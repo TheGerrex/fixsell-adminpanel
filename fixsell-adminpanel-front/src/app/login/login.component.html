@@ -1,0 +1,20 @@
+<div fxLayoutAlign="center center" fxFlexFill fxLayout="column">
+    <!-- fixsell logo -->
+    <div fxFlex="25">
+        <img       src="https://fixsellnorte.com/wp-content/uploads/2020/02/Logo-nuevo-fixsell-300x41.png"
+        alt="fixsell logo">
+        <h1>Admin panel</h1>
+        </div>  
+    <mat-card fxFlex="25">
+        <form fxLayoutAlign="stretch" fxLayout="column">
+            <mat-form-field>
+              <input matInput placeholder="Email" [(ngModel)]="loginUserData.email" name ="email">
+            </mat-form-field>
+          
+            <mat-form-field>
+                <input matInput placeholder="Password" [(ngModel)]="loginUserData.password" name ="password">
+              </mat-form-field>
+              <button mat-raised-button color="primary" type="submit"  (click)="loginUser()">Login</button>
+          </form>
+    </mat-card>
+</div>

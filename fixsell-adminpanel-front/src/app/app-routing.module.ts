@@ -1,11 +1,30 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { PrintersregisterComponent } from './printersregister/printersregister.component';
+import { isNotAuthenticatedGuard, isAuthenticatedGuard } from './auth/guards';
 
 const routes: Routes = [
-  {path:'login', component:LoginComponent},
-  {path:'printersregister', component:PrintersregisterComponent}
+  
+  {
+    path:'auth',
+    //guards
+    canActivate:[ isNotAuthenticatedGuard ],
+    loadChildren:()=>import('./auth/auth.module').then(m=>m.AuthModule)
+  },
+  {
+    path:'dashboard',
+    canActivate:[ isAuthenticatedGuard ],
+
+    loadChildren:()=>import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
+  },
+  {
+    path:'**',
+    redirectTo:'auth'
+  },
+  
+  //{path:'login', component:LoginComponent},
+  //{path:'printersregister', component:PrintersregisterComponent}
+
+
 ];
 
 @NgModule({

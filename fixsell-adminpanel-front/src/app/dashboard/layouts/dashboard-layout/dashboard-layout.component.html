@@ -1,0 +1,15 @@
+<h1>Dashboard</h1>
+<hr>
+
+<h3>User</h3>
+<pre>Hello, {{user()?.name}} </pre>
+
+
+<pre>{{user() | json }}</pre>
+
+<br>
+
+<button (click)="onLogout()">
+    log out
+</button>
+

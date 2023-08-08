@@ -2,6 +2,10 @@ import { Component, computed, inject } from '@angular/core';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { PrintersRegisterComponent } from '../../components/printers-register/printers-register.component';
 
+interface SideNavToggle {
+  screenWidth: number;
+  collapsed: boolean;
+}
 
 @Component({
   templateUrl: './dashboard-layout.component.html',
@@ -35,5 +39,13 @@ export class DashboardLayoutComponent {
    
     this.authService.logout();
     console.log("clicked logout")
+  }
+
+  isSideNavCollapsed = true;
+  screenWidth = 0;
+
+  onToggleSideNav(data: SideNavToggle): void {
+    this.screenWidth = data.screenWidth;
+    this.isSideNavCollapsed = data.collapsed;
   }
 }

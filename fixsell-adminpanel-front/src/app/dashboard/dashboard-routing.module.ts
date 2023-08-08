@@ -3,17 +3,28 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
 //import printerregister
 import { PrintersRegisterComponent } from './components/printers-register/printers-register.component';
+import { IntroScreenComponent } from './components/intro-screen/intro-screen.component';
+import { PrinterscrudComponent } from './components/printerscrud/printerscrud.component';
+import { EditPrinterComponent } from './components/edit-printer/edit-printer.component';
+
 
 const routes: Routes = [
   {
-  path: '',
-  component: DashboardLayoutComponent,
-  
-  children: [
-     {path: 'printers-register', component: PrintersRegisterComponent}
-  ]
-}
-];
+    path: '',
+    redirectTo: 'intro-screen', // Add redirect route to intro-screen
+    pathMatch: 'full'
+  },
+  {
+    path: '',
+    component: DashboardLayoutComponent,
+    children: [
+      { path: 'intro-screen', component: IntroScreenComponent },
+      { path: 'printerscrud', component: PrinterscrudComponent},
+      { path: 'printers-register', component: PrintersRegisterComponent },
+      { path: 'edit-printer', component: EditPrinterComponent }
+    ]
+  },
+]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

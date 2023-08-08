@@ -6,7 +6,7 @@
         alt="fixsell logo"
         width="300"
         height="41"/> -->
-      <h1>Add a printer</h1>
+      <h1>Update a printer</h1>
     </div>
   
     <div class="row">
@@ -52,6 +52,7 @@
                           data-error="Lastname is required."
                           [(ngModel)]="model"
                           [ngModelOptions]="{standalone: true}"
+                         
                         />
                       </div>
                     </div>
@@ -66,10 +67,12 @@
                         data-error="Please specify your need"
                           [(ngModel)]="category"
                                   [ngModelOptions]="{standalone: true}"
+                                  required
                       >
                         <option value="" selected disabled>
                           --Select Items Category--
                         </option>
+                        <!-- "category must be one of the following values: Oficina, Produccion, Inyección de Tinta, Artes Gráficas, Etiquetas" -->
                         <option>Oficina</option>
                         <option>Produccion</option>
                         <option>Inyección de Tinta</option>
@@ -317,8 +320,8 @@
                       <input
                         type="submit"
                         class="btn btn-success btn-send pt-2 btn-block"
-                        value="Create Printer"
-                        (click)="printerregister()"
+                        value="Update Printer"
+                        (click)="updatePrinter()"
                       />
                     </div>
                   </div>

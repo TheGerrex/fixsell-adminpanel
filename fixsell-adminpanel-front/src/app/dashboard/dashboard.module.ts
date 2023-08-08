@@ -15,10 +15,12 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { IntroScreenComponent } from './components/intro-screen/intro-screen.component';
 import { PrinterscrudComponent } from './components/printerscrud/printerscrud.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 // import for mat-icon
 import {MatIconModule} from '@angular/material/icon';
 import { EditPrinterComponent } from './components/edit-printer/edit-printer.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { EditPrinterComponent } from './components/edit-printer/edit-printer.com
     SettingsComponent,
     IntroScreenComponent,
     PrinterscrudComponent,
-    EditPrinterComponent // Add the PrintersRegisterComponent to the declarations array
+    EditPrinterComponent,
+    UsersComponent // Add the PrintersRegisterComponent to the declarations array
   ],
   imports: [
     CommonModule,
@@ -41,7 +44,8 @@ import { EditPrinterComponent } from './components/edit-printer/edit-printer.com
     ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ],
   exports: [
     PrintersRegisterComponent // Add the PrintersRegisterComponent to the exports array

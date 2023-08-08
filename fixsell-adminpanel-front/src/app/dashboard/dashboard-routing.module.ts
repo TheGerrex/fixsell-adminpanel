@@ -6,6 +6,7 @@ import { PrintersRegisterComponent } from './components/printers-register/printe
 import { IntroScreenComponent } from './components/intro-screen/intro-screen.component';
 import { PrinterscrudComponent } from './components/printerscrud/printerscrud.component';
 import { EditPrinterComponent } from './components/edit-printer/edit-printer.component';
+import { UsersComponent } from './components/users/users.component';
 
 
 const routes: Routes = [
@@ -21,7 +22,8 @@ const routes: Routes = [
       { path: 'intro-screen', component: IntroScreenComponent },
       { path: 'printerscrud', component: PrinterscrudComponent},
       { path: 'printers-register', component: PrintersRegisterComponent },
-      { path: 'edit-printer', component: EditPrinterComponent }
+      { path: 'edit-printer', component: EditPrinterComponent },
+      { path: 'users', component: UsersComponent }
     ]
   },
 ]

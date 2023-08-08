@@ -13,8 +13,8 @@ export const navbarData = [
         label: 'Printers'
     },
     {
-        routeLink: 'printers-register',
-        icon: 'fal fa-print',
-        label: 'Register Printer'
-    },
+        routeLink: 'users',
+        icon: 'fal fa-users',
+        label: 'Users'
+    }
 ];

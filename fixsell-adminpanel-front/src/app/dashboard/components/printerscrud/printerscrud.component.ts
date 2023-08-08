@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+//mat button
+import { MatButtonModule } from '@angular/material/button';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
@@ -85,6 +87,10 @@ export class PrinterscrudComponent implements OnInit {
         );
       }
     });
+  }
+
+  addPrinter() {
+    this.router.navigate(['/dashboard/printers-register']);
   }
 
 

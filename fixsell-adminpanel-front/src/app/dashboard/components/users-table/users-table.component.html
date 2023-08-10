@@ -1,0 +1,31 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password" class="form-control" placeholder="Enter your password">
+    </div>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" class="form-control" placeholder="Enter your name">
+    </div>
+    <div class="form-group">
+      <label for="roles">Roles</label>
+      <div class="checkbox-group">
+        <div class="checkbox" *ngFor="let role of roles">
+          <label>
+            <input type="checkbox" [value]="role" [checked]="userForm.get('roles')?.value?.includes(role)" (change)="toggleRole(role)">
+
+            {{ role }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="isActive">Active</label>
+      <input type="checkbox" id="isActive" formControlName="isActive" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>

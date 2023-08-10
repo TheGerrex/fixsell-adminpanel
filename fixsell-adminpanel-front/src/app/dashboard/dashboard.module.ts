@@ -17,10 +17,17 @@ import { PrinterscrudComponent } from './components/printerscrud/printerscrud.co
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
+//import for mat-option
+import {MatOptionModule} from '@angular/material/core';
 // import for mat-icon
 import {MatIconModule} from '@angular/material/icon';
+// import for mat checkbox
+import {MatCheckboxModule} from '@angular/material/checkbox';
+//import for mat-chip 
+import { MatChipsModule } from '@angular/material/chips';
 import { EditPrinterComponent } from './components/edit-printer/edit-printer.component';
 import { UsersComponent } from './components/users/users.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +39,8 @@ import { UsersComponent } from './components/users/users.component';
     IntroScreenComponent,
     PrinterscrudComponent,
     EditPrinterComponent,
-    UsersComponent // Add the PrintersRegisterComponent to the declarations array
+    UsersComponent,
+    UsersTableComponent // Add the PrintersRegisterComponent to the declarations array
   ],
   imports: [
     CommonModule,
@@ -45,7 +53,10 @@ import { UsersComponent } from './components/users/users.component';
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatOptionModule,
+    MatCheckboxModule,
+    MatChipsModule
   ],
   exports: [
     PrintersRegisterComponent // Add the PrintersRegisterComponent to the exports array

@@ -7,6 +7,7 @@ import { IntroScreenComponent } from './components/intro-screen/intro-screen.com
 import { PrinterscrudComponent } from './components/printerscrud/printerscrud.component';
 import { EditPrinterComponent } from './components/edit-printer/edit-printer.component';
 import { UsersComponent } from './components/users/users.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
       { path: 'printerscrud', component: PrinterscrudComponent},
       { path: 'printers-register', component: PrintersRegisterComponent },
       { path: 'edit-printer', component: EditPrinterComponent },
-      { path: 'users', component: UsersComponent }
+      { path: 'users', component: UsersComponent },
+      { path: 'users-table', component: UsersTableComponent  }
     ]
   },
 ]

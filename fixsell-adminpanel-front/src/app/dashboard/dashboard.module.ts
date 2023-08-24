@@ -27,7 +27,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { EditPrinterComponent } from './components/edit-printer/edit-printer.component';
 import { UsersComponent } from './components/users/users.component';
-import { UsersTableComponent } from './components/users-table/users-table.component';
+import { UsersTableComponent } from './components/users-create/users-table.component';
+import { UserEditComponent } from './components/user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
     PrinterscrudComponent,
     EditPrinterComponent,
     UsersComponent,
-    UsersTableComponent // Add the PrintersRegisterComponent to the declarations array
+    UsersTableComponent,
+    UserEditComponent // Add the PrintersRegisterComponent to the declarations array
   ],
   imports: [
     CommonModule,

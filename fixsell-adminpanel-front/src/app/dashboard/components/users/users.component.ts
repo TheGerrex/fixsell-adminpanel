@@ -11,6 +11,7 @@ export interface User {
   _id: string;
   email: string;
   name: string;
+  password: string;
   isActive: boolean;
   roles: string[];
   __v: number;
@@ -46,7 +47,8 @@ export class UsersComponent {
 
   editUser(user: User){
     // Implement edit functionality here
-    this.router.navigate(['/dashboard/edit-user']);
+    console.log(user);
+    this.router.navigate(['/dashboard/users-edit'], { state: { user } });
   }
 
   deleteUser(user: User) {

@@ -8,7 +8,7 @@ describe('IntroScreenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [IntroScreenComponent]
+      declarations: [IntroScreenComponent],
     });
     fixture = TestBed.createComponent(IntroScreenComponent);
     component = fixture.componentInstance;

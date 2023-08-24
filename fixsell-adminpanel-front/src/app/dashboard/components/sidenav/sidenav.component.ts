@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { navbarData } from './nav-data';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -16,10 +17,22 @@ interface SideNavToggle {
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('350ms ease-in', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate('350ms ease-in', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SidenavComponent implements OnInit {
   @Output() onToggleSideNav = new EventEmitter<SideNavToggle>();
-  collapsed = true;
+  collapsed = false;
   screenWidth = 0;
   navData = navbarData;
 

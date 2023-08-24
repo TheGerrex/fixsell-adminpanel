@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
-
 
 .sidenav {
     background: #263238;
@@ -8,18 +6,15 @@
     z-index: 1;
     top: 0;
     width: 5rem;
-
     height: 100vh;
     box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
-    font-family: 'Roboto', sans-serif;
+
 
     .logo-container{
-
         display: flex;
         align-items: center;
         padding: 0.938rem 0.938rem 0 0.938rem;
         width: 100%;
-        font-family: 'Roboto', sans-serif;
 
         .logo {
             background: #fff;
@@ -30,9 +25,8 @@
             padding: 0.313rem;
             font-size: 24px;
             font-weight: 900;
-            cursor:pointer;
+            cursor: pointer;
             border: none;
-            font-family: 'Roboto', sans-serif;
 
         }
 
@@ -69,7 +63,7 @@
 .sidenav-nav {
     list-style: none;
     padding: 0.938rem;
-    margin:0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,20 +72,19 @@
 
     .sidenav-nav-item {
         width: 100%;
-        margin-bottom: 0.625;
+        margin-bottom: 0.625rem;
 
         .sidenav-nav-link {
             display: flex;
             align-items: center;
             height: 3rem;
             color: #f3f3f3;
-            text-decoration:none;
-            border-radius: 1rem;
+            text-decoration: none;
+            border-radius: 0.625rem;
             transition: all .3s ease;
-            border-radius: 1rem;
             
             .sidenav-link-icon {
-                font-size : 22px;
+                font-size: 22px;
                 width: 2rem;
                 min-width: 2rem;
                 margin: 0 0.5rem;
@@ -101,16 +94,17 @@
             }
 
             .sidenav-link-text {
-                margin-left: 0.8rem;
+                margin-left: 1.5rem;
             }
 
         }
     }
 
     .sidenav-nav-item:hover {
-        background-color: #1a252f;
-        color: #fff;
-        border-radius: 1rem;
+        .sidenav-nav-link {
+            background-color: #fff;
+            color: #000;
+        }
     }
 }
 
@@ -118,7 +112,8 @@
     background-color: #fff;
 
 
-    .sidenav-link-icon {
+    .sidenav-link-icon,
+    .sidenav-link-text{
         color: #000;
     }
 

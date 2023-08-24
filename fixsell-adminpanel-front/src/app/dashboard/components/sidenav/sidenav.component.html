@@ -3,13 +3,8 @@
     <button class="logo" (click)="toggleCollapse()" onclick="toggleCollapse()">
       F
     </button>
-    <div class="logo-text" *ngIf="collapsed">Fixsell</div>
-    <button
-      class="btn-closed"
-      *ngIf="collapsed"
-      (click)="closeSidenav()"
-      onclick="toggleCollapse()"
-    >
+    <div class="logo-text" @fadeInOut *ngIf="collapsed">Fixsell</div>
+    <button class="btn-closed" *ngIf="collapsed" (click)="closeSidenav()">
       <i class="fal fa-times close-icon"></i>
     </button>
   </div>
@@ -22,7 +17,7 @@
         [routerLinkActiveOptions]="{ exact: true }"
       >
         <i class="sidenav-link-icon" [class]="data.icon">
-          <span class="sidenav-link-text" *ngIf="collapsed">{{
+          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{
             data.label
           }}</span>
         </i>

@@ -9,6 +9,7 @@ import { EditPrinterComponent } from './components/edit-printer/edit-printer.com
 import { UsersComponent } from './components/users/users.component';
 import { UsersTableComponent } from './components/users-create/users-table.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
+import { SettingsComponent } from './components/settings/settings.component';
 const routes: Routes = [
   {
     path: '',
@@ -26,6 +27,7 @@ const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'users-table', component: UsersTableComponent },
       { path: 'users-edit', component: UserEditComponent },
+      { path: 'settings', component: SettingsComponent },
     ],
   },
 ];

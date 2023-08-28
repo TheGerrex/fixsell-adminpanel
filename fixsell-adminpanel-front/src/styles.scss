@@ -21,24 +21,25 @@
   src: url('./assets/fonts/poppins/Poppins-SemiBold.ttf');
 }
 
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import '~@angular/cdk/overlay-prebuilt.css';
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 * {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    font-family: Poppins-Bold;
+    font-family: 'Roboto';
 }
 
 body, html {
+  position: relative;
     height: 100%;
-    font-family: Poppins-Regular, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 /*---------------------------------------------*/
 a {
-    font-family: Poppins-Regular;
     font-size: 14px;
     line-height: 1.7;
     color: #666666;
@@ -343,6 +344,25 @@ button:hover {
   background-color: grey;
 }
 
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: .5rem;
+  background-color: #fff;
+  margin: 1.25rem 0 1.25rem 0;
+  box-shadow: 0 .25rem .5rem #e6edef;
+
+  .card-head {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #edf1f7;
+      font-size: 1rem;
+      font-weight: 600;
+  }
+
+  .card-body {
+      padding: 1rem 1.5rem; 
+  }
+}
 
 /*[ PADDING ]
 ///////////////////////////////////////////////////////////

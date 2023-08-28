@@ -15,6 +15,7 @@
         [routerLink]="[data.routeLink]"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="isAllowed(data.allowedRoles)"
       >
         <i class="sidenav-link-icon" [class]="data.icon">
           <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{

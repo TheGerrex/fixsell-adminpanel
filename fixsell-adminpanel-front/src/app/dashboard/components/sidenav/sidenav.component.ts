@@ -4,9 +4,12 @@ import {
   HostListener,
   OnInit,
   Output,
+  computed,
+  inject,
 } from '@angular/core';
 import { navbarData } from './nav-data';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -66,5 +69,13 @@ export class SidenavComponent implements OnInit {
       collapsed: this.collapsed,
       screenWidth: this.screenWidth,
     });
+  }
+
+  private authService = inject(AuthService);
+  public user = computed(() => this.authService.currentUser());
+
+  isAllowed(allowedRoles: string[]): boolean {
+    const userRole = this.authService.getCurrentUserRoles();
+    return allowedRoles.some((role) => userRole.includes(role));
   }
 }

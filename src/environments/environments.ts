@@ -1,4 +1,4 @@
 export const environment = {
-    production: false,
-    baseUrl: 'http://localhost:3000'
-}
+  //   production: true,
+  baseUrl: 'https://nest-fixsell-backend-production.up.railway.app',
+};

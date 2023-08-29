@@ -42,7 +42,7 @@ export class UsersComponent {
   ngOnInit() {
     //gets users and sends auth token in header to verify user
     this.http
-      .get<User[]>('http://localhost:3000/auth', {
+      .get<User[]>(`${environment.baseUrl}/auth`, {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token') || '',
         },

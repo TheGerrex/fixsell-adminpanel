@@ -3,34 +3,38 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Printer } from '../printerscrud/printerscrud.component';
 import { HttpClient } from '@angular/common/http';
 import swal from 'sweetalert2';
-
+import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-edit-printer',
   templateUrl: './edit-printer.component.html',
-  styleUrls: ['./edit-printer.component.scss']
+  styleUrls: ['./edit-printer.component.scss'],
 })
-export class EditPrinterComponent  {
+export class EditPrinterComponent {
   printer: Printer;
   _id: string = '';
   brand: string = '';
   model: string = '';
-  category: string  = '';
+  category: string = '';
   color: boolean = false;
   rentable: boolean = false;
   duplexUnit: boolean = false;
-  powerConsumption: string = '';; 
+  powerConsumption: string = '';
   dimensions: string = '';
   printVelocity: Number = 0;
-  maxPrintSize : string = '';
+  maxPrintSize: string = '';
   maxPaperWeight: string = '';
   paperSizes: string = '';
-  price: Number = 0; 
+  price: Number = 0;
   applicableOS: string = '';
   description: string = '';
   img_url: string = '';
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: HttpClient
+  ) {
     this.printer = history.state.printer;
     console.log('State data:', history.state);
     console.log('Printer data:', this.printer);
@@ -55,10 +59,9 @@ export class EditPrinterComponent  {
     this.applicableOS = this.printer.applicableOS;
     this.description = this.printer.description;
     this.img_url = this.printer.img_url;
-
   }
 
-  updatePrinter(){
+  updatePrinter() {
     // update with new values
     this.printer.brand = this.brand;
     this.printer.model = this.model;
@@ -88,41 +91,46 @@ export class EditPrinterComponent  {
       powerConsumption: this.printer.powerConsumption,
       dimensions: this.printer.dimensions,
       printVelocity: this.printer.printVelocity,
-      maxPrintSize : this.printer.maxPrintSize,
+      maxPrintSize: this.printer.maxPrintSize,
       maxPaperWeight: this.printer.maxPaperWeight,
       paperSizes: this.printer.paperSizes,
       price: this.printer.price,
       applicableOS: this.printer.applicableOS,
       description: this.printer.description,
       //convert to string instead of array
-      img_url: this.printer.img_url.toString()
-
+      img_url: this.printer.img_url.toString(),
     };
     console.log(printerData);
 
-    swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to update this printer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, update it!',
-      cancelButtonText: 'No, cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Send a PATCH request to update the printer in the database
-        this.http.patch(`http://localhost:3000/printers/${this.printer._id}`, printerData).subscribe(() => {
-          // Show a success message
-          swal.fire({
-            title: 'Success!',
-            text: 'Printer updated successfully!',
-            icon: 'success'
-          });
-  
-          // Redirect to the printers list page
-          this.router.navigate(['/dashboard/printerscrud']);
-        });
-      }
-    });
-}
+    swal
+      .fire({
+        title: 'Are you sure?',
+        text: 'Do you want to update this printer?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'No, cancel',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // Send a PATCH request to update the printer in the database
+          this.http
+            .patch(
+              `${environment.baseUrl}/printers/${this.printer._id}`,
+              printerData
+            )
+            .subscribe(() => {
+              // Show a success message
+              swal.fire({
+                title: 'Success!',
+                text: 'Printer updated successfully!',
+                icon: 'success',
+              });
 
+              // Redirect to the printers list page
+              this.router.navigate(['/dashboard/printerscrud']);
+            });
+        }
+      });
+  }
 }

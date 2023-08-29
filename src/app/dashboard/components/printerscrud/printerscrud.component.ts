@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { environment } from 'src/environments/environments';
 
 export interface Printer {
   _id: string;
@@ -90,7 +91,7 @@ export class PrinterscrudComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          const url = `http://localhost:3000/printers/${printer._id}`;
+          const url = `${environment.baseUrl}/printers/${printer._id}`;
           this.http.delete(url).subscribe(
             () => {
               console.log(`Printer ${printer._id} deleted successfully`);

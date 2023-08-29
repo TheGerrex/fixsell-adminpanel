@@ -18,6 +18,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-user-edit',
@@ -140,7 +141,7 @@ export class UserEditComponent {
 
     // Send a PATCH request to update the user data
     this.http
-      .patch(`http://localhost:3000/auth/${this.userId}`, newUser)
+      .patch(`${environment.baseUrl}/auth/${this.userId}`, newUser)
       .subscribe(
         (response) => {
           //log response

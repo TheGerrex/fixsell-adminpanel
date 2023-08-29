@@ -57,7 +57,7 @@ export class PrinterscrudComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<Printer[]>('http://localhost:3000/printers')
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
       .subscribe((data) => {
         console.log(data);
 

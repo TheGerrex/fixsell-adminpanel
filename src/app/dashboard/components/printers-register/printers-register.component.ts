@@ -27,6 +27,8 @@ export class PrintersRegisterComponent {
   applicableOS: string = '';
   description: string = '';
   img_url: string = '';
+  datasheetUrl: string = '';
+  maxPrintSizeSimple: string = '';
 
   constructor(private http: HttpClient) {}
 
@@ -128,6 +130,8 @@ export class PrintersRegisterComponent {
       applicableOS: this.applicableOS,
       description: this.description,
       img_url: this.img_url,
+      datasheetUrl: this.datasheetUrl,
+      maxPrintSizeSimple: this.maxPrintSize,
     };
     console.log(bodyData);
     this.http
@@ -155,6 +159,8 @@ export class PrintersRegisterComponent {
           this.applicableOS = '';
           this.description = '';
           this.img_url = '';
+          this.datasheetUrl = '';
+          this.maxPrintSizeSimple = '';
         },
         (error: HttpErrorResponse) => {
           if (error.status === 400) {

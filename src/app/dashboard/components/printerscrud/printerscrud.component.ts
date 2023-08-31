@@ -27,6 +27,8 @@ export interface Printer {
   applicableOS: string;
   description: string;
   img_url: string;
+  datasheetUrl: string;
+  maxPrintSizeSimple: string;
 }
 
 @Component({

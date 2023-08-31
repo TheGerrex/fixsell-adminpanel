@@ -29,6 +29,8 @@ export class EditPrinterComponent {
   applicableOS: string = '';
   description: string = '';
   img_url: string = '';
+  datasheetUrl: string = '';
+  maxPrintSizeSimple: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -59,6 +61,8 @@ export class EditPrinterComponent {
     this.applicableOS = this.printer.applicableOS;
     this.description = this.printer.description;
     this.img_url = this.printer.img_url;
+    this.datasheetUrl = this.printer.datasheetUrl;
+    this.maxPrintSizeSimple = this.printer.maxPrintSize;
   }
 
   updatePrinter() {
@@ -79,6 +83,8 @@ export class EditPrinterComponent {
     this.printer.applicableOS = this.applicableOS;
     this.printer.description = this.description;
     this.printer.img_url = this.img_url;
+    this.printer.datasheetUrl = this.datasheetUrl;
+    this.printer.maxPrintSizeSimple = this.maxPrintSize;
 
     //create a new printer object with the updated values
     const printerData = {
@@ -99,6 +105,8 @@ export class EditPrinterComponent {
       description: this.printer.description,
       //convert to string instead of array
       img_url: this.printer.img_url.toString(),
+      datasheetUrl: this.printer.datasheetUrl,
+      maxPrintSizeSimple: this.printer.maxPrintSize,
     };
     console.log(printerData);
 

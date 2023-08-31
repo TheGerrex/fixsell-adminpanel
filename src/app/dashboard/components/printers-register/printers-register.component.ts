@@ -42,11 +42,7 @@ export class PrintersRegisterComponent {
       alert('Model input must be at least 4 characters long');
       return;
     }
-    // cannot contain special characters
-    if (!/^[a-zA-Z0-9- ]*$/.test(this.model)) {
-      alert('Model input cannot contain special characters');
-      return;
-    }
+
     // Check if category input is selected
     if (this.category === '') {
       alert('Please select a category');

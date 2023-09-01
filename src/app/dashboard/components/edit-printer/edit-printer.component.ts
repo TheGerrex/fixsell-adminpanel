@@ -31,6 +31,12 @@ export class EditPrinterComponent {
   img_url: string = '';
   datasheetUrl: string = '';
   maxPrintSizeSimple: string = '';
+  impresion: boolean = true;
+  copiado: boolean = true;
+  escaneo: boolean = true;
+  otro: boolean = false;
+  otroDetalle: string = '';
+  printerFunction: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -63,6 +69,43 @@ export class EditPrinterComponent {
     this.img_url = this.printer.img_url;
     this.datasheetUrl = this.printer.datasheetUrl;
     this.maxPrintSizeSimple = this.printer.maxPrintSize;
+    this.printerFunction = this.printer.printerFunction;
+    //if the printer function contains impresion, copiado or escaneo, set the value to true
+    if (this.printer.printerFunction.includes('Impresion')) {
+      this.impresion = true;
+    } else {
+      this.impresion = false;
+    }
+    if (this.printer.printerFunction.includes('Copiado')) {
+      this.copiado = true;
+    } else {
+      this.copiado = false;
+    }
+
+    if (this.printer.printerFunction.includes('Escaneo')) {
+      this.escaneo = true;
+    } else {
+      this.escaneo = false;
+    }
+    // if printerFunction contains another word that is not impresion, copiado or escaneo, set the value to true
+    if (
+      this.printer.printerFunction?.match(/(\b\w+\b)/g)?.length! > 3 &&
+      !this.printer.printerFunction.includes('Impresion') &&
+      !this.printer.printerFunction.includes('Copiado') &&
+      !this.printer.printerFunction.includes('Escaneo')
+    ) {
+      this.otro = true;
+    } else {
+      this.otro = false;
+    }
+
+    //if the printer function contains otro, set the value to true and set the otroDetalle value
+    if (this.otro) {
+      this.otroDetalle = this.printer.printerFunction.replace(
+        'otro',
+        ''
+      ) as string;
+    }
   }
 
   updatePrinter() {
@@ -85,6 +128,24 @@ export class EditPrinterComponent {
     this.printer.img_url = this.img_url;
     this.printer.datasheetUrl = this.datasheetUrl;
     this.printer.maxPrintSizeSimple = this.maxPrintSize;
+    this.printer.printerFunction = this.printerFunction;
+    //if the printer function contains impresion, copiado or escaneo, set the value to true
+    if (this.impresion) {
+      this.printer.printerFunction += 'impresion, ';
+    }
+    if (this.copiado) {
+      this.printer.printerFunction += 'copiado, ';
+    }
+    if (this.escaneo) {
+      this.printer.printerFunction += 'escaneo, ';
+    }
+    if (this.otro) {
+      this.printer.printerFunction += 'otro, ';
+    }
+    // Remove the last comma and space if printerFunction is not empty
+    if (this.printer.printerFunction !== '') {
+      this.printer.printerFunction = this.printer.printerFunction.slice(0, -2);
+    }
 
     //create a new printer object with the updated values
     const printerData = {
@@ -107,6 +168,7 @@ export class EditPrinterComponent {
       img_url: this.printer.img_url.toString(),
       datasheetUrl: this.printer.datasheetUrl,
       maxPrintSizeSimple: this.printer.maxPrintSize,
+      printerFunction: this.printer.printerFunction,
     };
     console.log(printerData);
 

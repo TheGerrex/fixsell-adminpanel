@@ -29,6 +29,7 @@ export interface Printer {
   img_url: string;
   datasheetUrl: string;
   maxPrintSizeSimple: string;
+  printerFunction: string;
 }
 
 @Component({

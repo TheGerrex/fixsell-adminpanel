@@ -268,6 +268,83 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- a row with four selectors: Impresión, copiado, escaneo y otro-->
+                <!-- if otro is selected opens an new text field -->
+                <hr />
+                <div class="row">
+                  <label>Printer Functions</label>
+
+                  <div class="col-md-3">
+                    <div>
+                      <label for="form_lastname">Impresión</label>
+                      <input
+                        type="checkbox"
+                        name="impresion"
+                        value="True"
+                        [(ngModel)]="impresion"
+                        [ngModelOptions]="{ standalone: true }"
+                        checked
+                      /><br />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div>
+                      <label for="form_lastname">Copiado</label>
+                      <input
+                        type="checkbox"
+                        name="copiado"
+                        value="True"
+                        [(ngModel)]="copiado"
+                        [ngModelOptions]="{ standalone: true }"
+                      /><br />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div>
+                      <label for="form_lastname">Escaneo</label>
+                      <input
+                        type="checkbox"
+                        name="escaneo"
+                        value="True"
+                        [(ngModel)]="escaneo"
+                        [ngModelOptions]="{ standalone: true }"
+                      /><br />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div>
+                      <label for="form_lastname">Otro</label>
+                      <input
+                        type="checkbox"
+                        name="otro"
+                        value="True"
+                        [(ngModel)]="otro"
+                        [ngModelOptions]="{ standalone: true }"
+                      /><br />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="otro">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="form_otro">Otro Function</label>
+                      <input
+                        id="form_otro"
+                        type="text"
+                        name="otro_detalle"
+                        class="form-control"
+                        placeholder="otro function"
+                        [(ngModel)]="otroDetalle"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <hr />
+
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">

@@ -15,8 +15,8 @@ export class PrintersRegisterComponent {
   model: string = '';
   category: string = '';
   color: boolean = true;
-  rentable: boolean = false;
-  duplexUnit: boolean = false;
+  rentable: boolean = true;
+  duplexUnit: boolean = true;
   powerConsumption: string = '';
   dimensions: string = '';
   printVelocity: Number = 0;
@@ -29,15 +29,16 @@ export class PrintersRegisterComponent {
   img_url: string = '';
   datasheetUrl: string = '';
   maxPrintSizeSimple: string = '';
+  impresion: boolean = true;
+  copiado: boolean = true;
+  escaneo: boolean = true;
+  otro: boolean = false;
+  otroDetalle: string = '';
+  printerFunction: string = '';
 
   constructor(private http: HttpClient) {}
 
   printerregister() {
-    // Check if model input is valid
-    if (!/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$/.test(this.model)) {
-      alert('Model input must contain at least 1 letter and 1 number');
-      return;
-    }
     if (this.model.length < 4) {
       alert('Model input must be at least 4 characters long');
       return;
@@ -109,6 +110,31 @@ export class PrintersRegisterComponent {
       return;
     }
 
+    // add values to printerfunction
+    this.printerFunction = '';
+    if (this.impresion) {
+      this.printerFunction += 'Impresion, ';
+    }
+
+    if (this.copiado) {
+      this.printerFunction += 'Copiado, ';
+    }
+
+    if (this.escaneo) {
+      this.printerFunction += 'Escaneo, ';
+    }
+
+    if (this.otro) {
+      this.printerFunction += this.otroDetalle + ', ';
+    }
+
+    // Remove the last comma and space if printerFunction is not empty
+    if (this.printerFunction !== '') {
+      this.printerFunction = this.printerFunction.slice(0, -2);
+    }
+
+    console.log(this.printerFunction);
+
     let bodyData = {
       brand: this.brand,
       model: this.model,
@@ -128,6 +154,7 @@ export class PrintersRegisterComponent {
       img_url: this.img_url,
       datasheetUrl: this.datasheetUrl,
       maxPrintSizeSimple: this.maxPrintSize,
+      printerFunction: this.printerFunction,
     };
     console.log(bodyData);
     this.http

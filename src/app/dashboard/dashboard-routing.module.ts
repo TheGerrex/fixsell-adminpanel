@@ -11,6 +11,7 @@ import { UsersTableComponent } from './components/users-create/users-table.compo
 import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { RoleGuard } from '../auth/guards/role.guard';
+import { InventoryComponent } from './components/inventory/inventory.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,12 @@ const routes: Routes = [
         data: { allowedRoles: ['admin'] },
       },
       { path: 'settings', component: SettingsComponent },
+      {
+        path: 'inventario',
+        component: InventoryComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user', 'vendor'] },
+      },
     ],
   },
 ];

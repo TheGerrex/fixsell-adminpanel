@@ -29,6 +29,8 @@ import { EditPrinterComponent } from './components/edit-printer/edit-printer.com
 import { UsersComponent } from './components/users/users.component';
 import { UsersTableComponent } from './components/users-create/users-table.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { InventoryComponent } from './components/inventory/inventory.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { UserEditComponent } from './components/user-edit/user-edit.component';
     EditPrinterComponent,
     UsersComponent,
     UsersTableComponent,
-    UserEditComponent, // Add the PrintersRegisterComponent to the declarations array
+    UserEditComponent,
+    InventoryComponent, // Add the PrintersRegisterComponent to the declarations array
   ],
   imports: [
     CommonModule,

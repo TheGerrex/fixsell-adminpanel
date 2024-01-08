@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environments';
 
 export interface User {
-  _id: string;
+  id: string;
   email: string;
   name: string;
   password: string;
@@ -78,9 +78,10 @@ export class UsersComponent {
       })
       .then(async (result) => {
         if (result.value) {
+          console.log(`Deleting user with id: ${user.id}`); // Log the user id
           try {
             await this.http
-              .delete(`${environment.baseUrl}/auth/${user._id}`, {
+              .delete(`${environment.baseUrl}/auth/${user.id}`, {
                 headers: {
                   Authorization:
                     'Bearer ' + localStorage.getItem('token') || '',
@@ -89,7 +90,7 @@ export class UsersComponent {
               .toPromise();
             swal.fire('Deleted!', 'Your user has been deleted.', 'success');
             this.dataSource.data = this.dataSource.data.filter(
-              ({ _id }) => _id !== user._id
+              ({ id }) => id !== user.id
             );
           } catch (err) {
             swal.fire('Error!', 'Your user could not be deleted.', 'error');

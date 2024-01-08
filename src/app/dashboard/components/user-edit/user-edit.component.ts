@@ -60,7 +60,7 @@ export class UserEditComponent {
 
   ngOnInit() {
     // this.user = history.state.user;
-    this.userId = this.user._id;
+    this.userId = this.user.id;
     this.userForm = new FormGroup(
       {
         email: new FormControl(this.user.email, [

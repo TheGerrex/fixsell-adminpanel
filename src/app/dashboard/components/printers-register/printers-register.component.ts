@@ -27,14 +27,14 @@ export class PrintersRegisterComponent {
   applicableOS: string = '';
   description: string = '';
   img_url: string = '';
-  datasheetUrl: string = '';
+  datasheet_url: string = '';
   maxPrintSizeSimple: string = '';
   impresion: boolean = true;
   copiado: boolean = true;
   escaneo: boolean = true;
   otro: boolean = false;
   otroDetalle: string = '';
-  printerFunction: string = '';
+  printerFunctions: string = '';
 
   constructor(private http: HttpClient) {}
 
@@ -111,29 +111,29 @@ export class PrintersRegisterComponent {
     }
 
     // add values to printerfunction
-    this.printerFunction = '';
+    this.printerFunctions = '';
     if (this.impresion) {
-      this.printerFunction += 'Impresion, ';
+      this.printerFunctions += 'Impresion, ';
     }
 
     if (this.copiado) {
-      this.printerFunction += 'Copiado, ';
+      this.printerFunctions += 'Copiado, ';
     }
 
     if (this.escaneo) {
-      this.printerFunction += 'Escaneo, ';
+      this.printerFunctions += 'Escaneo, ';
     }
 
     if (this.otro) {
-      this.printerFunction += this.otroDetalle + ', ';
+      this.printerFunctions += this.otroDetalle + ', ';
     }
 
     // Remove the last comma and space if printerFunction is not empty
-    if (this.printerFunction !== '') {
-      this.printerFunction = this.printerFunction.slice(0, -2);
+    if (this.printerFunctions !== '') {
+      this.printerFunctions = this.printerFunctions.slice(0, -2);
     }
 
-    console.log(this.printerFunction);
+    console.log(this.printerFunctions);
 
     let bodyData = {
       brand: this.brand,
@@ -151,10 +151,10 @@ export class PrintersRegisterComponent {
       price: this.price,
       applicableOS: this.applicableOS,
       description: this.description,
-      img_url: this.img_url,
-      datasheetUrl: this.datasheetUrl,
+      img_url: [this.img_url],
+      datasheet_url: this.datasheet_url,
       maxPrintSizeSimple: this.maxPrintSize,
-      printerFunction: this.printerFunction,
+      printerFunctions: this.printerFunctions,
     };
     console.log(bodyData);
     this.http
@@ -182,7 +182,7 @@ export class PrintersRegisterComponent {
           this.applicableOS = '';
           this.description = '';
           this.img_url = '';
-          this.datasheetUrl = '';
+          this.datasheet_url = '';
           this.maxPrintSizeSimple = '';
         },
         (error: HttpErrorResponse) => {

@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environments';
 })
 export class EditPrinterComponent {
   printer: Printer;
-  _id: string = '';
+  id: string = '';
   brand: string = '';
   model: string = '';
   category: string = '';
@@ -28,7 +28,7 @@ export class EditPrinterComponent {
   price: Number = 0;
   applicableOS: string = '';
   description: string = '';
-  img_url: string = '';
+  img_url: string[] = [];
   datasheetUrl: string = '';
   maxPrintSizeSimple: string = '';
   impresion: boolean = true;
@@ -36,7 +36,7 @@ export class EditPrinterComponent {
   escaneo: boolean = true;
   otro: boolean = false;
   otroDetalle: string = '';
-  printerFunction: string = '';
+  printerFunctions: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -50,7 +50,7 @@ export class EditPrinterComponent {
 
   ngOnInit() {
     this.printer = history.state.printer;
-    this._id = this.printer._id;
+    this.id = this.printer.id;
     this.brand = this.printer.brand;
     this.model = this.printer.model;
     this.category = this.printer.category;
@@ -66,33 +66,33 @@ export class EditPrinterComponent {
     this.price = this.printer.price;
     this.applicableOS = this.printer.applicableOS;
     this.description = this.printer.description;
-    this.img_url = this.printer.img_url;
+    this.img_url = [this.printer.img_url];
     this.datasheetUrl = this.printer.datasheetUrl;
     this.maxPrintSizeSimple = this.printer.maxPrintSize;
-    this.printerFunction = this.printer.printerFunction;
+    this.printerFunctions = this.printer.printerFunctions;
     //if the printer function contains impresion, copiado or escaneo, set the value to true
-    if (this.printer.printerFunction.includes('Impresion')) {
+    if (this.printer.printerFunctions.includes('Impresion')) {
       this.impresion = true;
     } else {
       this.impresion = false;
     }
-    if (this.printer.printerFunction.includes('Copiado')) {
+    if (this.printer.printerFunctions.includes('Copiado')) {
       this.copiado = true;
     } else {
       this.copiado = false;
     }
 
-    if (this.printer.printerFunction.includes('Escaneo')) {
+    if (this.printer.printerFunctions.includes('Escaneo')) {
       this.escaneo = true;
     } else {
       this.escaneo = false;
     }
     // if printerFunction contains another word that is not impresion, copiado or escaneo, set the value to true
     if (
-      this.printer.printerFunction?.match(/(\b\w+\b)/g)?.length! > 3 &&
-      !this.printer.printerFunction.includes('Impresion') &&
-      !this.printer.printerFunction.includes('Copiado') &&
-      !this.printer.printerFunction.includes('Escaneo')
+      this.printer.printerFunctions?.match(/(\b\w+\b)/g)?.length! > 3 &&
+      !this.printer.printerFunctions.includes('Impresion') &&
+      !this.printer.printerFunctions.includes('Copiado') &&
+      !this.printer.printerFunctions.includes('Escaneo')
     ) {
       this.otro = true;
     } else {
@@ -101,7 +101,7 @@ export class EditPrinterComponent {
 
     //if the printer function contains otro, set the value to true and set the otroDetalle value
     if (this.otro) {
-      this.otroDetalle = this.printer.printerFunction.replace(
+      this.otroDetalle = this.printer.printerFunctions.replace(
         'otro',
         ''
       ) as string;
@@ -125,26 +125,29 @@ export class EditPrinterComponent {
     this.printer.price = this.price;
     this.printer.applicableOS = this.applicableOS;
     this.printer.description = this.description;
-    this.printer.img_url = this.img_url;
+    this.img_url = this.printer.img_url ? this.printer.img_url.split(',') : [];
     this.printer.datasheetUrl = this.datasheetUrl;
     this.printer.maxPrintSizeSimple = this.maxPrintSize;
-    this.printer.printerFunction = this.printerFunction;
+    this.printer.printerFunctions = this.printerFunctions;
     //if the printer function contains impresion, copiado or escaneo, set the value to true
     if (this.impresion) {
-      this.printer.printerFunction += 'impresion, ';
+      this.printer.printerFunctions += 'impresion, ';
     }
     if (this.copiado) {
-      this.printer.printerFunction += 'copiado, ';
+      this.printer.printerFunctions += 'copiado, ';
     }
     if (this.escaneo) {
-      this.printer.printerFunction += 'escaneo, ';
+      this.printer.printerFunctions += 'escaneo, ';
     }
     if (this.otro) {
-      this.printer.printerFunction += 'otro, ';
+      this.printer.printerFunctions += 'otro, ';
     }
     // Remove the last comma and space if printerFunction is not empty
-    if (this.printer.printerFunction !== '') {
-      this.printer.printerFunction = this.printer.printerFunction.slice(0, -2);
+    if (this.printer.printerFunctions !== '') {
+      this.printer.printerFunctions = this.printer.printerFunctions.slice(
+        0,
+        -2
+      );
     }
 
     //create a new printer object with the updated values
@@ -165,10 +168,10 @@ export class EditPrinterComponent {
       applicableOS: this.printer.applicableOS,
       description: this.printer.description,
       //convert to string instead of array
-      img_url: this.printer.img_url.toString(),
+      img_url: this.printer.img_url,
       datasheetUrl: this.printer.datasheetUrl,
       maxPrintSizeSimple: this.printer.maxPrintSize,
-      printerFunction: this.printer.printerFunction,
+      printerFunctions: this.printer.printerFunctions,
     };
     console.log(printerData);
 
@@ -186,7 +189,7 @@ export class EditPrinterComponent {
           // Send a PATCH request to update the printer in the database
           this.http
             .patch(
-              `${environment.baseUrl}/printers/${this.printer._id}`,
+              `${environment.baseUrl}/printers/${this.printer.id}`,
               printerData
             )
             .subscribe(() => {

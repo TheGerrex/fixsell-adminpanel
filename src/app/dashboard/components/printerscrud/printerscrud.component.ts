@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { environment } from 'src/environments/environments';
 
 export interface Printer {
-  _id: string;
+  id: string;
   brand: string;
   model: string;
   category: string;
@@ -29,7 +29,7 @@ export interface Printer {
   img_url: string;
   datasheetUrl: string;
   maxPrintSizeSimple: string;
-  printerFunction: string;
+  printerFunctions: string;
 }
 
 @Component({
@@ -94,10 +94,10 @@ export class PrinterscrudComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          const url = `${environment.baseUrl}/printers/${printer._id}`;
+          const url = `${environment.baseUrl}/printers/${printer.id}`;
           this.http.delete(url).subscribe(
             () => {
-              console.log(`Printer ${printer._id} deleted successfully`);
+              console.log(`Printer ${printer.id} deleted successfully`);
               // Remove the deleted printer from the data source
               const index = this.dataSource.data.indexOf(printer);
               if (index >= 0) {
@@ -107,7 +107,7 @@ export class PrinterscrudComponent implements OnInit {
             },
             (error) => {
               console.error(
-                `Error deleting printer ${printer._id}: ${error.message}`
+                `Error deleting printer ${printer.id}: ${error.message}`
               );
             }
           );

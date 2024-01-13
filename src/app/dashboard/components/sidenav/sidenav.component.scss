@@ -34,11 +34,11 @@
             color: #fff;
         }
 
-        .btn-close {
+        .btn-closed {
             margin-left: auto;
             cursor: pointer;
             width: 2rem;
-            height: 2rem;
+            height: 1.8rem;
             border-radius: 50%;
             background-color: transparent;
             border: none;
@@ -79,11 +79,14 @@
             transition: all .3s ease;
 
             .sidenav-link-icon {
-                font-size: 20px;
+                font-size: 18px;
                 width: 2rem;
                 min-width: 2rem;
                 margin: 0 0.5rem;
-                text-align: center;
+                margin-left: 1rem;
+                // text-align: center;
+              
+                
             }
 
             .sidenav-link-text {
@@ -108,3 +111,38 @@
         color: #000;
     }
 }
+
+
+.sidenav-mobile {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #263238;
+    z-index: 1000;
+  
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      color: #fff;
+    }
+  
+    .sidenav-nav {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      padding: 10px 0;
+      margin: 0;
+      background: #263238;
+    }
+  
+    .sidenav-nav-item {
+      color: #fff;
+    }
+  
+    .sidenav-nav-link {
+      color: #fff;
+      text-decoration: none;
+    }
+  }

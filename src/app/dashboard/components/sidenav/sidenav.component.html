@@ -1,11 +1,46 @@
-<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+<!-- Desktop layout -->
+<div
+  class="sidenav"
+  [ngClass]="collapsed ? 'sidenav-collapsed' : ''"
+  *ngIf="screenWidth > 768"
+>
   <div class="logo-container">
     <button class="logo" (click)="toggleCollapse()" onclick="toggleCollapse()">
       F
     </button>
     <div class="logo-text" @fadeInOut *ngIf="collapsed">Fixsell</div>
     <button class="btn-closed" *ngIf="collapsed" (click)="closeSidenav()">
-      <i class="fal fa-times close-icon"></i>
+      <i class="fa fa-times close-icon"></i>
+    </button>
+  </div>
+  <ul class="sidenav-nav">
+    <li class="sidenav-nav-item" *ngFor="let data of navData">
+      <a
+        class="sidenav-nav-link"
+        [routerLink]="[data.routeLink]"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="isAllowed(data.allowedRoles)"
+      >
+        <i class="sidenav-link-icon" [class]="data.icon">
+          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{
+            data.label
+          }}</span>
+        </i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Mobile layout -->
+<div class="sidenav-mobile" *ngIf="screenWidth <= 768">
+  <div class="logo-container">
+    <button class="logo" (click)="toggleCollapse()" onclick="toggleCollapse()">
+      F
+    </button>
+    <div class="logo-text" @fadeInOut *ngIf="collapsed">Fixsell</div>
+    <button class="btn-closed" *ngIf="collapsed" (click)="closeSidenav()">
+      <i class="fa fa-times close-icon"></i>
     </button>
   </div>
   <ul class="sidenav-nav">

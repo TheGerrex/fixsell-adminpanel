@@ -1,8 +1,10 @@
-
-<h1 *ngIf="!finishedAuthCheck()">
-    loading...
-</h1>
+<div class="loco-container" *ngIf="!finishedAuthCheck()">
+  <h1 *ngIf="!finishedAuthCheck()">
+    <div class="loader">
+      <img src="../assets/images/Fixsell Brand/fixsell-logo.png" />
+    </div>
+  </h1>
+</div>
 
 <!-- <app-printersregister></app-printersregister> -->
 <router-outlet *ngIf="finishedAuthCheck()" />
-

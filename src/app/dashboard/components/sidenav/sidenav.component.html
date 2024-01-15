@@ -33,14 +33,16 @@
 </div>
 
 <!-- Mobile layout -->
-<div class="sidenav-mobile" *ngIf="screenWidth <= 768">
+<div
+  class="sidenav-mobile"
+  [ngClass]="collapsed ? 'collapsed' : ''"
+  *ngIf="screenWidth <= 768"
+>
   <div class="logo-container">
-    <button class="logo" (click)="toggleCollapse()" onclick="toggleCollapse()">
-      F
-    </button>
-    <div class="logo-text" @fadeInOut *ngIf="collapsed">Fixsell</div>
-    <button class="btn-closed" *ngIf="collapsed" (click)="closeSidenav()">
-      <i class="fa fa-times close-icon"></i>
+    <button class="logo" (click)="toggleCollapse()">F</button>
+    <div class="logo-text">Fixsell</div>
+    <button class="btn-closed" (click)="toggleCollapse()">
+      <i class="fa fa-bars close-icon"></i>
     </button>
   </div>
   <ul class="sidenav-nav">
@@ -53,7 +55,7 @@
         *ngIf="isAllowed(data.allowedRoles)"
       >
         <i class="sidenav-link-icon" [class]="data.icon">
-          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed">{{
             data.label
           }}</span>
         </i>

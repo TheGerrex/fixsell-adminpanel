@@ -126,6 +126,44 @@
       justify-content: space-between;
       padding: 10px;
       color: #fff;
+
+        .logo {
+            background: #fff;
+            text-align: center;
+            width: 3rem;
+            min-width: 3rem;
+            border-radius: 0.313rem;
+            padding: 0.313rem;
+            font-size: 24px;
+            font-weight: 900;
+            cursor: pointer;
+            border: none;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-self: center;
+        }
+
+        .btn-closed {
+            cursor: pointer;
+            width: 2rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            background-color: transparent;
+            border: none;
+            color: #fff;
+
+            .fa-times {
+                color: #fff;
+                font-size: 24px;
+            }
+        }
+
+        
     }
   
     .sidenav-nav {
@@ -146,3 +184,7 @@
       text-decoration: none;
     }
   }
+
+  .sidenav-mobile.collapsed .sidenav-nav {
+    display: none;
+}

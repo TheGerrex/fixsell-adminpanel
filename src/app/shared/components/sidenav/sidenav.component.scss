@@ -1,19 +1,18 @@
 .sidenav {
     background: #263238;
     transition: all .5s ease;
-    position: fixed;
+    position: sticky;
     top: 0;
     // z-index: 1;
-    width: 5rem;
+    // width: 5rem;
+    width: 200px;
     height: 100vh;
     box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
-
     .logo-container {
         display: flex;
         align-items: center;
         padding: 0.938rem 0.938rem 0 0.938rem;
         width: 100%;
-
         .logo {
             background: #fff;
             text-align: center;
@@ -26,14 +25,12 @@
             cursor: pointer;
             border: none;
         }
-
         .logo-text {
             margin-left: 1.5rem;
             font-size: 24px;
             font-weight: 700;
             color: #fff;
         }
-
         .btn-closed {
             margin-left: auto;
             cursor: pointer;
@@ -42,7 +39,6 @@
             border-radius: 50%;
             background-color: transparent;
             border: none;
-
             .fa-times {
                 color: #fff;
                 font-size: 24px;
@@ -64,11 +60,9 @@
     align-items: center;
     height: calc(100% - 3.65rem);
     cursor: pointer;
-
     .sidenav-nav-item {
         width: 100%;
         margin-bottom: 0.625rem;
-
         .sidenav-nav-link {
             display: flex;
             align-items: center;
@@ -77,7 +71,6 @@
             text-decoration: none;
             border-radius: 0.625rem;
             transition: all .3s ease;
-
             .sidenav-link-icon {
                 font-size: 18px;
                 width: 2rem;
@@ -85,16 +78,12 @@
                 margin: 0 0.5rem;
                 margin-left: 1rem;
                 // text-align: center;
-              
-                
             }
-
             .sidenav-link-text {
                 margin-left: 1.5rem;
             }
         }
     }
-
     .sidenav-nav-item:hover {
         .sidenav-nav-link {
             background-color: #fff;
@@ -105,13 +94,11 @@
 
 .active {
     background-color: #fff;
-
     .sidenav-link-icon,
     .sidenav-link-text {
         color: #000;
     }
 }
-
 
 .sidenav-mobile {
     width: 100%;
@@ -120,13 +107,11 @@
     left: 0;
     background: #263238;
     z-index: 1000;
-  
     .logo-container {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px;
-      color: #fff;
-
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        color: #fff;
         .logo {
             background: #fff;
             text-align: center;
@@ -139,7 +124,6 @@
             cursor: pointer;
             border: none;
         }
-
         .logo-text {
             font-size: 24px;
             font-weight: 700;
@@ -147,7 +131,6 @@
             display: flex;
             align-self: center;
         }
-
         .btn-closed {
             cursor: pointer;
             width: 2rem;
@@ -156,35 +139,29 @@
             background-color: transparent;
             border: none;
             color: #fff;
-
             .fa-times {
                 color: #fff;
                 font-size: 24px;
             }
         }
-
-        
     }
-  
     .sidenav-nav {
-      display: flex;
-      justify-content: space-around;
-      list-style: none;
-      padding: 10px 0;
-      margin: 0;
-      background: #263238;
+        display: flex;
+        justify-content: space-around;
+        list-style: none;
+        padding: 10px 0;
+        margin: 0;
+        background: #263238;
     }
-  
     .sidenav-nav-item {
-      color: #fff;
+        color: #fff;
     }
-  
     .sidenav-nav-link {
-      color: #fff;
-      text-decoration: none;
+        color: #fff;
+        text-decoration: none;
     }
-  }
+}
 
-  .sidenav-mobile.collapsed .sidenav-nav {
+.sidenav-mobile.collapsed .sidenav-nav {
     display: none;
 }

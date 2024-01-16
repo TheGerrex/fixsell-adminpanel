@@ -4,11 +4,11 @@ import { isNotAuthenticatedGuard, isAuthenticatedGuard } from './auth/guards';
 
 const routes: Routes = [
   
-  // {
-  //   path:'dashboard',
-  //   canActivate:[ isAuthenticatedGuard ],
-  //   loadChildren:()=>import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
-  // },
+  {
+    path:'dashboard',
+    canActivate:[ isAuthenticatedGuard ],
+    loadChildren:()=>import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
+  },
   {
     path:'website',
     canActivate:[ isAuthenticatedGuard ],

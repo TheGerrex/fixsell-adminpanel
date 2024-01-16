@@ -1,21 +1,17 @@
 <!-- FILEPATH: c:\Users\hulig\Documents\github\fixsell-adminpanel\fixsell-adminpanel-front\src\app\dashboard\layouts\dashboard-layout\dashboard-layout.component.html -->
 
 <!-- add sidenav.component in components/sidenav/sidenav.component.ts -->
-<!-- <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav> -->
 <!-- <pre>Hello, {{user()?.name}} </pre>
-
-<button (click)="onLogout()">
-    log out
-</button> -->
-
-<app-body
-    [collapsed]="isSideNavCollapsed"
-    [screenWidth]="screenWidth"
     
->
+    <button (click)="onLogout()">
+        log out
+    </button> -->
 
-
-</app-body>
+<!-- <app-body [collapsed]="isSideNavCollapsed" [screenWidth]="screenWidth"></app-body> -->
+<div class="container-grid">
+    <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+    <!-- <router-outlet></router-outlet> -->
+</div>
 
 
 <!-- add the component in components/printer-register/printer-register.component -->

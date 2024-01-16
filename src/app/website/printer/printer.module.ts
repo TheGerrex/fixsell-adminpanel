@@ -7,6 +7,7 @@ import { PrinterListComponent } from './pages/printer-list/printer-list.componen
 import { PrinterCreateComponent } from './pages/printer-create/printer-create.component';
 import { PrinterDetailComponent } from './pages/printer-detail/printer-detail.component';
 import { PrinterEditComponent } from './pages/printer-edit/printer-edit.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { PrinterEditComponent } from './pages/printer-edit/printer-edit.componen
   ],
   imports: [
     CommonModule,
-    PrinterRoutingModule
+    PrinterRoutingModule,
+    SharedModule,
   ]
 })
 export class PrinterModule { }

@@ -1,9 +1,4 @@
 <div class="container-grid">
-    <div class="sidebar">
-    <div class="link">A</div>
-    <div class="link">B</div>
-    <div class="link">C</div>
-    <div class="link">D</div>
-    </div>
+    <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
     <router-outlet></router-outlet>
 </div>

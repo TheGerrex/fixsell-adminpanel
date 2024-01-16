@@ -49,7 +49,7 @@ public authStatusChangedEffect = effect( () => {
       return;
 
     case AuthStatus.authenticated:
-      this.router.navigateByUrl('/webpage/printer');
+      this.router.navigateByUrl('/dashboard');
       return;
 
 

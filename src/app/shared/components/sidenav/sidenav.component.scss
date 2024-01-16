@@ -1,5 +1,6 @@
+@import "_variables.scss";
 .sidenav {
-    background: #263238;
+    background: $sidenav-bg;
     transition: all .5s ease;
     position: sticky;
     top: 0;
@@ -11,8 +12,9 @@
     .logo-container {
         display: flex;
         align-items: center;
-        padding: 0.938rem 0.938rem 0 0.938rem;
+        padding: 1em;
         width: 100%;
+        background-color: #fff;
         .logo {
             background: #fff;
             text-align: center;
@@ -53,74 +55,91 @@
 
 .sidenav-nav {
     list-style: none;
-    padding: 0.938rem;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: calc(100% - 3.65rem);
     cursor: pointer;
     .sidenav-nav-item {
+        display: flex;
         width: 100%;
-        margin-bottom: 0.625rem;
         .sidenav-nav-link {
             display: flex;
+            flex-direction: row;
             align-items: center;
-            height: 3rem;
+            justify-content: flex-start;
+            width: 100%;
+            // height: 3rem;
+            gap: 1em;
             color: #f3f3f3;
             text-decoration: none;
-            border-radius: 0.625rem;
             transition: all .3s ease;
-            .sidenav-link-icon {
-                font-size: 18px;
-                width: 2rem;
-                min-width: 2rem;
-                margin: 0 0.5rem;
-                margin-left: 1rem;
-                // text-align: center;
+            padding: 1em;
+            .sidenav-link-icon-container {
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                height: 100%;
+                .sidenav-link-icon {
+                    font-size: 1.5rem;
+                }
             }
-            .sidenav-link-text {
-                margin-left: 1.5rem;
+            .sidenav-link-items-container {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                row-gap: .5em;
+                .sidenav-link-item-header {
+                    width: 100%;
+                }
+                .sidenav-link-item-body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .5em;
+                    p {
+                        margin-left: 1em;
+                        font-size: 1em;
+                        margin-bottom: 0;
+                        color: $sidenav-link;
+                        &:hover {
+                            color: #fff;
+                        }
+                    }
+                }
             }
         }
     }
     .sidenav-nav-item:hover {
         .sidenav-nav-link {
-            background-color: #fff;
-            color: #000;
+            background-color: $sidenav-item;
         }
     }
 }
 
 .active {
-    background-color: #fff;
+    background-color: $sidenav-item;
     .sidenav-link-icon,
     .sidenav-link-text {
-        color: #000;
+        color: #fff;
     }
 }
 
 .sidenav-mobile {
     width: 100%;
+    height: 50px;
     position: fixed;
     top: 0;
     left: 0;
-    background: #263238;
+    background: $sidenav-bg;
     z-index: 1000;
     .logo-container {
         display: flex;
         justify-content: space-between;
         padding: 10px;
-        color: #fff;
+        background-color: white;
+        border-bottom: 1px solid $gray-200;
         .logo {
-            background: #fff;
-            text-align: center;
-            width: 3rem;
-            min-width: 3rem;
-            border-radius: 0.313rem;
-            padding: 0.313rem;
-            font-size: 24px;
-            font-weight: 900;
+            width: 200px;
             cursor: pointer;
             border: none;
         }
@@ -138,7 +157,7 @@
             border-radius: 50%;
             background-color: transparent;
             border: none;
-            color: #fff;
+            color: $gray-900;
             .fa-times {
                 color: #fff;
                 font-size: 24px;
@@ -149,7 +168,8 @@
         display: flex;
         justify-content: space-around;
         list-style: none;
-        padding: 10px 0;
+        // padding: 10px 0;
+        padding: 0;
         margin: 0;
         background: #263238;
     }

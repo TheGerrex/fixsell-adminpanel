@@ -10,7 +10,9 @@
 <!-- <app-body [collapsed]="isSideNavCollapsed" [screenWidth]="screenWidth"></app-body> -->
 <div class="container-grid">
     <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
-    <!-- <router-outlet></router-outlet> -->
+    <div class="container-grid-content">
+        <router-outlet></router-outlet>
+    </div>
 </div>
 
 

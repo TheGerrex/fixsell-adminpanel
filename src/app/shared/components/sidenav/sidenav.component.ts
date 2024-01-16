@@ -10,6 +10,8 @@ import {
 import { navbarData } from './nav-data';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -39,6 +41,8 @@ export class SidenavComponent implements OnInit {
   screenWidth = 0;
   navData = navbarData;
 
+  constructor(private router: Router) {}
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
     this.screenWidth = window.innerWidth;
@@ -49,6 +53,18 @@ export class SidenavComponent implements OnInit {
     this.screenWidth = window.innerWidth;
     this.collapsed = false; // like why???
     this.collapsed = this.screenWidth <= 768 ? true : false; //so stupid but it works
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.navData.forEach(item => item.isExpanded = false);
+    });
+  }
+
+  handleClick(data: any) {
+    data.isExpanded = !data.isExpanded;
+    if (!data.subRoutes) {
+      this.toggleCollapse();
+    }
   }
 
   toggleCollapse(): void {

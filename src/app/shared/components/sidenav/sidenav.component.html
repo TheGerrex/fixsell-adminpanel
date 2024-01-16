@@ -1,65 +1,56 @@
 <!-- Desktop layout -->
-<div
-  class="sidenav"
-  [ngClass]="collapsed ? 'sidenav-collapsed' : ''"
-  *ngIf="screenWidth > 768"
->
-  <div class="logo-container">
-    <button class="logo" (click)="toggleCollapse()" onclick="toggleCollapse()">
-      F
-    </button>
-    <div class="logo-text" @fadeInOut *ngIf="collapsed">Fixsell</div>
-    <button class="btn-closed" *ngIf="collapsed" (click)="closeSidenav()">
-      <i class="fa fa-times close-icon"></i>
-    </button>
-  </div>
-  <ul class="sidenav-nav">
-    <li class="sidenav-nav-item" *ngFor="let data of navData">
-      <a
-        class="sidenav-nav-link"
-        [routerLink]="['/' + data.routeLink]"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="isAllowed(data.allowedRoles)"
-      >
-        <i class="sidenav-link-icon" [class]="data.icon">
-          <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{
-            data.label
-          }}</span>
-        </i>
-      </a>
-    </li>
-  </ul>
+<div class="sidenav" *ngIf="screenWidth > 768">
+    <div class="logo-container">
+        <img src="../../../../assets/logo/logo-navbar.svg" alt="logo-fixsell" (click)="toggleCollapse()">
+    </div>
+    <div class="sidenav-nav">
+        <div class="sidenav-nav-item" *ngFor="let data of navData">
+            <div class="sidenav-nav-link" [routerLink]="data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="isAllowed(data.allowedRoles)" (click)="data.isExpanded = !data.isExpanded">
+                <div class="sidenav-link-icon-container">
+                    <i class="sidenav-link-icon" [class]="data.icon"></i>
+                </div>
+                <div class="sidenav-link-items-container">
+                    <div class="sidenav-link-item-header">
+                        <span class="sidenav-link-text" @fadeInOut>{{data.label}}</span>
+                    </div>
+                    <div class="sidenav-link-item-body" *ngIf="data.isExpanded && data.subRoutes">
+                        <p *ngFor="let subRoute of data.subRoutes" [routerLink]="['/' + subRoute.routeLink]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                            {{subRoute.label}}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Mobile layout -->
-<div
-  class="sidenav-mobile"
-  [ngClass]="collapsed ? 'collapsed' : ''"
-  *ngIf="screenWidth <= 768"
->
-  <div class="logo-container">
-    <button class="logo" (click)="toggleCollapse()">F</button>
-    <div class="logo-text">Fixsell</div>
-    <button class="btn-closed" (click)="toggleCollapse()">
-      <i class="fa fa-bars close-icon"></i>
-    </button>
-  </div>
-  <ul class="sidenav-nav">
-    <li class="sidenav-nav-item" *ngFor="let data of navData">
-      <a
-        class="sidenav-nav-link"
-        [routerLink]="['/' + data.routeLink]"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="isAllowed(data.allowedRoles)"
-      >
-        <i class="sidenav-link-icon" [class]="data.icon">
-          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed">{{
-            data.label
-          }}</span>
-        </i>
-      </a>
-    </li>
-  </ul>
+<div class="sidenav-mobile" [ngClass]="collapsed ? 'collapsed' : ''" *ngIf="screenWidth <= 768">
+    <div class="logo-container">
+        <img src="../../../../assets/logo/logo-navbar.svg" class="logo" alt="logo-fixsell" (click)="toggleCollapse()">
+        <button class="btn-closed" (click)="toggleCollapse()">
+          <i class="fa fa-bars close-icon"></i>
+        </button>
+    </div>
+    <ul class="sidenav-nav">
+        <div class="sidenav-nav-item" *ngFor="let data of navData">
+            <div class="sidenav-nav-link" [routerLink]="data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="isAllowed(data.allowedRoles)" (click)="handleClick(data)">
+                <div class="sidenav-link-icon-container">
+                    <i class="sidenav-link-icon" [class]="data.icon"></i>
+                </div>
+                <div class="sidenav-link-items-container">
+                    <div class="sidenav-link-item-header">
+                        <span class="sidenav-link-text" @fadeInOut>{{data.label}}</span>
+                    </div>
+                    <div class="sidenav-link-item-body" *ngIf="data.isExpanded && data.subRoutes">
+                        <p *ngFor="let subRoute of data.subRoutes" [routerLink]="['/' + subRoute.routeLink]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="toggleCollapse()">
+                            {{subRoute.label}}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </ul>
 </div>

@@ -1,50 +1,57 @@
 export const navbarData = [
   {
-    routeLink: 'dashboard/intro-screen',
-    icon: 'fal fa-home',
     label: 'Dashboard',
+    routeLink: 'dashboard',
+    icon: 'fal fa-home',
     allowedRoles: ['admin', 'user', 'vendor'],
   },
   {
+    label: 'Printers',
     routeLink: 'dashboard/printerscrud',
     icon: 'fal fa-tasks',
-    label: 'Printers',
     allowedRoles: ['admin', 'user', 'vendor'],
   },
   {
-    routeLink: 'website/printers/create',
-    icon: 'fal fa-tasks',
-    label: 'Website Printers',
+    label: 'Pagina Web',
+    routeLink: 'website/printers',
     allowedRoles: ['admin', 'user', 'vendor'],
+    icon: 'fal fa-globe',
+    isExpanded: false,
+    subRoutes: [
+      { label: 'Multifuncionales', routeLink: 'website/printers' },
+      { label: 'Printers', routeLink: 'website/printers' },
+      { label: 'Printers', routeLink: 'website/printers' },
+      { label: 'Printers', routeLink: 'website/printers' },
+    ]
   },
   {
+    label: 'Usuarios',
     routeLink: 'dashboard/users',
     icon: 'fal fa-users',
-    label: 'Users',
     allowedRoles: ['admin'],
   },
+  // {
+  //   routeLink: 'dashboard/ventas',
+  //   icon: 'fal fa-shopping-cart',
+  //   label: 'Ventas',
+  //   allowedRoles: ['admin', 'vendor'],
+  // },
+  // {
+  //   routeLink: 'dashboard/inventario',
+  //   icon: 'fal fa-boxes',
+  //   label: 'Inventario',
+  //   allowedRoles: ['admin', 'user', 'vendor'],
+  // },
+  // {
+  //   routeLink: 'dashboard/chat',
+  //   icon: 'fal fa-comments',
+  //   label: 'Chat',
+  //   allowedRoles: ['admin', 'user', 'vendor'],
+  // },
   {
-    routeLink: 'dashboard/ventas',
-    icon: 'fal fa-shopping-cart',
-    label: 'Ventas',
-    allowedRoles: ['admin', 'vendor'],
-  },
-  {
-    routeLink: 'dashboard/inventario',
-    icon: 'fal fa-boxes',
-    label: 'Inventario',
-    allowedRoles: ['admin', 'user', 'vendor'],
-  },
-  {
-    routeLink: 'dashboard/chat',
-    icon: 'fal fa-comments',
-    label: 'Chat',
-    allowedRoles: ['admin', 'user', 'vendor'],
-  },
-  {
+    label: 'Ajustes',
     routeLink: 'dashboard/settings',
     icon: 'fal fa-cog',
-    label: 'Settings',
     allowedRoles: ['admin', 'user', 'vendor'],
   },
 ];

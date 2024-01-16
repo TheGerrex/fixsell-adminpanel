@@ -20,12 +20,26 @@ export class LoginPageComponent {
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
+  // login() {
+  //   const { email, password } = this.myForm.value;
+  //   this.authService.login(email, password).subscribe({
+  //     next: () => {this.router.navigateByUrl('/webpage/printer'); console.log('login-success')},
+  //     error: (message) => {
+  //       Swal.fire('Error', message, 'error');
+  //     },
+  //   });
+  // }
+
   login() {
     const { email, password } = this.myForm.value;
     this.authService.login(email, password).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
-      error: (message) => {
-        Swal.fire('Error', message, 'error');
+      next: () => {
+        this.router.navigateByUrl('/webpage/printer');
+        console.log('login-success');
+      },
+      error: (error) => {
+        console.error('Error during login', error);
+        Swal.fire('Error', error.message, 'error');
       },
     });
   }

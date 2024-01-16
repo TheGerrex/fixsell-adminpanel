@@ -8,22 +8,24 @@ import {
 } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Observable } from 'rxjs';
+import { RoleService } from 'src/app/shared/services/role.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoleGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private roleService: RoleService) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> {
-    const allowedRoles = route.data['allowedRoles'] as string[]; // Roles allowed for the route
+    const allowedRoles = this.roleService.getAllowedRoles(state.url); // Get the allowed roles from the RoleService
 
     if (this.authService.checkAuthStatus()) {
       const userRoles = this.authService.getCurrentUserRoles();
       console.log('users roles:', userRoles);
+      console.log('allowed roles:', allowedRoles);
 
       // Check if any of the allowed roles match the user's roles
       const hasRequiredRole = allowedRoles.some((role) =>

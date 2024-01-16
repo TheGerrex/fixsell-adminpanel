@@ -3,11 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { PrinterRoutingModule } from './printer-routing.module';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
+import { PrinterListComponent } from './pages/printer-list/printer-list.component';
+import { PrinterCreateComponent } from './pages/printer-create/printer-create.component';
+import { PrinterDetailComponent } from './pages/printer-detail/printer-detail.component';
+import { PrinterEditComponent } from './pages/printer-edit/printer-edit.component';
 
 
 @NgModule({
   declarations: [
-    LayoutPageComponent
+    LayoutPageComponent,
+    PrinterListComponent,
+    PrinterCreateComponent,
+    PrinterDetailComponent,
+    PrinterEditComponent
   ],
   imports: [
     CommonModule,

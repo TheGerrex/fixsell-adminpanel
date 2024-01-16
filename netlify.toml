@@ -1,0 +1,9 @@
+[build]
+  [build.budgets]
+    [build.budgets.CSS]
+      maximumBudget = 12
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

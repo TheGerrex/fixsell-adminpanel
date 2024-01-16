@@ -9,11 +9,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
   declarations: [],
+  imports: [
+    CommonModule
+  ],
   exports: [
     MatFormFieldModule,
     MatInputModule,
@@ -25,7 +28,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatCheckboxModule,
     MatChipsModule,
     MatCardModule,
-    BrowserAnimationsModule
   ]
 })
 export class AngularMaterialModule { }

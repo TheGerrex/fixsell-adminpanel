@@ -13,16 +13,12 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { RoleGuard } from '../auth/guards/role.guard';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'intro-screen', // Add redirect route to intro-screen
-    pathMatch: 'full',
-  },
+
   {
     path: '',
     component: DashboardLayoutComponent,
     children: [
-      { path: 'intro-screen', component: IntroScreenComponent },
+      { path: '', component: IntroScreenComponent },
       {
         path: 'printerscrud',
         component: PrinterscrudComponent,

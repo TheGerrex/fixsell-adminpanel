@@ -4,22 +4,20 @@ import { isNotAuthenticatedGuard, isAuthenticatedGuard } from './auth/guards';
 
 const routes: Routes = [
   
-  {
-    path:'auth',
-    //guards
-    canActivate:[ isNotAuthenticatedGuard ],
-    loadChildren:()=>import('./auth/auth.module').then(m=>m.AuthModule)
-  },
-  {
-    path:'dashboard',
-    canActivate:[ isAuthenticatedGuard ],
-
-    loadChildren:()=>import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
-  },
+  // {
+  //   path:'dashboard',
+  //   canActivate:[ isAuthenticatedGuard ],
+  //   loadChildren:()=>import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
+  // },
   {
     path:'website',
     canActivate:[ isAuthenticatedGuard ],
     loadChildren:()=>import('./website/website.module').then(m=>m.WebsiteModule)
+  },
+  {
+    path:'auth',
+    canActivate:[ isNotAuthenticatedGuard ],
+    loadChildren:()=>import('./auth/auth.module').then(m=>m.AuthModule)
   },
   {
     path:'**',

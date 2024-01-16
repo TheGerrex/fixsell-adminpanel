@@ -18,6 +18,6 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
   exports: [
     SidenavComponent,
     AngularMaterialModule,
-  ],
+  ]
 })
 export class SharedModule { }

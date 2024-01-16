@@ -3,11 +3,18 @@ import { AuthService } from './auth/services/auth.service';
 import { AuthStatus } from './auth/interfaces';
 import { Router } from '@angular/router';
 
+interface SideNavToggle {
+  screenWidth: number;
+  collapsed: boolean;
+}
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent {
   title = 'admin panel';
 
@@ -22,7 +29,16 @@ export class AppComponent {
   }
   
   return true; 
+
 });
+
+isSideNavCollapsed = true;
+screenWidth = 0;
+
+onToggleSideNav(data: SideNavToggle): void {
+  this.screenWidth = data.screenWidth;
+  this.isSideNavCollapsed = data.collapsed;
+}
 
   
 
@@ -33,7 +49,7 @@ public authStatusChangedEffect = effect( () => {
       return;
 
     case AuthStatus.authenticated:
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl('/webpage/printer');
       return;
 
 

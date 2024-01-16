@@ -1,3 +1,5 @@
+<router-outlet *ngIf="finishedAuthCheck()" />
+
 <div class="loco-container" *ngIf="!finishedAuthCheck()">
   <h1 *ngIf="!finishedAuthCheck()">
     <div class="loader">
@@ -5,6 +7,3 @@
     </div>
   </h1>
 </div>
-
-<!-- <app-printersregister></app-printersregister> -->
-<router-outlet *ngIf="finishedAuthCheck()" />

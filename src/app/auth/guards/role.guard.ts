@@ -36,7 +36,7 @@ export class RoleGuard implements CanActivate {
         return true; // User has required role, allow access
       } else {
         // Redirect to unauthorized page or show an appropriate message
-        return this.router.createUrlTree(['/unauthorized']); // Redirect to '/unauthorized'
+        return this.router.createUrlTree(['/dashboard']); // Redirect to '/unauthorized'
       }
     }
 

@@ -17,6 +17,11 @@ const routes: Routes = [
     loadChildren:()=>import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
   },
   {
+    path:'website',
+    canActivate:[ isAuthenticatedGuard ],
+    loadChildren:()=>import('./website/website.module').then(m=>m.WebsiteModule)
+  },
+  {
     path:'**',
     redirectTo:'auth'
   },

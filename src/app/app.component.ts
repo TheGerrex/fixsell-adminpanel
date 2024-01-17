@@ -43,13 +43,13 @@ onToggleSideNav(data: SideNavToggle): void {
   
 
 public authStatusChangedEffect = effect( () => {
-  
+  const lastVisitedRoute = localStorage.getItem('lastVisitedRoute');
   switch(this.AuthService.authStatus()) {
     case AuthStatus.checking:
       return;
 
     case AuthStatus.authenticated:
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl(lastVisitedRoute || '/dashboard');
       return;
 
 
@@ -57,7 +57,7 @@ public authStatusChangedEffect = effect( () => {
       this.router.navigateByUrl('/auth/login');
       return;
   }
-  
+
 });
 
 

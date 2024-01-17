@@ -1,0 +1,55 @@
+.table-header {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+
+}
+
+.responsive-table {
+    overflow-x: auto;
+}
+
+.printer-list-table {
+  border: 1px solid #e0e0e0;
+}
+.table-paginator {
+  border: 1px solid #e0e0e0;
+}
+  
+//   @media screen and (max-width: 600px) {
+//     .responsive-table table, .responsive-table th, .responsive-table td, .responsive-table tbody, .responsive-table tr {
+//       display: block;
+//     }
+
+//     .responsive-table tbody {
+//       width: 100%;
+//     }
+  
+//     .responsive-table th {
+//       position: absolute;
+//       top: -9999px;
+//       left: -9999px;
+//     }
+
+//     .responsive-table tr {
+//       height: 100%;
+//     }
+  
+//     .responsive-table td {
+//       border: none;
+//       position: relative;
+//       padding-left: 50%;
+//     }
+  
+//     .responsive-table td:before {
+//       position: absolute;
+//       top: 6px;
+//       left: 6px;
+//       width: 45%;
+//       padding-right: 10px;
+//       white-space: nowrap;
+//       content: attr(data-column);
+//     }
+//   }

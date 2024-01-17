@@ -57,8 +57,7 @@ public authStatusChangedEffect = effect( () => {
       this.router.navigateByUrl('/auth/login');
       return;
   }
-
-  this.AuthService.authStatus()
+  
 });
 
 

@@ -34,7 +34,7 @@ export class LoginPageComponent {
     const { email, password } = this.myForm.value;
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.router.navigateByUrl('/webpage/printer');
+        this.router.navigateByUrl('/dashboard');
         console.log('login-success');
       },
       error: (error) => {

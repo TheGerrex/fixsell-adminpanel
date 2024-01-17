@@ -48,9 +48,8 @@ html {
 /*---------------------------------------------*/
 
 a {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #666666;
+    font-size: 16px;
+    line-height: 20px;
     margin: 0px;
     transition: all 0.4s;
     -webkit-transition: all 0.4s;
@@ -76,21 +75,58 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0px;
-}
-
-p {
-    /* font-family: Poppins-Regular; */
-    font-size: 14px;
-    line-height: 1.7;
-    color: #666666;
-    margin: 0px;
+    font-weight: 500 !important;
 }
 
 ul,
 li {
     margin: 0px;
     list-style-type: none;
+}
+
+h1 {
+    font-size: 35px;
+    line-height: 43.75px;
+}
+
+h2 {
+    font-size: 28px;
+    line-height: 35px;
+}
+
+h3 {
+    font-size: 24.5px;
+    line-height: 30.6px;
+}
+
+h4 {
+    font-size: 21px;
+    line-height: 26.3px;
+}
+
+h5 {
+    font-size: 17.5px;
+    line-height: 21.9px;
+}
+
+h6 {
+    font-size: 16px;
+    line-height: 20px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 0;
+}
+
+small {
+    font-size: 10.5px;
+    line-height: 13.1px;
+}
+
+li {
+    font-size: 1em;
 }
 
 
@@ -321,70 +357,173 @@ app-sidenav {
 /*------------------------------------------------------------------
 [ Button ]*/
 
-.container-login100-form-btn {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.wrap-login100-form-btn {
-    width: 100%;
-    display: block;
-    position: relative;
-    z-index: 1;
-    border-radius: 25px;
-    overflow: hidden;
-    margin: 0 auto;
-    box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
-    -moz-box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
-    -webkit-box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
-    -o-box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
-    -ms-box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
-}
-
-.login100-form-bgbtn {
-    position: absolute;
-    z-index: -1;
-    width: 300%;
-    height: 100%;
-    background: rgb(96, 207, 220);
-    background: linear-gradient(90deg, rgba(96, 207, 220, 1) 0%, rgba(190, 52, 218, 1) 92%);
-    top: 0;
-    left: -100%;
-    -webkit-transition: all 0.4s;
-    -o-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    transition: all 0.4s;
-}
-
-.login100-form-btn {
-    font-family: Poppins-Medium;
-    font-size: 16px;
-    color: #fff;
-    line-height: 1.2;
-    text-transform: uppercase;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: center;
+.button {
+    margin: 0;
+    display: inline-flex;
+    user-select: none;
+    cursor: pointer;
     align-items: center;
-    padding: 0 20px;
-    width: 100%;
-    height: 50px;
-}
-
-.wrap-login100-form-btn:hover .login100-form-bgbtn {
-    left: 0;
-}
-
-.login100-form-btn:disabled {
-    background-color: grey;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    gap: 8px;
+    color: $text;
+    font-size: 1rem;
+    padding: .75rem 1.25rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+    &:focus:not(:focus-visible) {
+        outline: 0;
+    }
+    &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus, 0 1px 2px 0 black;
+    }
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+    .button-label {
+        font-weight: 700;
+        flex: 1 1 auto;
+        transition-duration: 0.2s;
+    }
+    &-primary {
+        color: $primary-color-text;
+        background: $primary-color;
+        border: 1px $primary-color solid;
+        &:hover {
+            background: $primary-color-hover;
+            color: $primary-color-text;
+            border-color: $primary-color-hover;
+        }
+        &:active {
+            background: $primary-color-active;
+            color: $primary-color-text;
+            border-color: $primary-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-secondary {
+        color: $secondary-color-text;
+        background: $secondary-color;
+        border: 1px $secondary-color solid;
+        &:hover {
+            background: $secondary-color-hover;
+            color: $secondary-color-text;
+            border-color: $secondary-color-hover;
+        }
+        &:active {
+            background: $secondary-color-active;
+            color: $secondary-color-text;
+            border-color: $secondary-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-success {
+        color: $success-color-text;
+        background: $success-color;
+        border: 1px $success-color solid;
+        &:hover {
+            background: $success-color-hover;
+            color: $success-color-text;
+            border-color: $success-color-hover;
+        }
+        &:active {
+            background: $success-color-active;
+            color: $success-color-text;
+            border-color: $success-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-info {
+        color: $info-color-text;
+        background: $info-color;
+        border: 1px $info-color solid;
+        &:hover {
+            background: $info-color-hover;
+            color: $info-color-text;
+            border-color: $info-color-hover;
+        }
+        &:active {
+            background: $info-color-active;
+            color: $info-color-text;
+            border-color: $info-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-warning {
+        color: $warning-color-text;
+        background: $warning-color;
+        border: 1px $warning-color solid;
+        &:hover {
+            background: $warning-color-hover;
+            color: $warning-color-text;
+            border-color: $warning-color-hover;
+        }
+        &:active {
+            background: $warning-color-active;
+            color: $warning-color-text;
+            border-color: $warning-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-help {
+        color: $help-color-text;
+        background: $help-color;
+        border: 1px $help-color solid;
+        &:hover {
+            background: $help-color-hover;
+            color: $help-color-text;
+            border-color: $help-color-hover;
+        }
+        &:active {
+            background: $help-color-active;
+            color: $help-color-text;
+            border-color: $help-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-danger {
+        color: $danger-color-text;
+        background: $danger-color;
+        border: 1px $danger-color solid;
+        &:hover {
+            background: $danger-color-hover;
+            color: $danger-color-text;
+            border-color: $danger-color-hover;
+        }
+        &:active {
+            background: $danger-color-active;
+            color: $danger-color-text;
+            border-color: $danger-color-active;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus, 0 1px 2px 0 black;
+        }
+    }
+    &-full {
+        width: 100%;
+    }
+    &-rounded {
+        border-radius: 2rem;
+    }
+    &-raised {
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
 }
 
 .card {

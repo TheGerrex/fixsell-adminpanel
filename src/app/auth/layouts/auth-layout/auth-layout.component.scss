@@ -1,0 +1,24 @@
+.login-container {
+    // padding: 2em;
+    width: 100%;
+    height: 100vh;
+    .login-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 600px;
+        height: 100%;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; // to maintain aspect ratio
+            object-position: left;
+        }
+        @media(max-width: 768px) {
+            grid-template-columns: none; // give all available space to the login form
+            display: flex;
+            flex-direction: column;
+            img {
+                display: none; // hide the image
+            }
+        }
+    }
+}

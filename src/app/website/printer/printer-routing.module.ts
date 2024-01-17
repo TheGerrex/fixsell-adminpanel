@@ -11,6 +11,7 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutPageComponent,
+    data: { allowedRoles: ['admin', 'user'] },
     children: [
       {
         path: '',

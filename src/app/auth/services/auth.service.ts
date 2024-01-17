@@ -31,7 +31,7 @@ export class AuthService {
     this._currentUser.set(user);
     this._authStatus.set(AuthStatus.authenticated);
     localStorage.setItem('token', token);
-
+    localStorage.setItem('currentUser', JSON.stringify(user));
     return true;
   }
 
@@ -40,7 +40,11 @@ export class AuthService {
     const body = { email, password };
 
     return this.http.post<LoginResponse>(url, body).pipe(
-      map(({ user, token }) => this.setAuthentication(user, token)),
+      map(({ user, token }) => {
+        // Store the authentication state in localStorage
+        localStorage.setItem('authStatus', AuthStatus.authenticated);
+        return this.setAuthentication(user, token);
+      }),
       catchError((err) => {
         return throwError(() => err.error.message);
       })
@@ -59,10 +63,15 @@ export class AuthService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return this.http.get<CheckTokenResponse>(url, { headers }).pipe(
-      map(({ user, token }) => this.setAuthentication(user, token)),
+      map(({ user, token }) => {
+        // Store the authentication state in localStorage
+        localStorage.setItem('authStatus', AuthStatus.authenticated);
+        return this.setAuthentication(user, token);
+      }),
       //error
       catchError(() => {
         this._authStatus.set(AuthStatus.notAuthenticated);
+        localStorage.removeItem('authStatus');
         return of(false);
       })
     );
@@ -72,10 +81,22 @@ export class AuthService {
     this._currentUser.set(null);
     this._authStatus.set(AuthStatus.notAuthenticated);
     localStorage.removeItem('token');
+    localStorage.removeItem('authStatus');
+    localStorage.removeItem('currentUser');
   }
-
+  
+  setCurrentUser(user: User): void {
+    this._currentUser.set(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+  
+  getCurrentUser(): User | null {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+  }
+  
   getCurrentUserRoles(): string[] {
-    const user = this.currentUser();
+    const user = this.getCurrentUser();
     return user ? user.roles : [];
   }
 }

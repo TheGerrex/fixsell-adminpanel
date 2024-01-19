@@ -1,9 +1,8 @@
 <router-outlet *ngIf="finishedAuthCheck()" />
 
 <div class="loco-container" *ngIf="!finishedAuthCheck()">
-  <h1 *ngIf="!finishedAuthCheck()">
-    <div class="loader">
-      <img src="../assets/images/Fixsell Brand/fixsell-logo.png" />
+    <div class="loco-wrapper" *ngIf="!finishedAuthCheck()">
+        <div class="loader"></div>
+        <img src="../assets/images/Fixsell Brand/fixsell-logo.png" />
     </div>
-  </h1>
 </div>

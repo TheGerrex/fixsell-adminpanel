@@ -1,23 +1,36 @@
 export interface Printer {
-    id: string;
-    brand: string;
-    model: string;
-    category: string;
-    color: boolean;
-    rentable: boolean;
-    duplexUnit: boolean;
-    powerConsumption: string;
-    dimensions: string;
-    printVelocity: Number;
-    maxPrintSize: string;
-    maxPaperWeight: string;
-    paperSizes: string;
-    price: Number;
-    applicableOS: string;
-    description: string;
-    img_url: string;
-    datasheetUrl: string;
+    id:                 string;
+    brand:              string;
+    model:              string;
+    datasheet_url:      string;
+    img_url:            string[];
+    description:        string;
+    price:              number;
+    category:           string;
+    color:              boolean;
+    rentable:           boolean;
+    sellable:           boolean;
+    tags:               string[];
+    powerConsumption:   string;
+    dimensions:         string;
+    printVelocity:      string;
     maxPrintSizeSimple: string;
-    printerFunctions: string;
+    maxPrintSize:       string;
+    printSize:          string;
+    maxPaperWeight:     string;
+    duplexUnit:         boolean;
+    paperSizes:         string;
+    applicableOS:       string;
+    printerFunctions:   string;
+    barcode:            null;
+    deal:               Deal;
+}
 
+export interface Deal {
+    id:                     number;
+    dealEndDate:            Date;
+    dealStartDate:          Date;
+    dealPrice:              string;
+    dealDiscountPercentage: string;
+    dealDescription:        string;
 }

@@ -43,6 +43,10 @@ html {
     font-family: 'Roboto', sans-serif;
 }
 
+body {
+    background-color: $gray-100 !important;
+}
+
 
 /*---------------------------------------------*/
 
@@ -196,16 +200,15 @@ button:hover {
     grid-template-columns: 200px 1fr;
     .container-grid-content {
         width: 100%;
-        padding: 32px;
+        padding: 16px;
     }
     @media(max-width: 768px) {
         grid-template-columns: none !important;
         grid-template-rows: 50px 1fr;
+        .container-grid-content {
+            padding: 16px;
+        }
     }
-}
-
-app-sidenav {
-    height: 50px;
 }
 
 

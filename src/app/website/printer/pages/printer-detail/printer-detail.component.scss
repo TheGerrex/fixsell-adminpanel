@@ -18,6 +18,9 @@
     h2 {
         margin: 0;
     }
+    button {
+        flex-shrink: 0;
+    }
 }
 
 .printer-info {
@@ -107,6 +110,9 @@
         border-bottom: 1px solid $gray-300;
         h2 {
             margin: 0;
+        }
+        button {
+            flex-shrink: 0;
         }
     }
     .printer-deals {

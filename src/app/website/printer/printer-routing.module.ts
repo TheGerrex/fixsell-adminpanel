@@ -11,31 +11,31 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutPageComponent,
-    data: { allowedRoles: ['admin', 'user'] },
+    data: { allowedRoles: ['admin', 'user']},
     children: [
       {
         path: '',
         component: PrinterListComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'] },
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Multifuncionales'  },
       },
       {
         path: 'create',
         component: PrinterCreateComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'] },
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear'},
       },
       {
         path: ':id',
         component: PrinterDetailComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'] },
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Multifuncional' },
       },
       {
         path: ':id/edit',
         component: PrinterEditComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'] },
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Editar' },
       }
     ]
   }

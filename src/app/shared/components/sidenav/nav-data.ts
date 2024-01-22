@@ -18,11 +18,15 @@ export const navbarData = [
     icon: 'fal fa-globe',
     isExpanded: false,
     subRoutes: [
-      { label: 'Multifuncionales', routeLink: 'website/printers', allowedRoles: ['admin', 'user', 'vendor'] },
+      {
+        label: 'Multifuncionales',
+        routeLink: 'website/printers',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
       { label: 'Printers', routeLink: 'website/printers' },
+      { label: 'Promociones', routeLink: 'website/promociones' },
       { label: 'Printers', routeLink: 'website/printers' },
-      { label: 'Printers', routeLink: 'website/printers' },
-    ]
+    ],
   },
   {
     label: 'Usuarios',

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoleService {
   private roles: { [key: string]: string[] } = {
     '/website/printers': ['admin', 'user'],
     '/website/printers/create': ['admin', 'user', 'vendor'],
+    '/website/promociones': ['admin'],
     '/dashboard/intro-screen': ['admin', 'user', 'vendor'],
     '/dashboard/printerscrud': ['admin', 'user', 'vendor'],
     '/dashboard/users': ['admin'],

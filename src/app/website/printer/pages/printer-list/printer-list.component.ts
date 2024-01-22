@@ -17,10 +17,11 @@ export class PrinterListComponent {
   displayedColumns: string[] = [
     'brand',
     'model',
+    'rentable',
+    'color',
     'category',
     'price',
-    'edit',
-    'delete',
+    'action',
   ];
   dataSource = new MatTableDataSource<Printer>();
   filterValue = '';
@@ -52,9 +53,13 @@ export class PrinterListComponent {
     }
   }
 
+  seePrinter(printer: Printer) {
+    // Implement edit functionality here
+    this.router.navigate([`/website/printers/${printer.id}`], { state: { printer } });
+  }
   editPrinter(printer: Printer) {
     // Implement edit functionality here
-    this.router.navigate(['/dashboard/edit-printer'], { state: { printer } });
+    this.router.navigate([`/website/printers/${printer.id}/edit`], { state: { printer } });
   }
 
   deletePrinter(printer: Printer) {
@@ -93,6 +98,6 @@ export class PrinterListComponent {
   }
 
   addPrinter() {
-    this.router.navigate(['/dashboard/printers-register']);
+    this.router.navigate(['/website/printers/create']);
   }
 }

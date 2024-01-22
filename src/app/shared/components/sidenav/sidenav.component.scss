@@ -4,10 +4,8 @@
     transition: all .5s ease;
     position: sticky;
     top: 0;
-    // z-index: 1;
-    // width: 5rem;
     width: 200px;
-    height: 100vh;
+    min-height: 100vh;
     box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
     .logo-container {
         display: flex;

@@ -14,18 +14,27 @@ import { RoleService } from 'src/app/shared/services/role.service';
   providedIn: 'root',
 })
 export class RoleGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router, private roleService: RoleService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private roleService: RoleService
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> {
     const allowedRoles = this.roleService.getAllowedRoles(state.url); // Get the allowed roles from the RoleService
-    console.log("allowedRoles", allowedRoles)
+    console.log('allowedRoles', allowedRoles);
+    // log url and allowed roles to the console
+    console.log('url', state.url);
+    console.log('allowedRoles', allowedRoles);
     if (this.authService.checkAuthStatus()) {
       const userRoles = this.authService.getCurrentUserRoles();
-      const hasRequiredRole = allowedRoles.some(role => userRoles.includes(role));
-    
+      const hasRequiredRole = allowedRoles.some((role) =>
+        userRoles.includes(role)
+      );
+
       if (hasRequiredRole) {
         return true;
       } else {

@@ -9,17 +9,17 @@ import { environment } from 'src/environments/environments';
 import swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-printer-list',
-  templateUrl: './printer-list.component.html',
-  styleUrls: ['./printer-list.component.scss'],
+  selector: 'app-deal-list',
+  templateUrl: './deal-list.component.html',
+  styleUrls: ['./deal-list.component.scss'],
 })
-export class PrinterListComponent {
+export class DealListComponent {
   displayedColumns: string[] = [
     'brand',
     'model',
-    'rentable',
-    'color',
-    'category',
+    'dealDiscountPercentage',
+    // 'color',
+    'dealPrice',
     'price',
     'action',
   ];
@@ -41,15 +41,26 @@ export class PrinterListComponent {
       .subscribe((data) => {
         console.log(data);
 
+        // Filter out printers with null dealDiscountPercentage
+        const filteredData = data.filter(
+          (printer) =>
+            printer.deal && printer.deal.dealDiscountPercentage !== null
+        );
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
-        this.dataSource = new MatTableDataSource(data);
+        this.dataSource = new MatTableDataSource(filteredData);
         this.dataSource.paginator = this.paginator;
       });
 
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
-      this.displayedColumns = ['brand', 'model', 'category', 'price'];
+      this.displayedColumns = [
+        'brand',
+        'model',
+        'dealPrice',
+        'price',
+        'dealDiscountPercentage',
+      ];
     }
   }
 
@@ -102,6 +113,6 @@ export class PrinterListComponent {
   }
 
   addPrinter() {
-    this.router.navigate(['/website/printers/create']);
+    this.router.navigate(['/website/deals/create']);
   }
 }

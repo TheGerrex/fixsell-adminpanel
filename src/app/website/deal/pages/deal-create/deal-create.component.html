@@ -1,0 +1,70 @@
+<form>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="printer">Equipo</label>
+          <select class="form-control" id="printer">
+            <option
+              *ngFor="let printerName of printerNames"
+              [value]="printerName"
+            >
+              {{ printerName }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="dealEndDate">Fecha de Finalizacion</label>
+          <input type="date" class="form-control" id="dealEndDate" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="dealStartDate">Fecha de Inico</label>
+          <input type="date" class="form-control" id="dealStartDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="dealPrice">Precio de Promocion</label>
+          <input
+            type="number"
+            class="form-control"
+            id="dealPrice"
+            placeholder="Enter deal price"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="dealDiscountPercentage">Porcentage de Descuento</label>
+          <input
+            type="number"
+            class="form-control"
+            id="dealDiscountPercentage"
+            placeholder="Enter deal discount percentage"
+          />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="dealDescription">Descripcion</label>
+          <textarea
+            class="form-control"
+            id="dealDescription"
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary button button-primary">
+      Agregar Promocion
+    </button>
+  </div>
+</form>

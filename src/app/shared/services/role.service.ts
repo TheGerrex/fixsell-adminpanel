@@ -9,6 +9,10 @@ export class RoleService {
     '/website/printers/create': ['admin', 'user', 'vendor'],
     '/website/printers/*': ['admin', 'user', 'vendor'],
     '/website/printers/*/edit': ['admin', 'user', 'vendor'],
+    '/website/deals': ['admin', 'user', 'vendor'],
+    '/website/deals/create': ['admin', 'user', 'vendor'],
+    '/website/deals/*': ['admin', 'user', 'vendor'],
+    '/website/deals/*/edit': ['admin', 'user', 'vendor'],
     '/dashboard/intro-screen': ['admin', 'user', 'vendor'],
     '/dashboard/printerscrud': ['admin', 'user', 'vendor'],
     '/dashboard/users': ['admin'],
@@ -19,8 +23,13 @@ export class RoleService {
   };
 
   getAllowedRoles(path: string): string[] {
-    const route = Object.keys(this.roles).find(key =>
-        new RegExp(`^${key.replace('*', '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}')}$`).test(path)
+    const route = Object.keys(this.roles).find((key) =>
+      new RegExp(
+        `^${key.replace(
+          '*',
+          '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
+        )}$`
+      ).test(path)
     );
     return route ? this.roles[route] : [];
   }

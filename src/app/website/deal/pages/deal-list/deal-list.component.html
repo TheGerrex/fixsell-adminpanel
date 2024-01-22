@@ -1,5 +1,5 @@
 <div class="table-header">
-  <h2>Multifuncionales</h2>
+  <h2>Promociones</h2>
   <button
     class="button button-primary button-raised button-icon"
     (click)="addPrinter()"
@@ -35,24 +35,30 @@
     </ng-container>
 
     <!-- Model Column -->
-    <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef>Categoria</th>
-      <td mat-cell *matCellDef="let printer" data-column="category">
-        {{ printer.category }}
+    <ng-container matColumnDef="dealPrice">
+      <th mat-header-cell *matHeaderCellDef>Precio Promocion</th>
+      <td mat-cell *matCellDef="let printer" data-column="dealPrice">
+        {{ printer.deal.dealPrice | currency }}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="rentable">
+    <!-- <ng-container matColumnDef="rentable">
       <th mat-header-cell *matHeaderCellDef>Tipo</th>
       <td mat-cell *matCellDef="let printer" data-column="rentable">
         {{ printer.rentable ? "Renta" : "Venta" }}
       </td>
-    </ng-container>
+    </ng-container> -->
 
-    <ng-container matColumnDef="color">
-      <th mat-header-cell *matHeaderCellDef>Modo de Impresión</th>
-      <td mat-cell *matCellDef="let printer" data-column="color">
-        {{ printer.color ? "Color" : "B&N" }}
+    <ng-container matColumnDef="dealDiscountPercentage">
+      <th mat-header-cell *matHeaderCellDef>% de Descuento</th>
+      <td
+        mat-cell
+        *matCellDef="let printer"
+        data-column="dealDiscountPercentage"
+      >
+        <span *ngIf="printer.deal.dealDiscountPercentage">
+          {{ printer.deal.dealDiscountPercentage }}
+        </span>
       </td>
     </ng-container>
 

@@ -4,6 +4,7 @@ import { DealService } from '../../services/deal.service';
 import { FormControl } from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 /* 
 TODO 1: add user input validation
@@ -32,13 +33,28 @@ export class DealCreateComponent implements OnInit {
   constructor(
     private DealService: DealService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    const printerId = this.route.snapshot.paramMap.get('id');
+
     this.DealService.getAllPrinterNames().subscribe(
       (printerNames: string[]) => {
         this.printerNames = printerNames;
+
+        if (printerId) {
+          // If a printer id is present in the URL, find the printer name with that id
+          const printerName = this.printerNames.find(
+            (name) => name === printerId
+          );
+
+          if (printerName) {
+            // If a printer with the specified id is found, select it
+            this.selectedPrinter.setValue(printerName);
+          }
+        }
       }
     );
 

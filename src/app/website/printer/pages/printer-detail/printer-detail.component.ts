@@ -9,7 +9,7 @@ import { PrinterService } from '../../services/printer.service';
 @Component({
   selector: 'app-printer-detail',
   templateUrl: './printer-detail.component.html',
-  styleUrls: ['./printer-detail.component.scss']
+  styleUrls: ['./printer-detail.component.scss'],
 })
 export class PrinterDetailComponent implements OnInit {
   printer: Printer | null = null;
@@ -20,13 +20,12 @@ export class PrinterDetailComponent implements OnInit {
     private http: HttpClient,
     private sharedService: SharedService,
     private printerService: PrinterService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.getPrinter();
   }
-
 
   prevImage(): void {
     if (this.currentImageIndex > 0) {
@@ -35,7 +34,10 @@ export class PrinterDetailComponent implements OnInit {
   }
 
   nextImage(): void {
-    if (this.printer && this.currentImageIndex < this.printer.img_url.length - 1) {
+    if (
+      this.printer &&
+      this.currentImageIndex < this.printer.img_url.length - 1
+    ) {
       this.currentImageIndex++;
     }
   }
@@ -43,7 +45,7 @@ export class PrinterDetailComponent implements OnInit {
   getPrinter(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.printerService.getPrinter(id).subscribe(printer => {
+      this.printerService.getPrinter(id).subscribe((printer) => {
         this.printer = printer;
         this.sharedService.changePrinterModel(printer.model);
       });
@@ -71,6 +73,10 @@ export class PrinterDetailComponent implements OnInit {
   }
 
   navigateToEdit(id: string) {
-    this.router.navigate(['/website','printers', id, 'edit']);
+    this.router.navigate(['/website', 'printers', id, 'edit']);
+  }
+
+  navigateToCreateDeal(id: string) {
+    this.router.navigate(['/website/deals/create', id]);
   }
 }

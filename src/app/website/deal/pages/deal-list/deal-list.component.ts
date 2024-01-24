@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environments';
 import swal from 'sweetalert2';
 import { DealService } from '../../services/deal.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-deal-list',
@@ -36,7 +37,8 @@ export class DealListComponent {
     private router: Router,
     private authService: AuthService,
     private DealService: DealService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -99,11 +101,11 @@ export class DealListComponent {
           this.DealService.deleteDealById(printer.deal.id).subscribe(
             (response) => {
               console.log(response); // This should log "Deal with ID 10 has been removed"
-              this.dialogService.openConfirmDialog(
-                'Deleted!',
-                'OK',
-                'confirm-dialog'
-              ); // Show success dialog with 'confirm-dialog' class
+              // Show a toast message after the user confirms the deletion
+              this.toastService.showSuccess(
+                'Printer deleted successfully',
+                'OK'
+              );
 
               // Remove the deleted deal from the dataSource
               const data = this.dataSource.data;

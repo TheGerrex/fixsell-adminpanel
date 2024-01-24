@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Deal, Printer } from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
 import swal from 'sweetalert2';
-import { PrinterService } from '../../services/deal.service';
+import { DealService } from '../../services/deal.service';
 
 @Component({
   selector: 'app-deal-list',
@@ -34,7 +34,7 @@ export class DealListComponent {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private printerService: PrinterService
+    private DealService: DealService
   ) {}
 
   ngOnInit() {
@@ -96,9 +96,8 @@ export class DealListComponent {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.printerService
-            .deleteDealById(printer.deal.id)
-            .subscribe((response) => {
+          this.DealService.deleteDealById(printer.deal.id).subscribe(
+            (response) => {
               console.log(response); // This should log "Deal with ID 10 has been removed"
               swal.fire('Deleted!', 'Your deal has been deleted.', 'success');
 
@@ -107,7 +106,8 @@ export class DealListComponent {
               this.dataSource.data = data.filter(
                 (p) => p.deal.id !== printer.deal.id
               );
-            });
+            }
+          );
         }
       });
   }

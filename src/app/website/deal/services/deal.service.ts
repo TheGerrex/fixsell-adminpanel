@@ -9,7 +9,7 @@ import { of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class PrinterService {
+export class DealService {
   constructor(private http: HttpClient) {}
 
   //get printer name by id

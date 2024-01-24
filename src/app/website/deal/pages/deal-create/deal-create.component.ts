@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Printer } from '../../../interfaces/printer.interface';
-import { PrinterService } from '../../services/deal.service';
+import { DealService } from '../../services/deal.service';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -18,24 +18,24 @@ export class DealCreateComponent implements OnInit {
   dealEndDate = new FormControl('');
   dealDescription = new FormControl('');
 
-  constructor(private printerService: PrinterService) {}
+  constructor(private DealService: DealService) {}
 
   ngOnInit() {
-    this.printerService
-      .getAllPrinterNames()
-      .subscribe((printerNames: string[]) => {
+    this.DealService.getAllPrinterNames().subscribe(
+      (printerNames: string[]) => {
         this.printerNames = printerNames;
-      });
+      }
+    );
 
     // subscribe to the value changes of the printer dropdown
     this.selectedPrinter.valueChanges.subscribe((name: string | null) => {
       if (name !== null) {
-        this.printerService
-          .findPrinterPriceByName(name)
-          .subscribe((price: number) => {
+        this.DealService.findPrinterPriceByName(name).subscribe(
+          (price: number) => {
             this.printerPrice = price; // store the price in a variable
             console.log('printer price: ', this.printerPrice);
-          });
+          }
+        );
       }
     });
   }
@@ -72,13 +72,13 @@ export class DealCreateComponent implements OnInit {
 
       console.log('Deal object: ', deal);
 
-      this.printerService
-        .createDealForPrinterByName(this.selectedPrinter.value, deal)
-        .subscribe({
-          next: (response) =>
-            console.log('Deal created successfully', response),
-          error: (error) => console.error('Error creating deal', error),
-        });
+      this.DealService.createDealForPrinterByName(
+        this.selectedPrinter.value,
+        deal
+      ).subscribe({
+        next: (response) => console.log('Deal created successfully', response),
+        error: (error) => console.error('Error creating deal', error),
+      });
     } else {
       console.error('Printer name, price or discount percentage is missing');
     }

@@ -73,10 +73,15 @@ export class DealListComponent {
     });
   }
   editPrinter(printer: Printer) {
-    // Implement edit functionality here
-    this.router.navigate([`/website/printers/${printer.id}/edit`], {
-      state: { printer },
-    });
+    // Check if the printer has a deal
+    if (printer.deal) {
+      this.router.navigate([`/website/deals/${printer.deal.id}/edit`], {
+        state: { deal: printer.deal },
+      });
+    } else {
+      // Handle the case where the printer does not have a deal
+      console.error('This printer does not have a deal to edit.');
+    }
   }
 
   addPrinter() {

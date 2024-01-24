@@ -24,16 +24,10 @@ export class RoleService {
 
   getAllowedRoles(path: string): string[] {
     const route = Object.keys(this.roles).find((key) =>
-      new RegExp(
-        `^${key.replace(
-          '*',
-          '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
-        )}$`
-      ).test(path)
+      new RegExp(`^${key.replace('*', '[0-9a-zA-Z-]+')}$`).test(path)
     );
     return route ? this.roles[route] : [];
   }
-
   // getAllowedRoles(path: string): string[] {
   //   return this.roles[path];
   // }

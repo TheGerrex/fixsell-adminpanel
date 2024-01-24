@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { Deal } from 'src/app/website/interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 @Component({
   selector: 'app-deal-edit',
   templateUrl: './deal-edit.component.html',
@@ -20,23 +20,57 @@ export class DealEditComponent implements OnInit {
     private route: ActivatedRoute,
     private sharedService: SharedService,
     private dealService: DealService,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.editDealForm = this.fb.group({
+      dealStartDate: ['', Validators.required],
+      dealEndDate: ['', Validators.required],
+      dealPrice: ['', Validators.required],
+      dealDiscountPercentage: ['', Validators.required],
+      dealDescription: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.getDeal();
   }
 
+  formatDate(date: any): string {
+    let dateObject = new Date(date);
+    let year = dateObject.getUTCFullYear();
+    let month = ('0' + (dateObject.getUTCMonth() + 1)).slice(-2); // Months are 0-based, so +1 and pad with 0
+    let day = ('0' + dateObject.getUTCDate()).slice(-2); // Pad with 0
+    return `${year}-${month}-${day}`; // "yyyy-MM-dd"
+  }
+
   initializeForm() {
+    console.log(
+      'dealEndDate:',
+      this.deal ? this.formatDate(this.deal.dealEndDate) : ''
+    );
+    console.log(
+      'dealStartDate:',
+      this.deal ? this.formatDate(this.deal.dealStartDate) : ''
+    );
+    console.log('dealPrice:', this.deal ? this.deal.dealPrice : '');
+    console.log(
+      'dealDiscountPercentage:',
+      this.deal ? this.deal.dealDiscountPercentage : ''
+    );
+    console.log('dealDescription:', this.deal ? this.deal.dealDescription : '');
+
     this.editDealForm = this.fb.group({
-      dealEndDate: [
-        this.deal ? this.deal.dealEndDate : '',
-        Validators.required,
-      ],
       dealStartDate: [
-        this.deal ? this.deal.dealStartDate : '',
+        this.deal ? this.formatDate(this.deal.dealStartDate) : '',
         Validators.required,
       ],
+
+      dealEndDate: [
+        this.deal ? this.formatDate(this.deal.dealEndDate) : '',
+        Validators.required,
+      ],
+
       dealPrice: [this.deal ? this.deal.dealPrice : '', Validators.required],
       dealDiscountPercentage: [
         this.deal ? this.deal.dealDiscountPercentage : '',
@@ -53,8 +87,9 @@ export class DealEditComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.dealService.getDeal(id).subscribe((dealResponse) => {
+        console.log('dealResponse:', dealResponse);
         this.deal = dealResponse;
-        this.initializeForm();
+        this.initializeForm(); // Move this inside the subscribe block
         console.log(this.editDealForm);
         this.sharedService.changeDealName(dealResponse.dealName);
       });
@@ -70,12 +105,20 @@ export class DealEditComponent implements OnInit {
       this.editDealForm.markAllAsTouched();
       return;
     }
-    const formData = this.editDealForm.value;
+    let formData = this.editDealForm.value;
     const dealId = this.route.snapshot.paramMap.get('id');
     if (dealId === null) {
       console.error('Deal id is null');
       return;
     }
+
+    // Convert dealPrice and dealDiscountPercentage to numbers
+    formData = {
+      ...formData,
+      dealPrice: parseFloat(formData.dealPrice),
+      dealDiscountPercentage: parseFloat(formData.dealDiscountPercentage),
+    };
+
     this.dealService.submitDealEditForm(formData, dealId).subscribe(
       (response) => {
         console.log('Response:', response);

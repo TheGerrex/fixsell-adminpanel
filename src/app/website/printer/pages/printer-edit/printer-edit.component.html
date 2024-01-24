@@ -1,1 +1,131 @@
-<p>printer-edit works!</p>
+<div *ngIf="printer">
+    <form [formGroup]="editPrinterForm" class="printer-container" *ngIf="editPrinterForm">
+        <div class="printer-header">
+            <h2>Editar Multifuncional</h2>
+            <button type="submit" class="button button-primary button-raised" (click)="submitForm()"><span class="button-label">Realizar Cambios</span></button>
+        </div>
+        <div class="printer-info">
+            <div class="carousel">
+                <div class="image-container">
+                    <img [src]="editPrinterForm.value.img_url[currentImageIndex]" alt="">
+                </div>
+                <div class="button-container">
+                    <button class="button button-secondary button-raised" (click)="prevImage()">< Atras</button>
+                    <button class="button button-secondary button-raised" (click)="nextImage()">Siguiente ></button>
+                </div>
+            </div>
+            <div class="printer-data-container">
+                <div class="printer-data">
+                    <div class="printer-data-item">
+                        <h5>Marca</h5>
+                        <select formControlName="brand" class="form-select">
+                          <option *ngFor="let brand of brands" [value]="brand" [selected]="brand === printer.brand">{{ brand }}</option>
+                        </select>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Modelo</h5>
+                        <input formControlName="model" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Categoria</h5>
+                        <select formControlName="category" class="form-select">
+                          <option *ngFor="let category of categories" [value]="category" [selected]="category === printer.category">{{ category }}</option>
+                        </select>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Precio</h5>
+                        <input formControlName="price" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item half-row">
+                        <h5>Descripcion</h5>
+                        <textarea formControlName="description" class="form-control" type="text"></textarea>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Funciones</h5>
+                        <input formControlName="printerFunctions" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Color</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="colorYes" name="color" 
+                            [checked]="editPrinterForm.get('color')?.value || false" 
+                            (change)="onColorChange($event)">
+                            <label class="form-check-label" for="color">{{ editPrinterForm.get('color')?.value ? 'Si' : 'No' }}</label>
+                          </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Renta</h5>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="rentableYes" name="rentable" 
+                          [checked]="editPrinterForm.get('rentable')?.value || false" 
+                          (change)="onRentableChange($event)">
+                          <label class="form-check-label" for="rentableYes">{{ editPrinterForm.get('rentable')?.value ? 'Si' : 'No' }}</label>
+                        </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Venta</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="sellableYes" name="sellable" 
+                            [checked]="editPrinterForm.get('sellable')?.value || false" 
+                            (change)="onSellableChange($event)">
+                            <label class="form-check-label" for="sellableYes">{{ editPrinterForm.get('sellable')?.value ? 'Si' : 'No' }}</label>
+                        </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Unidad Duplex</h5>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="duplexUnitYes" name="duplexUnit" 
+                          [checked]="editPrinterForm.get('duplexUnit')?.value || false" 
+                          (change)="onDuplexUnitChange($event)">
+                          <label class="form-check-label" for="duplexUnitYes">{{ editPrinterForm.get('duplexUnit')?.value ? 'Si' : 'No' }}</label>
+                        </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Dimensiones</h5>
+                        <input formControlName="dimensions" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Velocidad de Impresión</h5>
+                        <input formControlName="printVelocity" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Tamaño de Impresión</h5>
+                        <input formControlName="printSize" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Máximo de Impresión</h5>
+                        <input formControlName="maxPrintSize" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Máximo de Impresión (Simple)</h5>
+                        <input formControlName="maxPrintSizeSimple" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Grosor de Papel</h5>
+                        <input formControlName="maxPaperWeight" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Tamaños de Papel</h5>
+                        <input formControlName="paperSizes" class="form-control" type="text">
+                    </div>
+                    <div class="printer-data-item half-row">
+                        <h5>Sistema Operativo</h5>
+                        <textarea formControlName="applicableOS" class="form-control" type="text"></textarea>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Etiquetas</h5>
+                        <div class="tag-inputs-container"  formArrayName="tags">
+                          <div *ngFor="let tag of tagsControls; let i = index">
+                            <div class="tag-inputs">
+                                <input [formControlName]="i" class="form-control">
+                                <button class="button button-danger button-icon" (click)="removeTag(i)"><mat-icon>delete</mat-icon></button>
+                            </div>
+                          </div>
+                          <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

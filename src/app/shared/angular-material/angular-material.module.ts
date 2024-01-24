@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 
 
@@ -28,6 +29,7 @@ import { CommonModule } from '@angular/common';
     MatCheckboxModule,
     MatChipsModule,
     MatCardModule,
+    MatSnackBarModule,
   ]
 })
 export class AngularMaterialModule { }

@@ -34,7 +34,6 @@ export class RoleGuard implements CanActivate {
       const hasRequiredRole = allowedRoles.some((role) =>
         userRoles.includes(role)
       );
-
       if (hasRequiredRole) {
         return true;
       } else {

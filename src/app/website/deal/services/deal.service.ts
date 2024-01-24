@@ -68,5 +68,10 @@ export class PrinterService {
     );
   }
 
-  // get deal for printer by name
+  // delete deal by id
+  deleteDealById(id: number): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}/deals/${id}`, {
+      responseType: 'text',
+    });
+  }
 }

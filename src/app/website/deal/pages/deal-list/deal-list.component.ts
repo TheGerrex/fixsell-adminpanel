@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { Component, Injectable, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Printer } from 'src/app/website/interfaces/printer.interface';
+import { Deal, Printer } from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
 import swal from 'sweetalert2';
+import { PrinterService } from '../../services/deal.service';
 
 @Component({
   selector: 'app-deal-list',
@@ -32,7 +33,8 @@ export class DealListComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private printerService: PrinterService
   ) {}
 
   ngOnInit() {
@@ -77,11 +79,15 @@ export class DealListComponent {
     });
   }
 
-  deletePrinter(printer: Printer) {
+  addPrinter() {
+    this.router.navigate(['/website/deals/create']);
+  }
+
+  deleteDeal(printer: Printer) {
     swal
       .fire({
         title: 'Are you sure?',
-        text: 'Once deleted, you will not be able to recover this printer!',
+        text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -90,29 +96,19 @@ export class DealListComponent {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          const url = `${environment.baseUrl}/printers/${printer.id}`;
-          this.http.delete(url).subscribe(
-            () => {
-              console.log(`Printer ${printer.id} deleted successfully`);
-              // Remove the deleted printer from the data source
-              const index = this.dataSource.data.indexOf(printer);
-              if (index >= 0) {
-                this.dataSource.data.splice(index, 1);
-                this.dataSource._updateChangeSubscription();
-              }
-            },
-            (error) => {
-              console.error(
-                `Error deleting printer ${printer.id}: ${error.message}`
+          this.printerService
+            .deleteDealById(printer.deal.id)
+            .subscribe((response) => {
+              console.log(response); // This should log "Deal with ID 10 has been removed"
+              swal.fire('Deleted!', 'Your deal has been deleted.', 'success');
+
+              // Remove the deleted deal from the dataSource
+              const data = this.dataSource.data;
+              this.dataSource.data = data.filter(
+                (p) => p.deal.id !== printer.deal.id
               );
-            }
-          );
-          swal.fire('Deleted!', 'The printer has been deleted.', 'success');
+            });
         }
       });
-  }
-
-  addPrinter() {
-    this.router.navigate(['/website/deals/create']);
   }
 }

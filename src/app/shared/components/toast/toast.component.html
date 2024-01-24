@@ -1,0 +1,7 @@
+<div class="toast-message">
+    <mat-icon>{{data.icon}}</mat-icon>
+    <p style="margin-bottom: 0; margin-left: 1em; flex-grow: 1;"><b class="toast-title">{{data.title}}</b><br>{{data.message}}</p>
+    <button class="button button-icon" ngClass={{data.buttonColor}} (click)="snackBarRef.dismiss()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>

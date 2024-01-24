@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastComponent } from './components/toast/toast.component';
 
 
 
@@ -12,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [
     SidenavComponent,
     BreadcrumbComponent,
+    ToastComponent,
   ],
   imports: [
     CommonModule,

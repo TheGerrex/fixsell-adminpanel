@@ -4,6 +4,9 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { PrinterService } from '../../services/printer.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastService } from 'src/app/shared/services/toast.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { RoleService } from 'src/app/shared/services/role.service';
 
 @Component({
   selector: 'app-printer-edit',
@@ -24,6 +27,9 @@ export class PrinterEditComponent implements OnInit {
     private sharedService: SharedService,
     private printerService: PrinterService,
     private fb: FormBuilder,
+    private toastService: ToastService,
+    private authService: AuthService,
+    private roleService: RoleService,
   ) {}
 
   ngOnInit(): void {
@@ -158,13 +164,24 @@ export class PrinterEditComponent implements OnInit {
     }
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       response => {
-        // Handle the response
-        console.log('Response:', response);
-        this.router.navigate(['printer-detail', printerId]);
+        this.toastService.showSuccess('Multifuncional editada', "Aceptar");
+
+        // Check the user's roles and the allowed roles
+        const allowedRoles = this.roleService.getAllowedRoles('/website/printers/*');
+        const userRoles = this.authService.getCurrentUserRoles();
+        const hasRequiredRole = allowedRoles.some((role: any) => userRoles.includes(role));
+        console.log("allowedRoles", allowedRoles);
+        console.log("userRoles", userRoles);
+    
+        // Redirect based on the user's roles
+        if (hasRequiredRole) {
+          this.router.navigate(['printer-detail', printerId]);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error => {
-        // Handle the error
-        console.error('Error:', error);
+        this.toastService.showError(error.error.message, "Aceptar");
       }
     );
   }

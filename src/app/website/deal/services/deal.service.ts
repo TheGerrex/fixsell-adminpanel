@@ -74,4 +74,14 @@ export class DealService {
       responseType: 'text',
     });
   }
+
+  // get deal by id
+  getDeal(id: string): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/deals/${id}`);
+  }
+
+  // submit deal edit form
+  submitDealEditForm(formData: any, dealId: string): Observable<any> {
+    return this.http.put(`${environment.baseUrl}/deals/${dealId}`, formData);
+  }
 }

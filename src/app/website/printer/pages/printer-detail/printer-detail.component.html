@@ -1,7 +1,7 @@
 <div class="printer-container" *ngIf="printer">
     <div class="printer-header">
         <h2>{{ printer.brand }} {{ printer.model }}</h2>
-        <button class="button button-primary button-raised button-icon" (click)="navigateToEdit(printer.id)"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
+        <button class="button button-primary button-raised button-icon-text" (click)="navigateToEdit(printer.id)"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
     </div>
     <div class="printer-info">
         <div class="carousel">
@@ -44,8 +44,11 @@
             </div>
             <div class="printer-data-item">
                 <h5>Etiquetas</h5>
-                <p>{{ printer.tags ? "Vacio" : printer.tags }}</p>
-            </div>
+                <p *ngIf="!printer.tags || printer.tags.length === 0">Vacio</p>
+                <div *ngIf="printer.tags && printer.tags.length > 0">
+                  <span class="tag" *ngFor="let tag of printer.tags">{{ tag }}</span>
+                </div>
+              </div>
             <div class="printer-data-item">
                 <h5>Consumo de Energia</h5>
                 <p>{{ printer.powerConsumption }}</p>
@@ -84,7 +87,7 @@
     <div class="printer-deal-container">
         <div class="printer-deal-header">
             <h2>Promociones</h2>
-            <button class="button button-primary button-raised button-icon"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
+            <button class="button button-primary button-raised button-icon-text"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
         </div>
         <div class="printer-deals" *ngIf="printer.deal">
             <div class="deal">

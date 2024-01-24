@@ -4,6 +4,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -15,12 +16,14 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
   imports: [
     CommonModule,
     RouterModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    ReactiveFormsModule,
   ],
   exports: [
     SidenavComponent,
     BreadcrumbComponent,
     AngularMaterialModule,
+    ReactiveFormsModule,
   ]
 })
 export class SharedModule { }

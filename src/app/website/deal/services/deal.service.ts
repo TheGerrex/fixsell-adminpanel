@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -37,16 +38,35 @@ export class PrinterService {
     );
   }
 
+  //find price of printer by name
+  findPrinterPriceByName(name: string): Observable<number> {
+    return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
+      tap(() => console.log(`Fetching price for printer: ${name}`)), // log the name of the printer
+      map((printers: Printer[]) => {
+        const printer = printers.find((printer) => printer.model === name);
+        const price = printer ? printer.price : 0;
+        console.log(`Found price: ${price}`); // log the found price
+        return price;
+      }),
+      catchError((error) => {
+        console.error(`Error fetching price for printer: ${name}`, error); // log the error
+        return of(0); // return a default price of 0 in case of error
+      })
+    );
+  }
   //create deal for printer by name
   createDealForPrinterByName(name: string, deal: any): Observable<any> {
     return this.findPrinterIdByName(name).pipe(
-      tap((id) => {
+      switchMap((id) => {
         if (id) {
-          this.http
-            .post(`${environment.baseUrl}/printers/${id}/deal`, deal)
-            .subscribe();
+          deal.printer = id; // set the printer id in the deal object
+          return this.http.post(`${environment.baseUrl}/deals`, deal);
+        } else {
+          throw new Error('Printer not found');
         }
       })
     );
   }
+
+  // get deal for printer by name
 }

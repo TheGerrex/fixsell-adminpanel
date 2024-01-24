@@ -4,7 +4,7 @@
       <div class="col-12 col-md-6">
         <div class="form-group">
           <label for="printer">Equipo</label>
-          <select class="form-control" id="printer">
+          <select class="form-control" [formControl]="selectedPrinter">
             <option
               *ngFor="let printerName of printerNames"
               [value]="printerName"
@@ -12,12 +12,18 @@
               {{ printerName }}
             </option>
           </select>
+          <p>Price: {{ printerPrice }}</p>
         </div>
       </div>
       <div class="col-12 col-md-6">
         <div class="form-group">
           <label for="dealEndDate">Fecha de Finalizacion</label>
-          <input type="date" class="form-control" id="dealEndDate" />
+          <input
+            type="date"
+            class="form-control"
+            id="dealEndDate"
+            [formControl]="dealEndDate"
+          />
         </div>
       </div>
     </div>
@@ -25,18 +31,33 @@
       <div class="col-12 col-md-6">
         <div class="form-group">
           <label for="dealStartDate">Fecha de Inico</label>
-          <input type="date" class="form-control" id="dealStartDate" />
+          <input
+            type="date"
+            class="form-control"
+            id="dealStartDate"
+            [formControl]="dealStartDate"
+          />
         </div>
       </div>
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealPrice">Precio de Promocion</label>
-          <input
-            type="number"
-            class="form-control"
-            id="dealPrice"
-            placeholder="Enter deal price"
-          />
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <div class="form-group">
+            <label for="dealPrice">Precio de Promocion</label>
+            <input
+              type="number"
+              class="form-control"
+              id="dealPrice"
+              placeholder="Enter deal price"
+              [formControl]="dealPrice"
+            />
+            <button
+              type="button"
+              class="btn btn-primary button button-primary"
+              (click)="calculatePercentage()"
+            >
+              Calcular Porcentage
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -49,7 +70,15 @@
             class="form-control"
             id="dealDiscountPercentage"
             placeholder="Enter deal discount percentage"
+            [formControl]="dealDiscountPercentage"
           />
+          <button
+            type="button"
+            class="btn btn-primary button button-primary"
+            (click)="calculatePrice()"
+          >
+            Calcular Precio
+          </button>
         </div>
       </div>
       <div class="col-12 col-md-6">
@@ -59,11 +88,16 @@
             class="form-control"
             id="dealDescription"
             rows="3"
+            [formControl]="dealDescription"
           ></textarea>
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary button button-primary">
+    <button
+      type="submit"
+      class="btn btn-primary button button-primary"
+      (click)="addPromotion()"
+    >
       Agregar Promocion
     </button>
   </div>

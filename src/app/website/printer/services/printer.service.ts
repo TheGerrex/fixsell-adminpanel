@@ -6,14 +6,22 @@ import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PrinterService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getPrinterName(id: string): Observable<string> {
-    return this.http.get<Printer>(`${environment.baseUrl}/printers/${id}`).pipe(
-      map((printer: any) => printer.model)
-    );
+    return this.http
+      .get<Printer>(`${environment.baseUrl}/printers/${id}`)
+      .pipe(map((printer: any) => printer.model));
+  }
+
+  getAllPrinterNames(): Observable<string[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(
+        map((printers: Printer[]) => printers.map((printer) => printer.model))
+      );
   }
 }

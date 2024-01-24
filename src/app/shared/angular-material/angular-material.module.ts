@@ -9,15 +9,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     MatFormFieldModule,
     MatInputModule,
@@ -30,6 +28,7 @@ import { CommonModule } from '@angular/common';
     MatChipsModule,
     MatCardModule,
     MatSnackBarModule,
-  ]
+    MatDialogModule,
+  ],
 })
-export class AngularMaterialModule { }
+export class AngularMaterialModule {}

@@ -8,6 +8,7 @@ import { Deal, Printer } from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
 import swal from 'sweetalert2';
 import { DealService } from '../../services/deal.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Component({
   selector: 'app-deal-list',
@@ -34,7 +35,8 @@ export class DealListComponent {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private DealService: DealService
+    private DealService: DealService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -89,28 +91,33 @@ export class DealListComponent {
   }
 
   deleteDeal(printer: Printer) {
-    swal
-      .fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
+    this.dialogService
+      .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
           this.DealService.deleteDealById(printer.deal.id).subscribe(
             (response) => {
               console.log(response); // This should log "Deal with ID 10 has been removed"
-              swal.fire('Deleted!', 'Your deal has been deleted.', 'success');
+              this.dialogService.openConfirmDialog(
+                'Deleted!',
+                'OK',
+                'confirm-dialog'
+              ); // Show success dialog with 'confirm-dialog' class
 
               // Remove the deleted deal from the dataSource
               const data = this.dataSource.data;
               this.dataSource.data = data.filter(
                 (p) => p.deal.id !== printer.deal.id
               );
+            },
+            (error) => {
+              console.error('Error:', error);
+              this.dialogService.openErrorDialog(
+                'Error deleting deal',
+                'OK',
+                'delete-dialog'
+              ); // Show error dialog with 'delete-dialog' class
             }
           );
         }

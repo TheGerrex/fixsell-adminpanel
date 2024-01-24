@@ -635,6 +635,20 @@ button:hover {
     --mdc-snackbar-container-color: #faf5ff !important;
     --mdc-snackbar-supporting-text-color: #a855f7 !important;
 }
+/*[ Dialog ]
+-----------------------------------------------------------
+*/
+
+
+.delete-dialog .mat-dialog-container {
+    background-color: #fef2f2 !important;
+    color: #ef4444 !important;
+}
+
+.confirm-dialog .mat-dialog-container {
+    background-color: #F0FDF4 !important;
+    color: #22c55e !important;
+}
 
 
 /*[ Position ]

@@ -2,6 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Printer } from '../../../interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import { FormControl } from '@angular/forms';
+import { ToastService } from './../../../../shared/services/toast.service';
+import { Router } from '@angular/router';
+
+/* 
+TODO 1: add user input validation
+TODO 2: add error handling
+TODO 3: add success message
+TODO 4: add loading indicator
+TODO 5: add confirmation dialog 
+TODO 6: add better front end design
+*/
 
 @Component({
   selector: 'app-deal-create',
@@ -18,7 +29,11 @@ export class DealCreateComponent implements OnInit {
   dealEndDate = new FormControl('');
   dealDescription = new FormControl('');
 
-  constructor(private DealService: DealService) {}
+  constructor(
+    private DealService: DealService,
+    private toastService: ToastService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.DealService.getAllPrinterNames().subscribe(
@@ -76,11 +91,22 @@ export class DealCreateComponent implements OnInit {
         this.selectedPrinter.value,
         deal
       ).subscribe({
-        next: (response) => console.log('Deal created successfully', response),
-        error: (error) => console.error('Error creating deal', error),
+        next: (response) => {
+          console.log('Deal created successfully', response);
+          this.toastService.showSuccess('Deal created successfully', 'OK'); // Show success toast
+          this.router.navigate(['/website/deals']); // Navigate to the deals page
+        },
+        error: (error) => {
+          console.error('Error creating deal', error);
+          this.toastService.showError('Error creating deal', 'OK'); // Show error toast
+        },
       });
     } else {
       console.error('Printer name, price or discount percentage is missing');
+      this.toastService.showError(
+        'Printer name, price or discount percentage is missing',
+        'OK'
+      ); // Show error toast
     }
   }
 }

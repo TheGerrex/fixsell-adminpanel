@@ -5,6 +5,8 @@ import { Deal } from 'src/app/website/interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
+
+import { ToastService } from 'src/app/shared/services/toast.service';
 @Component({
   selector: 'app-deal-edit',
   templateUrl: './deal-edit.component.html',
@@ -21,7 +23,8 @@ export class DealEditComponent implements OnInit {
     private sharedService: SharedService,
     private dealService: DealService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.editDealForm = this.fb.group({
       dealStartDate: ['', Validators.required],
@@ -45,21 +48,6 @@ export class DealEditComponent implements OnInit {
   }
 
   initializeForm() {
-    console.log(
-      'dealEndDate:',
-      this.deal ? this.formatDate(this.deal.dealEndDate) : ''
-    );
-    console.log(
-      'dealStartDate:',
-      this.deal ? this.formatDate(this.deal.dealStartDate) : ''
-    );
-    console.log('dealPrice:', this.deal ? this.deal.dealPrice : '');
-    console.log(
-      'dealDiscountPercentage:',
-      this.deal ? this.deal.dealDiscountPercentage : ''
-    );
-    console.log('dealDescription:', this.deal ? this.deal.dealDescription : '');
-
     this.editDealForm = this.fb.group({
       dealStartDate: [
         this.deal ? this.formatDate(this.deal.dealStartDate) : '',
@@ -122,10 +110,12 @@ export class DealEditComponent implements OnInit {
     this.dealService.submitDealEditForm(formData, dealId).subscribe(
       (response) => {
         console.log('Response:', response);
+        this.toastService.showSuccess('Deal updated successfully', 'OK'); // Show success toast
         this.router.navigate(['deal-detail', dealId]);
       },
       (error) => {
         console.error('Error:', error);
+        this.toastService.showError('Error updating deal', 'OK'); // Show error toast
       }
     );
   }

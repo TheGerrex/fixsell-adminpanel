@@ -6,14 +6,14 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastComponent } from './components/toast/toast.component';
-
-
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
     SidenavComponent,
     BreadcrumbComponent,
     ToastComponent,
+    DialogComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +26,6 @@ import { ToastComponent } from './components/toast/toast.component';
     BreadcrumbComponent,
     AngularMaterialModule,
     ReactiveFormsModule,
-  ]
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

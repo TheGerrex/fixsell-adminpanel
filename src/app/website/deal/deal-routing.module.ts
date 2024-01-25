@@ -29,6 +29,12 @@ const routes: Routes = [
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
       },
       {
+        path: 'create/:id',
+        component: DealCreateComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
+      },
+      {
         path: ':id',
         component: DealDetailComponent,
         canActivate: [RoleGuard],

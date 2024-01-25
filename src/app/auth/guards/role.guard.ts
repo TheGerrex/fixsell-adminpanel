@@ -37,7 +37,8 @@ export class RoleGuard implements CanActivate {
       if (hasRequiredRole) {
         return true;
       } else {
-        return this.router.createUrlTree(['/dashboard']);
+        console.log('RoleGuard: user does not have required role');
+        // return this.router.createUrlTree(['/dashboard']);
       }
     }
 

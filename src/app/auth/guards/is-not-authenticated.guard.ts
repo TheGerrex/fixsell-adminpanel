@@ -15,17 +15,14 @@ export const isNotAuthenticatedGuard: CanActivateFn = (route, state) => {
   // router.navigateByUrl('/auth/login');
   // return false;
 
-  
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if(authService.authStatus() === AuthStatus.authenticated){
-    router.navigateByUrl('/dashboard');
+  if (authService.authStatus() === AuthStatus.authenticated) {
+    console.log('isNotAuthenticatedGuard: user is authenticated');
+    // router.navigateByUrl('/dashboard');
     return false;
   }
 
   return true;
-
-
-
 };

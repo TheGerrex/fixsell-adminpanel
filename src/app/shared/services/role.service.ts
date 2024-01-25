@@ -11,6 +11,7 @@ export class RoleService {
     '/website/printers/*/edit': ['admin', 'user', 'vendor'],
     '/website/deals': ['admin', 'user', 'vendor'],
     '/website/deals/create': ['admin', 'user', 'vendor'],
+    '/website/deals/create/*': ['admin', 'user', 'vendor'],
     '/website/deals/*': ['admin', 'user', 'vendor'],
     '/website/deals/*/edit': ['admin', 'user', 'vendor'],
     '/dashboard/intro-screen': ['admin', 'user', 'vendor'],

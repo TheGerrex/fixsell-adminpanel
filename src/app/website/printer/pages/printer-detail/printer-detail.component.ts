@@ -77,6 +77,8 @@ export class PrinterDetailComponent implements OnInit {
   }
 
   navigateToCreateDeal(id: string) {
-    this.router.navigate(['/website/deals/create', id]);
+    const url = ['/website', 'deals', 'create', id];
+    console.log('navigateToCreateDeal URL:', url);
+    this.router.navigate(url);
   }
 }

@@ -53,16 +53,17 @@ export class SidenavComponent implements OnInit {
     this.screenWidth = window.innerWidth;
     this.collapsed = false; // like why???
     this.collapsed = this.screenWidth <= 768 ? true : false; //so stupid but it works
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.navData.forEach(item => item.isExpanded = false);
-    });
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.navData.forEach((item) => (item.isExpanded = false));
+      });
   }
 
   handleClick(data: any) {
     data.isExpanded = !data.isExpanded;
     if (!data.subRoutes) {
+      console.log('Navigating to:', data.routeLink); // Add this line
       this.toggleCollapse();
     }
   }

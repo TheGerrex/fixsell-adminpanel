@@ -14,33 +14,35 @@ import { RoleService } from 'src/app/shared/services/role.service';
   providedIn: 'root',
 })
 export class RoleGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router, private roleService: RoleService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private roleService: RoleService
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> {
     const allowedRoles = this.roleService.getAllowedRoles(state.url); // Get the allowed roles from the RoleService
-
+    console.log('allowedRoles', allowedRoles);
+    // log url and allowed roles to the console
+    console.log('url', state.url);
+    console.log('allowedRoles', allowedRoles);
     if (this.authService.checkAuthStatus()) {
       const userRoles = this.authService.getCurrentUserRoles();
-      console.log('users roles:', userRoles);
-      console.log('allowed roles:', allowedRoles);
-
-      // Check if any of the allowed roles match the user's roles
       const hasRequiredRole = allowedRoles.some((role) =>
         userRoles.includes(role)
       );
-
       if (hasRequiredRole) {
-        return true; // User has required role, allow access
+        return true;
       } else {
-        // Redirect to unauthorized page or show an appropriate message
-        return this.router.createUrlTree(['/dashboard']); // Redirect to '/unauthorized'
+        console.log('RoleGuard: user does not have required role');
+        // return this.router.createUrlTree(['/dashboard']);
       }
     }
 
     // Redirect to login page if user is not authenticated
-    return this.router.createUrlTree(['/login']);
+    return this.router.createUrlTree(['/auth/login']);
   }
 }

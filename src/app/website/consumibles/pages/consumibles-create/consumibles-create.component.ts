@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Printer } from '../../../interfaces/printer.interface';
-import { FormControl, Validators } from '@angular/forms';
+import {
+  FormControl,
+  Validators,
+  FormBuilder,
+  FormArray,
+} from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -29,7 +34,7 @@ export class ConsumiblesCreateComponent implements OnInit {
   shortDescription = new FormControl('', Validators.required);
   thumbnailImage = new FormControl('', Validators.required);
   longDescription = new FormControl('', Validators.required);
-  images = new FormControl('', Validators.required);
+  images = this.fb.array([this.fb.control('')]);
   category = new FormControl('', Validators.required);
   stock = new FormControl('', Validators.required);
   location = new FormControl('', Validators.required);
@@ -38,7 +43,8 @@ export class ConsumiblesCreateComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private route: ActivatedRoute,
-    private ConsumiblesService: ConsumiblesService
+    private ConsumiblesService: ConsumiblesService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {}
@@ -47,20 +53,30 @@ export class ConsumiblesCreateComponent implements OnInit {
   //Fills up images array with the file url of the uploaded image
   onFileUploaded(link: string) {
     // Get the current value of the images form control
-    let images = this.images.value;
+    let images: (string | null)[] = this.images.value;
 
-    // If the current value is not a string, initialize it to an empty string
-    if (typeof images !== 'string') {
-      images = '';
+    // If the current value is not an array, initialize it to an empty array
+    if (!Array.isArray(images)) {
+      images = [];
     }
 
-    // If the current value is not empty, append a newline character to it
-    if (images) {
-      images += ', ';
-    }
+    // Append the link to the images array
+    images.push(link);
 
-    // Append the link to the images form control
-    this.images.setValue(images + link);
+    // Update the value of the images form control
+    this.images.setValue(images);
+  }
+
+  get imagesControls() {
+    return (this.images as FormArray).controls;
+  }
+
+  addImage() {
+    this.images.push(this.fb.control(''));
+  }
+
+  removeImage(index: number) {
+    this.images.removeAt(index);
   }
 
   addConsumible() {
@@ -72,7 +88,7 @@ export class ConsumiblesCreateComponent implements OnInit {
       thumbnailImage: this.thumbnailImage.value || '',
       longDescription: this.longDescription.value || '',
       images: Array.isArray(this.images.value)
-        ? this.images.value.filter((image) => image !== null)
+        ? (this.images.value.filter((image) => image !== null) as string[])
         : [],
       category: this.category.value || '',
       stock: Number(this.stock.value),
@@ -83,10 +99,12 @@ export class ConsumiblesCreateComponent implements OnInit {
 
     this.ConsumiblesService.createConsumible(consumible).subscribe(
       (response: Consumible) => {
-        this.router.navigate(['/consumibles']);
+        console.log('Success:', response);
+        this.router.navigate(['website/consumibles']);
         this.toastService.showSuccess('consumible created successfully', 'OK');
       },
       (error) => {
+        console.log('Error:', error);
         this.toastService.showError('Error creating consumible', 'OK');
       }
     );

@@ -8,7 +8,11 @@
   <p *ngIf="!isUploading">
     Drag and drop a file here, or click to select a file
   </p>
-  <p *ngIf="isUploading">Uploading...</p>
+  <div *ngIf="isUploading" class="uploading-container">
+    <p>Uploading...</p>
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+
   <button mat-raised-button type="button" (click)="fileInput.click()">
     Select File
   </button>

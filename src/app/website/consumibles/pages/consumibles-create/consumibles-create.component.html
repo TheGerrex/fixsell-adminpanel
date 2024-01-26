@@ -58,14 +58,29 @@
             [formControl]="longDescription"
           ></textarea>
         </div>
-        <div class="form-group">
-          <label for="images">Images URLs</label>
-          <textarea
-            class="form-control"
-            id="images"
-            rows="3"
-            [formControl]="images"
-          ></textarea>
+        <div class="form-group" formArrayName="images">
+          <label>Image URLs</label>
+          <div *ngFor="let image of imagesControls; let i = index">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" [formControlName]="i" />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-danger"
+                  type="button"
+                  (click)="removeImage(i)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="addImage()"
+          >
+            Add Image URL
+          </button>
         </div>
         <div class="form-group">
           <label for="category">Category</label>

@@ -83,10 +83,12 @@ export class ConsumiblesCreateComponent implements OnInit {
 
     this.ConsumiblesService.createConsumible(consumible).subscribe(
       (response: Consumible) => {
-        this.router.navigate(['/consumibles']);
+        console.log('Success:', response);
+        this.router.navigate(['website/consumibles']);
         this.toastService.showSuccess('consumible created successfully', 'OK');
       },
       (error) => {
+        console.log('Error:', error);
         this.toastService.showError('Error creating consumible', 'OK');
       }
     );

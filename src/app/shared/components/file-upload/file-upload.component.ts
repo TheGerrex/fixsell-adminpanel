@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { environment } from 'src/environments/environments';
 
 @Component({
@@ -10,6 +10,9 @@ import { environment } from 'src/environments/environments';
 export class FileUploadComponent {
   isUploading = false;
   isDragging = false; // Add this line
+
+  // event emitter for file upload
+  @Output() fileUpload = new EventEmitter<any>();
 
   constructor(private http: HttpClient) {}
 
@@ -54,9 +57,10 @@ export class FileUploadComponent {
     formData.append('image', file, file.name);
 
     this.http.post(`${environment.baseUrl}/upload/image`, formData).subscribe(
-      (res) => {
+      (res: any) => {
         this.isUploading = false; // Set isUploading to false when upload completes
-        console.log(res);
+        console.log(res.url);
+        this.fileUpload.emit(res.url); // Emit file upload event with response body
       },
       (err) => {
         this.isUploading = false; // Set isUploading to false if an error occurs

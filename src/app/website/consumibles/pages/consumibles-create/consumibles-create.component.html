@@ -94,7 +94,9 @@
             [formControl]="location"
           />
         </div>
-        <app-file-upload></app-file-upload>
+        <app-file-upload
+          (fileUpload)="onFileUploaded($event)"
+        ></app-file-upload>
       </div>
     </div>
     <div class="row button-container">

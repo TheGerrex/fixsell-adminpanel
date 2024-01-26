@@ -43,6 +43,26 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   ngOnInit() {}
 
+  //Function for when user uploads file
+  //Fills up images array with the file url of the uploaded image
+  onFileUploaded(link: string) {
+    // Get the current value of the images form control
+    let images = this.images.value;
+
+    // If the current value is not a string, initialize it to an empty string
+    if (typeof images !== 'string') {
+      images = '';
+    }
+
+    // If the current value is not empty, append a newline character to it
+    if (images) {
+      images += ', ';
+    }
+
+    // Append the link to the images form control
+    this.images.setValue(images + link);
+  }
+
   addConsumible() {
     const consumible: Consumible = {
       name: this.name.value!,
@@ -63,8 +83,8 @@ export class ConsumiblesCreateComponent implements OnInit {
 
     this.ConsumiblesService.createConsumible(consumible).subscribe(
       (response: Consumible) => {
-        this.toastService.showSuccess('consumible created successfully', 'OK');
         this.router.navigate(['/consumibles']);
+        this.toastService.showSuccess('consumible created successfully', 'OK');
       },
       (error) => {
         this.toastService.showError('Error creating consumible', 'OK');

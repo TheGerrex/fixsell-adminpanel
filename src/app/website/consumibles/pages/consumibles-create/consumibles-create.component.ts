@@ -5,6 +5,8 @@ import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { ConsumiblesService } from '../../services/consumibles.service';
+import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
+import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
 
 /* 
 TODO 1: add user input validation
@@ -35,10 +37,38 @@ export class ConsumiblesCreateComponent implements OnInit {
   constructor(
     private toastService: ToastService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ConsumiblesService: ConsumiblesService
   ) {}
 
   ngOnInit() {}
 
-  addConsumible() {}
+  addConsumible() {
+    const consumible: Consumible = {
+      name: this.name.value!,
+      price: Number(this.price.value),
+      weight: Number(this.weight.value),
+      shortDescription: this.shortDescription.value || '',
+      thumbnailImage: this.thumbnailImage.value || '',
+      longDescription: this.longDescription.value || '',
+      images: Array.isArray(this.images.value)
+        ? this.images.value.filter((image) => image !== null)
+        : [],
+      category: this.category.value || '',
+      stock: Number(this.stock.value),
+      location: this.location.value || '',
+    };
+
+    console.log('consumible object', consumible);
+
+    this.ConsumiblesService.createConsumible(consumible).subscribe(
+      (response: Consumible) => {
+        this.toastService.showSuccess('consumible created successfully', 'OK');
+        this.router.navigate(['/consumibles']);
+      },
+      (error) => {
+        this.toastService.showError('Error creating consumible', 'OK');
+      }
+    );
+  }
 }

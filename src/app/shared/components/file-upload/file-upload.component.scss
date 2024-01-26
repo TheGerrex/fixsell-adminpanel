@@ -1,0 +1,12 @@
+.file-drop-area {
+  outline: 2px solid #000; // Change color as needed
+  padding: 20px;
+  text-align: center;
+  margin: 10px;
+  transition: outline 0.35s ease-in-out;
+
+  &:hover,
+  &.dragging {
+    outline: 2px solid #007bff; // Change color as needed
+  }
+}

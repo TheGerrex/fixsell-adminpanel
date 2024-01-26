@@ -1,5 +1,5 @@
 export interface Consumible {
-  id: string;
+  id?: string;
   name: string;
   price: number;
   weight: number;

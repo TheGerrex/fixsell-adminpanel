@@ -90,6 +90,11 @@ export class ConsumiblesListComponent {
     this.router.navigateByUrl(`website/consumibles/${consumible.id}/edit`);
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   deleteConsumible(consumible: Consumible) {
     this.dialogService
       .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class

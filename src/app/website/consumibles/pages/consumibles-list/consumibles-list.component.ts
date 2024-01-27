@@ -17,18 +17,6 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 export class ConsumiblesListComponent {
   displayedColumns: string[] = [
     //consumibles columns
-    /*
-        name: string;
-        price: number;
-        weight: number;
-        longDescription: string;
-        shortDescription: string;
-        thumbnailImage: string;
-        images: string[];
-        category: string;
-        stock: number;
-        location: string;
-    */
     'name',
     'price',
     'weight',

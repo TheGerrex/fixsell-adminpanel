@@ -7,6 +7,8 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastComponent } from './components/toast/toast.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -14,18 +16,21 @@ import { DialogComponent } from './components/dialog/dialog.component';
     BreadcrumbComponent,
     ToastComponent,
     DialogComponent,
+    FileUploadComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     AngularMaterialModule,
     ReactiveFormsModule,
+    DragDropModule,
   ],
   exports: [
     SidenavComponent,
     BreadcrumbComponent,
     AngularMaterialModule,
     ReactiveFormsModule,
+    FileUploadComponent,
   ],
 })
 export class SharedModule {}

@@ -21,6 +21,11 @@ export class RoleService {
     '/dashboard/inventario': ['admin', 'user', 'vendor'],
     '/dashboard/chat': ['admin', 'user', 'vendor'],
     '/dashboard/settings': ['admin', 'user', 'vendor'],
+    '/website/consumibles': ['admin', 'user', 'vendor'],
+    '/website/consumibles/create': ['admin', 'user', 'vendor'],
+    '/website/consumibles/create/*': ['admin', 'user', 'vendor'],
+    '/website/consumibles/*': ['admin', 'user', 'vendor'],
+    '/website/consumibles/*/edit': ['admin', 'user', 'vendor'],
   };
 
   getAllowedRoles(path: string): string[] {

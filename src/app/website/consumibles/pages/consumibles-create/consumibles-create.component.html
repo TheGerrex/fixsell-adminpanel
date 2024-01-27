@@ -1,0 +1,98 @@
+<div>
+  <form [formGroup]="createConsumibleForm" class="printer-container">
+    <div class="printer-header">
+      <h2>Crear Consumible</h2>
+      <button
+        type="submit"
+        class="button button-primary button-raised"
+        (click)="submitForm()"
+      >
+        <span class="button-label">Agregar Consumible</span>
+      </button>
+    </div>
+    <div class="printer-info">
+      <div class="printer-data-container">
+        <div class="printer-data">
+          <div class="printer-data-item">
+            <h5>Name</h5>
+            <input formControlName="name" class="form-control" type="text" />
+          </div>
+          <div class="printer-data-item">
+            <h5>Weight</h5>
+            <input
+              formControlName="weight"
+              class="form-control"
+              type="number"
+            />
+          </div>
+          <div class="printer-data-item">
+            <h5>Precio</h5>
+            <input
+              formControlName="weight"
+              class="form-control"
+              type="number"
+            />
+          </div>
+          <div class="printer-data-item">
+            <h5>Short Description</h5>
+            <textarea
+              formControlName="shortDescription"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <!-- <div class="printer-data-item">
+            <h5>Thumbnail Image</h5>
+            <input
+              formControlName="thumbnailImage"
+              class="form-control"
+              type="text"
+            />
+          </div> -->
+          <div class="printer-data-item">
+            <h5>Long Description</h5>
+            <textarea
+              formControlName="longDescription"
+              class="form-control"
+              rows="5"
+            ></textarea>
+          </div>
+
+          <div class="printer-data-item">
+            <h5>Category</h5>
+            <input
+              formControlName="category"
+              class="form-control"
+              type="text"
+            />
+          </div>
+          <div class="printer-data-item">
+            <h5>Stock</h5>
+            <input formControlName="stock" class="form-control" type="text" />
+          </div>
+          <div class="printer-data-item">
+            <h5>Location</h5>
+            <input
+              formControlName="location"
+              class="form-control"
+              type="text"
+            />
+          </div>
+
+          <div class="printer-data-item">
+            <div class="tag-inputs-container" formArrayName="images">
+              <div *ngFor="let image of images.controls; let i = index"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h5>Images</h5>
+    <app-product-image-grid
+      [imageUrls]="imageUrlsArray"
+      (remove)="onRemove($event)"
+    ></app-product-image-grid>
+
+    <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
+  </form>
+</div>

@@ -160,22 +160,13 @@ input:focus {
     cursor: pointer;
     align-items: center;
     justify-content: center;
-    // overflow: hidden;
     position: relative;
     gap: 8px;
     color: $text;
-    font-size: .95rem;
-    padding: .5rem 1.25rem;
+    font-size: 1em;
+    padding: .5rem 1rem;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     border-radius: 4px;
-    // @media(max-width: 576px) {
-    //     i {
-    //         display: none;
-    //     }
-    //     mat-icon {
-    //         display: none;
-    //     }
-    // }
     &:not(:disabled) {
         cursor: pointer;
     }
@@ -187,7 +178,7 @@ input:focus {
     }
     &:disabled {
         opacity: 0.6;
-        cursor: default;
+        cursor: none;
     }
     .button-label {
         font-weight: 500;
@@ -413,7 +404,7 @@ input:focus {
         }
     }
     &-icon-text {
-        padding: 0.5em 1em 0.5em .5em;
+        padding: .5em 20px .5em 16px;
     }
 }
 
@@ -635,10 +626,11 @@ button:hover {
     --mdc-snackbar-container-color: #faf5ff !important;
     --mdc-snackbar-supporting-text-color: #a855f7 !important;
 }
+
+
 /*[ Dialog ]
 -----------------------------------------------------------
 */
-
 
 .delete-dialog .mat-dialog-container {
     background-color: #fef2f2 !important;

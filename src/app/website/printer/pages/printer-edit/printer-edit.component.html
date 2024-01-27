@@ -2,7 +2,7 @@
     <form [formGroup]="editPrinterForm" class="printer-container" *ngIf="editPrinterForm">
         <div class="printer-header">
             <h2>Editar Multifuncional</h2>
-            <button type="submit" class="button button-primary button-raised" (click)="submitForm()"><span class="button-label">Realizar Cambios</span></button>
+            <button type="submit" class="button button-primary button-raised" [disabled]="editPrinterForm.invalid" (click)="submitForm()"><span class="button-label">Realizar Cambios</span></button>
         </div>
         <div class="printer-info">
             <div class="carousel">
@@ -18,110 +18,169 @@
                 <div class="printer-data">
                     <div class="printer-data-item">
                         <h5>Marca</h5>
-                        <select formControlName="brand" class="form-select">
+                        <select formControlName="brand" class="form-select" [class.is-invalid]="editPrinterForm.controls['brand'].invalid && editPrinterForm.controls['brand'].touched">
                           <option *ngFor="let brand of brands" [value]="brand" [selected]="brand === printer.brand">{{ brand }}</option>
                         </select>
+                        <span *ngIf="isValidField('brand')" class="form-text text-danger">
+                            {{ getFieldError('brand') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Modelo</h5>
-                        <input formControlName="model" class="form-control" type="text">
+                        <input formControlName="model" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['model'].invalid && editPrinterForm.controls['model'].touched">
+                        <span *ngIf="isValidField('model')" class="form-text text-danger">
+                            {{ getFieldError('model') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Categoria</h5>
-                        <select formControlName="category" class="form-select">
+                        <select formControlName="category" class="form-select" [class.is-invalid]="editPrinterForm.controls['category'].invalid && editPrinterForm.controls['category'].touched">
                           <option *ngFor="let category of categories" [value]="category" [selected]="category === printer.category">{{ category }}</option>
                         </select>
+                        <span *ngIf="isValidField('category')" class="form-text text-danger">
+                            {{ getFieldError('category') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Precio</h5>
-                        <input formControlName="price" class="form-control" type="text">
+                        <!-- <input formControlName="price" class="form-control" type="text"> -->
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" formControlName="price" [class.is-invalid]="editPrinterForm.controls['price'].invalid && editPrinterForm.controls['price'].touched">
+                            <span class="input-group-text">USD</span>
+                        </div>
+                        <span *ngIf="isValidField('price')" class="form-text text-danger">
+                            {{ getFieldError('price') }}
+                        </span>
                     </div>
                     <div class="printer-data-item half-row">
                         <h5>Descripcion</h5>
-                        <textarea formControlName="description" class="form-control" type="text"></textarea>
+                        <textarea formControlName="description" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['description'].invalid && editPrinterForm.controls['description'].touched"></textarea>
+                        <span *ngIf="isValidField('description')" class="form-text text-danger">
+                            {{ getFieldError('description') }}
+                        </span>
                     </div>
-                    <div class="printer-data-item">
-                        <h5>Funciones</h5>
-                        <input formControlName="printerFunctions" class="form-control" type="text">
+                    <div class="printer-data-item half-row">
+                        <h5>Sistema Operativo</h5>
+                        <textarea formControlName="applicableOS" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['applicableOS'].invalid && editPrinterForm.controls['applicableOS'].touched"></textarea>
+                        <span *ngIf="isValidField('applicableOS')" class="form-text text-danger">
+                            {{ getFieldError('applicableOS') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Color</h5>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="colorYes" name="color" 
-                            [checked]="editPrinterForm.get('color')?.value || false" 
-                            (change)="onColorChange($event)">
+                            <input class="form-check-input" type="checkbox" id="colorYes" formControlName="color" [checked]="editPrinterForm.get('color')?.value || false" (change)="onColorChange($event)">
                             <label class="form-check-label" for="color">{{ editPrinterForm.get('color')?.value ? 'Si' : 'No' }}</label>
-                          </div>
+                        </div>
+                        <span *ngIf="isValidField('color')" class="form-text text-danger">
+                            {{ getFieldError('color') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Renta</h5>
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="rentableYes" name="rentable" 
-                          [checked]="editPrinterForm.get('rentable')?.value || false" 
-                          (change)="onRentableChange($event)">
-                          <label class="form-check-label" for="rentableYes">{{ editPrinterForm.get('rentable')?.value ? 'Si' : 'No' }}</label>
+                            <input class="form-check-input" type="checkbox" id="rentableYes" formControlName="rentable" [checked]="editPrinterForm.get('rentable')?.value || false" (change)="onRentableChange($event)">
+                            <label class="form-check-label" for="rentableYes">{{ editPrinterForm.get('rentable')?.value ? 'Si' : 'No' }}</label>
                         </div>
+                        <span *ngIf="isValidField('rentable')" class="form-text text-danger">
+                            {{ getFieldError('rentable') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Venta</h5>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="sellableYes" name="sellable" 
-                            [checked]="editPrinterForm.get('sellable')?.value || false" 
-                            (change)="onSellableChange($event)">
+                            <input class="form-check-input" type="checkbox" id="sellableYes" formControlName="sellable" [checked]="editPrinterForm.get('sellable')?.value || false" (change)="onSellableChange($event)">
                             <label class="form-check-label" for="sellableYes">{{ editPrinterForm.get('sellable')?.value ? 'Si' : 'No' }}</label>
                         </div>
+                        <span *ngIf="isValidField('sellable')" class="form-text text-danger">
+                            {{ getFieldError('sellable') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Unidad Duplex</h5>
                         <div class="form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="duplexUnitYes" name="duplexUnit" 
-                          [checked]="editPrinterForm.get('duplexUnit')?.value || false" 
-                          (change)="onDuplexUnitChange($event)">
-                          <label class="form-check-label" for="duplexUnitYes">{{ editPrinterForm.get('duplexUnit')?.value ? 'Si' : 'No' }}</label>
+                            <input class="form-check-input" type="checkbox" id="duplexUnitYes" formControlName="duplexUnit" [checked]="editPrinterForm.get('duplexUnit')?.value || false" (change)="onDuplexUnitChange($event)">
+                            <label class="form-check-label" for="duplexUnitYes">{{ editPrinterForm.get('duplexUnit')?.value ? 'Si' : 'No' }}</label>
                         </div>
+                        <span *ngIf="isValidField('duplexUnit')" class="form-text text-danger">
+                            {{ getFieldError('duplexUnit') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
-                        <h5>Dimensiones</h5>
-                        <input formControlName="dimensions" class="form-control" type="text">
+                        <h5>Funciones</h5>
+                        <input formControlName="printerFunctions" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['printerFunctions'].invalid && editPrinterForm.controls['printerFunctions'].touched">
+                        <span *ngIf="isValidField('printerFunctions')" class="form-text text-danger">
+                            {{ getFieldError('printerFunctions') }}
+                        </span>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Dimensiones (An x Al x P)</h5>
+                        <div class="input-group">
+                            <input type="text" class="form-control" formControlName="dimensions" [class.is-invalid]="editPrinterForm.controls['dimensions'].invalid && editPrinterForm.controls['dimensions'].touched">
+                        </div>
+                        <span *ngIf="isValidField('dimensions')" class="form-text text-danger">
+                            {{ getFieldError('dimensions') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Velocidad de Impresión</h5>
-                        <input formControlName="printVelocity" class="form-control" type="text">
+                        <div class="input-group">
+                            <input type="text" class="form-control" formControlName="printVelocity" [class.is-invalid]="editPrinterForm.controls['printVelocity'].invalid && editPrinterForm.controls['printVelocity'].touched">
+                            <span class="input-group-text">ppm</span>
+                        </div>
+                        <span *ngIf="isValidField('printVelocity')" class="form-text text-danger">
+                            {{ getFieldError('printVelocity') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Tamaño de Impresión</h5>
-                        <input formControlName="printSize" class="form-control" type="text">
+                        <input formControlName="printSize" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['printSize'].invalid && editPrinterForm.controls['printSize'].touched">
+                        <span *ngIf="isValidField('printSize')" class="form-text text-danger">
+                            {{ getFieldError('printSize') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Máximo de Impresión</h5>
-                        <input formControlName="maxPrintSize" class="form-control" type="text">
+                        <input formControlName="maxPrintSize" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['maxPrintSize'].invalid && editPrinterForm.controls['maxPrintSize'].touched">
+                        <span *ngIf="isValidField('maxPrintSize')" class="form-text text-danger">
+                            {{ getFieldError('maxPrintSize') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Máximo de Impresión (Simple)</h5>
-                        <input formControlName="maxPrintSizeSimple" class="form-control" type="text">
+                        <input formControlName="maxPrintSizeSimple" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['maxPrintSizeSimple'].invalid && editPrinterForm.controls['maxPrintSizeSimple'].touched">
+                        <span *ngIf="isValidField('maxPrintSizeSimple')" class="form-text text-danger">
+                            {{ getFieldError('maxPrintSizeSimple') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
-                        <h5>Grosor de Papel</h5>
-                        <input formControlName="maxPaperWeight" class="form-control" type="text">
+                        <h5>Grosor Máximo de Papel</h5>
+                        <div class="input-group">
+                            <input type="text" class="form-control" formControlName="maxPaperWeight" [class.is-invalid]="editPrinterForm.controls['maxPaperWeight'].invalid && editPrinterForm.controls['maxPaperWeight'].touched">
+                            <span class="input-group-text">g/m2</span>
+                        </div>
+                        <span *ngIf="isValidField('maxPaperWeight')" class="form-text text-danger">
+                            {{ getFieldError('maxPaperWeight') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Tamaños de Papel</h5>
-                        <input formControlName="paperSizes" class="form-control" type="text">
-                    </div>
-                    <div class="printer-data-item half-row">
-                        <h5>Sistema Operativo</h5>
-                        <textarea formControlName="applicableOS" class="form-control" type="text"></textarea>
+                        <input formControlName="paperSizes" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['paperSizes'].invalid && editPrinterForm.controls['paperSizes'].touched">
+                        <span *ngIf="isValidField('paperSizes')" class="form-text text-danger">
+                            {{ getFieldError('paperSizes') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Etiquetas</h5>
-                        <div class="tag-inputs-container"  formArrayName="tags">
-                          <div *ngFor="let tag of tagsControls; let i = index">
-                            <div class="tag-inputs">
-                                <input [formControlName]="i" class="form-control">
-                                <button class="button button-danger button-icon" (click)="removeTag(i)"><mat-icon>delete</mat-icon></button>
+                        <div class="tag-inputs-container" formArrayName="tags">
+                            <div *ngFor="let tag of tagsControls; let i = index">
+                                <div class="tag-inputs">
+                                    <input [formControlName]="i" class="form-control">
+                                    <button class="button button-danger button-icon" (click)="removeTag(i)"><mat-icon>delete</mat-icon></button>
+                                </div>
                             </div>
-                          </div>
-                          <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
+                            <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
                         </div>
                     </div>
                 </div>

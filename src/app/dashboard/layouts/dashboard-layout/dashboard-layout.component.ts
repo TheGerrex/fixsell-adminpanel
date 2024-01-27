@@ -1,6 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { PrintersRegisterComponent } from '../../components/printers-register/printers-register.component';
 
 interface SideNavToggle {
   screenWidth: number;

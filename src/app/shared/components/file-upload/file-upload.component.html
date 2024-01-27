@@ -1,0 +1,25 @@
+<div
+  class="file-drop-area"
+  [class.dragging]="isDragging"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  <p *ngIf="!isUploading">
+    Drag and drop a file here, or click to select a file
+  </p>
+  <div *ngIf="isUploading" class="uploading-container">
+    <p>Uploading...</p>
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+
+  <button mat-raised-button type="button" (click)="fileInput.click()">
+    Select File
+  </button>
+  <input
+    type="file"
+    #fileInput
+    style="display: none"
+    (change)="onFileSelected($event)"
+  />
+</div>

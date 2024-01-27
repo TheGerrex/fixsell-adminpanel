@@ -17,18 +17,6 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 export class ConsumiblesListComponent {
   displayedColumns: string[] = [
     //consumibles columns
-    /*
-        name: string;
-        price: number;
-        weight: number;
-        longDescription: string;
-        shortDescription: string;
-        thumbnailImage: string;
-        images: string[];
-        category: string;
-        stock: number;
-        location: string;
-    */
     'name',
     'price',
     'weight',
@@ -88,6 +76,11 @@ export class ConsumiblesListComponent {
 
   editConsumible(consumible: Consumible) {
     this.router.navigateByUrl(`website/consumibles/${consumible.id}/edit`);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   deleteConsumible(consumible: Consumible) {

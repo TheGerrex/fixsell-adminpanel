@@ -1,5 +1,7 @@
 <div class="table-header">
   <h2>Consumibles</h2>
+  <!-- search field -->
+  <input type="text" placeholder="Search" (input)="applyFilter($event)" />
   <button
     class="button button-primary button-raised button-icon"
     (click)="addConsumible()"

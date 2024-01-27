@@ -7,8 +7,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./dialog.component.scss'],
 })
 export class DialogComponent {
+  imageUrl!: string;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogComponent>
-  ) {}
+  ) {
+    if (data && data.imageUrl) {
+      this.imageUrl = data.imageUrl;
+    }
+  }
 }

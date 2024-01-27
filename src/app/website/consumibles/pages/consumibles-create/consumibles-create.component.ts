@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Printer } from '../../../interfaces/printer.interface';
-import {
-  FormControl,
-  Validators,
-  FormBuilder,
-  FormArray,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { ConsumiblesService } from '../../services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
-
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 /* 
 TODO 1: add user input validation
 TODO 2: add error handling
@@ -28,85 +23,75 @@ TODO 6: add better front end design
   styleUrls: ['./consumibles-create.component.scss'],
 })
 export class ConsumiblesCreateComponent implements OnInit {
-  name = new FormControl('', Validators.required);
-  price = new FormControl('', Validators.required);
-  weight = new FormControl('', Validators.required);
-  shortDescription = new FormControl('', Validators.required);
-  thumbnailImage = new FormControl('', Validators.required);
-  longDescription = new FormControl('', Validators.required);
-  images = this.fb.array([this.fb.control('')]);
-  category = new FormControl('', Validators.required);
-  stock = new FormControl('', Validators.required);
-  location = new FormControl('', Validators.required);
+  public createConsumibleForm!: FormGroup;
+  public imageUrlsArray: string[] = [];
 
   constructor(
     private toastService: ToastService,
     private router: Router,
     private route: ActivatedRoute,
     private ConsumiblesService: ConsumiblesService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit() {}
-
-  //Function for when user uploads file
-  //Fills up images array with the file url of the uploaded image
-  onFileUploaded(link: string) {
-    // Get the current value of the images form control
-    let images: (string | null)[] = this.images.value;
-
-    // If the current value is not an array, initialize it to an empty array
-    if (!Array.isArray(images)) {
-      images = [];
-    }
-
-    // Append the link to the images array
-    images.push(link);
-
-    // Update the value of the images form control
-    this.images.setValue(images);
+  ngOnInit() {
+    this.initalizeForm();
   }
 
-  get imagesControls() {
-    return (this.images as FormArray).controls;
+  initalizeForm() {
+    this.createConsumibleForm = this.fb.group({
+      name: ['', Validators.required],
+      price: ['', Validators.required],
+      weight: ['', Validators.required],
+      shortDescription: ['', Validators.required],
+      thumbnailImage: ['', Validators.required],
+      longDescription: ['', Validators.required],
+      images: this.fb.array([''], Validators.required),
+      category: ['', Validators.required],
+      stock: ['', Validators.required],
+      location: ['', Validators.required],
+    });
   }
 
-  addImage() {
+  get images(): FormArray {
+    return this.createConsumibleForm.get('images') as FormArray;
+  }
+
+  addImage(): void {
     this.images.push(this.fb.control(''));
   }
 
-  removeImage(index: number) {
+  removeImage(index: number): void {
     this.images.removeAt(index);
   }
-
-  addConsumible() {
-    const consumible: Consumible = {
-      name: this.name.value!,
-      price: Number(this.price.value),
-      weight: Number(this.weight.value),
-      shortDescription: this.shortDescription.value || '',
-      thumbnailImage: this.thumbnailImage.value || '',
-      longDescription: this.longDescription.value || '',
-      images: Array.isArray(this.images.value)
-        ? (this.images.value.filter((image) => image !== null) as string[])
-        : [],
-      category: this.category.value || '',
-      stock: Number(this.stock.value),
-      location: this.location.value || '',
-    };
-
-    console.log('consumible object', consumible);
-
-    this.ConsumiblesService.createConsumible(consumible).subscribe(
-      (response: Consumible) => {
-        console.log('Success:', response);
-        this.router.navigate(['website/consumibles']);
-        this.toastService.showSuccess('consumible created successfully', 'OK');
+  previewImage(index: number): void {
+    const imageUrl = this.images.at(index).value;
+    this.dialog.open(DialogComponent, {
+      data: {
+        imageUrl: imageUrl,
       },
-      (error) => {
-        console.log('Error:', error);
-        this.toastService.showError('Error creating consumible', 'OK');
-      }
-    );
+    });
   }
+
+  //Function for when user uploads file
+  //Fills up images array with the file url of the uploaded image
+  onFileUploaded(event: any): void {
+    const imageUrl = event; // The event should be the URL of the uploaded file
+    this.imageUrlsArray.push(imageUrl);
+    // Check if the last image URL in the form array is not empty
+    if (this.images.at(this.images.length - 1).value !== '') {
+      // If it's not empty, add a new control to the form array
+      this.addImage();
+    }
+
+    // Set the value of the last control in the form array to the image URL
+    this.images.at(this.images.length - 1).setValue(imageUrl);
+  }
+  onRemove(index: number): void {
+    this.imageUrlsArray.splice(index, 1);
+    this.removeImage(index);
+  }
+
+  submitForm() {}
 }

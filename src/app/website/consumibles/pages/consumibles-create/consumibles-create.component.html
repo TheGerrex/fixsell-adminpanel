@@ -1,129 +1,98 @@
-<form>
-  <div class="container">
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="name"
-            [formControl]="name"
-          />
-        </div>
-        <div class="form-group">
-          <label for="price">Price</label>
-          <input
-            type="number"
-            class="form-control"
-            id="price"
-            [formControl]="price"
-          />
-        </div>
-        <div class="form-group">
-          <label for="weight">Weight</label>
-          <input
-            type="number"
-            class="form-control"
-            id="weight"
-            [formControl]="weight"
-          />
-        </div>
-        <div class="form-group">
-          <label for="shortDescription">Short Description</label>
-          <input
-            type="text"
-            class="form-control"
-            id="shortDescription"
-            [formControl]="shortDescription"
-          />
-        </div>
-        <div class="form-group">
-          <label for="thumbnailImage">Thumbnail Image URL</label>
-          <input
-            type="text"
-            class="form-control"
-            id="thumbnailImage"
-            [formControl]="thumbnailImage"
-          />
-        </div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="longDescription">Long Description</label>
-          <textarea
-            class="form-control"
-            id="longDescription"
-            rows="3"
-            [formControl]="longDescription"
-          ></textarea>
-        </div>
-        <div class="form-group" formArrayName="images">
-          <label>Image URLs</label>
-          <div *ngFor="let image of imagesControls; let i = index">
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" [formControlName]="i" />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-outline-danger"
-                  type="button"
-                  (click)="removeImage(i)"
-                >
-                  Remove
-                </button>
-              </div>
+<div>
+  <form [formGroup]="createConsumibleForm" class="printer-container">
+    <div class="printer-header">
+      <h2>Crear Consumible</h2>
+      <button
+        type="submit"
+        class="button button-primary button-raised"
+        (click)="submitForm()"
+      >
+        <span class="button-label">Agregar Consumible</span>
+      </button>
+    </div>
+    <div class="printer-info">
+      <div class="printer-data-container">
+        <div class="printer-data">
+          <div class="printer-data-item">
+            <h5>Name</h5>
+            <input formControlName="name" class="form-control" type="text" />
+          </div>
+          <div class="printer-data-item">
+            <h5>Weight</h5>
+            <input
+              formControlName="weight"
+              class="form-control"
+              type="number"
+            />
+          </div>
+          <div class="printer-data-item">
+            <h5>Precio</h5>
+            <input
+              formControlName="weight"
+              class="form-control"
+              type="number"
+            />
+          </div>
+          <div class="printer-data-item">
+            <h5>Short Description</h5>
+            <textarea
+              formControlName="shortDescription"
+              class="form-control"
+              rows="1"
+            ></textarea>
+          </div>
+          <!-- <div class="printer-data-item">
+            <h5>Thumbnail Image</h5>
+            <input
+              formControlName="thumbnailImage"
+              class="form-control"
+              type="text"
+            />
+          </div> -->
+          <div class="printer-data-item">
+            <h5>Long Description</h5>
+            <textarea
+              formControlName="longDescription"
+              class="form-control"
+              rows="5"
+            ></textarea>
+          </div>
+
+          <div class="printer-data-item">
+            <h5>Category</h5>
+            <input
+              formControlName="category"
+              class="form-control"
+              type="text"
+            />
+          </div>
+          <div class="printer-data-item">
+            <h5>Stock</h5>
+            <input formControlName="stock" class="form-control" type="text" />
+          </div>
+          <div class="printer-data-item">
+            <h5>Location</h5>
+            <input
+              formControlName="location"
+              class="form-control"
+              type="text"
+            />
+          </div>
+
+          <div class="printer-data-item">
+            <div class="tag-inputs-container" formArrayName="images">
+              <div *ngFor="let image of images.controls; let i = index"></div>
             </div>
           </div>
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            (click)="addImage()"
-          >
-            Add Image URL
-          </button>
         </div>
-        <div class="form-group">
-          <label for="category">Category</label>
-          <input
-            type="text"
-            class="form-control"
-            id="category"
-            [formControl]="category"
-          />
-        </div>
-        <div class="form-group">
-          <label for="stock">Stock</label>
-          <input
-            type="number"
-            class="form-control"
-            id="stock"
-            [formControl]="stock"
-          />
-        </div>
-        <div class="form-group">
-          <label for="location">Location</label>
-          <input
-            type="text"
-            class="form-control"
-            id="location"
-            [formControl]="location"
-          />
-        </div>
-        <app-file-upload
-          (fileUpload)="onFileUploaded($event)"
-        ></app-file-upload>
       </div>
     </div>
-    <div class="row button-container">
-      <div class="col-12">
-        <button
-          type="submit"
-          class="btn btn-primary button button-primary"
-          (click)="addConsumible()"
-        >
-          Add Consumible
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
+    <h5>Images</h5>
+    <app-product-image-grid
+      [imageUrls]="imageUrlsArray"
+      (remove)="onRemove($event)"
+    ></app-product-image-grid>
+
+    <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
+  </form>
+</div>

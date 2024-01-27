@@ -1,0 +1,11 @@
+<div class="image-grid">
+  <div
+    *ngFor="let imageUrl of imageUrls; let i = index"
+    class="image-thumbnail"
+  >
+    <img [src]="imageUrl" alt="Product image" />
+    <button class="remove-button" (click)="onRemove(i)">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

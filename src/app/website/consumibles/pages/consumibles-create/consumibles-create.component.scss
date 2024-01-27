@@ -1,6 +1,76 @@
-.button-container {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 10px;
+@import "_variables.scss";
+.printer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  background-color: #fff;
+  border-radius: $border-radius;
+  padding: 1em;
+}
+
+.printer-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  h2 {
+    margin: 0;
   }
+  button {
+    flex-shrink: 0;
+  }
+}
+
+.printer-info {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+
+  .printer-data-container {
+    width: 100%;
+    .printer-data {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      row-gap: 1em;
+      column-gap: 1em;
+      .printer-data-item {
+        min-height: 50px;
+        p {
+          margin-bottom: 0;
+        }
+        @media (max-width: 600px) {
+          grid-column: 1 / -1;
+          gap: 1em;
+          // row-gap: 1em;
+        }
+      }
+      .full-row {
+        grid-column: 1 / -1; // This will make the description item span the entire row
+      }
+      .half-row {
+        grid-column: span 2; // This will make the description item span half row
+      }
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        row-gap: 1em;
+        column-gap: 0em;
+      }
+    }
+  }
+
+  .tag-inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .tag-inputs {
+    display: flex;
+    gap: 0.5em;
+  }
+}

@@ -3,72 +3,70 @@
 
 @import "_variables.scss";
 @font-face {
-    font-family: Poppins-Regular;
-    src: url('./assets/fonts/poppins/Poppins-Regular.ttf');
+  font-family: Poppins-Regular;
+  src: url("./assets/fonts/poppins/Poppins-Regular.ttf");
 }
 
 @font-face {
-    font-family: Poppins-Medium;
-    src: url('./assets/fonts/poppins/Poppins-Medium.ttf');
+  font-family: Poppins-Medium;
+  src: url("./assets/fonts/poppins/Poppins-Medium.ttf");
 }
 
 @font-face {
-    font-family: Poppins-Bold;
-    src: url('./assets/fonts/poppins/Poppins-Bold.ttf');
+  font-family: Poppins-Bold;
+  src: url("./assets/fonts/poppins/Poppins-Bold.ttf");
 }
 
 @font-face {
-    font-family: Poppins-SemiBold;
-    src: url('./assets/fonts/poppins/Poppins-SemiBold.ttf');
+  font-family: Poppins-SemiBold;
+  src: url("./assets/fonts/poppins/Poppins-SemiBold.ttf");
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
-@import '~@angular/cdk/overlay-prebuilt.css';
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
+@import "~@angular/cdk/overlay-prebuilt.css";
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
 * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-    font-family: 'Roboto';
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Roboto";
 }
 
 body,
 html {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    font-family: 'Roboto', sans-serif;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
-    background-color: $gray-100 !important;
+  background-color: $gray-100 !important;
 }
-
 
 /*---------------------------------------------*/
 
 a {
-    font-size: 16px;
-    // line-height: 20px;
-    margin: 0px;
-    transition: all 0.4s;
-    -webkit-transition: all 0.4s;
-    -o-transition: all 0.4s;
-    -moz-transition: all 0.4s;
+  font-size: 16px;
+  // line-height: 20px;
+  margin: 0px;
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
 }
 
 a:focus {
-    outline: none !important;
+  outline: none !important;
 }
 
 a:hover {
-    text-decoration: none;
-    color: #a64bf4;
+  text-decoration: none;
+  color: #a64bf4;
 }
-
 
 /*---------------------------------------------*/
 
@@ -78,1199 +76,1185 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 500 !important;
+  font-weight: 500 !important;
 }
 
 ul,
 li {
-    margin: 0px;
-    list-style-type: none;
+  margin: 0px;
+  list-style-type: none;
 }
 
 h1 {
-    font-size: 35px;
-    line-height: 43.75px;
+  font-size: 35px;
+  line-height: 43.75px;
 }
 
 h2 {
-    font-size: 28px;
-    line-height: 35px;
+  font-size: 28px;
+  line-height: 35px;
 }
 
 h3 {
-    font-size: 24.5px;
-    line-height: 30.6px;
+  font-size: 24.5px;
+  line-height: 30.6px;
 }
 
 h4 {
-    font-size: 21px;
-    line-height: 26.3px;
+  font-size: 21px;
+  line-height: 26.3px;
 }
 
 h5 {
-    font-size: 17.5px;
-    line-height: 21.9px;
+  font-size: 17.5px;
+  line-height: 21.9px;
 }
 
 h6 {
-    font-size: 16px;
-    line-height: 20px;
+  font-size: 16px;
+  line-height: 20px;
 }
 
 p {
-    font-size: 16px;
-    line-height: 20px;
-    margin-bottom: 0;
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 0;
 }
 
 small {
-    font-size: 10.5px;
-    line-height: 13.1px;
+  font-size: 10.5px;
+  line-height: 13.1px;
 }
 
 li {
-    font-size: 1em;
+  font-size: 1em;
 }
-
 
 /*---------------------------------------------*/
 
 input {
-    outline: none;
-    border: none;
+  outline: none;
+  border: none;
 }
 
 textarea {
-    outline: none;
-    border: none;
+  outline: none;
+  border: none;
 }
 
 textarea:focus,
 input:focus {
-    border-color: transparent !important;
+  border-color: transparent !important;
 }
-
 
 /*--------------------Button------------------------*/
 
 .button {
-    margin: 0;
-    display: inline-flex;
-    user-select: none;
+  margin: 0;
+  display: inline-flex;
+  user-select: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  // overflow: hidden;
+  position: relative;
+  gap: 8px;
+  color: $text;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.25rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 4px;
+  // @media(max-width: 576px) {
+  //     i {
+  //         display: none;
+  //     }
+  //     mat-icon {
+  //         display: none;
+  //     }
+  // }
+  &:not(:disabled) {
     cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    // overflow: hidden;
-    position: relative;
-    gap: 8px;
-    color: $text;
-    font-size: .95rem;
-    padding: .5rem 1.25rem;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-    border-radius: 4px;
-    // @media(max-width: 576px) {
-    //     i {
-    //         display: none;
-    //     }
-    //     mat-icon {
-    //         display: none;
-    //     }
-    // }
-    &:not(:disabled) {
-        cursor: pointer;
+  }
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+  &:focus {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
+      0 1px 2px 0 black;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  .button-label {
+    font-weight: 500;
+    flex: 1 1 auto;
+    transition-duration: 0.2s;
+  }
+  &-primary {
+    color: $primary-color-text;
+    background: $primary-color;
+    border: 1px $primary-color solid;
+    &:hover {
+      background: $primary-color-hover;
+      color: $primary-color-text;
+      border-color: $primary-color-hover;
     }
-    &:focus:not(:focus-visible) {
-        outline: 0;
+    &:active {
+      background: $primary-color-active;
+      color: $primary-color-text;
+      border-color: $primary-color-active;
     }
     &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus, 0 1px 2px 0 black;
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
+        0 1px 2px 0 black;
     }
-    &:disabled {
-        opacity: 0.6;
-        cursor: default;
+  }
+  &-secondary {
+    color: $secondary-color-text;
+    background: $secondary-color;
+    border: 1px $secondary-color solid;
+    &:hover {
+      background: $secondary-color-hover;
+      color: $secondary-color-text;
+      border-color: $secondary-color-hover;
     }
-    .button-label {
-        font-weight: 500;
-        flex: 1 1 auto;
-        transition-duration: 0.2s;
+    &:active {
+      background: $secondary-color-active;
+      color: $secondary-color-text;
+      border-color: $secondary-color-active;
     }
-    &-primary {
-        color: $primary-color-text;
-        background: $primary-color;
-        border: 1px $primary-color solid;
-        &:hover {
-            background: $primary-color-hover;
-            color: $primary-color-text;
-            border-color: $primary-color-hover;
-        }
-        &:active {
-            background: $primary-color-active;
-            color: $primary-color-text;
-            border-color: $primary-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus, 0 1px 2px 0 black;
-        }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus,
+        0 1px 2px 0 black;
     }
-    &-secondary {
-        color: $secondary-color-text;
-        background: $secondary-color;
-        border: 1px $secondary-color solid;
-        &:hover {
-            background: $secondary-color-hover;
-            color: $secondary-color-text;
-            border-color: $secondary-color-hover;
-        }
-        &:active {
-            background: $secondary-color-active;
-            color: $secondary-color-text;
-            border-color: $secondary-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus, 0 1px 2px 0 black;
-        }
+  }
+  &-success {
+    color: $success-color-text;
+    background: $success-color;
+    border: 1px $success-color solid;
+    &:hover {
+      background: $success-color-hover;
+      color: $success-color-text;
+      border-color: $success-color-hover;
     }
+    &:active {
+      background: $success-color-active;
+      color: $success-color-text;
+      border-color: $success-color-active;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus,
+        0 1px 2px 0 black;
+    }
+  }
+  &-info {
+    color: $info-color-text;
+    background: $info-color;
+    border: 1px $info-color solid;
+    &:hover {
+      background: $info-color-hover;
+      color: $info-color-text;
+      border-color: $info-color-hover;
+    }
+    &:active {
+      background: $info-color-active;
+      color: $info-color-text;
+      border-color: $info-color-active;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus,
+        0 1px 2px 0 black;
+    }
+  }
+  &-warning {
+    color: $warning-color-text;
+    background: $warning-color;
+    border: 1px $warning-color solid;
+    &:hover {
+      background: $warning-color-hover;
+      color: $warning-color-text;
+      border-color: $warning-color-hover;
+    }
+    &:active {
+      background: $warning-color-active;
+      color: $warning-color-text;
+      border-color: $warning-color-active;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus,
+        0 1px 2px 0 black;
+    }
+  }
+  &-help {
+    color: $help-color-text;
+    background: $help-color;
+    border: 1px $help-color solid;
+    &:hover {
+      background: $help-color-hover;
+      color: $help-color-text;
+      border-color: $help-color-hover;
+    }
+    &:active {
+      background: $help-color-active;
+      color: $help-color-text;
+      border-color: $help-color-active;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus,
+        0 1px 2px 0 black;
+    }
+  }
+  &-danger {
+    color: $danger-color-text;
+    background: $danger-color;
+    border: 1px $danger-color solid;
+    &:hover {
+      background: $danger-color-hover;
+      color: $danger-color-text;
+      border-color: $danger-color-hover;
+    }
+    &:active {
+      background: $danger-color-active;
+      color: $danger-color-text;
+      border-color: $danger-color-active;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
+        0 1px 2px 0 black;
+    }
+  }
+  &-full {
+    width: 100%;
+  }
+  &-rounded {
+    border-radius: 2rem;
+  }
+  &-raised {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  }
+  &-icon {
+    padding: 0.5em;
     &-success {
-        color: $success-color-text;
+      color: $success-color;
+      &:hover {
         background: $success-color;
-        border: 1px $success-color solid;
-        &:hover {
-            background: $success-color-hover;
-            color: $success-color-text;
-            border-color: $success-color-hover;
-        }
-        &:active {
-            background: $success-color-active;
-            color: $success-color-text;
-            border-color: $success-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus, 0 1px 2px 0 black;
-        }
-    }
-    &-info {
-        color: $info-color-text;
-        background: $info-color;
-        border: 1px $info-color solid;
-        &:hover {
-            background: $info-color-hover;
-            color: $info-color-text;
-            border-color: $info-color-hover;
-        }
-        &:active {
-            background: $info-color-active;
-            color: $info-color-text;
-            border-color: $info-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus, 0 1px 2px 0 black;
-        }
-    }
-    &-warning {
-        color: $warning-color-text;
-        background: $warning-color;
-        border: 1px $warning-color solid;
-        &:hover {
-            background: $warning-color-hover;
-            color: $warning-color-text;
-            border-color: $warning-color-hover;
-        }
-        &:active {
-            background: $warning-color-active;
-            color: $warning-color-text;
-            border-color: $warning-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus, 0 1px 2px 0 black;
-        }
-    }
-    &-help {
-        color: $help-color-text;
-        background: $help-color;
-        border: 1px $help-color solid;
-        &:hover {
-            background: $help-color-hover;
-            color: $help-color-text;
-            border-color: $help-color-hover;
-        }
-        &:active {
-            background: $help-color-active;
-            color: $help-color-text;
-            border-color: $help-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus, 0 1px 2px 0 black;
-        }
+        color: $success-color-text;
+        border-color: $success-color-hover;
+      }
+      &:active {
+        background: $success-color-active;
+        color: $success-color-text;
+        border-color: $success-color-active;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus,
+          0 1px 2px 0 black;
+      }
     }
     &-danger {
-        color: $danger-color-text;
+      color: $danger-color;
+      &:hover {
         background: $danger-color;
-        border: 1px $danger-color solid;
-        &:hover {
-            background: $danger-color-hover;
-            color: $danger-color-text;
-            border-color: $danger-color-hover;
-        }
-        &:active {
-            background: $danger-color-active;
-            color: $danger-color-text;
-            border-color: $danger-color-active;
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus, 0 1px 2px 0 black;
-        }
+        color: $danger-color-text;
+        border-color: $danger-color-hover;
+      }
+      &:active {
+        background: $danger-color-active;
+        color: $danger-color-text;
+        border-color: $danger-color-active;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
+          0 1px 2px 0 black;
+      }
     }
-    &-full {
-        width: 100%;
+    &-warning {
+      color: $warning-color;
+      &:hover {
+        background: $warning-color;
+        color: $danger-color-text;
+        border-color: $danger-color-hover;
+      }
+      &:active {
+        background: $danger-color-active;
+        color: $danger-color-text;
+        border-color: $danger-color-active;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
+          0 1px 2px 0 black;
+      }
     }
-    &-rounded {
-        border-radius: 2rem;
+    &-info {
+      color: $info-color;
+      &:hover {
+        background: $info-color;
+        color: $info-color-text;
+        border-color: $info-color-hover;
+      }
+      &:active {
+        background: $info-color-active;
+        color: $info-color-text;
+        border-color: $info-color-active;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus,
+          0 1px 2px 0 black;
+      }
     }
-    &-raised {
-        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    &-help {
+      color: $help-color;
+      &:hover {
+        background: $help-color;
+        color: $help-color-text;
+        border-color: $help-color-hover;
+      }
+      &:active {
+        background: $help-color-active;
+        color: $help-color-text;
+        border-color: $help-color-active;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus,
+          0 1px 2px 0 black;
+      }
     }
-    &-icon {
-        padding: 0.5em;
-        &-success {
-            color: $success-color;
-            &:hover {
-                background: $success-color;
-                color: $success-color-text;
-                border-color: $success-color-hover;
-            }
-            &:active {
-                background: $success-color-active;
-                color: $success-color-text;
-                border-color: $success-color-active;
-            }
-            &:focus {
-                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus, 0 1px 2px 0 black;
-            }
-        }
-        &-danger {
-            color: $danger-color;
-            &:hover {
-                background: $danger-color;
-                color: $danger-color-text;
-                border-color: $danger-color-hover;
-            }
-            &:active {
-                background: $danger-color-active;
-                color: $danger-color-text;
-                border-color: $danger-color-active;
-            }
-            &:focus {
-                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus, 0 1px 2px 0 black;
-            }
-        }
-        &-warning {
-            color: $warning-color;
-            &:hover {
-                background: $warning-color;
-                color: $danger-color-text;
-                border-color: $danger-color-hover;
-            }
-            &:active {
-                background: $danger-color-active;
-                color: $danger-color-text;
-                border-color: $danger-color-active;
-            }
-            &:focus {
-                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus, 0 1px 2px 0 black;
-            }
-        }
-        &-info {
-            color: $info-color;
-            &:hover {
-                background: $info-color;
-                color: $info-color-text;
-                border-color: $info-color-hover;
-            }
-            &:active {
-                background: $info-color-active;
-                color: $info-color-text;
-                border-color: $info-color-active;
-            }
-            &:focus {
-                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus, 0 1px 2px 0 black;
-            }
-        }
-        &-help {
-            color: $help-color;
-            &:hover {
-                background: $help-color;
-                color: $help-color-text;
-                border-color: $help-color-hover;
-            }
-            &:active {
-                background: $help-color-active;
-                color: $help-color-text;
-                border-color: $help-color-active;
-            }
-            &:focus {
-                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus, 0 1px 2px 0 black;
-            }
-        }
-    }
-    &-icon-text {
-        padding: 0.5em 1em 0.5em .5em;
-    }
+  }
+  &-icon-text {
+    padding: 0.5em 1em 0.5em 0.5em;
+  }
 }
 
 button {
-    outline: none !important;
-    border: none;
-    background: transparent;
+  outline: none !important;
+  border: none;
+  background: transparent;
 }
 
 button:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 // Structure //
 .container-grid {
-    display: grid;
-    grid-template-columns: 200px 1fr;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  .container-grid-content {
+    width: 100%;
+    padding: 16px;
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: none !important;
+    grid-template-rows: 50px 1fr;
     .container-grid-content {
-        width: 100%;
-        padding: 16px;
+      padding: 8px;
     }
-    @media(max-width: 768px) {
-        grid-template-columns: none !important;
-        grid-template-rows: 50px 1fr;
-        .container-grid-content {
-            padding: 8px;
-        }
-    }
+  }
 }
-
 
 /*//////////////////////////////////////////////////////////////////
 [ login ]*/
 
 .limiter {
-    width: 100%;
-    margin: 0 auto;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .container-login100 {
-    width: 100%;
-    min-height: 100vh;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+  width: 100%;
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .wrap-login100 {
-    width: 500px;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
+  width: 500px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
 }
-
 
 /*------------------------------------------------------------------
 [ Form ]*/
 
 .login100-form {
-    width: 100%;
+  width: 100%;
 }
 
 .login100-form-title {
-    display: block;
-    font-family: Poppins-Bold;
-    font-size: 30px;
-    color: #333333;
-    line-height: 1.2;
-    text-align: center;
+  display: block;
+  font-family: Poppins-Bold;
+  font-size: 30px;
+  color: #333333;
+  line-height: 1.2;
+  text-align: center;
 }
-
 
 /*------------------------------------------------------------------
 [ Input ]*/
 
 .wrap-input100 {
-    width: 100%;
-    position: relative;
-    border-bottom: 2px solid #d9d9d9;
+  width: 100%;
+  position: relative;
+  border-bottom: 2px solid #d9d9d9;
 }
 
 .label-input100 {
-    font-family: Poppins-Regular;
-    font-size: 14px;
-    color: #333333;
-    line-height: 1.5;
-    padding-left: 7px;
+  font-family: Poppins-Regular;
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.5;
+  padding-left: 7px;
 }
 
 .input100 {
-    font-family: Poppins-Medium;
-    font-size: 16px;
-    color: #333333;
-    line-height: 1.2;
-    display: block;
-    width: 100%;
-    height: 55px;
-    background: transparent;
-    padding: 0 7px 0 43px;
+  font-family: Poppins-Medium;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.2;
+  display: block;
+  width: 100%;
+  height: 11155px;
+  background: transparent;
+  padding: 0 7px 0 43px;
 }
-
 
 /*---------------------------------------------*/
 
 .focus-input100 {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 .focus-input100::after {
-    content: attr(data-symbol);
-    font-family: Material-Design-Iconic-Font;
-    color: #adadad;
-    font-size: 22px;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    height: calc(100% - 20px);
-    bottom: 0;
-    left: 0;
-    padding-left: 13px;
-    padding-top: 3px;
+  content: attr(data-symbol);
+  font-family: Material-Design-Iconic-Font;
+  color: #adadad;
+  font-size: 22px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: calc(100% - 20px);
+  bottom: 0;
+  left: 0;
+  padding-left: 13px;
+  padding-top: 3px;
 }
 
 .focus-input100::before {
-    content: "";
-    display: block;
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #7f7f7f;
-    -webkit-transition: all 0.4s;
-    -o-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    transition: all 0.4s;
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #7f7f7f;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
 }
 
-.input100:focus+.focus-input100::before {
-    width: 100%;
+.input100:focus + .focus-input100::before {
+  width: 100%;
 }
 
-.has-val.input100+.focus-input100::before {
-    width: 100%;
+.has-val.input100 + .focus-input100::before {
+  width: 100%;
 }
 
-.input100:focus+.focus-input100::after {
-    color: #a64bf4;
+.input100:focus + .focus-input100::after {
+  color: #a64bf4;
 }
 
-.has-val.input100+.focus-input100::after {
-    color: #a64bf4;
+.has-val.input100 + .focus-input100::after {
+  color: #a64bf4;
 }
-
 
 /*------------------------------------------------------------------
 [ Card ]*/
 
 .card {
-    display: flex;
-    flex-direction: column;
-    border-radius: .5rem;
-    background-color: #fff;
-    margin: 1.25rem 0 1.25rem 0;
-    box-shadow: 0 .25rem .5rem #e6edef;
-    .card-head {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #edf1f7;
-        font-size: 1rem;
-        font-weight: 600;
-    }
-    .card-body {
-        padding: 1rem 1.5rem;
-    }
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  margin: 1.25rem 0 1.25rem 0;
+  box-shadow: 0 0.25rem 0.5rem #e6edef;
+  .card-head {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #edf1f7;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .card-body {
+    padding: 1rem 1.5rem;
+  }
 }
 
 // Snackbar //
 .success-toast {
-    --mdc-snackbar-container-color: #F0FDF4 !important;
-    --mdc-snackbar-supporting-text-color: #22c55e !important;
+  --mdc-snackbar-container-color: #f0fdf4 !important;
+  --mdc-snackbar-supporting-text-color: #22c55e !important;
 }
 
 .error-toast {
-    --mdc-snackbar-container-color: #fef2f2 !important;
-    --mdc-snackbar-supporting-text-color: #ef4444 !important;
+  --mdc-snackbar-container-color: #fef2f2 !important;
+  --mdc-snackbar-supporting-text-color: #ef4444 !important;
 }
 
 .warning-toast {
-    --mdc-snackbar-container-color: #fefce8 !important;
-    --mdc-snackbar-supporting-text-color: #eab308 !important;
+  --mdc-snackbar-container-color: #fefce8 !important;
+  --mdc-snackbar-supporting-text-color: #eab308 !important;
 }
 
 .info-toast {
-    --mdc-snackbar-container-color: #eef2ff !important;
-    --mdc-snackbar-supporting-text-color: #6366f1 !important;
+  --mdc-snackbar-container-color: #eef2ff !important;
+  --mdc-snackbar-supporting-text-color: #6366f1 !important;
 }
 
 .help-toast {
-    --mdc-snackbar-container-color: #faf5ff !important;
-    --mdc-snackbar-supporting-text-color: #a855f7 !important;
+  --mdc-snackbar-container-color: #faf5ff !important;
+  --mdc-snackbar-supporting-text-color: #a855f7 !important;
 }
 /*[ Dialog ]
 -----------------------------------------------------------
 */
 
-
 .delete-dialog .mat-dialog-container {
-    background-color: #fef2f2 !important;
-    color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  color: #ef4444 !important;
 }
 
 .confirm-dialog .mat-dialog-container {
-    background-color: #F0FDF4 !important;
-    color: #22c55e !important;
+  background-color: #f0fdf4 !important;
+  color: #22c55e !important;
 }
-
 
 /*[ Position ]
 -----------------------------------------------------------
 */
 
 .pos-relative {
-    position: relative;
+  position: relative;
 }
 
 .pos-absolute {
-    position: absolute;
+  position: absolute;
 }
 
 .pos-fixed {
-    position: fixed;
+  position: fixed;
 }
-
 
 /*[ float ]
 -----------------------------------------------------------
 */
 
 .float-l {
-    float: left;
+  float: left;
 }
 
 .float-r {
-    float: right;
+  float: right;
 }
-
 
 /*[ Width & Height ]
 -----------------------------------------------------------
 */
 
 .sizefull {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .w-full {
-    width: 100%;
+  width: 100%;
 }
 
 .h-full {
-    height: 100%;
+  height: 100%;
 }
 
 .max-w-full {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .max-h-full {
-    max-height: 100%;
+  max-height: 100%;
 }
 
 .min-w-full {
-    min-width: 100%;
+  min-width: 100%;
 }
 
 .min-h-full {
-    min-height: 100%;
+  min-height: 100%;
 }
-
 
 /*[ Top Bottom Left Right ]
 -----------------------------------------------------------
 */
 
 .top-0 {
-    top: 0;
+  top: 0;
 }
 
 .bottom-0 {
-    bottom: 0;
+  bottom: 0;
 }
 
 .left-0 {
-    left: 0;
+  left: 0;
 }
 
 .right-0 {
-    right: 0;
+  right: 0;
 }
 
 .top-auto {
-    top: auto;
+  top: auto;
 }
 
 .bottom-auto {
-    bottom: auto;
+  bottom: auto;
 }
 
 .left-auto {
-    left: auto;
+  left: auto;
 }
 
 .right-auto {
-    right: auto;
+  right: auto;
 }
-
 
 /*[ Opacity ]
 -----------------------------------------------------------
 */
 
 .op-0-0 {
-    opacity: 0;
+  opacity: 0;
 }
 
 .op-0-1 {
-    opacity: 0.1;
+  opacity: 0.1;
 }
 
 .op-0-2 {
-    opacity: 0.2;
+  opacity: 0.2;
 }
 
 .op-0-3 {
-    opacity: 0.3;
+  opacity: 0.3;
 }
 
 .op-0-4 {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 .op-0-5 {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .op-0-6 {
-    opacity: 0.6;
+  opacity: 0.6;
 }
 
 .op-0-7 {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 .op-0-8 {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .op-0-9 {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .op-1-0 {
-    opacity: 1;
+  opacity: 1;
 }
-
 
 /*[ Background ]
 -----------------------------------------------------------
 */
 
 .bgwhite {
-    background-color: white;
+  background-color: white;
 }
 
 .bgblack {
-    background-color: black;
+  background-color: black;
 }
-
 
 /*[ Wrap Picture ]
 -----------------------------------------------------------
 */
 
 .wrap-pic-w img {
-    width: 100%;
+  width: 100%;
 }
 
 .wrap-pic-max-w img {
-    max-width: 100%;
+  max-width: 100%;
 }
-
 
 /* ------------------------------------ */
 
 .wrap-pic-h img {
-    height: 100%;
+  height: 100%;
 }
 
 .wrap-pic-max-h img {
-    max-height: 100%;
+  max-height: 100%;
 }
-
 
 /* ------------------------------------ */
 
 .wrap-pic-cir {
-    border-radius: 50%;
-    overflow: hidden;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .wrap-pic-cir img {
-    width: 100%;
+  width: 100%;
 }
-
 
 /*[ Hover ]
 -----------------------------------------------------------
 */
 
 .hov-pointer:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
-
 
 /* ------------------------------------ */
 
 .hov-img-zoom {
-    display: block;
-    overflow: hidden;
+  display: block;
+  overflow: hidden;
 }
 
 .hov-img-zoom img {
-    width: 100%;
-    -webkit-transition: all 0.6s;
-    -o-transition: all 0.6s;
-    -moz-transition: all 0.6s;
-    transition: all 0.6s;
+  width: 100%;
+  -webkit-transition: all 0.6s;
+  -o-transition: all 0.6s;
+  -moz-transition: all 0.6s;
+  transition: all 0.6s;
 }
 
 .hov-img-zoom:hover img {
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  transform: scale(1.1);
 }
-
 
 /*[  ]
 -----------------------------------------------------------
 */
 
 .bo-cir {
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 .of-hidden {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .visible-false {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .visible-true {
-    visibility: visible;
+  visibility: visible;
 }
-
 
 /*[ Transition ]
 -----------------------------------------------------------
 */
 
 .trans-0-1 {
-    -webkit-transition: all 0.1s;
-    -o-transition: all 0.1s;
-    -moz-transition: all 0.1s;
-    transition: all 0.1s;
+  -webkit-transition: all 0.1s;
+  -o-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+  transition: all 0.1s;
 }
 
 .trans-0-2 {
-    -webkit-transition: all 0.2s;
-    -o-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 .trans-0-3 {
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 .trans-0-4 {
-    -webkit-transition: all 0.4s;
-    -o-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
 }
 
 .trans-0-5 {
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 .trans-0-6 {
-    -webkit-transition: all 0.6s;
-    -o-transition: all 0.6s;
-    -moz-transition: all 0.6s;
-    transition: all 0.6s;
+  -webkit-transition: all 0.6s;
+  -o-transition: all 0.6s;
+  -moz-transition: all 0.6s;
+  transition: all 0.6s;
 }
 
 .trans-0-9 {
-    -webkit-transition: all 0.9s;
-    -o-transition: all 0.9s;
-    -moz-transition: all 0.9s;
-    transition: all 0.9s;
+  -webkit-transition: all 0.9s;
+  -o-transition: all 0.9s;
+  -moz-transition: all 0.9s;
+  transition: all 0.9s;
 }
 
 .trans-1-0 {
-    -webkit-transition: all 1s;
-    -o-transition: all 1s;
-    -moz-transition: all 1s;
-    transition: all 1s;
+  -webkit-transition: all 1s;
+  -o-transition: all 1s;
+  -moz-transition: all 1s;
+  transition: all 1s;
 }
-
 
 /*[ Layout ]
 ///////////////////////////////////////////////////////////
 */
 
-
 /*[ Flex ]
 -----------------------------------------------------------
 */
 
-
 /* ------------------------------------ */
 
 .flex-w {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    -moz-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    -o-flex-wrap: wrap;
-    flex-wrap: wrap;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
-
 
 /* ------------------------------------ */
 
 .flex-l {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: flex-start;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .flex-r {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: flex-end;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .flex-c {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
 }
 
 .flex-sa {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: space-around;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-around;
 }
 
 .flex-sb {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: space-between;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
 }
-
 
 /* ------------------------------------ */
 
 .flex-t {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-align-items: flex-start;
-    align-items: flex-start;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-align-items: flex-start;
+  align-items: flex-start;
 }
 
 .flex-b {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-align-items: flex-end;
-    align-items: flex-end;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-align-items: flex-end;
+  align-items: flex-end;
 }
 
 .flex-m {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-align-items: center;
+  align-items: center;
 }
 
 .flex-str {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-align-items: stretch;
-    align-items: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-align-items: stretch;
+  align-items: stretch;
 }
-
 
 /* ------------------------------------ */
 
 .flex-row {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: row;
-    -moz-flex-direction: row;
-    -ms-flex-direction: row;
-    -o-flex-direction: row;
-    flex-direction: row;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  -o-flex-direction: row;
+  flex-direction: row;
 }
 
 .flex-row-rev {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: row-reverse;
-    -moz-flex-direction: row-reverse;
-    -ms-flex-direction: row-reverse;
-    -o-flex-direction: row-reverse;
-    flex-direction: row-reverse;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -moz-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  -o-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
 
 .flex-col {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    -o-flex-direction: column;
-    flex-direction: column;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  -o-flex-direction: column;
+  flex-direction: column;
 }
 
 .flex-col-rev {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column-reverse;
-    -moz-flex-direction: column-reverse;
-    -ms-flex-direction: column-reverse;
-    -o-flex-direction: column-reverse;
-    flex-direction: column-reverse;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column-reverse;
+  -moz-flex-direction: column-reverse;
+  -ms-flex-direction: column-reverse;
+  -o-flex-direction: column-reverse;
+  flex-direction: column-reverse;
 }
-
 
 /* ------------------------------------ */
 
 .flex-c-m {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: center;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  -ms-align-items: center;
+  align-items: center;
 }
 
 .flex-c-t {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: center;
-    -ms-align-items: flex-start;
-    align-items: flex-start;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  -ms-align-items: flex-start;
+  align-items: flex-start;
 }
 
 .flex-c-b {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: center;
-    -ms-align-items: flex-end;
-    align-items: flex-end;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  -ms-align-items: flex-end;
+  align-items: flex-end;
 }
 
 .flex-c-str {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: center;
-    -ms-align-items: stretch;
-    align-items: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  -ms-align-items: stretch;
+  align-items: stretch;
 }
 
 .flex-l-m {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: flex-start;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: flex-start;
+  -ms-align-items: center;
+  align-items: center;
 }
 
 .flex-r-m {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: flex-end;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: flex-end;
+  -ms-align-items: center;
+  align-items: center;
 }
 
 .flex-sa-m {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: space-around;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-around;
+  -ms-align-items: center;
+  align-items: center;
 }
 
 .flex-sb-m {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: space-between;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
+  -ms-align-items: center;
+  align-items: center;
 }
-
 
 /* ------------------------------------ */
 
 .flex-col-l {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    -o-flex-direction: column;
-    flex-direction: column;
-    -ms-align-items: flex-start;
-    align-items: flex-start;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  -o-flex-direction: column;
+  flex-direction: column;
+  -ms-align-items: flex-start;
+  align-items: flex-start;
 }
 
 .flex-col-r {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    -o-flex-direction: column;
-    flex-direction: column;
-    -ms-align-items: flex-end;
-    align-items: flex-end;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  -o-flex-direction: column;
+  flex-direction: column;
+  -ms-align-items: flex-end;
+  align-items: flex-end;
 }
 
 .flex-col-c {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    -o-flex-direction: column;
-    flex-direction: column;
-    -ms-align-items: center;
-    align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  -o-flex-direction: column;
+  flex-direction: column;
+  -ms-align-items: center;
+  align-items: center;
 }

@@ -10,6 +10,8 @@ import { ConsumiblesListComponent } from './pages/consumibles-list/consumibles-l
 import { ConsumiblesCreateComponent } from './pages/consumibles-create/consumibles-create.component';
 import { WebsiteModule } from '../website.module';
 import { ProductImageGridComponent } from '../components/product-image-grid/product-image-grid.component';
+import { ConsumiblesDetailComponent } from './pages/consumibles-detail/consumibles-detail.component';
+import { ConsumiblesEditComponent } from './pages/consumibles-edit/consumibles-edit.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { ProductImageGridComponent } from '../components/product-image-grid/prod
     ConsumiblesCreateComponent,
     // DealEditComponent,
     LayoutPageComponent,
+    ConsumiblesDetailComponent,
+    ConsumiblesEditComponent,
   ],
   imports: [
     CommonModule,

@@ -8,6 +8,8 @@ import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
 /* 
 TODO 1: add user input validation
 TODO 2: add error handling
@@ -32,24 +34,25 @@ export class ConsumiblesCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private ConsumiblesService: ConsumiblesService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private validatorsService: ValidatorsService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initalizeForm();
   }
 
   initalizeForm() {
     this.createConsumibleForm = this.fb.group({
       name: ['', Validators.required],
-      price: ['', Validators.required],
-      weight: ['', Validators.required],
+      price: [0, [Validators.required, Validators.min(0.01)]],
+      weight: [0, [Validators.required, Validators.min(0.01)]],
       shortDescription: ['', Validators.required],
       thumbnailImage: ['', Validators.required],
       longDescription: ['', Validators.required],
       images: this.fb.array([''], Validators.required),
       category: ['', Validators.required],
-      stock: ['', Validators.required],
+      stock: [0, [Validators.required, Validators.min(0)]],
       location: ['', Validators.required],
     });
   }
@@ -93,5 +96,59 @@ export class ConsumiblesCreateComponent implements OnInit {
     this.removeImage(index);
   }
 
-  submitForm() {}
+  isValidField(field: string): boolean | null {
+    // console.log(this.validatorsService.isValidField(this.editPrinterForm, field))
+    return this.validatorsService.isValidField(
+      this.createConsumibleForm,
+      field
+    );
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.createConsumibleForm.controls[field]) return null;
+
+    const errors = this.createConsumibleForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  submitForm() {
+    if (this.createConsumibleForm.invalid) {
+      console.log('invalid form');
+      console.log(this.createConsumibleForm);
+      this.createConsumibleForm.markAllAsTouched();
+      return;
+    }
+    const formData = this.createConsumibleForm.value;
+    // formData.price = parseFloat(formData.price);
+    formData.weight = parseFloat(formData.weight);
+    formData.stock = parseInt(formData.stock);
+    this.ConsumiblesService.createConsumible(formData).subscribe(
+      (response) => {
+        this.toastService.showSuccess('Consumible created successfully', 'OK'); // Show success toast
+        this.router.navigate(['/website/consumibles']);
+      },
+      (error) => {
+        console.log(error);
+        this.toastService.showError(
+          'There was an error: ' + error.error.message + '. Please try again.',
+          'error-snackbar'
+        );
+      }
+    );
+  }
 }

@@ -33,7 +33,7 @@ export class PrinterEditComponent implements OnInit {
     private printerService: PrinterService,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService,
+    private validatorsService: ValidatorsService
   ) {}
 
   ngOnInit(): void {
@@ -44,74 +44,40 @@ export class PrinterEditComponent implements OnInit {
     this.editPrinterForm = this.fb.group({
       brand: [this.printer ? this.printer.brand : '', Validators.required],
       model: [this.printer ? this.printer.model : '', Validators.required],
-      datasheet_url: [
-        this.printer ? this.printer.datasheet_url : '',
-      ],
-      img_url: this.fb.array(
-        this.printer ? this.printer.img_url : [],
-      ),
-      description: [
-        this.printer ? this.printer.description : '',
-      ],
+      datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
+      img_url: this.fb.array(this.printer ? this.printer.img_url : []),
+      description: [this.printer ? this.printer.description : ''],
       price: [
         this.printer ? this.printer.price : '',
         [
           Validators.required,
-          Validators.pattern(this.validatorsService.floatNumberPattern)
+          Validators.pattern(this.validatorsService.floatNumberPattern),
         ],
       ],
       category: [
         this.printer ? this.printer.category : '',
         Validators.required,
       ],
-      color: [
-        this.printer ? this.printer.color : false,
-      ],
-      rentable: [
-        this.printer ? this.printer.rentable : false,
-      ],
-      sellable: [
-        this.printer ? this.printer.sellable : false,
-      ],
+      color: [this.printer ? this.printer.color : false],
+      rentable: [this.printer ? this.printer.rentable : false],
+      sellable: [this.printer ? this.printer.sellable : false],
       tags: this.fb.array(
         (this.printer && this.printer.tags.length > 0
           ? this.printer.tags
           : ['']
-        ).map((tag) => this.fb.control(tag, ))
+        ).map((tag) => this.fb.control(tag))
       ),
-      powerConsumption: [
-        this.printer ? this.printer.powerConsumption : '',
-      ],
-      dimensions: [
-        this.printer ? this.printer.dimensions : '',
-      ],
-      printVelocity: [
-        this.printer ? this.printer.printVelocity : '',
-      ],
-      maxPrintSizeSimple: [
-        this.printer ? this.printer.maxPrintSizeSimple : '',
-      ],
-      maxPrintSize: [
-        this.printer ? this.printer.maxPrintSize : '',
-      ],
-      printSize: [
-        this.printer ? this.printer.printSize : '',
-      ],
-      maxPaperWeight: [
-        this.printer ? this.printer.maxPaperWeight : '',
-      ],
-      duplexUnit: [
-        this.printer ? this.printer.duplexUnit : false,
-      ],
-      paperSizes: [
-        this.printer ? this.printer.paperSizes : '',
-      ],
-      applicableOS: [
-        this.printer ? this.printer.applicableOS : '',
-      ],
-      printerFunctions: [
-        this.printer ? this.printer.printerFunctions : '',
-      ],
+      powerConsumption: [this.printer ? this.printer.powerConsumption : ''],
+      dimensions: [this.printer ? this.printer.dimensions : ''],
+      printVelocity: [this.printer ? this.printer.printVelocity : ''],
+      maxPrintSizeSimple: [this.printer ? this.printer.maxPrintSizeSimple : ''],
+      maxPrintSize: [this.printer ? this.printer.maxPrintSize : ''],
+      printSize: [this.printer ? this.printer.printSize : ''],
+      maxPaperWeight: [this.printer ? this.printer.maxPaperWeight : ''],
+      duplexUnit: [this.printer ? this.printer.duplexUnit : false],
+      paperSizes: [this.printer ? this.printer.paperSizes : ''],
+      applicableOS: [this.printer ? this.printer.applicableOS : ''],
+      printerFunctions: [this.printer ? this.printer.printerFunctions : ''],
     });
   }
 
@@ -204,9 +170,9 @@ export class PrinterEditComponent implements OnInit {
     console.log(this.editPrinterForm.value);
   }
 
-  isValidField(field: string): boolean|null {
+  isValidField(field: string): boolean | null {
     // console.log(this.validatorsService.isValidField(this.editPrinterForm, field))
-    return this.validatorsService.isValidField(this.editPrinterForm, field)
+    return this.validatorsService.isValidField(this.editPrinterForm, field);
   }
 
   getFieldError(field: string): string | null {
@@ -217,15 +183,15 @@ export class PrinterEditComponent implements OnInit {
     console.log(errors);
 
     for (const key of Object.keys(errors)) {
-      switch(key) {
-        case'required':
+      switch (key) {
+        case 'required':
           return 'Este campo es requerido';
-        case'pattern':
+        case 'pattern':
           return 'Este campo esta en formato incorrecto';
-        case'maxlength':
-          return `Máximo ${ errors['maxlength'].requiredLength } caracteres`;
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
         default:
-          return "Error desconocido";
+          return 'Error desconocido';
       }
     }
     return null;

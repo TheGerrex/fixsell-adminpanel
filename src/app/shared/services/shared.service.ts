@@ -11,6 +11,9 @@ export class SharedService {
   private dealNameSource = new BehaviorSubject<string>('');
   currentDealName = this.dealNameSource.asObservable();
 
+  private consumablesModel = new BehaviorSubject<string>('');
+  currentConsumablesModel = this.consumablesModel.asObservable();
+
   constructor() {}
 
   changePrinterModel(model: string) {
@@ -19,5 +22,9 @@ export class SharedService {
 
   changeDealName(name: string) {
     this.dealNameSource.next(name);
+  }
+
+  changeConsumiblesModel(model: string) {
+    this.consumablesModel.next(model);
   }
 }

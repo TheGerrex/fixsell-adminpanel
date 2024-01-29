@@ -97,7 +97,6 @@ export class ConsumiblesCreateComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.editPrinterForm, field))
     return this.validatorsService.isValidField(
       this.createConsumibleForm,
       field

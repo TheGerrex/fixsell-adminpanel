@@ -7,6 +7,7 @@ import { ConsumiblesListComponent } from './pages/consumibles-list/consumibles-l
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
 import { ConsumiblesCreateComponent } from './pages/consumibles-create/consumibles-create.component';
 import { ConsumiblesEditComponent } from './pages/consumibles-edit/consumibles-edit.component';
+import { ConsumiblesDetailComponent } from './pages/consumibles-detail/consumibles-detail.component';
 
 const routes: Routes = [
   {
@@ -26,12 +27,12 @@ const routes: Routes = [
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
       },
-      //   {
-      //     path: ':id',
-      //     component: PrinterDetailComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Multifuncional' },
-      //   },
+      {
+        path: ':id',
+        component: ConsumiblesDetailComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Multifuncional' },
+      },
       {
         path: ':id/edit',
         component: ConsumiblesEditComponent,

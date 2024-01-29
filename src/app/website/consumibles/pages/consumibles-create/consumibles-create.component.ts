@@ -48,11 +48,11 @@ export class ConsumiblesCreateComponent implements OnInit {
       price: [0, [Validators.required, Validators.min(0.01)]],
       weight: [0, [Validators.required, Validators.min(0.01)]],
       shortDescription: ['', Validators.required],
-      thumbnailImage: ['', Validators.required],
+      thumbnailImage: [''],
       longDescription: ['', Validators.required],
       images: this.fb.array([''], Validators.required),
       category: ['', Validators.required],
-      stock: [0, [Validators.required, Validators.min(0)]],
+      stock: [1, [Validators.required, Validators.min(1)]],
       location: ['', Validators.required],
     });
   }
@@ -128,8 +128,22 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   submitForm() {
     if (this.createConsumibleForm.invalid) {
+      Object.keys(this.createConsumibleForm.controls).forEach((key) => {
+        console.log(
+          'Key = ' +
+            key +
+            ', Value = ' +
+            this.createConsumibleForm.controls[key].value +
+            ', Valid = ' +
+            this.createConsumibleForm.controls[key].valid
+        );
+      });
       console.log('invalid form');
+      //reason of invalid form
+      console.log(this.createConsumibleForm.errors);
       console.log(this.createConsumibleForm);
+      console.log(this.createConsumibleForm.value);
+
       this.createConsumibleForm.markAllAsTouched();
       return;
     }

@@ -45,6 +45,7 @@ export class ConsumiblesEditComponent implements OnInit {
         console.log('got consumible from service' + { Consumible });
         console.log({ Consumible });
         this.Consumible = Consumible;
+        this.imageUrlsArray = [...this.Consumible.images]; // Update the imageUrlsArray
         this.initalizeForm(); // Moved inside the subscribe block
         console.log(this.Consumible);
         this.sharedService.changeConsumiblesModel(this.Consumible.name);
@@ -123,7 +124,80 @@ export class ConsumiblesEditComponent implements OnInit {
     return null;
   }
 
-  onFileUploaded(event: any): void {}
-  onRemove(index: number): void {}
-  submitForm() {}
+  //Function for when user uploads file
+  //Fills up images array with the file url of the uploaded image
+  onFileUploaded(event: any): void {
+    const imageUrl = event; // The event should be the URL of the uploaded file
+    this.imageUrlsArray.push(imageUrl);
+    // Check if the last image URL in the form array is not empty
+    if (this.images.at(this.images.length - 1).value !== '') {
+      // If it's not empty, add a new control to the form array
+      this.addImage();
+    }
+
+    // Set the value of the last control in the form array to the image URL
+    this.images.at(this.images.length - 1).setValue(imageUrl);
+  }
+  onRemove(index: number): void {
+    this.imageUrlsArray.splice(index, 1);
+    this.removeImage(index);
+  }
+
+  addImage(): void {
+    this.images.push(this.fb.control(''));
+  }
+
+  removeImage(index: number): void {
+    this.images.removeAt(index);
+  }
+  submitForm() {
+    // validate form
+    if (this.editConsumibleForm.invalid) {
+      Object.keys(this.editConsumibleForm.controls).forEach((key) => {
+        console.log(
+          'Key = ' +
+            key +
+            ' value = ' +
+            this.editConsumibleForm.controls[key].value
+        );
+        this.editConsumibleForm.controls[key].markAsTouched();
+      });
+      console.log('form invalid');
+      this.editConsumibleForm.markAllAsTouched();
+      this.toastService.showError(
+        'Error',
+        'Error al actualizar consumible, revise los campos'
+      );
+      return;
+    }
+
+    const formData = this.editConsumibleForm.value;
+    formData.weight = parseFloat(formData.weight);
+    formData.stock = parseInt(formData.stock);
+    formData.price = parseFloat(formData.price);
+    console.log(formData);
+    const consumiblesId = this.route.snapshot.paramMap.get('id');
+    if (consumiblesId === null) {
+      console.error('Printer id is null');
+      return;
+    }
+
+    this.ConsumiblesService.updateConsumible(formData, consumiblesId).subscribe(
+      (data) => {
+        console.log(data);
+        this.toastService.showSuccess(
+          'Consumible actualizado',
+          'Consumible actualizado correctamente'
+        );
+        this.router.navigate(['website/consumibles']);
+      },
+      (error) => {
+        console.log(error);
+        this.toastService.showError(
+          'Error',
+          'Error al actualizar consumible' + error.error.message
+        );
+      }
+    );
+  }
 }

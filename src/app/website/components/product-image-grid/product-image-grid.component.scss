@@ -1,24 +1,42 @@
+@import '_variables.scss';
 .image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
-  gap: 10px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  min-height: 200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
+    gap: 10px;
+    // border: 1px solid $gray-300;
+    border-radius: $border-radius;
+    padding: 10px;
+    min-height: 200px;
 }
 
 .image-thumbnail {
-  position: relative;
+    position: relative;
+    background-color: #F8FAFC;
+    border: 1px solid $gray-300;
+    text-align: center;
+    border-radius: $border-radius;
 }
 
 .image-thumbnail img {
-  width: 100%;
-  height: auto;
+    width: 200px;
+    height: auto;
 }
 
 .remove-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: #ccc;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 5px;
+    right: 5px;
+    color: $gray-500;
+    background-color: $gray-100;
+    border-radius: 50px;
+    height: 32px;
+    width: 32px;
+    transition: all .1s ease-out;
+    &:hover {
+        color: $red-500;
+        background-color: $red-100;
+    }
 }

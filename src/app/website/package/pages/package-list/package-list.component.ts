@@ -47,9 +47,9 @@ export class PackageListComponent {
         // Filter out printers with null dealDiscountPercentage
         const filteredData = data.filter(
           (printer) =>
-            printer.package &&
-            printer.package.packageDiscountPercentage !== null
+            printer.packages && printer.packages.packagePrice !== null
         );
+        console.log('filteredData', filteredData);
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(filteredData);
         this.dataSource.paginator = this.paginator;

@@ -36,31 +36,31 @@
     </ng-container>
 
     <!-- duracion in months Column -->
-    <ng-container matColumnDef="dealPrice">
+    <ng-container matColumnDef="packageDuration">
       <th mat-header-cell *matHeaderCellDef>Duracion de Paquete</th>
-      <td mat-cell *matCellDef="let printer" data-column="dealPrice">
-        {{ printer.package.packageDuration }}
+      <td mat-cell *matCellDef="let printer" data-column="packageDuration">
+        {{ printer.packages.packageDuration }}
       </td>
     </ng-container>
     <!-- paqueteDiscount -->
-    <ng-container matColumnDef="dealDiscountPercentage">
+    <ng-container matColumnDef="packageDiscountPercentage">
       <th mat-header-cell *matHeaderCellDef>% de Descuento</th>
       <td
         mat-cell
         *matCellDef="let printer"
-        data-column="dealDiscountPercentage"
+        data-column="packageDiscountPercentage"
       >
-        <span *ngIf="printer.package.packageDiscountPercentage">
-          {{ printer.package.packageDiscountPercentage }}
+        <span *ngIf="printer.packages.packageDiscountPercentage">
+          {{ printer.packages.packageDiscountPercentage }}
         </span>
       </td>
     </ng-container>
 
     <!-- packagePrice Column -->
     <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef>Precio</th>
+      <th mat-header-cell *matHeaderCellDef>Precio de paquete</th>
       <td mat-cell *matCellDef="let printer" data-column="price">
-        {{ printer.package.price | currency }}
+        {{ printer.packages.packagePrice | currency }}
       </td>
     </ng-container>
 

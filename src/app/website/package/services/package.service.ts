@@ -11,4 +11,10 @@ import { of } from 'rxjs';
 })
 export class PackageService {
   constructor(private http: HttpClient) {}
+
+  deletePackageById(id: number): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}/packages/${id}`, {
+      responseType: 'text',
+    });
+  }
 }

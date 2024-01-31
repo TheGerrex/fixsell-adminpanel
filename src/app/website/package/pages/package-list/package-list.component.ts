@@ -122,6 +122,6 @@ export class PackageListComponent {
   }
 
   addPaquete() {
-    this.router.navigate(['/website/paquete/create']);
+    this.router.navigate(['/website/packages/create']);
   }
 }

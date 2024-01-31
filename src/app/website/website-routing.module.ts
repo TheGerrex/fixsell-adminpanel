@@ -18,6 +18,11 @@ const routes: Routes = [
         (m) => m.ConsumiblesModule
       ),
   },
+  {
+    path: 'packages',
+    loadChildren: () =>
+      import('./package/package.module').then((m) => m.PackageModule),
+  },
 ];
 
 @NgModule({

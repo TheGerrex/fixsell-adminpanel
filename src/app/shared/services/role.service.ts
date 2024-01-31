@@ -26,6 +26,11 @@ export class RoleService {
     '/website/consumibles/create/*': ['admin', 'user', 'vendor'],
     '/website/consumibles/*': ['admin', 'user', 'vendor'],
     '/website/consumibles/*/edit': ['admin', 'user', 'vendor'],
+    '/website/packets': ['admin', 'user', 'vendor'],
+    '/website/packets/create': ['admin', 'user', 'vendor'],
+    '/website/packets/create/*': ['admin', 'user', 'vendor'],
+    '/website/packets/*': ['admin', 'user', 'vendor'],
+    '/website/packets/*/edit': ['admin', 'user', 'vendor'],
   };
 
   getAllowedRoles(path: string): string[] {

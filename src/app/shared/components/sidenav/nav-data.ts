@@ -27,7 +27,11 @@ export const navbarData = [
         routeLink: 'website/deals',
         allowedRoles: ['admin', 'user', 'vendor'],
       },
-      { label: 'Printers', routeLink: 'website/printers' },
+      {
+        label: 'Paquetes',
+        routeLink: 'website/packets',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
     ],
   },
   {

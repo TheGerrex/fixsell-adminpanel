@@ -6,23 +6,21 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Deal, Printer } from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
-import swal from 'sweetalert2';
-import { DealService } from '../../services/deal.service';
+import { PackageService } from '../../services/package.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
-  selector: 'app-deal-list',
-  templateUrl: './deal-list.component.html',
-  styleUrls: ['./deal-list.component.scss'],
+  selector: 'app-package-list',
+  templateUrl: './package-list.component.html',
+  styleUrls: ['./package-list.component.scss'],
 })
-export class DealListComponent {
+export class PackageListComponent {
   displayedColumns: string[] = [
     'brand',
     'model',
-    'dealDiscountPercentage',
-    // 'color',
-    'dealPrice',
+    'packageDuration',
+    'packageDiscountPercentage',
     'price',
     'action',
   ];
@@ -36,7 +34,6 @@ export class DealListComponent {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private DealService: DealService,
     private dialogService: DialogService,
     private toastService: ToastService
   ) {}
@@ -50,7 +47,8 @@ export class DealListComponent {
         // Filter out printers with null dealDiscountPercentage
         const filteredData = data.filter(
           (printer) =>
-            printer.deal && printer.deal.dealDiscountPercentage !== null
+            printer.package &&
+            printer.package.packageDiscountPercentage !== null
         );
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(filteredData);
@@ -63,9 +61,9 @@ export class DealListComponent {
       this.displayedColumns = [
         'brand',
         'model',
-        'dealPrice',
+        'packageDuration',
+        'packageDiscountPercentage',
         'price',
-        'dealDiscountPercentage',
       ];
     }
   }
@@ -76,7 +74,7 @@ export class DealListComponent {
       state: { printer },
     });
   }
-  editPrinter(printer: Printer) {
+  editPackage(printer: Printer) {
     // Check if the printer has a deal
     if (printer.deal) {
       this.router.navigate([`/website/deals/${printer.deal.id}/edit`], {
@@ -88,43 +86,7 @@ export class DealListComponent {
     }
   }
 
-  addPrinter() {
-    this.router.navigate(['/website/deals/create']);
-  }
-
-  deleteDeal(printer: Printer) {
-    this.dialogService
-      .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.DealService.deleteDealById(printer.deal.id).subscribe(
-            (response) => {
-              console.log(response); // This should log "Deal with ID 10 has been removed"
-              // Show a toast message after the user confirms the deletion
-              this.toastService.showSuccess(
-                'Printer deleted successfully',
-                'OK'
-              );
-
-              // Remove the deleted deal from the dataSource
-              const data = this.dataSource.data;
-              this.dataSource.data = data.filter(
-                (p) => p.deal.id !== printer.deal.id
-              );
-            },
-            (error) => {
-              console.error('Error:', error);
-              this.dialogService.openErrorDialog(
-                'Error deleting deal',
-                'OK',
-                'delete-dialog'
-              ); // Show error dialog with 'delete-dialog' class
-            }
-          );
-        }
-      });
-  }
+  deletePackage(printer: Printer) {}
 
   addPaquete() {
     this.router.navigate(['/website/paquete/create']);

@@ -5,15 +5,6 @@
             <button type="submit" class="button button-primary button-raised" [disabled]="editPrinterForm.invalid" (click)="submitForm()"><span class="button-label">Realizar Cambios</span></button>
         </div>
         <div class="printer-info">
-            <!-- <div class="carousel">
-                <div class="image-container">
-                    <img [src]="editPrinterForm.value.img_url[currentImageIndex]" alt="">
-                </div>
-                <div class="button-container">
-                    <button class="button button-secondary button-raised" (click)="prevImage()">< Atras</button>
-                    <button class="button button-secondary button-raised" (click)="nextImage()">Siguiente ></button>
-                </div>
-            </div> -->
             <div class="printer-images">
                 <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="onRemove($event)"></app-product-image-grid>
                 <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>

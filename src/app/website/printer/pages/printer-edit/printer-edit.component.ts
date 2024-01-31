@@ -13,6 +13,7 @@ import { ValidatorsService } from 'src/app/shared/services/validators.service';
   styleUrls: ['./printer-edit.component.scss'],
 })
 export class PrinterEditComponent implements OnInit {
+  public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
   categories = [
@@ -101,6 +102,7 @@ export class PrinterEditComponent implements OnInit {
     if (id) {
       this.printerService.getPrinter(id).subscribe((printerResponse) => {
         this.printer = printerResponse;
+        this.imageUrlsArray = [...this.printer.img_url];
         this.initializeForm();
         // console.log(this.printer);
         console.log(this.editPrinterForm);
@@ -220,5 +222,34 @@ export class PrinterEditComponent implements OnInit {
         this.toastService.showError(error.error.message, 'Aceptar');
       }
     );
+  }
+
+  get images(): FormArray {
+    return this.editPrinterForm.get('images') as FormArray;
+  }
+
+  onFileUploaded(event: any): void {
+    const imageUrl = event; // The event should be the URL of the uploaded file
+    this.imageUrlsArray.push(imageUrl);
+    // Check if the last image URL in the form array is not empty
+    if (this.images.at(this.images.length - 1).value !== '') {
+      // If it's not empty, add a new control to the form array
+      this.addImage();
+    }
+
+    // Set the value of the last control in the form array to the image URL
+    this.images.at(this.images.length - 1).setValue(imageUrl);
+  }
+  onRemove(index: number): void {
+    this.imageUrlsArray.splice(index, 1);
+    this.removeImage(index);
+  }
+
+  addImage(): void {
+    this.images.push(this.fb.control(''));
+  }
+
+  removeImage(index: number): void {
+    this.images.removeAt(index);
   }
 }

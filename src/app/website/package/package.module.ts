@@ -6,9 +6,14 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { PackageRoutingModule } from './package-routing.module';
+import { PackageCreateComponent } from './pages/package-create/package-create.component';
 
 @NgModule({
-  declarations: [LayoutPageComponent, PackageListComponent],
+  declarations: [
+    LayoutPageComponent,
+    PackageListComponent,
+    PackageCreateComponent,
+  ],
   imports: [
     CommonModule,
     PackageRoutingModule,

@@ -35,6 +35,7 @@ export class PackageListComponent {
     private router: Router,
     private authService: AuthService,
     private dialogService: DialogService,
+    private PackageService: PackageService,
     private toastService: ToastService
   ) {}
 
@@ -47,9 +48,9 @@ export class PackageListComponent {
         // Filter out printers with null dealDiscountPercentage
         const filteredData = data.filter(
           (printer) =>
-            printer.package &&
-            printer.package.packageDiscountPercentage !== null
+            printer.packages && printer.packages.packagePrice !== null
         );
+        console.log('filteredData', filteredData);
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(filteredData);
         this.dataSource.paginator = this.paginator;
@@ -86,9 +87,41 @@ export class PackageListComponent {
     }
   }
 
-  deletePackage(printer: Printer) {}
+  deletePackage(printer: Printer) {
+    this.dialogService
+      .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.PackageService.deletePackageById(printer.packages.id).subscribe(
+            (response) => {
+              console.log(response); // This should log "packages with ID 10 has been removed"
+              // Show a toast message after the user confirms the deletion
+              this.toastService.showSuccess(
+                'Printer deleted successfully',
+                'OK'
+              );
+
+              // Remove the deleted packages from the dataSource
+              const data = this.dataSource.data;
+              this.dataSource.data = data.filter(
+                (p) => p.packages.id !== printer.packages.id
+              );
+            },
+            (error) => {
+              console.error('Error:', error);
+              this.dialogService.openErrorDialog(
+                'Error deleting package',
+                'OK',
+                'delete-dialog'
+              ); // Show error dialog with 'delete-dialog' class
+            }
+          );
+        }
+      });
+  }
 
   addPaquete() {
-    this.router.navigate(['/website/paquete/create']);
+    this.router.navigate(['/website/packages/create']);
   }
 }

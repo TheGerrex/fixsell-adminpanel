@@ -24,7 +24,7 @@ export interface Printer {
   printerFunctions: string;
   barcode: null;
   deal: Deal;
-  package: Package;
+  packages: Package;
 }
 
 export interface Deal {

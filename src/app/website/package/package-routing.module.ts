@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 import { PackageListComponent } from './pages/package-list/package-list.component';
+import { PackageCreateComponent } from './pages/package-create/package-create.component';
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
 
 const routes: Routes = [
@@ -19,18 +20,18 @@ const routes: Routes = [
           breadcrumb: 'paquetes',
         },
       },
-      //   {
-      //     path: 'create',
-      //     component: DealCreateComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
-      //   },
-      //   {
-      //     path: 'create/:id',
-      //     component: DealCreateComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
-      //   },
+      {
+        path: 'create',
+        component: PackageCreateComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
+      },
+      {
+        path: 'create/:id',
+        component: PackageCreateComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
+      },
       //   {
       //     path: ':id',
       //     component: DealDetailComponent,

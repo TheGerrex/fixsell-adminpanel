@@ -1,0 +1,227 @@
+<div>
+  <form
+    [formGroup]="createPackageForm"
+    class="packages-container"
+    *ngIf="createPackageForm"
+  >
+    <div class="packages-header">
+      <h2>Crear Package</h2>
+      <button
+        type="submit"
+        class="button button-primary button-raised"
+        (click)="submitForm()"
+      >
+        <span class="button-label">Agregar Package</span>
+      </button>
+    </div>
+    <div class="packages-info">
+      <div class="packages-data-container">
+        <div class="packages-data">
+          <div class="packages-data-item">
+            <h5>Printer</h5>
+            <mat-form-field>
+              <input
+                type="text"
+                placeholder="Select a printer"
+                aria-label="Number"
+                matInput
+                [formControl]="printerControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let printerName of filteredPrinterNames$ | async"
+                  [value]="printerName"
+                >
+                  {{ printerName }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <span
+              *ngIf="
+                createPackageForm.controls['printer'].invalid &&
+                createPackageForm.controls['printer'].touched
+              "
+              class="form-text text-danger"
+            >
+              Printer is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Duration</h5>
+            <input
+              formControlName="packageDuration"
+              class="form-control"
+              type="number"
+              [class.is-invalid]="
+                createPackageForm.controls['packageDuration'].invalid &&
+                createPackageForm.controls['packageDuration'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packageDuration'].invalid &&
+                createPackageForm.controls['packageDuration'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Duration is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Start Date</h5>
+            <input
+              formControlName="packageStartDate"
+              class="form-control"
+              type="date"
+              [class.is-invalid]="
+                createPackageForm.controls['packageStartDate'].invalid &&
+                createPackageForm.controls['packageStartDate'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packageStartDate'].invalid &&
+                createPackageForm.controls['packageStartDate'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Start Date is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package End Date</h5>
+            <input
+              formControlName="packageEndDate"
+              class="form-control"
+              type="date"
+              [class.is-invalid]="
+                createPackageForm.controls['packageEndDate'].invalid &&
+                createPackageForm.controls['packageEndDate'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packageEndDate'].invalid &&
+                createPackageForm.controls['packageEndDate'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package End Date is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Price</h5>
+            <input
+              formControlName="packagePrice"
+              class="form-control"
+              type="number"
+              step="0.01"
+              [class.is-invalid]="
+                createPackageForm.controls['packagePrice'].invalid &&
+                createPackageForm.controls['packagePrice'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packagePrice'].invalid &&
+                createPackageForm.controls['packagePrice'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Price is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Discount Percentage</h5>
+            <input
+              formControlName="packageDiscountPercentage"
+              class="form-control"
+              type="number"
+              step="0.01"
+              [class.is-invalid]="
+                createPackageForm.controls['packageDiscountPercentage']
+                  .invalid &&
+                createPackageForm.controls['packageDiscountPercentage'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packageDiscountPercentage']
+                  .invalid &&
+                createPackageForm.controls['packageDiscountPercentage'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Discount Percentage is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Description</h5>
+            <textarea
+              formControlName="packageDescription"
+              class="form-control"
+              rows="5"
+              [class.is-invalid]="
+                createPackageForm.controls['packageDescription'].invalid &&
+                createPackageForm.controls['packageDescription'].touched
+              "
+            ></textarea>
+            <span
+              *ngIf="
+                createPackageForm.controls['packageDescription'].invalid &&
+                createPackageForm.controls['packageDescription'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Description is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Prints</h5>
+            <input
+              formControlName="packagePrints"
+              class="form-control"
+              type="number"
+              [class.is-invalid]="
+                createPackageForm.controls['packagePrints'].invalid &&
+                createPackageForm.controls['packagePrints'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packagePrints'].invalid &&
+                createPackageForm.controls['packagePrints'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Prints is required.
+            </span>
+          </div>
+          <div class="packages-data-item">
+            <h5>Package Extra Click Price</h5>
+            <input
+              formControlName="packageExtraClickPrice"
+              class="form-control"
+              type="number"
+              step="0.01"
+              [class.is-invalid]="
+                createPackageForm.controls['packageExtraClickPrice'].invalid &&
+                createPackageForm.controls['packageExtraClickPrice'].touched
+              "
+            />
+            <span
+              *ngIf="
+                createPackageForm.controls['packageExtraClickPrice'].invalid &&
+                createPackageForm.controls['packageExtraClickPrice'].touched
+              "
+              class="form-text text-danger"
+            >
+              Package Extra Click Price is required.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

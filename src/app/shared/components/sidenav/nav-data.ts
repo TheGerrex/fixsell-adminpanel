@@ -29,7 +29,7 @@ export const navbarData = [
       },
       {
         label: 'Paquetes',
-        routeLink: 'website/packets',
+        routeLink: 'website/packages',
         allowedRoles: ['admin', 'user', 'vendor'],
       },
     ],

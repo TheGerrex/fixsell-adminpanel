@@ -48,6 +48,21 @@
           gap: 1em;
           // row-gap: 1em;
         }
+
+        .package-price-item {
+          display: flex;
+          align-items: center;
+          align-items: stretch; // Make the items stretch to fill the container
+
+          input {
+            flex-grow: 1; // Make the input field take up the remaining space
+          }
+
+          button {
+            padding: 1em; // Increase the size of the button
+            flex-shrink: 0; // Prevent the button from shrinking
+          }
+        }
       }
       .full-row {
         grid-column: 1 / -1; // This will make the description item span the entire row

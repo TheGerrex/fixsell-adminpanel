@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environments';
@@ -43,9 +43,47 @@ export class PackageService {
     );
   }
 
+  // create package
+  createPackage(packageData: any): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/packages`, packageData);
+  }
+
+  //get uuid from printer name
+  getPrinterId(name: string): Observable<string> {
+    return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
+      map((printers: Printer[]) => {
+        const printer = printers.find((printer) => printer.model === name);
+        if (printer) {
+          return printer.id;
+        } else {
+          throw new Error('Printer not found');
+        }
+      }),
+      catchError((error) => {
+        console.error(error);
+        return throwError(error);
+      })
+    );
+  }
+
   deletePackageById(id: number): Observable<any> {
     return this.http.delete(`${environment.baseUrl}/packages/${id}`, {
       responseType: 'text',
     });
+  }
+
+  getPrinterPrice(name: string): Observable<number> {
+    return this.findPrinterIdByName(name).pipe(
+      switchMap((id) => {
+        if (id) {
+          return this.http.get<Printer>(
+            `${environment.baseUrl}/printers/${id}`
+          );
+        } else {
+          throw new Error('Printer not found');
+        }
+      }),
+      map((printer: Printer) => printer.price)
+    );
   }
 }

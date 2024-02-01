@@ -3,7 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 import { PackageListComponent } from './pages/package-list/package-list.component';
 import { PackageCreateComponent } from './pages/package-create/package-create.component';
+
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
+import { PackageEditComponent } from './pages/package-edit/package-edit.component';
 
 const routes: Routes = [
   {
@@ -32,18 +34,12 @@ const routes: Routes = [
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
       },
-      //   {
-      //     path: ':id',
-      //     component: DealDetailComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Deals' },
-      //   },
-      //   {
-      //     path: ':id/edit',
-      //     component: DealEditComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Editar' },
-      //   },
+      {
+        path: ':id/edit',
+        component: PackageEditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Editar' },
+      },
     ],
   },
 ];

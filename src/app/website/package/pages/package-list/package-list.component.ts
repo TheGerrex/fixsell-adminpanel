@@ -77,13 +77,13 @@ export class PackageListComponent {
   }
   editPackage(printer: Printer) {
     // Check if the printer has a deal
-    if (printer.deal) {
-      this.router.navigate([`/website/deals/${printer.deal.id}/edit`], {
-        state: { deal: printer.deal },
+    if (printer.packages) {
+      this.router.navigate([`/website/packages/${printer.packages.id}/edit`], {
+        state: { package: printer.packages },
       });
     } else {
       // Handle the case where the printer does not have a deal
-      console.error('This printer does not have a deal to edit.');
+      console.error('This printer does not have a package to edit.');
     }
   }
 

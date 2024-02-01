@@ -7,12 +7,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { PackageRoutingModule } from './package-routing.module';
 import { PackageCreateComponent } from './pages/package-create/package-create.component';
+import { PackageEditComponent } from './pages/package-edit/package-edit.component';
 
 @NgModule({
   declarations: [
     LayoutPageComponent,
     PackageListComponent,
     PackageCreateComponent,
+    PackageEditComponent,
   ],
   imports: [
     CommonModule,

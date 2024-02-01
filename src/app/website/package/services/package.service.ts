@@ -86,4 +86,8 @@ export class PackageService {
       map((printer: Printer) => printer.price)
     );
   }
+
+  getPackage(id: string): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/packages/${id}`);
+  }
 }

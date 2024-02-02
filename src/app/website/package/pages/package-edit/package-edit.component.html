@@ -5,13 +5,13 @@
     *ngIf="editPackageForm"
   >
     <div class="packages-header">
-      <h2>Crear Package</h2>
+      <h2>Editar Paquete</h2>
       <button
         type="submit"
         class="button button-primary button-raised"
         (click)="submitForm()"
       >
-        <span class="button-label">Agregar Package</span>
+        <span class="button-label">Editar Package</span>
       </button>
     </div>
     <div class="packages-info">
@@ -22,10 +22,8 @@
             <mat-form-field>
               <input
                 type="text"
-                placeholder="Select a printer"
-                aria-label="Number"
                 matInput
-                [formControl]="printerControl"
+                formControlName="printer"
                 [matAutocomplete]="auto"
               />
               <mat-autocomplete #auto="matAutocomplete">
@@ -38,7 +36,7 @@
               </mat-autocomplete>
             </mat-form-field>
             <div>
-              <p>Price: {{ printerPrice }}</p>
+              <p>Price: {{ package ? package.printer.price : 0 }}</p>
             </div>
             <span
               *ngIf="

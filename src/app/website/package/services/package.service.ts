@@ -48,6 +48,14 @@ export class PackageService {
     return this.http.post(`${environment.baseUrl}/packages`, packageData);
   }
 
+  // update package
+  updatePackage(id: string, packageData: any): Observable<any> {
+    return this.http.patch(
+      `${environment.baseUrl}/packages/${id}`,
+      packageData
+    );
+  }
+
   //get uuid from printer name
   getPrinterId(name: string): Observable<string> {
     return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
@@ -89,5 +97,9 @@ export class PackageService {
 
   getPackage(id: string): Observable<any> {
     return this.http.get(`${environment.baseUrl}/packages/${id}`);
+  }
+
+  getPrinterById(id: string): Observable<Printer> {
+    return this.http.get<Printer>(`${environment.baseUrl}/printers/${id}`);
   }
 }

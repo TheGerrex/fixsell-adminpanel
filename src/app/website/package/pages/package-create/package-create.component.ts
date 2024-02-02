@@ -197,9 +197,5 @@ export class PackageCreateComponent implements OnInit {
         );
       }
     );
-
-    // formData.price = parseFloat(formData.price);
-    // formData.weight = parseFloat(formData.weight);
-    // formData.stock = parseInt(formData.stock);
   }
 }

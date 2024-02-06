@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from './shared/shared.module';
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -18,7 +17,7 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule, // Add HttpClientModule to imports
     FlexLayoutModule,
     BrowserAnimationsModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

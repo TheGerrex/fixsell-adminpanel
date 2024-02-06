@@ -6,18 +6,14 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
     LoginPageComponent,
     RegisterPageComponent,
-    AuthLayoutComponent
+    AuthLayoutComponent,
   ],
-  imports: [
-    CommonModule,
-    AuthRoutingModule,
-    ReactiveFormsModule
-  ]
+  imports: [CommonModule, AuthRoutingModule, ReactiveFormsModule, SharedModule],
 })
-export class AuthModule { }
+export class AuthModule {}

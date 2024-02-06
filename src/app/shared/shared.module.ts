@@ -9,6 +9,7 @@ import { ToastComponent } from './components/toast/toast.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
     ToastComponent,
     DialogComponent,
     FileUploadComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,

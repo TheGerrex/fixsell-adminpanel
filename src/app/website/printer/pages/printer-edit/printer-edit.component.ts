@@ -6,6 +6,8 @@ import { PrinterService } from '../../services/printer.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-printer-edit',
@@ -34,7 +36,8 @@ export class PrinterEditComponent implements OnInit {
     private printerService: PrinterService,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +49,7 @@ export class PrinterEditComponent implements OnInit {
       brand: [this.printer ? this.printer.brand : '', Validators.required],
       model: [this.printer ? this.printer.model : '', Validators.required],
       datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
-      img_url: this.fb.array(this.printer ? this.printer.img_url : []),
+      images: this.fb.array(this.printer ? this.printer.img_url : []),
       description: [this.printer ? this.printer.description : ''],
       price: [
         this.printer ? this.printer.price : '',
@@ -240,6 +243,30 @@ export class PrinterEditComponent implements OnInit {
     // Set the value of the last control in the form array to the image URL
     this.images.at(this.images.length - 1).setValue(imageUrl);
   }
+
+  openConfirmDialog(index: number): void {
+    const dialogConfig = new MatDialogConfig();
+  
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Borrar imagen de la impresora',
+      message: 'Estas seguro de querer eliminar esta imagen?',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar'
+      }
+    };
+  
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+  
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.onRemove(index);
+      }
+    });
+  }
+
   onRemove(index: number): void {
     this.imageUrlsArray.splice(index, 1);
     this.removeImage(index);

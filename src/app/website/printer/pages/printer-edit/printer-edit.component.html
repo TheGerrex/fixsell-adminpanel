@@ -6,7 +6,7 @@
         </div>
         <div class="printer-info">
             <div class="printer-images">
-                <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="onRemove($event)"></app-product-image-grid>
+                <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
                 <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
             </div>
             <div class="printer-data-container">

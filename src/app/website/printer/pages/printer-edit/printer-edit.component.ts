@@ -221,11 +221,11 @@ export class PrinterEditComponent implements OnInit {
     }
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       (response) => {
-        this.toastService.showSuccess('Multifuncional editada', 'Aceptar');
+        this.toastService.showSuccess('Multifuncional editada', 'Cerrar');
         this.router.navigate(['/website/printers', printerId]);
       },
       (error) => {
-        this.toastService.showError(error.error.message, 'Aceptar');
+        this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
   }

@@ -1,11 +1,15 @@
 @import '_variables.scss';
-.toast-title {
-    font-weight: 500;
-}
 
-.toast-message {
+
+.toast-component {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    
+    .toast-title {
+        font-weight: 500;
+    }
+
+
 }

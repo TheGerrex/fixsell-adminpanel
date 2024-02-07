@@ -180,8 +180,8 @@
                     </div>
                     <div class="printer-data-item">
                         <h5>Ficha Técnica</h5>
-                        <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched" (change)="onFileSelected($event)">
                         <input type="text" readonly [value]="selectedFileName || 'No file selected'">
+                        <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched" (change)="onFileSelected($event)">
                         <span *ngIf="isValidField('datasheet')" class="form-text text-danger">
                           {{ getFieldError('datasheet') }}
                         </span>

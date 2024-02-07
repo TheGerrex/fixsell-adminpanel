@@ -1,6 +1,6 @@
 <div class="file-drop-area" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
     <p *ngIf="!isUploading">
-        Arrastre y suelte un archivo (.jpg o .png)
+        Arrastre y suelte un archivo ({{file_type}})
     </p>
     <div class="icon-container">
         <mat-icon>upload_file</mat-icon>

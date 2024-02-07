@@ -231,17 +231,39 @@ export class PrinterEditComponent implements OnInit {
 
 
   onFileUploaded(event: any): void {
-    const imageUrl = event; // The event should be the URL of the uploaded file
-    this.imageUrlsArray.push(imageUrl);
-
-    // Check if the last image URL in the form array is not empty
-    if (this.images.at(this.images.length - 1).value !== '') {
-      // If it's not empty, add a new control to the form array
-      this.addImage();
+    const files = event; // The event should be an array of uploaded files
+  
+    for (const file of files) {
+      if (file) {
+        const fileExtension = file.split('.').pop();
+  
+        if (fileExtension === 'pdf') {
+          // It's a PDF, so add it to the datasheet_url field
+          const datasheetControl = this.editPrinterForm.get('datasheet');
+          if (datasheetControl) {
+            datasheetControl.setValue(file);
+          }
+        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+          // It's an image, so add it to the images field
+          this.imageUrlsArray.push(file);
+        }
+      }
     }
-
-    // Set the value of the last control in the form array to the image URL
-    this.images.at(this.images.length - 1).setValue(imageUrl);
+  
+    // Handle images
+    const imagesControl = this.editPrinterForm.get('images');
+    if (imagesControl) {
+      for (const imageUrl of this.imageUrlsArray) {
+        // Check if the last image URL in the form array is not empty
+        if (this.images.at(this.images.length - 1).value !== '') {
+          // If it's not empty, add a new control to the form array
+          this.addImage();
+        }
+  
+        // Set the value of the last control in the form array to the image URL
+        this.images.at(this.images.length - 1).setValue(imageUrl);
+      }
+    }
   }
 
   openConfirmDialog(index: number): void {

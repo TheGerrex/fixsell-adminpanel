@@ -20,11 +20,11 @@ export class NavigationGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
+    // store last visited url
+    localStorage.setItem('lastVisitedRoute', state.url);
     return this.authService.checkAuthStatus().pipe(
       map(() => true),
       catchError((err: any, caught: Observable<boolean>) => {
-        // store last visited url
-        localStorage.setItem('lastVisitedRoute', state.url);
         // Redirect to a fallback page when authentication fails
         return of(this.router.createUrlTree([`${this.baseUrl}/auth/login`]));
       })

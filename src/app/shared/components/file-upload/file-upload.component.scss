@@ -4,12 +4,18 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    // width: 250px;
+    // max-width: 250px;
+    min-height: 250px;
     outline: 2px dotted $gray-300;
     border-radius: $border-radius;
     padding: 20px;
     text-align: center;
     margin: 10px;
     transition: all 0.35s ease-in-out;
+    @media(max-width: 1024px) {
+        max-width: none;
+    }
     &:hover,
     &.dragging {
         outline: 2px dotted $primary-color;

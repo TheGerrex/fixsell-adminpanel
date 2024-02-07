@@ -18,6 +18,7 @@ export class PrinterEditComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
+  selectedFileName: string = '';
   categories = [
     'Oficina',
     'Produccion',
@@ -42,6 +43,7 @@ export class PrinterEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPrinter();
+    this.selectedFileName = this.getFileName(this.editPrinterForm.controls['datasheet'].value);
   }
 
   initializeForm() {
@@ -82,6 +84,7 @@ export class PrinterEditComponent implements OnInit {
       paperSizes: [this.printer ? this.printer.paperSizes : ''],
       applicableOS: [this.printer ? this.printer.applicableOS : ''],
       printerFunctions: [this.printer ? this.printer.printerFunctions : ''],
+      datasheet: [this.printer ? this.printer.datasheet_url : ''],
     });
   }
 
@@ -107,7 +110,7 @@ export class PrinterEditComponent implements OnInit {
         this.printer = printerResponse;
         this.imageUrlsArray = [...this.printer.img_url];
         this.initializeForm();
-        // console.log(this.printer);
+        console.log(this.printer);
         console.log(this.editPrinterForm);
         this.sharedService.changePrinterModel(printerResponse.model);
       });
@@ -263,6 +266,7 @@ export class PrinterEditComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.onRemove(index);
+        this.toastService.showSuccess('Imagen eliminada con exito', 'Aceptar');
       }
     });
   }
@@ -278,5 +282,15 @@ export class PrinterEditComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.removeAt(index);
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedFileName = event.target.files[0].name;
+    }
+  }
+  
+  getFileName(fileUrl: string): string {
+    return fileUrl.split('/').pop() || '';
   }
 }

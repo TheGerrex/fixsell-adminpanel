@@ -6,8 +6,8 @@
         </div>
         <div class="printer-info">
             <div class="printer-images">
-                <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
                 <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
+                <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
             </div>
             <div class="printer-data-container">
                 <div class="printer-data">
@@ -177,6 +177,14 @@
                             </div>
                             <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
                         </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Ficha Técnica</h5>
+                        <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched" (change)="onFileSelected($event)">
+                        <input type="text" readonly [value]="selectedFileName || 'No file selected'">
+                        <span *ngIf="isValidField('datasheet')" class="form-text text-danger">
+                          {{ getFieldError('datasheet') }}
+                        </span>
                     </div>
                 </div>
             </div>

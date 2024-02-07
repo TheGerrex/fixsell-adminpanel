@@ -9,6 +9,8 @@ export class ProductImageGridComponent {
   @Input() imageUrls!: string[];
   @Output() remove = new EventEmitter<number>();
 
+  constructor() {}
+
   onRemove(index: number): void {
     console.log('remove image at index: ', index);
     this.remove.emit(index);

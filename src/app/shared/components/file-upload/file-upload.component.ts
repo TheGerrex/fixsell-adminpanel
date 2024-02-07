@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { environment } from 'src/environments/environments';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -14,7 +15,7 @@ export class FileUploadComponent {
   // event emitter for file upload
   @Output() fileUpload = new EventEmitter<any>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastService: ToastService) {}
 
   onDragOver(event: Event) {
     event.preventDefault();
@@ -61,9 +62,11 @@ export class FileUploadComponent {
         this.isUploading = false; // Set isUploading to false when upload completes
         console.log(res.url);
         this.fileUpload.emit(res.url); // Emit file upload event with response body
+        this.toastService.showSuccess('Imagen agregada con exito', 'Aceptar');
       },
       (err) => {
         this.isUploading = false; // Set isUploading to false if an error occurs
+        this.toastService.showError(err.error.message, 'Aceptar');
         console.error(err);
       }
     );

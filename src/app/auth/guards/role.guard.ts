@@ -29,6 +29,7 @@ export class RoleGuard implements CanActivate {
     // log url and allowed roles to the console
     console.log('url', state.url);
     console.log('allowedRoles', allowedRoles);
+    localStorage.setItem('lastVisitedRoute', state.url);
     if (this.authService.checkAuthStatus()) {
       const userRoles = this.authService.getCurrentUserRoles();
       const hasRequiredRole = allowedRoles.some((role) =>

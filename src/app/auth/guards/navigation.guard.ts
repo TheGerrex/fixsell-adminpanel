@@ -21,7 +21,7 @@ export class NavigationGuard {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
     // store last visited url
-    localStorage.setItem('lastVisitedRoute', state.url);
+    //localStorage.setItem('lastVisitedRoute', state.url);
     return this.authService.checkAuthStatus().pipe(
       map(() => true),
       catchError((err: any, caught: Observable<boolean>) => {

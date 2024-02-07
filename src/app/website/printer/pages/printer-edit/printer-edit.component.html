@@ -6,7 +6,7 @@
         </div>
         <div class="printer-info">
             <div class="printer-images">
-                <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
+                <app-file-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'imagenes'"></app-file-upload>
                 <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
             </div>
             <div class="printer-data-container">
@@ -180,8 +180,8 @@
                     </div>
                     <div class="printer-data-item">
                         <h5>Ficha Técnica</h5>
-                        <input type="text" readonly [value]="selectedFileName || 'No file selected'">
-                        <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched" (change)="onFileSelected($event)">
+                        <a [href]="editPrinterForm.controls['datasheet'].value" target="_blank">{{editPrinterForm.controls['datasheet'].value.split('/').pop()}}</a>
+                        <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched">
                         <span *ngIf="isValidField('datasheet')" class="form-text text-danger">
                           {{ getFieldError('datasheet') }}
                         </span>

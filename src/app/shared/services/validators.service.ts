@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -14,5 +14,20 @@ export class ValidatorsService {
 
   public isValidField(form: FormGroup, field: string): boolean|null {
     return form.controls[field].errors && form.controls[field].touched;
-}
+  }
+
+  public fileValidator(control: FormControl): { [s: string]: boolean } {
+    const file = control.value;
+    if (file) {
+      const fileSize = file.size / 1024 / 1024; // size in MB
+      const fileType = file.type;
+      if (fileSize > 5) {
+        return { 'fileSize': true };
+      }
+      if (fileType !== 'application/pdf') {
+        return { 'fileType': true };
+      }
+    }
+    return {};
+  }
 }

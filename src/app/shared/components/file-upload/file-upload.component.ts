@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { environment } from 'src/environments/environments';
 import { ToastService } from '../../services/toast.service';
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 @Component({
   selector: 'app-file-upload',
@@ -14,6 +15,9 @@ export class FileUploadComponent {
 
   // event emitter for file upload
   @Output() fileUpload = new EventEmitter<any>();
+
+  @Input() rootFolder: string = '';
+  @Input() printer?: Printer;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
@@ -35,7 +39,7 @@ export class FileUploadComponent {
       const files = event.dataTransfer.files;
 
       if (files.length) {
-        this.uploadFile(files[0]);
+        this.uploadFile(files[0], this.rootFolder, this.printer?.brand || '', this.printer?.model || '');
       }
     }
   }
@@ -45,18 +49,21 @@ export class FileUploadComponent {
     const file: File | null = fileInput.files?.[0] || null;
 
     if (file) {
-      this.uploadFile(file);
+      this.uploadFile(file, this.rootFolder, this.printer?.brand || '', this.printer?.model || '');
     }
   }
 
-  uploadFile(file: File) {
+  uploadFile(file: File, rootFolder: string, brand: string, model: string) {
     this.isUploading = true; // Set isUploading to true when upload starts
-
+  
     console.log('Uploading file:', file.name);
-
+  
     const formData = new FormData();
     formData.append('image', file, file.name);
-
+    formData.append('rootFolder', rootFolder);
+    formData.append('subRootfolder', brand);
+    formData.append('childFolder', model);
+  
     this.http.post(`${environment.baseUrl}/upload/image`, formData).subscribe(
       (res: any) => {
         this.isUploading = false; // Set isUploading to false when upload completes

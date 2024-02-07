@@ -18,7 +18,7 @@ export class ToastService {
         buttonColor: 'button-icon-success',
         icon: 'done',
       },
-      duration: 5000, 
+      duration: 8000, 
       horizontalPosition: 'end', 
       verticalPosition: 'top',
       panelClass: ['success-toast']});
@@ -33,7 +33,7 @@ export class ToastService {
         buttonColor: 'button-icon-danger',
         icon: 'error',
       },
-      duration: 5000, 
+      duration: 8000, 
       horizontalPosition: 'end', 
       verticalPosition: 'top',
       panelClass: ['error-toast']});
@@ -48,7 +48,7 @@ export class ToastService {
         buttonColor: 'button-icon-warning',
         icon: 'warning',
       },
-      duration: 5000, 
+      duration: 8000, 
       horizontalPosition: 'end', 
       verticalPosition: 'top',
       panelClass: ['warning-toast']});
@@ -63,7 +63,7 @@ export class ToastService {
         buttonColor: 'button-icon-info',
         icon: 'info',
       },
-      duration: 5000, 
+      duration: 8000, 
       horizontalPosition: 'end', 
       verticalPosition: 'top',
       panelClass: ['info-toast']});
@@ -78,7 +78,7 @@ export class ToastService {
         buttonColor: 'button-icon-help',
         icon: 'info',
       },
-      duration: 5000, 
+      duration: 8000, 
       horizontalPosition: 'end', 
       verticalPosition: 'top',
       panelClass: ['help-toast']});

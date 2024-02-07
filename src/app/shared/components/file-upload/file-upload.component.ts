@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { environment } from 'src/environments/environments';
+import { ToastService } from '../../services/toast.service';
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 @Component({
   selector: 'app-file-upload',
@@ -14,7 +16,11 @@ export class FileUploadComponent {
   // event emitter for file upload
   @Output() fileUpload = new EventEmitter<any>();
 
-  constructor(private http: HttpClient) {}
+  @Input() rootFolder: string = '';
+  @Input() printer?: Printer;
+  @Input() file_type: string = '';
+
+  constructor(private http: HttpClient, private toastService: ToastService) {}
 
   onDragOver(event: Event) {
     event.preventDefault();
@@ -34,36 +40,48 @@ export class FileUploadComponent {
       const files = event.dataTransfer.files;
 
       if (files.length) {
-        this.uploadFile(files[0]);
+        this.uploadFiles(files, this.rootFolder, this.printer?.brand || '', this.printer?.model || '');
       }
     }
   }
 
   onFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
-    const file: File | null = fileInput.files?.[0] || null;
+    const files: FileList | null = fileInput.files || null;
 
-    if (file) {
-      this.uploadFile(file);
+    if (files) {
+      this.uploadFiles(files, this.rootFolder, this.printer?.brand || '', this.printer?.model || '');
     }
   }
 
-  uploadFile(file: File) {
+  uploadFiles(files: FileList, rootFolder: string, brand: string, model: string) {
     this.isUploading = true; // Set isUploading to true when upload starts
 
-    console.log('Uploading file:', file.name);
-
+    console.log(files);
+    console.log(rootFolder);
+    console.log(brand);
+    console.log(model);
+  
     const formData = new FormData();
-    formData.append('image', file, file.name);
+    formData.append('rootFolder', rootFolder);
+    formData.append('subRootfolder', brand);
+    formData.append('childFolder', model);
 
-    this.http.post(`${environment.baseUrl}/upload/image`, formData).subscribe(
+    for (let i = 0; i < files.length; i++) {
+      formData.append('image', files[i], files[i].name);
+    }
+    
+  
+    this.http.post(`${environment.baseUrl}/upload/image/multiple`, formData).subscribe(
       (res: any) => {
         this.isUploading = false; // Set isUploading to false when upload completes
-        console.log(res.url);
-        this.fileUpload.emit(res.url); // Emit file upload event with response body
+        console.log(res.urls);
+        this.fileUpload.emit(res.urls); // Emit file upload event with response body
+        this.toastService.showSuccess('Archivos agregados con exito', 'Aceptar');
       },
       (err) => {
         this.isUploading = false; // Set isUploading to false if an error occurs
+        this.toastService.showError(err.error.message, 'Aceptar');
         console.error(err);
       }
     );

@@ -6,8 +6,8 @@
         </div>
         <div class="printer-info">
             <div class="printer-images">
+                <app-file-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'imagenes'" [file_type]="'.png o .jpg'"></app-file-upload>
                 <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
-                <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
             </div>
             <div class="printer-data-container">
                 <div class="printer-data">
@@ -177,6 +177,20 @@
                             </div>
                             <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
                         </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Ficha Técnica</h5>
+                        <div class="file-container">
+                            <mat-icon>picture_as_pdf</mat-icon>
+                            <div class="file-name">
+                                <a [href]="editPrinterForm.controls['datasheet'].value" target="_blank">{{editPrinterForm.controls['datasheet'].value.split('/').pop()}}</a>
+                            </div>
+                        </div>
+                        <!-- <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched"> -->
+                        <app-file-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'datasheets'" [file_type]="'.pdf'"></app-file-upload>
+                        <span *ngIf="isValidField('datasheet')" class="form-text text-danger">
+                          {{ getFieldError('datasheet') }}
+                        </span>
                     </div>
                 </div>
             </div>

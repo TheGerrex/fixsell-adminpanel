@@ -12,7 +12,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -29,6 +30,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCardModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
+    MatAutocompleteModule,
   ],
 })
 export class AngularMaterialModule {}

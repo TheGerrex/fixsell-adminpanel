@@ -1,3 +1,4 @@
+<!-- deal table header -->
 <div class="table-header">
   <h2>Promociones</h2>
   <button
@@ -7,7 +8,7 @@
     <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
   </button>
 </div>
-<!-- table with printerdata from post to /printers -->
+<!-- table with deal data  -->
 <div class="responsive-table">
   <table mat-table [dataSource]="dataSource" class="printer-list-table">
     <!-- brand, model, category, price -->
@@ -101,16 +102,6 @@
       </td>
     </ng-container>
 
-    <!-- Delete Column -->
-    <!-- <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef>Borrar</th>
-            <td mat-cell *matCellDef="let printer">
-                <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="deletePrinter(printer)" onclick="deletePrinter(printer)">
-          <mat-icon>delete</mat-icon>
-        </button>
-            </td>
-        </ng-container> -->
-
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
@@ -122,3 +113,4 @@
     class="table-paginator"
   ></mat-paginator>
 </div>
+<!-- end deal table -->

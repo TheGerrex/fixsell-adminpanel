@@ -2,8 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-
-import Swal from 'sweetalert2';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   templateUrl: './login-page.component.html',
@@ -13,6 +12,8 @@ export class LoginPageComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
+  isLoading = false;
 
   public myForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -20,26 +21,19 @@ export class LoginPageComponent {
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
-  // login() {
-  //   const { email, password } = this.myForm.value;
-  //   this.authService.login(email, password).subscribe({
-  //     next: () => {this.router.navigateByUrl('/webpage/printer'); console.log('login-success')},
-  //     error: (message) => {
-  //       Swal.fire('Error', message, 'error');
-  //     },
-  //   });
-  // }
-
   login() {
+    this.isLoading = true;
     const { email, password } = this.myForm.value;
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.router.navigateByUrl('/dashboard');
-        console.log('login-success');
+        this.router.navigateByUrl('/dashboard').then(() => {
+          this.toastService.showSuccess('Login successful', 'success');
+          this.isLoading = false;
+        });
       },
-      error: (error) => {
-        console.error('Error during login', error);
-        Swal.fire('Error', error.message, 'error');
+      error: (message) => {
+        this.toastService.showError(message, 'error');
+        this.isLoading = false;
       },
     });
   }

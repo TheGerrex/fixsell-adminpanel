@@ -6,12 +6,6 @@ export const navbarData = [
     allowedRoles: ['admin', 'user', 'vendor'],
   },
   {
-    label: 'Printers',
-    routeLink: 'dashboard/printerscrud',
-    icon: 'fal fa-tasks',
-    allowedRoles: ['admin', 'user', 'vendor'],
-  },
-  {
     label: 'Pagina Web',
     routeLink: 'website/printers',
     allowedRoles: ['admin', 'user', 'vendor'],
@@ -33,7 +27,11 @@ export const navbarData = [
         routeLink: 'website/deals',
         allowedRoles: ['admin', 'user', 'vendor'],
       },
-      { label: 'Printers', routeLink: 'website/printers' },
+      {
+        label: 'Paquetes',
+        routeLink: 'website/packages',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
     ],
   },
   {

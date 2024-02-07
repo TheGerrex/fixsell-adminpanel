@@ -1,32 +1,61 @@
-<form class="login-form" autocomplete="off" [formGroup]="myForm" (ngSubmit)="login()">
-    <!-- add fixell logo -->
-    <div class="login-logo">
-        <img src="../../../../assets/images/logo300x41.png" alt="Fixell Logo" />
-        <p>Llevando tu productividad al máximo</p>
-    </div>
+<form
+  class="login-form"
+  autocomplete="off"
+  [formGroup]="myForm"
+  (ngSubmit)="login()"
+>
+  <!-- add fixell logo -->
+  <div class="login-logo">
+    <img src="../../../../assets/images/logo300x41.png" alt="Fixell Logo" />
+    <p>Llevando tu productividad al máximo</p>
+  </div>
 
-    <h1 class="login-title">Accede a tu cuenta</h1>
+  <h1 class="login-title">Accede a tu cuenta</h1>
 
-    <div class="mb-3 ">
-        <p class="form-label mb-2">Usuario</p>
-        <input class="form-control" type="email" formControlName="email" placeholder="Correo electrónico" />
-    </div>
+  <div class="mb-3">
+    <p class="form-label mb-2">Usuario</p>
+    <input
+      class="form-control"
+      type="email"
+      formControlName="email"
+      placeholder="Correo electrónico"
+    />
+  </div>
 
-    <div class="mb-3">
-        <p class="form-label mb-2">Contraseña</p>
-        <input class="form-control" type="password" formControlName="password" placeholder="Ingrese su contraseña" />
-    </div>
+  <div class="mb-3">
+    <p class="form-label mb-2">Contraseña</p>
+    <input
+      class="form-control"
+      type="password"
+      formControlName="password"
+      placeholder="Ingrese su contraseña"
+    />
+  </div>
 
-    <div class="mb-3">
-        <button class="button button-primary button-rounded" [disabled]="myForm.invalid" type="submit">
-        <span class="button-label">Iniciar Sesión</span>
-      </button>
-    </div>
+  <div class="mb-3">
+    <button
+      class="button button-primary button-rounded"
+      [disabled]="myForm.invalid"
+      type="submit"
+    >
+      <span class="button-label" *ngIf="!isLoading">Iniciar Sesión</span>
+      <!-- material spinner -->
+      <mat-spinner
+        *ngIf="isLoading"
+        class="spinner"
+        diameter="20"
+        strokeWidth="4"
+      ></mat-spinner>
+    </button>
+  </div>
 
-    <hr class="login-line">
+  <hr class="login-line" />
 
-    <div class="login-footer">
-        <p> ¿No tienes cuenta? </p>
-        <a href="mailto:jonastclausen@gmail.com?subject=Cuenta Dashboard&body=Hola me gustaria un cuenta ">Manda un Correo a TI</a>
-    </div>
+  <div class="login-footer">
+    <p>¿No tienes cuenta?</p>
+    <a
+      href="mailto:jonastclausen@gmail.com?subject=Cuenta Dashboard&body=Hola me gustaria un cuenta "
+      >Manda un Correo a TI</a
+    >
+  </div>
 </form>

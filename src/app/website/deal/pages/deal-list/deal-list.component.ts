@@ -125,4 +125,8 @@ export class DealListComponent {
         }
       });
   }
+
+  addPaquete() {
+    this.router.navigate(['/website/paquete/create']);
+  }
 }

@@ -1,0 +1,70 @@
+<div class="consumibles-container" *ngIf="consumible">
+  <div class="consumibles-header">
+    <h2>{{ consumible.name }}</h2>
+    <button
+      class="button button-primary button-raised button-icon-text"
+      *ngIf="consumible.id"
+      (click)="navigateToEdit(consumible.id)"
+    >
+      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+    </button>
+  </div>
+
+  <div class="consumibles-info">
+    <div class="carousel">
+      <div class="image-container">
+        <img [src]="consumible.images[currentImageIndex]" alt="" />
+      </div>
+      <div class="button-container">
+        <button
+          class="button button-secondary button-raised"
+          (click)="prevImage()"
+        >
+          < Atras
+        </button>
+        <button
+          class="button button-secondary button-raised"
+          (click)="nextImage()"
+        >
+          Siguiente >
+        </button>
+      </div>
+    </div>
+    <div class="consumibles-data">
+      <div class="consumibles-data-item">
+        <h5>Precio</h5>
+        <p>{{ consumible.price | currency }} USD</p>
+      </div>
+
+      <div class="consumibles-data-item">
+        <h5>Peso</h5>
+        <p>{{ consumible.weight }} kg</p>
+      </div>
+
+      <div class="consumibles-data-item">
+        <h5>Stock</h5>
+        <p>{{ consumible.stock }}</p>
+      </div>
+
+      <div class="consumibles-data-item">
+        <h5>Ubicacion</h5>
+        <p>{{ consumible.location }}</p>
+      </div>
+
+      <div class="consumibles-data-item description">
+        <h5>Long Decripcion</h5>
+        <p>{{ consumible.longDescription }}</p>
+      </div>
+
+      <div class="consumibles-data-item">
+        <h5>Short Descripcion</h5>
+        <p>{{ consumible.shortDescription }}</p>
+      </div>
+
+      <div class="consumibles-data-item">
+        <h5>Category</h5>
+        <p>{{ consumible.category }}</p>
+      </div>
+    </div>
+  </div>
+</div>

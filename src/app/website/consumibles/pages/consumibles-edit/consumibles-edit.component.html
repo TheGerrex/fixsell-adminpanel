@@ -1,0 +1,239 @@
+<div *ngIf="Consumible">
+  <div>
+    <form
+      [formGroup]="editConsumibleForm"
+      class="consumibles-container"
+      *ngIf="editConsumibleForm"
+    >
+      <div class="consumibles-header">
+        <h2>Editar Consumible</h2>
+        <button
+          type="submit"
+          class="button button-primary button-raised"
+          (click)="submitForm()"
+        >
+          <span class="button-label">Editar Consumible</span>
+        </button>
+      </div>
+      <div class="consumibles-info">
+        <div class="consumibles-data-container">
+          <div class="consumibles-data">
+            <div class="consumibles-data-item">
+              <h5>Name</h5>
+              <input
+                formControlName="name"
+                class="form-control"
+                type="text"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['name'].invalid &&
+                  editConsumibleForm.controls['name'].touched
+                "
+              />
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['name'].invalid &&
+                  editConsumibleForm.controls['name'].touched
+                "
+                class="form-text text-danger"
+              >
+                Name is required.
+              </span>
+            </div>
+            <div class="consumibles-data-item">
+              <h5>Weight</h5>
+              <input
+                formControlName="weight"
+                class="form-control"
+                type="number"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['weight'].invalid &&
+                  editConsumibleForm.controls['weight'].touched
+                "
+              />
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['weight'].invalid &&
+                  editConsumibleForm.controls['weight'].touched
+                "
+                class="form-text text-danger"
+              >
+                Weight is required.
+              </span>
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['weight'].errors?.['min'] &&
+                  editConsumibleForm.controls['weight'].touched
+                "
+                class="form-text text-danger"
+              >
+                Weight must be at least 0.01.
+              </span>
+            </div>
+            <div class="consumibles-data-item">
+              <h5>Precio</h5>
+              <input
+                formControlName="price"
+                class="form-control"
+                type="number"
+                step="0.01"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['price'].invalid &&
+                  editConsumibleForm.controls['price'].touched
+                "
+              />
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['price'].invalid &&
+                  editConsumibleForm.controls['price'].touched
+                "
+                class="form-text text-danger"
+              >
+                Price is required.
+              </span>
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['price'].errors?.['min'] &&
+                  editConsumibleForm.controls['price'].touched
+                "
+                class="form-text text-danger"
+              >
+                Price must be at least 0.01.
+              </span>
+            </div>
+            <!-- Short Description field -->
+            <div class="consumibles-data-item">
+              <h5>Short Description</h5>
+              <textarea
+                formControlName="shortDescription"
+                class="form-control"
+                rows="1"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['shortDescription'].invalid &&
+                  editConsumibleForm.controls['shortDescription'].touched
+                "
+              ></textarea>
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['shortDescription'].invalid &&
+                  editConsumibleForm.controls['shortDescription'].touched
+                "
+                class="form-text text-danger"
+              >
+                Short Description is required.
+              </span>
+            </div>
+            <!-- Long Description field -->
+            <div class="consumibles-data-item">
+              <h5>Long Description</h5>
+              <textarea
+                formControlName="longDescription"
+                class="form-control"
+                rows="5"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['longDescription'].invalid &&
+                  editConsumibleForm.controls['longDescription'].touched
+                "
+              ></textarea>
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['longDescription'].invalid &&
+                  editConsumibleForm.controls['longDescription'].touched
+                "
+                class="form-text text-danger"
+              >
+                Long Description is required.
+              </span>
+            </div>
+
+            <!-- Category field -->
+            <div class="consumibles-data-item">
+              <h5>Category</h5>
+              <input
+                formControlName="category"
+                class="form-control"
+                type="text"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['category'].invalid &&
+                  editConsumibleForm.controls['category'].touched
+                "
+              />
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['category'].invalid &&
+                  editConsumibleForm.controls['category'].touched
+                "
+                class="form-text text-danger"
+              >
+                Category is required.
+              </span>
+            </div>
+            <div class="consumibles-data-item">
+              <h5>Stock</h5>
+              <input
+                formControlName="stock"
+                class="form-control"
+                type="number"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['stock'].invalid &&
+                  editConsumibleForm.controls['stock'].touched
+                "
+              />
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['stock'].invalid &&
+                  editConsumibleForm.controls['stock'].touched
+                "
+                class="form-text text-danger"
+              >
+                Stock is required.
+              </span>
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['stock'].errors?.['min'] &&
+                  editConsumibleForm.controls['stock'].touched
+                "
+                class="form-text text-danger"
+              >
+                Stock must be at least 1.
+              </span>
+            </div>
+            <div class="consumibles-data-item">
+              <h5>Location</h5>
+              <input
+                formControlName="location"
+                class="form-control"
+                type="text"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['location'].invalid &&
+                  editConsumibleForm.controls['location'].touched
+                "
+              />
+              <span
+                *ngIf="
+                  editConsumibleForm.controls['location'].invalid &&
+                  editConsumibleForm.controls['location'].touched
+                "
+                class="form-text text-danger"
+              >
+                Location is required.
+              </span>
+            </div>
+
+            <div class="consumibles-data-item">
+              <div class="tag-inputs-container" formArrayName="images">
+                <div *ngFor="let image of images.controls; let i = index"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h5>Images</h5>
+      <app-product-image-grid
+        [imageUrls]="imageUrlsArray"
+        (remove)="onRemove($event)"
+      ></app-product-image-grid>
+
+      <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
+    </form>
+  </div>
+</div>

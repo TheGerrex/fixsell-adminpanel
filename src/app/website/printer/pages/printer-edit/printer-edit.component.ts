@@ -5,8 +5,9 @@ import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { PrinterService } from '../../services/printer.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { RoleService } from 'src/app/shared/services/role.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-printer-edit',
@@ -14,6 +15,7 @@ import { RoleService } from 'src/app/shared/services/role.service';
   styleUrls: ['./printer-edit.component.scss'],
 })
 export class PrinterEditComponent implements OnInit {
+  public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
   categories = [
@@ -34,8 +36,8 @@ export class PrinterEditComponent implements OnInit {
     private printerService: PrinterService,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private authService: AuthService,
-    private roleService: RoleService
+    private validatorsService: ValidatorsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -46,82 +48,40 @@ export class PrinterEditComponent implements OnInit {
     this.editPrinterForm = this.fb.group({
       brand: [this.printer ? this.printer.brand : '', Validators.required],
       model: [this.printer ? this.printer.model : '', Validators.required],
-      datasheet_url: [
-        this.printer ? this.printer.datasheet_url : '',
-        Validators.required,
+      datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
+      images: this.fb.array(this.printer ? this.printer.img_url : []),
+      description: [this.printer ? this.printer.description : ''],
+      price: [
+        this.printer ? this.printer.price : '',
+        [
+          Validators.required,
+          Validators.pattern(this.validatorsService.floatNumberPattern),
+        ],
       ],
-      img_url: this.fb.array(
-        this.printer ? this.printer.img_url : [],
-        Validators.required
-      ),
-      description: [
-        this.printer ? this.printer.description : '',
-        Validators.required,
-      ],
-      price: [this.printer ? this.printer.price : '', Validators.required],
       category: [
         this.printer ? this.printer.category : '',
         Validators.required,
       ],
-      color: [this.printer ? this.printer.color : false, Validators.required],
-      rentable: [
-        this.printer ? this.printer.rentable : false,
-        Validators.required,
-      ],
-      sellable: [
-        this.printer ? this.printer.sellable : false,
-        Validators.required,
-      ],
+      color: [this.printer ? this.printer.color : false],
+      rentable: [this.printer ? this.printer.rentable : false],
+      sellable: [this.printer ? this.printer.sellable : false],
       tags: this.fb.array(
         (this.printer && this.printer.tags.length > 0
           ? this.printer.tags
           : ['']
-        ).map((tag) => this.fb.control(tag, Validators.required))
+        ).map((tag) => this.fb.control(tag))
       ),
-      powerConsumption: [
-        this.printer ? this.printer.powerConsumption : '',
-        Validators.required,
-      ],
-      dimensions: [
-        this.printer ? this.printer.dimensions : '',
-        Validators.required,
-      ],
-      printVelocity: [
-        this.printer ? this.printer.printVelocity : '',
-        Validators.required,
-      ],
-      maxPrintSizeSimple: [
-        this.printer ? this.printer.maxPrintSizeSimple : '',
-        Validators.required,
-      ],
-      maxPrintSize: [
-        this.printer ? this.printer.maxPrintSize : '',
-        Validators.required,
-      ],
-      printSize: [
-        this.printer ? this.printer.printSize : '',
-        Validators.required,
-      ],
-      maxPaperWeight: [
-        this.printer ? this.printer.maxPaperWeight : '',
-        Validators.required,
-      ],
-      duplexUnit: [
-        this.printer ? this.printer.duplexUnit : false,
-        Validators.required,
-      ],
-      paperSizes: [
-        this.printer ? this.printer.paperSizes : '',
-        Validators.required,
-      ],
-      applicableOS: [
-        this.printer ? this.printer.applicableOS : '',
-        Validators.required,
-      ],
-      printerFunctions: [
-        this.printer ? this.printer.printerFunctions : '',
-        Validators.required,
-      ],
+      powerConsumption: [this.printer ? this.printer.powerConsumption : ''],
+      dimensions: [this.printer ? this.printer.dimensions : ''],
+      printVelocity: [this.printer ? this.printer.printVelocity : ''],
+      maxPrintSizeSimple: [this.printer ? this.printer.maxPrintSizeSimple : ''],
+      maxPrintSize: [this.printer ? this.printer.maxPrintSize : ''],
+      printSize: [this.printer ? this.printer.printSize : ''],
+      maxPaperWeight: [this.printer ? this.printer.maxPaperWeight : ''],
+      duplexUnit: [this.printer ? this.printer.duplexUnit : false],
+      paperSizes: [this.printer ? this.printer.paperSizes : ''],
+      applicableOS: [this.printer ? this.printer.applicableOS : ''],
+      printerFunctions: [this.printer ? this.printer.printerFunctions : ''],
     });
   }
 
@@ -145,6 +105,7 @@ export class PrinterEditComponent implements OnInit {
     if (id) {
       this.printerService.getPrinter(id).subscribe((printerResponse) => {
         this.printer = printerResponse;
+        this.imageUrlsArray = [...this.printer.img_url];
         this.initializeForm();
         // console.log(this.printer);
         console.log(this.editPrinterForm);
@@ -214,8 +175,37 @@ export class PrinterEditComponent implements OnInit {
     console.log(this.editPrinterForm.value);
   }
 
+  isValidField(field: string): boolean | null {
+    // console.log(this.validatorsService.isValidField(this.editPrinterForm, field))
+    return this.validatorsService.isValidField(this.editPrinterForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.editPrinterForm.controls[field]) return null;
+
+    const errors = this.editPrinterForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
   submitForm() {
     if (this.editPrinterForm.invalid) {
+      console.log('Invalid form');
+      console.log(this.editPrinterForm);
       this.editPrinterForm.markAllAsTouched();
       return;
     }
@@ -229,32 +219,64 @@ export class PrinterEditComponent implements OnInit {
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       (response) => {
         this.toastService.showSuccess('Multifuncional editada', 'Aceptar');
-
-        // Check the user's roles and the allowed roles
-        const allowedRoles = this.roleService.getAllowedRoles(
-          '/website/printers/*'
-        );
-        const userRoles = this.authService.getCurrentUserRoles();
-        const hasRequiredRole = allowedRoles.some((role: any) =>
-          userRoles.includes(role)
-        );
-        console.log('allowedRoles', allowedRoles);
-        console.log('userRoles', userRoles);
-
-        // redirect back to the printer detail page
-        console.log('navigating to:', 'printers', printerId);
         this.router.navigate(['/website/printers', printerId]);
-
-        // // Redirect based on the user's roles
-        // if (hasRequiredRole) {
-        //   this.router.navigate(['printer-detail', printerId]);
-        // } else {
-        //   this.router.navigate(['/dashboard']);
-        // }
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Aceptar');
       }
     );
+  }
+
+  get images(): FormArray {
+    return this.editPrinterForm.get('images') as FormArray;
+  }
+
+  onFileUploaded(event: any): void {
+    const imageUrl = event; // The event should be the URL of the uploaded file
+    this.imageUrlsArray.push(imageUrl);
+    // Check if the last image URL in the form array is not empty
+    if (this.images.at(this.images.length - 1).value !== '') {
+      // If it's not empty, add a new control to the form array
+      this.addImage();
+    }
+
+    // Set the value of the last control in the form array to the image URL
+    this.images.at(this.images.length - 1).setValue(imageUrl);
+  }
+
+  openConfirmDialog(index: number): void {
+    const dialogConfig = new MatDialogConfig();
+  
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Borrar imagen de la impresora',
+      message: 'Estas seguro de querer eliminar esta imagen?',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar'
+      }
+    };
+  
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+  
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.onRemove(index);
+      }
+    });
+  }
+
+  onRemove(index: number): void {
+    this.imageUrlsArray.splice(index, 1);
+    this.removeImage(index);
+  }
+
+  addImage(): void {
+    this.images.push(this.fb.control(''));
+  }
+
+  removeImage(index: number): void {
+    this.images.removeAt(index);
   }
 }

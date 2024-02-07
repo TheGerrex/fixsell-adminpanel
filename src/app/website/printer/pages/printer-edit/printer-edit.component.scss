@@ -27,6 +27,7 @@
     display: flex;
     gap: 1em;
     width: 100%;
+    flex-direction: column;
     @media(max-width: 1024px) {
         flex-direction: column;
     }
@@ -186,6 +187,6 @@
     }
 }
 
-textarea {
-    width: 100%;
+.printer-data-item textarea {
+    min-height: 8em !important;
 }

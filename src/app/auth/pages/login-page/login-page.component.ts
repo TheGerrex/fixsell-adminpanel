@@ -26,6 +26,7 @@ export class LoginPageComponent {
     const { email, password } = this.myForm.value;
     this.authService.login(email, password).subscribe({
       next: () => {
+        console.log('login successful rerouting to dashboard');
         this.router.navigateByUrl('/dashboard').then(() => {
           this.toastService.showSuccess('Login successful', 'success');
           this.isLoading = false;

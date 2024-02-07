@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environments';
+import { BehaviorSubject } from 'rxjs';
+
 import {
   AuthStatus,
   CheckTokenResponse,
@@ -40,9 +42,11 @@ export class AuthService {
     const body = { email, password };
 
     return this.http.post<LoginResponse>(url, body).pipe(
+      tap(() => console.log('Login method called')), // Add console log here
       map(({ user, token }) => {
         // Store the authentication state in localStorage
         localStorage.setItem('authStatus', AuthStatus.authenticated);
+        // redirect to the dashboard
         return this.setAuthentication(user, token);
       }),
       catchError((err) => {
@@ -84,17 +88,17 @@ export class AuthService {
     localStorage.removeItem('authStatus');
     localStorage.removeItem('currentUser');
   }
-  
+
   setCurrentUser(user: User): void {
     this._currentUser.set(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
-  
+
   getCurrentUser(): User | null {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
   }
-  
+
   getCurrentUserRoles(): string[] {
     const user = this.getCurrentUser();
     return user ? user.roles : [];

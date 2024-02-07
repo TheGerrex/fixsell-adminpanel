@@ -130,7 +130,16 @@ export class PackageEditComponent implements OnInit {
       return;
     }
 
-    const formData = this.editPackageForm.value;
+    const formData = {
+      ...this.editPackageForm.value,
+      packagePrice: Number(this.editPackageForm.value.packagePrice),
+      packageDiscountPercentage: Number(
+        this.editPackageForm.value.packageDiscountPercentage
+      ),
+      packageExtraClickPrice: Number(
+        this.editPackageForm.value.packageExtraClickPrice
+      ),
+    };
 
     this.PackageService.updatePackage(this.package.id, formData).subscribe(
       (response) => {

@@ -2,11 +2,6 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { SharedModule } from 'src/app/shared/shared.module';
-
-import Swal from 'sweetalert2';
-import { AngularMaterialModule } from '../../../shared/angular-material/angular-material.module';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
@@ -31,15 +26,13 @@ export class LoginPageComponent {
     const { email, password } = this.myForm.value;
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.router.navigateByUrl('/dashboard');
-        this.toastService.showSuccess('Login successful', 'sucess');
-        this.isLoading = false; // use toastService to show success message
+        this.router.navigateByUrl('/dashboard').then(() => {
+          this.toastService.showSuccess('Login successful', 'success');
+          this.isLoading = false;
+        });
       },
       error: (message) => {
-        this.toastService.showError(message, 'error'); // use toastService to show error message
-        this.isLoading = false;
-      },
-      complete: () => {
+        this.toastService.showError(message, 'error');
         this.isLoading = false;
       },
     });

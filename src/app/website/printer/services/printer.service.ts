@@ -36,4 +36,18 @@ export class PrinterService {
         })
       );
   }
+
+  submitPrinterCreateForm(data: Printer): Observable<Printer> {
+    const formData = data;
+    console.log('formData:', formData);
+    console.log(`${environment.baseUrl}/printers`);
+    return this.http
+      .post<Printer>(`${environment.baseUrl}/printers`, formData)
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(error);
+        })
+      );
+  }
 }

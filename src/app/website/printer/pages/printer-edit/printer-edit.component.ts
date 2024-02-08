@@ -49,7 +49,7 @@ export class PrinterEditComponent implements OnInit {
       brand: [this.printer ? this.printer.brand : '', Validators.required],
       model: [this.printer ? this.printer.model : '', Validators.required],
       datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
-      images: this.fb.array(this.printer ? this.printer.img_url : []),
+      img_url: this.fb.array(this.printer ? this.printer.img_url : []),
       description: [this.printer ? this.printer.description : ''],
       price: [
         this.printer ? this.printer.price : '',
@@ -82,7 +82,6 @@ export class PrinterEditComponent implements OnInit {
       paperSizes: [this.printer ? this.printer.paperSizes : ''],
       applicableOS: [this.printer ? this.printer.applicableOS : ''],
       printerFunctions: [this.printer ? this.printer.printerFunctions : ''],
-      datasheet: [this.printer ? this.printer.datasheet_url : '', [Validators.required]],
     });
   }
 
@@ -231,6 +230,11 @@ export class PrinterEditComponent implements OnInit {
 
 
   onFileUploaded(event: any): void {
+
+    if (!event) {
+      return;
+    }
+
     const files = event; // The event should be an array of uploaded files
   
     for (const file of files) {

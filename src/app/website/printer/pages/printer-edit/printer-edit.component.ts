@@ -52,7 +52,7 @@ export class PrinterEditComponent implements OnInit {
       datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
       images: this.fb.array(
         this.printer
-          ? this.printer.img_url.map(() => this.fb.control(''))
+          ? this.printer.img_url.map((url) => this.fb.control(url))
           : [this.fb.control('')]
       ),
       description: [this.printer ? this.printer.description : ''],
@@ -224,13 +224,24 @@ export class PrinterEditComponent implements OnInit {
       this.editPrinterForm.markAllAsTouched();
       return;
     }
-    const formData = this.editPrinterForm.value;
+    let formData = this.editPrinterForm.value;
     formData.price = formData.price.toString();
     const printerId = this.route.snapshot.paramMap.get('id');
     if (printerId === null) {
       console.error('Printer id is null');
       return;
     }
+
+    // Convert images to img_url and datasheet to datasheet_url
+    if (formData.images) {
+      formData.img_url = formData.images;
+      delete formData.images;
+    }
+    if (formData.datasheet) {
+      formData.datasheet_url = formData.datasheet;
+      delete formData.datasheet;
+    }
+
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       (response) => {
         this.toastService.showSuccess('Multifuncional editada', 'Cerrar');
@@ -319,6 +330,11 @@ export class PrinterEditComponent implements OnInit {
   }
 
   removeImage(index: number): void {
-    this.images.removeAt(index);
+    const imagesControl = this.editPrinterForm.get('images') as FormArray;
+    if (imagesControl) {
+      imagesControl.removeAt(index);
+    }
+    // object after removing the image
+    console.log('object after removing image.', this.editPrinterForm);
   }
 }

@@ -230,16 +230,13 @@ export class PrinterEditComponent implements OnInit {
 
 
   onFileUploaded(event: any): void {
-
-    if (!event) {
-      return;
-    }
-
     const files = event; // The event should be an array of uploaded files
+    console.log("files",files);
   
     for (const file of files) {
       if (file) {
         const fileExtension = file.split('.').pop();
+        console.log("fileExtension",fileExtension);
   
         if (fileExtension === 'pdf') {
           // It's a PDF, so add it to the datasheet_url field
@@ -250,6 +247,14 @@ export class PrinterEditComponent implements OnInit {
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
           // It's an image, so add it to the images field
           this.imageUrlsArray.push(file);
+          console.log("imageUrlsArray",this.imageUrlsArray);
+  
+          // Get a reference to the img_url form array
+          const imgUrlArray = this.editPrinterForm.get('img_url') as FormArray;
+  
+          // Create a new control with the URL and push it to the form array
+          imgUrlArray.push(this.fb.control(file));
+          console.log(this.editPrinterForm)
         }
       }
     }

@@ -75,7 +75,6 @@ export class FileUploadComponent {
     this.http.post(`${environment.baseUrl}/upload/image/multiple`, formData).subscribe(
       (res: any) => {
         this.isUploading = false; // Set isUploading to false when upload completes
-        console.log(res.urls);
         this.fileUpload.emit(res.urls); // Emit file upload event with response body
         this.toastService.showSuccess('Archivos agregados con exito', 'Aceptar');
       },

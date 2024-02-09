@@ -14,7 +14,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   templateUrl: './printer-create.component.html',
   styleUrls: ['./printer-create.component.scss']
 })
-export class PrinterCreateComponent implements OnInit{
+export class PrinterCreateComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
@@ -224,10 +224,12 @@ export class PrinterCreateComponent implements OnInit{
 
   onFileUploaded(event: any): void {
     const files = event; // The event should be an array of uploaded files
+    console.log("files",files);
   
     for (const file of files) {
       if (file) {
         const fileExtension = file.split('.').pop();
+        console.log("fileExtension",fileExtension);
   
         if (fileExtension === 'pdf') {
           // It's a PDF, so add it to the datasheet_url field
@@ -238,6 +240,14 @@ export class PrinterCreateComponent implements OnInit{
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
           // It's an image, so add it to the images field
           this.imageUrlsArray.push(file);
+          console.log("imageUrlsArray",this.imageUrlsArray);
+  
+          // Get a reference to the img_url form array
+          const imgUrlArray = this.createPrinterForm.get('img_url') as FormArray;
+  
+          // Create a new control with the URL and push it to the form array
+          imgUrlArray.push(this.fb.control(file));
+          console.log(this.createPrinterForm)
         }
       }
     }

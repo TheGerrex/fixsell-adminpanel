@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
@@ -13,7 +12,7 @@ import { RoleService } from 'src/app/shared/services/role.service';
 @Injectable({
   providedIn: 'root',
 })
-export class RoleGuard implements CanActivate {
+export class RoleGuard {
   constructor(
     private authService: AuthService,
     private router: Router,

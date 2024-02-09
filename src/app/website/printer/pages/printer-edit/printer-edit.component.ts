@@ -42,6 +42,7 @@ export class PrinterEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPrinter();
+    this.getBrandsAndCategories();
   }
 
   initializeForm() {
@@ -49,7 +50,11 @@ export class PrinterEditComponent implements OnInit {
       brand: [this.printer ? this.printer.brand : '', Validators.required],
       model: [this.printer ? this.printer.model : '', Validators.required],
       datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
-      images: this.fb.array(this.printer ? this.printer.img_url : []),
+      images: this.fb.array(
+        this.printer
+          ? this.printer.img_url.map(() => this.fb.control(''))
+          : [this.fb.control('')]
+      ),
       description: [this.printer ? this.printer.description : ''],
       price: [
         this.printer ? this.printer.price : '',
@@ -82,10 +87,12 @@ export class PrinterEditComponent implements OnInit {
       paperSizes: [this.printer ? this.printer.paperSizes : ''],
       applicableOS: [this.printer ? this.printer.applicableOS : ''],
       printerFunctions: [this.printer ? this.printer.printerFunctions : ''],
-      datasheet: [this.printer ? this.printer.datasheet_url : '', [Validators.required]],
+      datasheet: [
+        this.printer ? this.printer.datasheet_url ?? '' : '', // ?? for nullish coalescing operator
+        [Validators.required],
+      ],
     });
   }
-
 
   getPrinter(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -99,6 +106,16 @@ export class PrinterEditComponent implements OnInit {
         this.sharedService.changePrinterModel(printerResponse.model);
       });
     }
+  }
+
+  getBrandsAndCategories(): void {
+    this.printerService.getBrands().subscribe((brands: string[]) => {
+      this.brands = brands;
+    });
+
+    this.printerService.getCategories().subscribe((categories: string[]) => {
+      this.categories = categories;
+    });
   }
 
   getDealDuration(): number {
@@ -137,7 +154,7 @@ export class PrinterEditComponent implements OnInit {
       tags.at(0).reset('');
     }
   }
-  
+
   prevImage(): void {
     if (this.currentImageIndex > 0) {
       this.currentImageIndex--;
@@ -229,14 +246,13 @@ export class PrinterEditComponent implements OnInit {
     return this.editPrinterForm.get('images') as FormArray;
   }
 
-
   onFileUploaded(event: any): void {
     const files = event; // The event should be an array of uploaded files
-  
+
     for (const file of files) {
       if (file) {
         const fileExtension = file.split('.').pop();
-  
+
         if (fileExtension === 'pdf') {
           // It's a PDF, so add it to the datasheet_url field
           const datasheetControl = this.editPrinterForm.get('datasheet');
@@ -249,17 +265,20 @@ export class PrinterEditComponent implements OnInit {
         }
       }
     }
-  
+
     // Handle images
     const imagesControl = this.editPrinterForm.get('images');
     if (imagesControl) {
       for (const imageUrl of this.imageUrlsArray) {
-        // Check if the last image URL in the form array is not empty
-        if (this.images.at(this.images.length - 1).value !== '') {
-          // If it's not empty, add a new control to the form array
+        // Check if the images FormArray is empty or the last image URL in the form array is not empty
+        if (
+          this.images.length === 0 ||
+          this.images.at(this.images.length - 1).value !== ''
+        ) {
+          // If it's empty or the last control is not empty, add a new control to the form array
           this.addImage();
         }
-  
+
         // Set the value of the last control in the form array to the image URL
         this.images.at(this.images.length - 1).setValue(imageUrl);
       }
@@ -268,7 +287,7 @@ export class PrinterEditComponent implements OnInit {
 
   openConfirmDialog(index: number): void {
     const dialogConfig = new MatDialogConfig();
-  
+
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
@@ -276,12 +295,12 @@ export class PrinterEditComponent implements OnInit {
       message: 'Estas seguro de querer eliminar esta imagen?',
       buttonText: {
         ok: 'Eliminar',
-        cancel: 'Cancelar'
-      }
+        cancel: 'Cancelar',
+      },
     };
-  
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
-  
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.onRemove(index);

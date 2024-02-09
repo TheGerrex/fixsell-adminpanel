@@ -36,4 +36,30 @@ export class PrinterService {
         })
       );
   }
+
+  // get brands from printers
+  getBrands(): Observable<string[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(
+        map((printers: Printer[]) =>
+          printers
+            .map((printer: Printer) => printer.brand)
+            .filter((brand, index, self) => self.indexOf(brand) === index)
+        )
+      );
+  }
+
+  // get categories from printers
+  getCategories(): Observable<string[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(
+        map((printers: Printer[]) =>
+          printers
+            .map((printer: Printer) => printer.category)
+            .filter((category, index, self) => self.indexOf(category) === index)
+        )
+      );
+  }
 }

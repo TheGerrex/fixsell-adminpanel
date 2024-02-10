@@ -10,6 +10,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { PdfUploadComponent } from './components/pdf-upload/pdf-upload.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     DialogComponent,
     FileUploadComponent,
     ConfirmDialogComponent,
+    PdfUploadComponent,
   ],
   imports: [
     CommonModule,
@@ -33,6 +35,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     AngularMaterialModule,
     ReactiveFormsModule,
     FileUploadComponent,
+    PdfUploadComponent,
   ],
 })
 export class SharedModule {}

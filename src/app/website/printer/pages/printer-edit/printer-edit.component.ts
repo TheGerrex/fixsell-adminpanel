@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { PrinterService } from '../../services/printer.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
@@ -73,11 +73,11 @@ export class PrinterEditComponent implements OnInit {
       ),
       powerConsumption: [this.printer ? this.printer.powerConsumption : ''],
       dimensions: [this.printer ? this.printer.dimensions : ''],
-      printVelocity: [this.printer ? this.printer.printVelocity : ''],
+      printVelocity: [this.printer ? this.printer.printVelocity : 0],
       maxPrintSizeSimple: [this.printer ? this.printer.maxPrintSizeSimple : ''],
       maxPrintSize: [this.printer ? this.printer.maxPrintSize : ''],
       printSize: [this.printer ? this.printer.printSize : ''],
-      maxPaperWeight: [this.printer ? this.printer.maxPaperWeight : ''],
+      maxPaperWeight: [this.printer ? this.printer.maxPaperWeight : 0],
       duplexUnit: [this.printer ? this.printer.duplexUnit : false],
       paperSizes: [this.printer ? this.printer.paperSizes : ''],
       applicableOS: [this.printer ? this.printer.applicableOS : ''],
@@ -230,19 +230,21 @@ export class PrinterEditComponent implements OnInit {
 
 
   onFileUploaded(event: any): void {
-    const files = event; // The event should be an array of uploaded files
+    const files = Array.isArray(event) ? event : [event]; // The event should be an array of uploaded files
     console.log("files",files);
   
     for (const file of files) {
       if (file) {
-        const fileExtension = file.split('.').pop();
+        const fileExtension = file.split('.').pop().toLowerCase();
         console.log("fileExtension",fileExtension);
   
         if (fileExtension === 'pdf') {
           // It's a PDF, so add it to the datasheet_url field
-          const datasheetControl = this.editPrinterForm.get('datasheet');
+          const datasheetControl = this.editPrinterForm.get('datasheet_url');
+          console.log("datasheetControl",datasheetControl);
           if (datasheetControl) {
             datasheetControl.setValue(file);
+            console.log("I have set the value for datasheet:", datasheetControl.value);
           }
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
           // It's an image, so add it to the images field
@@ -281,8 +283,8 @@ export class PrinterEditComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Borrar imagen de la impresora',
-      message: 'Estas seguro de querer eliminar esta imagen?',
+      title: 'Estas seguro de querer eliminar esta imagen?',
+      message: 'La imagen sera eliminada permanentemente.',
       buttonText: {
         ok: 'Eliminar',
         cancel: 'Cancelar'
@@ -299,10 +301,31 @@ export class PrinterEditComponent implements OnInit {
     });
   }
 
-  onRemove(index: number): void {
-    this.imageUrlsArray.splice(index, 1);
-    this.removeImage(index);
-  }
+onRemove(index: number): void {
+  console.log('remove image at index: ', index);
+  
+  const imageUrl = this.imageUrlsArray[index];
+  console.log('imageUrl:', imageUrl);
+  this.printerService.deleteImagePrinter(imageUrl).subscribe(
+    response => {
+      console.log('Image deleted successfully', response);
+      this.toastService.showSuccess('Imagen borrada con éxito', 'Cerrar');
+      this.imageUrlsArray.splice(index, 1); // Remove the image from the array
+
+      // Update the form control
+      const controlArray = <FormArray>this.editPrinterForm.get('img_url');
+      controlArray.clear(); // Clear the existing form array
+      this.imageUrlsArray.forEach(url => {
+        controlArray.push(new FormControl(url)); // Add the remaining URLs back to the form array
+      });
+
+      // this.removeImage(index);
+    },
+    error => {
+      this.toastService.showError(error.error.message, 'Cerrar');
+    }
+  );
+}
 
   addImage(): void {
     this.images.push(this.fb.control(''));

@@ -50,4 +50,13 @@ export class PrinterService {
         })
       );
   }
+
+  deleteImagePrinter(imageUrl: string): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}/upload/file`, { body: { url: imageUrl } }).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return throwError(error);
+      })
+    );
+  }
 }

@@ -604,26 +604,36 @@ button:hover {
 .success-toast {
     --mdc-snackbar-container-color: #f0fdf4 !important;
     --mdc-snackbar-supporting-text-color: #22c55e !important;
+    border: 1px solid $success-color;
+    border-radius: $border-radius;
 }
 
 .error-toast {
     --mdc-snackbar-container-color: #fef2f2 !important;
     --mdc-snackbar-supporting-text-color: #ef4444 !important;
+    border: 1px solid $danger-color;
+    border-radius: $border-radius;
 }
 
 .warning-toast {
     --mdc-snackbar-container-color: #fefce8 !important;
     --mdc-snackbar-supporting-text-color: #eab308 !important;
+    border: 1px solid $warning-color;
+    border-radius: $border-radius;
 }
 
 .info-toast {
     --mdc-snackbar-container-color: #eef2ff !important;
     --mdc-snackbar-supporting-text-color: #6366f1 !important;
+    border: 1px solid $info-color;
+    border-radius: $border-radius;
 }
 
 .help-toast {
     --mdc-snackbar-container-color: #faf5ff !important;
     --mdc-snackbar-supporting-text-color: #a855f7 !important;
+    border: 1px solid $help-color;
+    border-radius: $border-radius;
 }
 
 

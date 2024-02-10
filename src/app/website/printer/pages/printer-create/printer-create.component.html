@@ -1,8 +1,8 @@
 <div>
     <form [formGroup]="createPrinterForm" class="printer-container">
         <div class="printer-header">
-            <h2>Crear Multifuncional</h2>
-            <button type="submit" class="button button-primary button-raised" [disabled]="createPrinterForm.invalid" (click)="submitForm()"><span class="button-label">Crear</span></button>
+            <h2>Nuevo Multifuncional</h2>
+            <button type="submit" class="button button-primary button-raised"  (click)="submitForm()"><span class="button-label">Crear Multifuncional</span></button>
         </div>
         <div class="printer-info">
             <div class="printer-images">
@@ -121,7 +121,7 @@
                     <div class="printer-data-item">
                         <h5>Velocidad de Impresión</h5>
                         <div class="input-group">
-                            <input type="text" class="form-control" formControlName="printVelocity" [class.is-invalid]="createPrinterForm.controls['printVelocity'].invalid && createPrinterForm.controls['printVelocity'].touched">
+                            <input type="number" class="form-control" formControlName="printVelocity" [class.is-invalid]="createPrinterForm.controls['printVelocity'].invalid && createPrinterForm.controls['printVelocity'].touched">
                             <span class="input-group-text">ppm</span>
                         </div>
                         <span *ngIf="isValidField('printVelocity')" class="form-text text-danger">
@@ -152,7 +152,7 @@
                     <div class="printer-data-item">
                         <h5>Grosor Máximo de Papel</h5>
                         <div class="input-group">
-                            <input type="text" class="form-control" formControlName="maxPaperWeight" [class.is-invalid]="createPrinterForm.controls['maxPaperWeight'].invalid && createPrinterForm.controls['maxPaperWeight'].touched">
+                            <input type="number" class="form-control" formControlName="maxPaperWeight" [class.is-invalid]="createPrinterForm.controls['maxPaperWeight'].invalid && createPrinterForm.controls['maxPaperWeight'].touched">
                             <span class="input-group-text">g/m2</span>
                         </div>
                         <span *ngIf="isValidField('maxPaperWeight')" class="form-text text-danger">
@@ -183,11 +183,11 @@
                         <div class="file-container">
                             <mat-icon>picture_as_pdf</mat-icon>
                             <div class="file-name">
-                                <a [href]="createPrinterForm.controls['datasheet_url'].value" target="_blank">{{createPrinterForm.controls['datasheet_url'].value.split('/').pop()}}</a>
+                                <a [href]="createPrinterForm.controls['datasheet_url'].value" target="_blank">{{(createPrinterForm.controls['datasheet_url'].value?.split('/').pop().split('-').slice(1).join('-')) || ""}}</a>
                             </div>
                         </div>
                         <!-- <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="createPrinterForm.controls['datasheet'].invalid && createPrinterForm.controls['datasheet'].touched"> -->
-                        <app-file-upload (fileUpload)="onFileUploaded($event)" [rootFolder]="'datasheets'" [file_type]="'.pdf'"></app-file-upload>
+                        <product-pdf-upload (fileUpload)="onFileUploaded($event)" [rootFolder]="'datasheets'"></product-pdf-upload>
                         <span *ngIf="isValidField('datasheet_url')" class="form-text text-danger">
                           {{ getFieldError('datasheet_url') }}
                         </span>

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { PrinterService } from '../../services/printer.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
@@ -42,6 +42,7 @@ export class PrinterEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPrinter();
+    this.getBrandsAndCategories();
   }
 
   initializeForm() {
@@ -49,7 +50,7 @@ export class PrinterEditComponent implements OnInit {
       brand: [this.printer ? this.printer.brand : '', Validators.required],
       model: [this.printer ? this.printer.model : '', Validators.required],
       datasheet_url: [this.printer ? this.printer.datasheet_url : ''],
-      images: this.fb.array(this.printer ? this.printer.img_url : []),
+      img_url: this.fb.array(this.printer ? this.printer.img_url : []),
       description: [this.printer ? this.printer.description : ''],
       price: [
         this.printer ? this.printer.price : '',
@@ -73,31 +74,16 @@ export class PrinterEditComponent implements OnInit {
       ),
       powerConsumption: [this.printer ? this.printer.powerConsumption : ''],
       dimensions: [this.printer ? this.printer.dimensions : ''],
-      printVelocity: [this.printer ? this.printer.printVelocity : ''],
+      printVelocity: [this.printer ? this.printer.printVelocity : null],
       maxPrintSizeSimple: [this.printer ? this.printer.maxPrintSizeSimple : ''],
       maxPrintSize: [this.printer ? this.printer.maxPrintSize : ''],
       printSize: [this.printer ? this.printer.printSize : ''],
-      maxPaperWeight: [this.printer ? this.printer.maxPaperWeight : ''],
+      maxPaperWeight: [this.printer ? this.printer.maxPaperWeight : null],
       duplexUnit: [this.printer ? this.printer.duplexUnit : false],
       paperSizes: [this.printer ? this.printer.paperSizes : ''],
       applicableOS: [this.printer ? this.printer.applicableOS : ''],
       printerFunctions: [this.printer ? this.printer.printerFunctions : ''],
     });
-  }
-
-  prevImage(): void {
-    if (this.currentImageIndex > 0) {
-      this.currentImageIndex--;
-    }
-  }
-
-  nextImage(): void {
-    if (
-      this.printer &&
-      this.currentImageIndex < this.printer.img_url.length - 1
-    ) {
-      this.currentImageIndex++;
-    }
   }
 
   getPrinter(): void {
@@ -107,11 +93,21 @@ export class PrinterEditComponent implements OnInit {
         this.printer = printerResponse;
         this.imageUrlsArray = [...this.printer.img_url];
         this.initializeForm();
-        // console.log(this.printer);
-        console.log(this.editPrinterForm);
+        console.log(this.printer);
+        console.log(this.printer.model);
         this.sharedService.changePrinterModel(printerResponse.model);
       });
     }
+  }
+
+  getBrandsAndCategories(): void {
+    this.printerService.getBrands().subscribe((brands: string[]) => {
+      this.brands = brands;
+    });
+
+    this.printerService.getCategories().subscribe((categories: string[]) => {
+      this.categories = categories;
+    });
   }
 
   getDealDuration(): number {
@@ -151,6 +147,21 @@ export class PrinterEditComponent implements OnInit {
     }
   }
 
+  prevImage(): void {
+    if (this.currentImageIndex > 0) {
+      this.currentImageIndex--;
+    }
+  }
+
+  nextImage(): void {
+    if (
+      this.printer &&
+      this.currentImageIndex < this.printer.img_url.length - 1
+    ) {
+      this.currentImageIndex++;
+    }
+  }
+
   onColorChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.editPrinterForm.get('color')?.setValue(target.checked);
@@ -169,10 +180,6 @@ export class PrinterEditComponent implements OnInit {
   onDuplexUnitChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.editPrinterForm.get('duplexUnit')?.setValue(target.checked);
-  }
-
-  logFormData() {
-    console.log(this.editPrinterForm.value);
   }
 
   isValidField(field: string): boolean | null {
@@ -209,20 +216,31 @@ export class PrinterEditComponent implements OnInit {
       this.editPrinterForm.markAllAsTouched();
       return;
     }
-    const formData = this.editPrinterForm.value;
+    let formData = this.editPrinterForm.value;
     formData.price = formData.price.toString();
     const printerId = this.route.snapshot.paramMap.get('id');
     if (printerId === null) {
       console.error('Printer id is null');
       return;
     }
+
+    // Convert images to img_url and datasheet to datasheet_url
+    if (formData.images) {
+      formData.img_url = formData.images;
+      delete formData.images;
+    }
+    if (formData.datasheet) {
+      formData.datasheet_url = formData.datasheet;
+      delete formData.datasheet;
+    }
+
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       (response) => {
-        this.toastService.showSuccess('Multifuncional editada', 'Aceptar');
+        this.toastService.showSuccess('Multifuncional editada', 'Cerrar');
         this.router.navigate(['/website/printers', printerId]);
       },
       (error) => {
-        this.toastService.showError(error.error.message, 'Aceptar');
+        this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
   }
@@ -232,51 +250,116 @@ export class PrinterEditComponent implements OnInit {
   }
 
   onFileUploaded(event: any): void {
-    const imageUrl = event; // The event should be the URL of the uploaded file
-    this.imageUrlsArray.push(imageUrl);
-    // Check if the last image URL in the form array is not empty
-    if (this.images.at(this.images.length - 1).value !== '') {
-      // If it's not empty, add a new control to the form array
-      this.addImage();
+    const files = Array.isArray(event) ? event : [event]; // The event should be an array of uploaded files
+    console.log("files",files);
+  
+    for (const file of files) {
+      if (file) {
+        const fileExtension = file.split('.').pop().toLowerCase();
+        console.log("fileExtension",fileExtension);
+  
+        if (fileExtension === 'pdf') {
+          // It's a PDF, so add it to the datasheet_url field
+          const datasheetControl = this.editPrinterForm.get('datasheet_url');
+          console.log("datasheetControl",datasheetControl);
+          if (datasheetControl) {
+            datasheetControl.setValue(file);
+            console.log("I have set the value for datasheet:", datasheetControl.value);
+          }
+        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+          // It's an image, so add it to the images field
+          this.imageUrlsArray.push(file);
+          console.log("imageUrlsArray",this.imageUrlsArray);
+  
+          // Get a reference to the img_url form array
+          const imgUrlArray = this.editPrinterForm.get('img_url') as FormArray;
+  
+          // Create a new control with the URL and push it to the form array
+          imgUrlArray.push(this.fb.control(file));
+          console.log(this.editPrinterForm)
+        }
+      }
     }
 
-    // Set the value of the last control in the form array to the image URL
-    this.images.at(this.images.length - 1).setValue(imageUrl);
+    // Handle images
+    const imagesControl = this.editPrinterForm.get('images');
+    if (imagesControl) {
+      for (const imageUrl of this.imageUrlsArray) {
+        // Check if the images FormArray is empty or the last image URL in the form array is not empty
+        if (
+          this.images.length === 0 ||
+          this.images.at(this.images.length - 1).value !== ''
+        ) {
+          // If it's empty or the last control is not empty, add a new control to the form array
+          this.addImage();
+        }
+
+        // Set the value of the last control in the form array to the image URL
+        this.images.at(this.images.length - 1).setValue(imageUrl);
+      }
+    }
   }
 
   openConfirmDialog(index: number): void {
     const dialogConfig = new MatDialogConfig();
-  
+
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Borrar imagen de la impresora',
-      message: 'Estas seguro de querer eliminar esta imagen?',
+      title: 'Estas seguro de querer eliminar esta imagen?',
+      message: 'La imagen sera eliminada permanentemente.',
       buttonText: {
         ok: 'Eliminar',
-        cancel: 'Cancelar'
-      }
+        cancel: 'Cancelar',
+      },
     };
-  
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
-  
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.onRemove(index);
+        this.toastService.showSuccess('Imagen eliminada con exito', 'Aceptar');
       }
     });
   }
 
-  onRemove(index: number): void {
-    this.imageUrlsArray.splice(index, 1);
-    this.removeImage(index);
-  }
+onRemove(index: number): void {
+  console.log('remove image at index: ', index);
+  
+  const imageUrl = this.imageUrlsArray[index];
+  console.log('imageUrl:', imageUrl);
+  this.printerService.deleteImagePrinter(imageUrl).subscribe(
+    response => {
+      console.log('Image deleted successfully', response);
+      this.toastService.showSuccess('Imagen borrada con éxito', 'Cerrar');
+      this.imageUrlsArray.splice(index, 1); // Remove the image from the array
+
+      // Update the form control
+      const controlArray = <FormArray>this.editPrinterForm.get('img_url');
+      controlArray.clear(); // Clear the existing form array
+      this.imageUrlsArray.forEach(url => {
+        controlArray.push(new FormControl(url)); // Add the remaining URLs back to the form array
+      });
+
+      // this.removeImage(index);
+    },
+    error => {
+      this.toastService.showError(error.error.message, 'Cerrar');
+    }
+  );
+}
 
   addImage(): void {
     this.images.push(this.fb.control(''));
   }
 
   removeImage(index: number): void {
-    this.images.removeAt(index);
+    const imagesControl = this.editPrinterForm.get('images') as FormArray;
+    if (imagesControl) {
+      imagesControl.removeAt(index);
+    }
+    // object after removing the image
+    console.log('object after removing image.', this.editPrinterForm);
   }
 }

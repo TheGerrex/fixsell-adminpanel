@@ -5,11 +5,11 @@ import { ToastService } from '../../services/toast.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.scss'],
+  selector: 'product-pdf-upload',
+  templateUrl: './pdf-upload.component.html',
+  styleUrls: ['./pdf-upload.component.scss']
 })
-export class FileUploadComponent {
+export class PdfUploadComponent {
   isUploading = false;
   isDragging = false; // Add this line
 
@@ -68,14 +68,15 @@ export class FileUploadComponent {
     formData.append('childFolder', model);
 
     for (let i = 0; i < files.length; i++) {
-      formData.append('image', files[i], files[i].name);
+      formData.append('pdf', files[i], files[i].name);
     }
     
   
-    this.http.post(`${environment.baseUrl}/upload/image/multiple`, formData).subscribe(
+    this.http.post(`${environment.baseUrl}/upload/pdf`, formData).subscribe(
       (res: any) => {
+        console.log(res);
         this.isUploading = false; // Set isUploading to false when upload completes
-        this.fileUpload.emit(res.urls); // Emit file upload event with response body
+        this.fileUpload.emit(res.url); // Emit file upload event with response body
         this.toastService.showSuccess('Archivos agregados con exito', 'Aceptar');
       },
       (err) => {

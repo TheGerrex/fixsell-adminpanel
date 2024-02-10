@@ -324,7 +324,7 @@ input:focus {
         &-success {
             color: $success-color;
             &:hover {
-                background: $success-color;
+                background: $success-color-hover;
                 color: $success-color-text;
                 border-color: $success-color-hover;
             }
@@ -340,7 +340,7 @@ input:focus {
         &-danger {
             color: $danger-color;
             &:hover {
-                background: $danger-color;
+                background: $danger-color-hover;
                 color: $danger-color-text;
                 border-color: $danger-color-hover;
             }
@@ -356,7 +356,7 @@ input:focus {
         &-warning {
             color: $warning-color;
             &:hover {
-                background: $warning-color;
+                background: $warning-color-hover;
                 color: $danger-color-text;
                 border-color: $danger-color-hover;
             }
@@ -372,7 +372,7 @@ input:focus {
         &-info {
             color: $info-color;
             &:hover {
-                background: $info-color;
+                background: $info-color-hover;
                 color: $info-color-text;
                 border-color: $info-color-hover;
             }
@@ -388,7 +388,7 @@ input:focus {
         &-help {
             color: $help-color;
             &:hover {
-                background: $help-color;
+                background: $help-color-hover;
                 color: $help-color-text;
                 border-color: $help-color-hover;
             }
@@ -604,26 +604,36 @@ button:hover {
 .success-toast {
     --mdc-snackbar-container-color: #f0fdf4 !important;
     --mdc-snackbar-supporting-text-color: #22c55e !important;
+    border: 1px solid $success-color;
+    border-radius: $border-radius;
 }
 
 .error-toast {
     --mdc-snackbar-container-color: #fef2f2 !important;
     --mdc-snackbar-supporting-text-color: #ef4444 !important;
+    border: 1px solid $danger-color;
+    border-radius: $border-radius;
 }
 
 .warning-toast {
     --mdc-snackbar-container-color: #fefce8 !important;
     --mdc-snackbar-supporting-text-color: #eab308 !important;
+    border: 1px solid $warning-color;
+    border-radius: $border-radius;
 }
 
 .info-toast {
     --mdc-snackbar-container-color: #eef2ff !important;
     --mdc-snackbar-supporting-text-color: #6366f1 !important;
+    border: 1px solid $info-color;
+    border-radius: $border-radius;
 }
 
 .help-toast {
     --mdc-snackbar-container-color: #faf5ff !important;
     --mdc-snackbar-supporting-text-color: #a855f7 !important;
+    border: 1px solid $help-color;
+    border-radius: $border-radius;
 }
 
 

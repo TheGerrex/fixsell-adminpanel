@@ -36,4 +36,53 @@ export class PrinterService {
         })
       );
   }
+
+  // get brands from printers
+  getBrands(): Observable<string[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(
+        map((printers: Printer[]) =>
+          printers
+            .map((printer: Printer) => printer.brand)
+            .filter((brand, index, self) => self.indexOf(brand) === index)
+        )
+      );
+  }
+
+  // get categories from printers
+  getCategories(): Observable<string[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(
+        map((printers: Printer[]) =>
+          printers
+            .map((printer: Printer) => printer.category)
+            .filter((category, index, self) => self.indexOf(category) === index)
+        )
+      );
+  }
+
+  submitPrinterCreateForm(data: Printer): Observable<Printer> {
+    const formData = data;
+    console.log('formData:', formData);
+    console.log(`${environment.baseUrl}/printers`);
+    return this.http
+      .post<Printer>(`${environment.baseUrl}/printers`, formData)
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  deleteImagePrinter(imageUrl: string): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}/upload/file`, { body: { url: imageUrl } }).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return throwError(error);
+      })
+    );
+  }
 }

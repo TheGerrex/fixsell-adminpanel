@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
@@ -13,7 +12,7 @@ import { RoleService } from 'src/app/shared/services/role.service';
 @Injectable({
   providedIn: 'root',
 })
-export class RoleGuard implements CanActivate {
+export class RoleGuard {
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -29,6 +28,7 @@ export class RoleGuard implements CanActivate {
     // log url and allowed roles to the console
     console.log('url', state.url);
     console.log('allowedRoles', allowedRoles);
+    localStorage.setItem('lastVisitedRoute', state.url);
     if (this.authService.checkAuthStatus()) {
       const userRoles = this.authService.getCurrentUserRoles();
       const hasRequiredRole = allowedRoles.some((role) =>

@@ -6,7 +6,7 @@
         </div>
         <div class="printer-info">
             <div class="printer-images">
-                <app-file-upload (fileUpload)="onFileUploaded($event)" [rootFolder]="'imagenes'" [file_type]="'.png o .jpg'"></app-file-upload>
+                <app-file-upload (fileUpload)="onFileUploaded($event)" [rootFolder]="'imagenes'"></app-file-upload>
                 <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
             </div>
             <div class="printer-data-container">

@@ -183,7 +183,7 @@
                         <div class="file-container">
                             <mat-icon>picture_as_pdf</mat-icon>
                             <div class="file-name">
-                                <a [href]="editPrinterForm.controls['datasheet_url'].value" target="_blank">{{(editPrinterForm.controls['datasheet_url'].value?.split('/').pop().split('-').slice(1).join('-')) || ""}}</a>
+                                <a [href]="editPrinterForm.controls['datasheet_url'].value" target="_blank">{{(editPrinterForm.controls['datasheet_url'].value?.split('/').pop().split('-').slice(1).join('-')) || editPrinterForm.controls['datasheet_url'].value}}</a>
                             </div>
                         </div>
                         <product-pdf-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'datasheets'"></product-pdf-upload>

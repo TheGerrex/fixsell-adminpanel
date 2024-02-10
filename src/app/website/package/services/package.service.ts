@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 
 @Injectable({

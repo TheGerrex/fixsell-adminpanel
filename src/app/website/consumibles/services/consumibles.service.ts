@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Consumible } from '../../interfaces/consumibles.interface';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 import { throwError } from 'rxjs';
 

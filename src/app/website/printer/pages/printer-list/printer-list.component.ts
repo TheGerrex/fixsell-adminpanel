@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 import swal from 'sweetalert2';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject } from '@angular/core';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-intro-screen',

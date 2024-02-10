@@ -121,7 +121,7 @@
                     <div class="printer-data-item">
                         <h5>Velocidad de Impresión</h5>
                         <div class="input-group">
-                            <input type="text" class="form-control" formControlName="printVelocity" [class.is-invalid]="editPrinterForm.controls['printVelocity'].invalid && editPrinterForm.controls['printVelocity'].touched">
+                            <input type="number" class="form-control" formControlName="printVelocity" [class.is-invalid]="editPrinterForm.controls['printVelocity'].invalid && editPrinterForm.controls['printVelocity'].touched">
                             <span class="input-group-text">ppm</span>
                         </div>
                         <span *ngIf="isValidField('printVelocity')" class="form-text text-danger">
@@ -152,7 +152,7 @@
                     <div class="printer-data-item">
                         <h5>Grosor Máximo de Papel</h5>
                         <div class="input-group">
-                            <input type="text" class="form-control" formControlName="maxPaperWeight" [class.is-invalid]="editPrinterForm.controls['maxPaperWeight'].invalid && editPrinterForm.controls['maxPaperWeight'].touched">
+                            <input type="number" class="form-control" formControlName="maxPaperWeight" [class.is-invalid]="editPrinterForm.controls['maxPaperWeight'].invalid && editPrinterForm.controls['maxPaperWeight'].touched">
                             <span class="input-group-text">g/m2</span>
                         </div>
                         <span *ngIf="isValidField('maxPaperWeight')" class="form-text text-danger">
@@ -183,13 +183,12 @@
                         <div class="file-container">
                             <mat-icon>picture_as_pdf</mat-icon>
                             <div class="file-name">
-                                <a [href]="editPrinterForm.controls['datasheet'].value" target="_blank">{{editPrinterForm.controls['datasheet'].value.split('/').pop()}}</a>
+                                <a [href]="editPrinterForm.controls['datasheet_url'].value" target="_blank">{{(editPrinterForm.controls['datasheet_url'].value?.split('/').pop().split('-').slice(1).join('-')) || editPrinterForm.controls['datasheet_url'].value}}</a>
                             </div>
                         </div>
-                        <!-- <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="editPrinterForm.controls['datasheet'].invalid && editPrinterForm.controls['datasheet'].touched"> -->
-                        <app-file-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'datasheets'" [file_type]="'.pdf'"></app-file-upload>
-                        <span *ngIf="isValidField('datasheet')" class="form-text text-danger">
-                          {{ getFieldError('datasheet') }}
+                        <product-pdf-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'datasheets'"></product-pdf-upload>
+                        <span *ngIf="isValidField('datasheet_url')" class="form-text text-danger">
+                          {{ getFieldError('datasheet_url') }}
                         </span>
                     </div>
                 </div>

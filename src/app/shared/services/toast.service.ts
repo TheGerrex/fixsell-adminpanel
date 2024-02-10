@@ -19,8 +19,8 @@ export class ToastService {
         icon: 'done',
       },
       duration: 8000, 
-      horizontalPosition: 'end', 
-      verticalPosition: 'top',
+      horizontalPosition: 'right', 
+      verticalPosition: 'bottom',
       panelClass: ['success-toast']});
   }
 
@@ -34,8 +34,8 @@ export class ToastService {
         icon: 'error',
       },
       duration: 8000, 
-      horizontalPosition: 'end', 
-      verticalPosition: 'top',
+      horizontalPosition: 'right', 
+      verticalPosition: 'bottom',
       panelClass: ['error-toast']});
   }
 
@@ -49,8 +49,8 @@ export class ToastService {
         icon: 'warning',
       },
       duration: 8000, 
-      horizontalPosition: 'end', 
-      verticalPosition: 'top',
+      horizontalPosition: 'right', 
+      verticalPosition: 'bottom',
       panelClass: ['warning-toast']});
   }
 
@@ -64,8 +64,8 @@ export class ToastService {
         icon: 'info',
       },
       duration: 8000, 
-      horizontalPosition: 'end', 
-      verticalPosition: 'top',
+      horizontalPosition: 'right', 
+      verticalPosition: 'bottom',
       panelClass: ['info-toast']});
   }
 
@@ -79,8 +79,8 @@ export class ToastService {
         icon: 'info',
       },
       duration: 8000, 
-      horizontalPosition: 'end', 
-      verticalPosition: 'top',
+      horizontalPosition: 'right', 
+      verticalPosition: 'bottom',
       panelClass: ['help-toast']});
   }
 }

@@ -47,6 +47,7 @@ export class PrinterDetailComponent implements OnInit {
     if (id) {
       this.printerService.getPrinter(id).subscribe((printer) => {
         this.printer = printer;
+        console.log('Printer:', printer);
         this.sharedService.changePrinterModel(printer.model);
       });
     }

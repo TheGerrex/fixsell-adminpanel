@@ -25,6 +25,10 @@ type Breadcrumb = { label: string, url: string };
       margin-bottom: 16px;
       align-items: center;
       height: auto;
+      background-color: #f9fafb;
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid #d1d5db;
     }
     @media(max-width: 768px) {
       nav {
@@ -66,7 +70,9 @@ export class BreadcrumbComponent implements OnInit {
     ngOnInit(): void {
       const labelMap: {[key: string]: string} = {
         'printers': 'Multifuncionales',
-        'edit': 'Editar'
+        'consumibles': 'Consumibles',
+        'edit': 'Editar',
+        'create': 'Crear'
         // Add more mappings here if needed
       };
     

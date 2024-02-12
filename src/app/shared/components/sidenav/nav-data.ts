@@ -37,9 +37,23 @@ export const navbarData = [
   {
     label: 'Usuarios',
     routeLink: 'dashboard/users',
+    allowedRoles: ['admin', 'user', 'vendor'],
     icon: 'fal fa-users',
-    allowedRoles: ['admin'],
+    isExpanded: false,
+    subRoutes: [
+      {
+        label: 'Usuarios',
+        routeLink: 'dashboard/users',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+      {
+        label: 'Crear Usuario',
+        routeLink: 'dashboard/users-table',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+    ],
   },
+
   // {
   //   routeLink: 'dashboard/ventas',
   //   icon: 'fal fa-shopping-cart',

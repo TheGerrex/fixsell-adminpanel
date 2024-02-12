@@ -3,7 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { PrinterService } from '../../services/printer.service';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
@@ -12,7 +18,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
 @Component({
   selector: 'app-printer-create',
   templateUrl: './printer-create.component.html',
-  styleUrls: ['./printer-create.component.scss']
+  styleUrls: ['./printer-create.component.scss'],
 })
 export class PrinterCreateComponent implements OnInit {
   public imageUrlsArray: string[] = [];
@@ -24,8 +30,9 @@ export class PrinterCreateComponent implements OnInit {
     'Etiquetas',
     'Artes Graficas',
     'Inyeccion de Tinta',
+    'Plotter',
   ];
-  brands = ['Konica Minolta', 'Kyocera', 'Epson', 'Fuji'];
+  brands = ['Konica Minolta', 'Kyocera', 'Epson', 'Fuji', 'Audley', 'Prixato'];
 
   public createPrinterForm!: FormGroup;
 
@@ -42,8 +49,28 @@ export class PrinterCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.getBrandsAndCategories();
   }
 
+  getBrandsAndCategories(): void {
+    this.printerService.getBrands().subscribe(
+      (brands: string[]) => {
+        this.brands = brands;
+      },
+      (error) => {
+        console.error('Error fetching brands', error);
+      }
+    );
+
+    this.printerService.getCategories().subscribe(
+      (categories: string[]) => {
+        this.categories = categories;
+      },
+      (error) => {
+        console.error('Error fetching categories', error);
+      }
+    );
+  }
   initializeForm() {
     this.createPrinterForm = this.fb.group({
       brand: ['', Validators.required],
@@ -58,10 +85,7 @@ export class PrinterCreateComponent implements OnInit {
           Validators.pattern(this.validatorsService.floatNumberPattern),
         ],
       ],
-      category: [
-        '',
-        Validators.required,
-      ],
+      category: ['', Validators.required],
       color: [false],
       rentable: [false],
       sellable: [false],
@@ -79,7 +103,6 @@ export class PrinterCreateComponent implements OnInit {
       printerFunctions: [''],
     });
   }
-
 
   getDealDuration(): number {
     if (this.printer && this.printer.deal) {
@@ -117,7 +140,7 @@ export class PrinterCreateComponent implements OnInit {
       tags.at(0).reset('');
     }
   }
-  
+
   prevImage(): void {
     if (this.currentImageIndex > 0) {
       this.currentImageIndex--;
@@ -207,39 +230,43 @@ export class PrinterCreateComponent implements OnInit {
     return this.createPrinterForm.get('images') as FormArray;
   }
 
-
   onFileUploaded(event: any): void {
     const files = Array.isArray(event) ? event : [event]; // The event should be an array of uploaded files
-    console.log("files",files);
-  
+    console.log('files', files);
+
     for (const file of files) {
       if (file) {
         const fileExtension = file.split('.').pop().toLowerCase();
-        console.log("fileExtension",fileExtension);
-  
+        console.log('fileExtension', fileExtension);
+
         if (fileExtension === 'pdf') {
           // It's a PDF, so add it to the datasheet_url field
           const datasheetControl = this.createPrinterForm.get('datasheet_url');
-          console.log("datasheetControl",datasheetControl);
+          console.log('datasheetControl', datasheetControl);
           if (datasheetControl) {
             datasheetControl.setValue(file);
-            console.log("I have set the value for datasheet:", datasheetControl.value);
+            console.log(
+              'I have set the value for datasheet:',
+              datasheetControl.value
+            );
           }
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
           // It's an image, so add it to the images field
           this.imageUrlsArray.push(file);
-          console.log("imageUrlsArray",this.imageUrlsArray);
-  
+          console.log('imageUrlsArray', this.imageUrlsArray);
+
           // Get a reference to the img_url form array
-          const imgUrlArray = this.createPrinterForm.get('img_url') as FormArray;
-  
+          const imgUrlArray = this.createPrinterForm.get(
+            'img_url'
+          ) as FormArray;
+
           // Create a new control with the URL and push it to the form array
           imgUrlArray.push(this.fb.control(file));
-          console.log(this.createPrinterForm)
+          console.log(this.createPrinterForm);
         }
       }
     }
-  
+
     // Handle images
     const imagesControl = this.createPrinterForm.get('images');
     if (imagesControl) {
@@ -249,7 +276,7 @@ export class PrinterCreateComponent implements OnInit {
           // If it's not empty, add a new control to the form array
           this.addImage();
         }
-  
+
         // Set the value of the last control in the form array to the image URL
         this.images.at(this.images.length - 1).setValue(imageUrl);
       }
@@ -258,7 +285,7 @@ export class PrinterCreateComponent implements OnInit {
 
   openConfirmDialog(index: number): void {
     const dialogConfig = new MatDialogConfig();
-  
+
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
@@ -266,12 +293,12 @@ export class PrinterCreateComponent implements OnInit {
       message: 'Estas seguro de querer eliminar esta imagen?',
       buttonText: {
         ok: 'Eliminar',
-        cancel: 'Cancelar'
-      }
+        cancel: 'Cancelar',
+      },
     };
-  
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
-  
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.onRemove(index);
@@ -282,25 +309,25 @@ export class PrinterCreateComponent implements OnInit {
 
   onRemove(index: number): void {
     console.log('remove image at index: ', index);
-    
+
     const imageUrl = this.imageUrlsArray[index];
     console.log('imageUrl:', imageUrl);
     this.printerService.deleteImagePrinter(imageUrl).subscribe(
-      response => {
+      (response) => {
         console.log('Image deleted successfully', response);
         this.toastService.showSuccess('Imagen borrada con éxito', 'Cerrar');
         this.imageUrlsArray.splice(index, 1); // Remove the image from the array
-  
+
         // Update the form control
         const controlArray = <FormArray>this.createPrinterForm.get('img_url');
         controlArray.clear(); // Clear the existing form array
-        this.imageUrlsArray.forEach(url => {
+        this.imageUrlsArray.forEach((url) => {
           controlArray.push(new FormControl(url)); // Add the remaining URLs back to the form array
         });
-  
+
         // this.removeImage(index);
       },
-      error => {
+      (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );

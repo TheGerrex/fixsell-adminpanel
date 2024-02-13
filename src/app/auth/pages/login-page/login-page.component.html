@@ -19,7 +19,11 @@
       type="email"
       formControlName="email"
       placeholder="Correo electrónico"
+      [class.is-invalid]="myForm.controls['email'].invalid && myForm.controls['email'].touched"
     />
+    <span *ngIf="isValidField('email')" class="form-text text-danger">
+      {{ getFieldError('email') }}
+    </span>
   </div>
 
   <div class="mb-3">
@@ -29,13 +33,17 @@
       type="password"
       formControlName="password"
       placeholder="Ingrese su contraseña"
+      [class.is-invalid]="myForm.controls['password'].invalid && myForm.controls['password'].touched"
     />
+    <span *ngIf="isValidField('password')" class="form-text text-danger">
+      {{ getFieldError('password') }}
+    </span>
   </div>
 
   <div class="mb-3">
     <button
       class="button button-primary button-rounded"
-      [disabled]="myForm.invalid"
+      
       type="submit"
     >
       <span class="button-label" *ngIf="!isLoading">Iniciar Sesión</span>

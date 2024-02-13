@@ -179,6 +179,13 @@
                         </div>
                     </div>
                     <div class="printer-data-item">
+                        <h5>Consumo de Poder</h5>
+                        <input formControlName="powerConsumption" class="form-control" type="text" [class.is-invalid]="editPrinterForm.controls['powerConsumption'].invalid && editPrinterForm.controls['powerConsumption'].touched">
+                        <span *ngIf="isValidField('powerConsumption')" class="form-text text-danger">
+                            {{ getFieldError('paperSizes') }}
+                        </span>
+                    </div>
+                    <div class="printer-data-item">
                         <h5>Ficha Técnica</h5>
                         <div class="file-container">
                             <mat-icon>picture_as_pdf</mat-icon>

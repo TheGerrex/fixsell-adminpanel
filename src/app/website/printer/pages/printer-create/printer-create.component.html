@@ -2,7 +2,7 @@
     <form [formGroup]="createPrinterForm" class="printer-container">
         <div class="printer-header">
             <h2>Nuevo Multifuncional</h2>
-            <button type="submit" class="button button-primary button-raised"  (click)="submitForm()"><span class="button-label">Crear Multifuncional</span></button>
+            <button type="submit" class="button button-primary button-raised" (click)="submitForm()"><span class="button-label">Crear Multifuncional</span></button>
         </div>
         <div class="printer-info">
             <div class="printer-images">
@@ -177,6 +177,13 @@
                             </div>
                             <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
                         </div>
+                    </div>
+                    <div class="printer-data-item">
+                        <h5>Consumo de Poder</h5>
+                        <input formControlName="powerConsumption" class="form-control" type="text" [class.is-invalid]="createPrinterForm.controls['powerConsumption'].invalid && createPrinterForm.controls['powerConsumption'].touched">
+                        <span *ngIf="isValidField('powerConsumption')" class="form-text text-danger">
+                            {{ getFieldError('paperSizes') }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Ficha Técnica</h5>

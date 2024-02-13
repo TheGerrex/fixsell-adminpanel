@@ -27,18 +27,26 @@
 .printer-info {
     display: flex;
     gap: 1em;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    max-width: 1920px;
     @media(max-width: 1024px) {
         flex-direction: column;
     }
     .carousel {
         display: flex;
         flex-direction: column;
+        align-self: flex-start;
         .image-container {
+            position: relative;
             width: 100%;
             border: 1px solid $gray-300;
             border-radius: $border-radius;
             background-color: #F8FAFC;
             text-align: center;
+            padding: 4em 4em;
             img {
                 width: 300px;
             }
@@ -46,25 +54,61 @@
         .button-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 1em;
+            padding: 1em;
             gap: 1em;
-            button {
-                width: 100%;
-            }
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        @media(max-width: 1024px) {
+            width: 100%;
         }
     }
-    .printer-data {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1em;
-        .printer-data-item {
-            min-height: 50px;
-            p {
-                margin-bottom: 0;
-            }
+    .dot-container {
+        text-align: center;
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: $gray-200;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
         }
-        .description {
-            grid-column: 1 / -1; // This will make the description item span the entire row
+        .active {
+            background-color: $gray-400;
+        }
+    }
+    .printer-data-container {
+        width: 100%;
+        max-width: 768px;
+        align-self: flex-start;
+        .printer-data {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 1em;
+            .printer-data-item {
+                min-height: 50px;
+                p {
+                    margin-bottom: 0;
+                }
+                @media (max-width: 600px) {
+                    grid-column: 1 / -1;
+                    gap: 1em;
+                    // row-gap: 1em;
+                }
+            }
+            .full-row {
+                grid-column: 1 / -1; // This will make the description item span the entire row
+            }
+            .half-row {
+                grid-column: span 2; // This will make the description item span half row
+            }
+            @media (max-width: 600px) {
+                grid-template-columns: 1fr;
+                row-gap: 1em;
+                column-gap: 0em;
+            }
         }
     }
 }

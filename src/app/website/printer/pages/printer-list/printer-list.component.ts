@@ -26,6 +26,7 @@ export class PrinterListComponent {
   dataSource = new MatTableDataSource<Printer>();
   filterValue = '';
   isAdmin = false;
+  printerData: Printer[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
@@ -40,6 +41,8 @@ export class PrinterListComponent {
       .get<Printer[]>(`${environment.baseUrl}/printers`)
       .subscribe((data) => {
         console.log(data);
+        // save to printerdata
+        this.printerData = data;
 
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(data);

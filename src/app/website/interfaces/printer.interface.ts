@@ -6,6 +6,7 @@ export interface Printer {
   img_url: string[];
   description: string;
   price: number;
+  currency: string;
   category: string;
   color: boolean;
   rentable: boolean;

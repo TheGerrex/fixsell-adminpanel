@@ -66,6 +66,7 @@ export class PrinterEditComponent implements OnInit {
           Validators.pattern(this.validatorsService.floatNumberPattern),
         ],
       ],
+      currency: ['USD', Validators.required],
       category: [
         this.printer ? this.printer.category : '',
         Validators.required,

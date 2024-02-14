@@ -1,233 +1,237 @@
-@import '_variables.scss';
+@import "_variables.scss";
 .printer-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2em;
-    background-color: #FFF;
-    border-radius: $border-radius;
-    border: 1px solid $gray-300;
-    padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  padding: 1em;
 }
 
 .printer-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  flex-wrap: wrap;
+  // @media(max-width: 320px) {
+  //     flex-direction: column;
+  //     gap: 1em;
+  //     align-items: flex-start;
+  // }
+  h2 {
+    margin: 0;
+  }
+  button {
+    flex-shrink: 0;
+  }
+}
+
+.currency-select {
+  height: 100%;
+}
+
+.printer-info {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 1920px;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+  .carousel {
+    display: flex;
+    flex-direction: column;
+    .image-container {
+      width: 100%;
+      border: 1px solid $gray-300;
+      border-radius: $border-radius;
+      background-color: #f8fafc;
+      text-align: center;
+      img {
+        width: 300px;
+      }
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1em;
+      gap: 1em;
+      button {
+        width: 100%;
+      }
+    }
+  }
+  .printer-images {
+    width: 100%;
+    max-width: 500px;
+    align-self: flex-start;
+    @media (max-width: 1024px) {
+      max-width: 100%;
+    }
+  }
+  .printer-data-container {
+    width: 100%;
+    max-width: 768px;
+    align-self: flex-start;
+    .printer-data {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(250px, 1fr));
+      row-gap: 1em;
+      column-gap: 1em;
+      .printer-data-item {
+        min-height: 50px;
+        p {
+          margin-bottom: 0;
+        }
+        @media (max-width: 600px) {
+          grid-column: 1 / -1;
+          gap: 1em;
+          // row-gap: 1em;
+        }
+      }
+      .full-row {
+        grid-column: 1 / -1; // This will make the description item span the entire row
+      }
+      .half-row {
+        grid-column: span 2; // This will make the description item span half row
+      }
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        row-gap: 1em;
+        column-gap: 0em;
+      }
+    }
+  }
+}
+
+.tag-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.tag-inputs {
+  display: flex;
+  gap: 0.5em;
+}
+
+.printer-deal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  background-color: #fff;
+  border-radius: $border-radius;
+  padding: 1em 0em;
+  .printer-deal-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: .5em;
+    padding-bottom: 0.5em;
     border-bottom: 1px solid $gray-300;
-    flex-wrap: wrap;
-    // @media(max-width: 320px) {
-    //     flex-direction: column;
-    //     gap: 1em;
-    //     align-items: flex-start;
-    // }
     h2 {
-        margin: 0;
+      margin: 0;
     }
     button {
-        flex-shrink: 0;
+      flex-shrink: 0;
     }
-}
-
-.printer-info {
+  }
+  .printer-deals {
     display: flex;
-    gap: 1em;
-    width: 100%;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    max-width: 1920px;
-    @media(max-width: 1024px) {
-        flex-direction: column;
-    }
-    .carousel {
-        display: flex;
-        flex-direction: column;
-        .image-container {
-            width: 100%;
-            border: 1px solid $gray-300;
-            border-radius: $border-radius;
-            background-color: #F8FAFC;
-            text-align: center;
-            img {
-                width: 300px;
-            }
-        }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1em;
-            gap: 1em;
-            button {
-                width: 100%;
-            }
-        }
-    }
-    .printer-images {
+    flex-grow: 1;
+    .deal {
+      display: flex;
+      flex-direction: column;
+      border-radius: $border-radius;
+      border: 1px solid $gray-300;
+      @media (max-width: 768px) {
         width: 100%;
-        max-width: 500px;
-        align-self: flex-start;
-        @media(max-width: 1024px) {
-            max-width: 100%;
-        }
-    }
-    .printer-data-container {
-        width: 100%;
-        max-width: 768px;
-        align-self: flex-start;
-        .printer-data {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(250px, 1fr));
-            row-gap: 1em;
-            column-gap: 1em;
-            .printer-data-item {
-                min-height: 50px;
-                p {
-                    margin-bottom: 0;
-                }
-                @media (max-width: 600px) {
-                    grid-column: 1 / -1;
-                    gap: 1em;
-                    // row-gap: 1em;
-                }
-            }
-            .full-row {
-                grid-column: 1 / -1; // This will make the description item span the entire row
-            }
-            .half-row {
-                grid-column: span 2; // This will make the description item span half row
-            }
-            @media (max-width: 600px) {
-                grid-template-columns: 1fr;
-                row-gap: 1em;
-                column-gap: 0em;
-            }
-        }
-    }
-}
-
-.tag-inputs-container {
-    display: flex;
-    flex-direction: column;
-    gap: .5em;
-}
-
-.tag-inputs {
-    display: flex;
-    gap: .5em;
-}
-
-.printer-deal-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    background-color: #FFF;
-    border-radius: $border-radius;
-    padding: 1em 0em;
-    .printer-deal-header {
+      }
+      .deal-header {
         display: flex;
-        flex-direction: row;
-        align-items: center;
         justify-content: space-between;
-        padding-bottom: .5em;
+        align-items: center;
+        height: 50px;
+        gap: 1em;
+        padding: 1em;
         border-bottom: 1px solid $gray-300;
-        h2 {
-            margin: 0;
+        background-color: $gray-100;
+        border-start-start-radius: $border-radius;
+        border-start-end-radius: $border-radius;
+        .deal-item {
+          display: flex;
+          gap: 8px;
+          h5 {
+            font-size: 1em;
+            margin-bottom: 0;
+          }
+          p {
+            margin-bottom: 0;
+          }
         }
-        button {
-            flex-shrink: 0;
+      }
+      .deal-content {
+        padding: 1em;
+        background-color: $gray-50;
+        .deal-row {
+          display: flex;
+          gap: 1em;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          .deal-item {
+            h5 {
+              font-size: 1em;
+              margin-bottom: 0;
+            }
+          }
         }
-    }
-    .printer-deals {
+      }
+      .deal-footer {
         display: flex;
-        flex-grow: 1;
-        .deal {
-            display: flex;
-            flex-direction: column;
-            border-radius: $border-radius;
-            border: 1px solid $gray-300;
-            @media(max-width: 768px) {
-                width: 100%;
-            }
-            .deal-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                height: 50px;
-                gap: 1em;
-                padding: 1em;
-                border-bottom: 1px solid $gray-300;
-                background-color: $gray-100;
-                border-start-start-radius: $border-radius;
-                border-start-end-radius: $border-radius;
-                .deal-item {
-                    display: flex;
-                    gap: 8px;
-                    h5 {
-                        font-size: 1em;
-                        margin-bottom: 0;
-                    }
-                    p {
-                        margin-bottom: 0;
-                    }
-                }
-            }
-            .deal-content {
-                padding: 1em;
-                background-color: $gray-50;
-                .deal-row {
-                    display: flex;
-                    gap: 1em;
-                    flex-wrap: wrap;
-                    justify-content: space-between;
-                    .deal-item {
-                        h5 {
-                            font-size: 1em;
-                            margin-bottom: 0;
-                        }
-                    }
-                }
-            }
-            .deal-footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 1em;
-                padding: 1em;
-                border-top: 1px solid $gray-300;
-                background-color: $gray-50;
-                border-end-start-radius: $border-radius;
-                border-end-end-radius: $border-radius;
-                p {
-                    margin-bottom: 0;
-                }
-            }
+        justify-content: space-between;
+        align-items: center;
+        gap: 1em;
+        padding: 1em;
+        border-top: 1px solid $gray-300;
+        background-color: $gray-50;
+        border-end-start-radius: $border-radius;
+        border-end-end-radius: $border-radius;
+        p {
+          margin-bottom: 0;
         }
+      }
     }
+  }
 }
 
 .printer-data-item textarea {
-    min-height: 8em !important;
+  min-height: 8em !important;
 }
 
 .file-container {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    padding: 8px;
-    border-radius: $border-radius;
-    background-color: $light-100;
-    border: 1px solid $light-300;
-    width: 100%;
-    max-width: 100%;
-    mat-icon {
-        flex-shrink: 0;
-    }
-    .file-name {
-        overflow-wrap: break-word;
-        word-break: break-all;
-        white-space: normal;
-        flex-grow: 1;
-    }
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 8px;
+  border-radius: $border-radius;
+  background-color: $light-100;
+  border: 1px solid $light-300;
+  width: 100%;
+  max-width: 100%;
+  mat-icon {
+    flex-shrink: 0;
+  }
+  .file-name {
+    overflow-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    flex-grow: 1;
+  }
 }

@@ -21,6 +21,7 @@ export class PrinterListComponent {
     'color',
     'category',
     'price',
+    'currency',
     'action',
   ];
   dataSource = new MatTableDataSource<Printer>();
@@ -52,7 +53,13 @@ export class PrinterListComponent {
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
-      this.displayedColumns = ['brand', 'model', 'category', 'price'];
+      this.displayedColumns = [
+        'brand',
+        'model',
+        'category',
+        'price',
+        'currency',
+      ];
     }
   }
 

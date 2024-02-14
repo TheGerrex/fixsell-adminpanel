@@ -19,10 +19,8 @@ export class ConsumiblesListComponent {
     //consumibles columns
     'name',
     'price',
-    'weight',
+    'currency',
     'category',
-    'stock',
-    'location',
     'action',
   ];
   dataSource = new MatTableDataSource<Consumible>();
@@ -55,14 +53,7 @@ export class ConsumiblesListComponent {
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
-      this.displayedColumns = [
-        'name',
-        'price',
-        'weight',
-        'category',
-        'stock',
-        'location',
-      ];
+      this.displayedColumns = ['name', 'price', 'currency', 'category'];
     }
   }
 

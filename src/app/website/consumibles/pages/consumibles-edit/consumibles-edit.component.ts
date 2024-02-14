@@ -45,7 +45,7 @@ export class ConsumiblesEditComponent implements OnInit {
         console.log('got consumible from service' + { Consumible });
         console.log({ Consumible });
         this.Consumible = Consumible;
-        this.imageUrlsArray = [...this.Consumible.images]; // Update the imageUrlsArray
+        this.imageUrlsArray = [...this.Consumible.img_url]; // Update the imageUrlsArray
         this.initalizeForm(); // Moved inside the subscribe block
         console.log(this.Consumible);
         this.sharedService.changeConsumiblesModel(this.Consumible.name);
@@ -74,7 +74,7 @@ export class ConsumiblesEditComponent implements OnInit {
       ],
       images: this.fb.array(
         this.Consumible
-          ? this.Consumible.images.map((image) => this.fb.control(image))
+          ? this.Consumible.img_url.map((image) => this.fb.control(image))
           : [],
         Validators.required
       ),

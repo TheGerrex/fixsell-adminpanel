@@ -1,16 +1,25 @@
 export interface Consumible {
   id?: string;
   name: string;
+  brand?: string;
   price: number;
-  weight: number;
+  currency?: string;
+  sku?: string;
   longDescription: string;
   shortDescription: string;
-  thumbnailImage: string;
-  images: string[];
+  compatibleModels?: string[];
+  color?: string;
+  yield?: number;
+  img_url: string[];
   category: string;
-  stock: number;
-  location: string;
-  // orderDetails: OrderDetail[];
+  // printers?: Printer[];
+  orderDetails?: OrderDetail[];
+  counterpart?: Consumible;
+
+  //delete later
+  stock?: number;
+  weight?: number;
+  location?: string;
 }
 
 export interface OrderDetail {

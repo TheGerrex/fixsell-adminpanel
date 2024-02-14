@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -7,7 +13,11 @@ import { ConsumiblesService } from '../../services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { startWith, map, switchMap } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 /* 
@@ -27,7 +37,9 @@ TODO 6: add better front end design
 export class ConsumiblesCreateComponent implements OnInit {
   public createConsumibleForm!: FormGroup;
   public imageUrlsArray: string[] = [];
-
+  printerNameControl = new FormControl();
+  filteredPrinterNames: Observable<string[]> | undefined;
+  public consumibles: Consumible[] = [];
   constructor(
     private toastService: ToastService,
     private router: Router,
@@ -40,21 +52,121 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.initalizeForm();
+    this.filteredPrinterNames = this.printerNameControl.valueChanges.pipe(
+      startWith(''),
+      switchMap((value) =>
+        this.ConsumiblesService.getAllPrinterNames().pipe(
+          map((printerNames) => this._filter(value, printerNames))
+        )
+      )
+    );
+    this.ConsumiblesService.getAllConsumibles().subscribe(
+      (consumibles: Consumible[]) => {
+        this.consumibles = consumibles;
+      }
+    );
+  }
+
+  private _filter(value: string, printerNames: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return printerNames.filter((printerName) =>
+      printerName.toLowerCase().includes(filterValue)
+    );
   }
 
   initalizeForm() {
     this.createConsumibleForm = this.fb.group({
       name: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0.01)]],
-      weight: [0, [Validators.required, Validators.min(0.01)]],
+      currency: ['USD', Validators.required],
+      brand: ['', [Validators.required]],
+      sku: ['', [Validators.required]],
       shortDescription: ['', Validators.required],
-      thumbnailImage: [''],
       longDescription: ['', Validators.required],
-      images: this.fb.array([''], Validators.required),
+      img_url: this.fb.array([], Validators.required),
       category: ['', Validators.required],
-      stock: [1, [Validators.required, Validators.min(1)]],
-      location: ['', Validators.required],
+      compatibleModels: this.fb.array([''], Validators.required),
+      color: ['', Validators.required],
+      yield: ['', Validators.required],
+      printers: this.fb.array([], Validators.required),
+      counterpart: [''],
     });
+  }
+
+  openConfirmDialog(index: number): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Borrar imagen de la impresora',
+      message: 'Estas seguro de querer eliminar esta imagen?',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.onRemove(index);
+        this.toastService.showSuccess('Imagen eliminada con exito', 'Aceptar');
+      }
+    });
+  }
+
+  addPrinterFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
+    const printerName = event.option.viewValue;
+    const printers = this.createConsumibleForm.get('printers') as FormArray;
+    const emptyIndex = printers.controls.findIndex(
+      (control) => control.value === ''
+    );
+
+    if (emptyIndex !== -1) {
+      printers.at(emptyIndex).setValue(printerName);
+    } else {
+      this.addPrinter(printerName);
+    }
+
+    this.printerNameControl.setValue(''); // Reset the autocomplete field
+  }
+
+  addPrinter(printerName: string = ''): void {
+    (this.createConsumibleForm.get('printers') as FormArray).push(
+      this.fb.control(printerName)
+    );
+  }
+
+  removePrinter(index: number) {
+    const printers = this.createConsumibleForm.get('printers') as FormArray;
+    if (index !== 0) {
+      printers.removeAt(index);
+    } else {
+      printers.at(0).setValue('');
+    }
+  }
+
+  get printers() {
+    return (this.createConsumibleForm.get('printers') as FormArray).controls;
+  }
+
+  get compatibleModelsControls() {
+    return (this.createConsumibleForm.get('compatibleModels') as FormArray)
+      .controls;
+  }
+
+  addModel() {
+    (this.createConsumibleForm.get('compatibleModels') as FormArray).push(
+      new FormControl('')
+    );
+  }
+
+  removeModel(index: number) {
+    (this.createConsumibleForm.get('compatibleModels') as FormArray).removeAt(
+      index
+    );
   }
 
   get images(): FormArray {
@@ -80,20 +192,84 @@ export class ConsumiblesCreateComponent implements OnInit {
   //Function for when user uploads file
   //Fills up images array with the file url of the uploaded image
   onFileUploaded(event: any): void {
-    const imageUrl = event; // The event should be the URL of the uploaded file
-    this.imageUrlsArray.push(imageUrl);
-    // Check if the last image URL in the form array is not empty
-    if (this.images.at(this.images.length - 1).value !== '') {
-      // If it's not empty, add a new control to the form array
-      this.addImage();
-    }
+    const files = Array.isArray(event) ? event : [event]; // The event should be an array of uploaded files
+    console.log('files', files);
 
-    // Set the value of the last control in the form array to the image URL
-    this.images.at(this.images.length - 1).setValue(imageUrl);
+    for (const file of files) {
+      if (file) {
+        const fileExtension = file.split('.').pop().toLowerCase();
+        console.log('fileExtension', fileExtension);
+
+        if (fileExtension === 'pdf') {
+          // It's a PDF, so add it to the datasheet_url field
+          const datasheetControl =
+            this.createConsumibleForm.get('datasheet_url');
+          console.log('datasheetControl', datasheetControl);
+          if (datasheetControl) {
+            datasheetControl.setValue(file);
+            console.log(
+              'I have set the value for datasheet:',
+              datasheetControl.value
+            );
+          }
+        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+          // It's an image, so add it to the images field
+          this.imageUrlsArray.push(file);
+          console.log('imageUrlsArray', this.imageUrlsArray);
+
+          // Get a reference to the img_url form array
+          const imgUrlArray = this.createConsumibleForm.get(
+            'img_url'
+          ) as FormArray;
+
+          // Create a new control with the URL and push it to the form array
+          imgUrlArray.push(this.fb.control(file));
+          console.log(this.createConsumibleForm);
+        }
+      }
+    }
+    // Handle images
+    const imagesControl = this.createConsumibleForm.get('images');
+    if (imagesControl) {
+      for (const imageUrl of this.imageUrlsArray) {
+        // Check if the last image URL in the form array is not empty
+        if (this.images.at(this.images.length - 1).value !== '') {
+          // If it's not empty, add a new control to the form array
+          this.addImage();
+        }
+
+        // Set the value of the last control in the form array to the image URL
+        this.images.at(this.images.length - 1).setValue(imageUrl);
+      }
+    }
   }
+
   onRemove(index: number): void {
-    this.imageUrlsArray.splice(index, 1);
-    this.removeImage(index);
+    console.log('remove image at index: ', index);
+
+    const imageUrl = this.imageUrlsArray[index];
+    console.log('imageUrl:', imageUrl);
+    this.ConsumiblesService.deleteImagePrinter(imageUrl).subscribe(
+      (response) => {
+        console.log('Image deleted successfully', response);
+        this.toastService.showSuccess('Imagen borrada con éxito', 'Cerrar');
+        this.imageUrlsArray.splice(index, 1); // Remove the image from the array
+
+        // Update the form control
+        const controlArray = <FormArray>(
+          this.createConsumibleForm.get('img_url')
+        );
+        controlArray.clear(); // Clear the existing form array
+        this.imageUrlsArray.forEach((url) => {
+          controlArray.push(new FormControl(url)); // Add the remaining URLs back to the form array
+        });
+
+        // this.removeImage(index);
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+    );
   }
 
   isValidField(field: string): boolean | null {
@@ -125,7 +301,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     return null;
   }
 
-  submitForm() {
+  async submitForm() {
     if (this.createConsumibleForm.invalid) {
       Object.keys(this.createConsumibleForm.controls).forEach((key) => {
         console.log(
@@ -148,8 +324,28 @@ export class ConsumiblesCreateComponent implements OnInit {
     }
     const formData = this.createConsumibleForm.value;
     // formData.price = parseFloat(formData.price);
-    formData.weight = parseFloat(formData.weight);
-    formData.stock = parseInt(formData.stock);
+
+    // Convert printer names to IDs
+    const printerNames = formData.printers;
+    const printerIdsPromises = printerNames.map((name: string) =>
+      this.ConsumiblesService.getPrinterIdByName(name).toPromise()
+    );
+    const printersIds = await Promise.all(printerIdsPromises);
+
+    // Convert counterpart to counterpartId
+    const counterpartName = formData.counterpart;
+    if (counterpartName) {
+      // Replace counterpart with counterpartId in the form data
+      const counterpartId = counterpartName;
+      delete formData.counterpart; // delete the old property
+      formData.counterpartId = counterpartId; // add the new property
+    } else {
+      delete formData.counterpart; // delete the old property if counterpartName is empty
+    }
+    // Replace printer names with IDs in the form data
+    delete formData.printers; // delete the old property
+    formData.printersIds = printersIds; // add the new property
+
     this.ConsumiblesService.createConsumible(formData).subscribe(
       (response) => {
         this.toastService.showSuccess('Consumible created successfully', 'OK'); // Show success toast
@@ -157,6 +353,8 @@ export class ConsumiblesCreateComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        //log object to console
+        console.log(formData);
         this.toastService.showError(
           'There was an error: ' + error.error.message + '. Please try again.',
           'error-snackbar'

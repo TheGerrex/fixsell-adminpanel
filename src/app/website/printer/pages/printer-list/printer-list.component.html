@@ -1,11 +1,11 @@
 <div class="table-header">
   <h2>Multifuncionales</h2>
-  <button
-    class="button button-primary button-raised button-icon-text"
-    (click)="addPrinter()"
-  >
-    <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-  </button>
+  <div class="table-actions">
+    <button class="button button-primary button-raised button-icon-text" (click)="addPrinter()">
+      <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+    </button>
+    <app-export [data]="printerData"></app-export>
+  </div>
 </div>
 <!-- table with printerdata from post to /printers -->
 <div class="responsive-table">
@@ -124,7 +124,4 @@
     showFirstLastButtons
     class="table-paginator"
   ></mat-paginator>
-
-  <!-- exports  -->
-  <app-export [data]="printerData"></app-export>
 </div>

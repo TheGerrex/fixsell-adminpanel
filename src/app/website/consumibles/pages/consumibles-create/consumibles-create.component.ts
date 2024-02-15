@@ -84,11 +84,13 @@ export class ConsumiblesCreateComponent implements OnInit {
       shortDescription: ['', Validators.required],
       longDescription: ['', Validators.required],
       img_url: this.fb.array([], Validators.required),
+      origen: ['', Validators.required],
+      volume: [0, Validators.required],
       category: ['', Validators.required],
       compatibleModels: this.fb.array([''], Validators.required),
       color: ['', Validators.required],
       yield: ['', Validators.required],
-      printers: this.fb.array([], Validators.required),
+      printers: this.fb.array([]),
       counterpart: [''],
     });
   }

@@ -15,6 +15,8 @@ export interface Consumible {
   // printers?: Printer[];
   orderDetails?: OrderDetail[];
   counterpart?: Consumible;
+  origen?: string;
+  volume?: number;
 
   //delete later
   stock?: number;

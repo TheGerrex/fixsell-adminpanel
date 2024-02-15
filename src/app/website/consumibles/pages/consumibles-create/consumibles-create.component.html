@@ -244,6 +244,44 @@
             </span>
           </div>
 
+          <!-- volume field -->
+          <div class="consumibles-data-item">
+            <h5>Volume</h5>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="volume"
+                [class.is-invalid]="
+                  createConsumibleForm.controls['volume'].invalid &&
+                  createConsumibleForm.controls['volume'].touched
+                "
+              />
+            </div>
+            <span
+              *ngIf="
+                createConsumibleForm.controls['volume'].invalid &&
+                createConsumibleForm.controls['volume'].touched
+              "
+              class="form-text text-danger"
+            >
+              Volume is required.
+            </span>
+          </div>
+
+          <!-- origin field selector-->
+          <div class="consumibles-data-item">
+            <h5>origen</h5>
+            <mat-form-field appearance="fill">
+              <mat-label>Selleciona su origen</mat-label>
+              <mat-select formControlName="origen">
+                <mat-option value="OEM">OEM</mat-option>
+                <mat-option value="Generico">Generico</mat-option>
+                <mat-option value="Recarga">Recarga</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
           <!-- Compatible Models Field -->
           <div class="consumibles-data-item">
             <h5>Compatible Models</h5>

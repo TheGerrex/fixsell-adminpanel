@@ -9,11 +9,19 @@ import { saveAs } from 'file-saver';
 })
 export class ExportComponent {
   @Input() data: any[] = [];
-
+  @Input() ignoreFields?: string[]; // Optional
   constructor() {}
 
   exportToExcel() {
-    const worksheet = XLSX.utils.json_to_sheet(this.data);
+    const filteredData = this.data.map((item) => {
+      const newItem = { ...item };
+      if (this.ignoreFields) {
+        this.ignoreFields.forEach((field) => delete newItem[field]);
+      }
+      return newItem;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
@@ -56,5 +64,19 @@ export class ExportComponent {
       str += line + '\r\n';
     }
     return str;
+  }
+
+  exportToJSON() {
+    const filteredData = this.data.map((item) => {
+      const newItem = { ...item };
+      if (this.ignoreFields) {
+        this.ignoreFields.forEach((field) => delete newItem[field]);
+      }
+      return newItem;
+    });
+
+    const jsonData = JSON.stringify(filteredData, null, 2); // Beautify the JSON
+    const blob = new Blob([jsonData], { type: 'text/json' });
+    saveAs(blob, 'data.json');
   }
 }

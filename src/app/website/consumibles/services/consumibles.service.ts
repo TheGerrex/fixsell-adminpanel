@@ -6,6 +6,7 @@ import { Consumible } from '../../interfaces/consumibles.interface';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 import { throwError } from 'rxjs';
+import { Printer } from '../../interfaces/printer.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -45,5 +46,51 @@ export class ConsumiblesService {
       `${environment.baseUrl}/consumibles/${id}`,
       consumible
     );
+  }
+
+  // get all printer names
+  //get all printer names
+  getAllPrinterNames(): Observable<string[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(
+        map((printers: Printer[]) => printers.map((printer) => printer.model))
+      );
+  }
+
+  //get printer id by name
+  getPrinterIdByName(name: string): Observable<string> {
+    return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
+      map((printers: Printer[]) => {
+        const printer = printers.find((printer) => printer.model === name);
+        return printer ? printer.id : '';
+      })
+    );
+  }
+
+  deleteImagePrinter(imageUrl: string): Observable<any> {
+    return this.http
+      .delete(`${environment.baseUrl}/upload/file`, { body: { url: imageUrl } })
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  // get consumible id by name
+  getConsumibleIdByName(name: string): Observable<string> {
+    return this.http
+      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
+      .pipe(
+        map((consumibles: Consumible[]) => {
+          const consumible = consumibles.find(
+            (consumible) => consumible.name === name
+          );
+          return consumible ? consumible.id : '';
+        }),
+        map((id) => id || '') // provide a default value when id is undefined
+      );
   }
 }

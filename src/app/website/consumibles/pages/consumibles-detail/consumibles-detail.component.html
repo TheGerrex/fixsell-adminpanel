@@ -13,7 +13,7 @@
   <div class="consumibles-info">
     <div class="carousel">
       <div class="image-container">
-        <img [src]="consumible.images[currentImageIndex]" alt="" />
+        <img [src]="consumible.img_url[currentImageIndex]" alt="" />
       </div>
       <div class="button-container">
         <button
@@ -32,23 +32,37 @@
     </div>
     <div class="consumibles-data">
       <div class="consumibles-data-item">
+        <h5>Fabricante</h5>
+        <p>{{ consumible.brand }}</p>
+      </div>
+      <div class="consumibles-data-item">
         <h5>Precio</h5>
-        <p>{{ consumible.price | currency }} USD</p>
+        <p>{{ consumible.price | currency }} {{ consumible.currency }}</p>
       </div>
 
       <div class="consumibles-data-item">
-        <h5>Peso</h5>
-        <p>{{ consumible.weight }} kg</p>
+        <h5>volumen</h5>
+        <p>{{ consumible.volume }} g</p>
       </div>
 
       <div class="consumibles-data-item">
-        <h5>Stock</h5>
-        <p>{{ consumible.stock }}</p>
+        <h5>Color</h5>
+        <div class="color-box" [ngSwitch]="consumible.color">
+          <p *ngSwitchCase="'K'" class="color-black">Negro</p>
+          <p *ngSwitchCase="'Y'" class="color-yellow">Amarillo</p>
+          <p *ngSwitchCase="'M'" class="color-magenta">Magenta</p>
+          <p *ngSwitchCase="'C'" class="color-cyan">Cian</p>
+        </div>
       </div>
 
       <div class="consumibles-data-item">
-        <h5>Ubicacion</h5>
-        <p>{{ consumible.location }}</p>
+        <h5>Origen</h5>
+        <p>{{ consumible.origen }}</p>
+      </div>
+
+      <div class="consumibles-data-item">
+        <h5>yield</h5>
+        <p>{{ consumible.yield }}</p>
       </div>
 
       <div class="consumibles-data-item description">
@@ -64,6 +78,12 @@
       <div class="consumibles-data-item">
         <h5>Category</h5>
         <p>{{ consumible.category }}</p>
+      </div>
+
+      <!-- printers -->
+      <div class="consumibles-data-item">
+        <h5>Impresoras Compatible</h5>
+        <p *ngFor="let model of consumible.compatibleModels">{{ model }}</p>
       </div>
     </div>
   </div>

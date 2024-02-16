@@ -11,6 +11,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { PdfUploadComponent } from './components/pdf-upload/pdf-upload.component';
+import { ExportComponent } from './components/export/export.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { PdfUploadComponent } from './components/pdf-upload/pdf-upload.component
     FileUploadComponent,
     ConfirmDialogComponent,
     PdfUploadComponent,
+    ExportComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { PdfUploadComponent } from './components/pdf-upload/pdf-upload.component
     ReactiveFormsModule,
     FileUploadComponent,
     PdfUploadComponent,
+    ExportComponent,
   ],
 })
 export class SharedModule {}

@@ -7,10 +7,11 @@ import { ConsumiblesService } from '../../services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { SharedService } from '../../../../shared/services/shared.service';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-consumibles-edit',
@@ -45,7 +46,7 @@ export class ConsumiblesEditComponent implements OnInit {
         console.log('got consumible from service' + { Consumible });
         console.log({ Consumible });
         this.Consumible = Consumible;
-        this.imageUrlsArray = [...this.Consumible.images]; // Update the imageUrlsArray
+        this.imageUrlsArray = [...this.Consumible.img_url]; // Update the imageUrlsArray
         this.initalizeForm(); // Moved inside the subscribe block
         console.log(this.Consumible);
         this.sharedService.changeConsumiblesModel(this.Consumible.name);
@@ -60,10 +61,15 @@ export class ConsumiblesEditComponent implements OnInit {
         this.Consumible ? this.Consumible.price : '',
         [Validators.required, Validators.min(0.01)],
       ],
-      weight: [
-        this.Consumible ? this.Consumible.weight : '',
-        [Validators.required, Validators.min(0.01)],
+      currency: [
+        this.Consumible ? this.Consumible.currency : '',
+        Validators.required,
       ],
+      brand: [
+        this.Consumible ? this.Consumible.brand : '',
+        Validators.required,
+      ],
+      sku: [this.Consumible ? this.Consumible.sku : '', Validators.required],
       shortDescription: [
         this.Consumible ? this.Consumible.shortDescription : '',
         Validators.required,
@@ -72,24 +78,62 @@ export class ConsumiblesEditComponent implements OnInit {
         this.Consumible ? this.Consumible.longDescription : '',
         Validators.required,
       ],
-      images: this.fb.array(
+      img_url: this.fb.array(
         this.Consumible
-          ? this.Consumible.images.map((image) => this.fb.control(image))
+          ? this.Consumible.img_url.map((image) => this.fb.control(image))
           : [],
         Validators.required
       ),
+      origen: [
+        this.Consumible ? this.Consumible.origen : '',
+        Validators.required,
+      ],
+      volume: [
+        this.Consumible ? this.Consumible.volume : '',
+        Validators.required,
+      ],
+
       category: [
         this.Consumible ? this.Consumible.category : '',
         Validators.required,
       ],
-      stock: [
-        this.Consumible ? this.Consumible.stock : '',
-        [Validators.required, Validators.min(0)],
-      ],
-      location: [
-        this.Consumible ? this.Consumible.location : '',
+      color: [
+        this.Consumible ? this.Consumible.color : '',
         Validators.required,
       ],
+      yield: [
+        this.Consumible ? this.Consumible.yield : '',
+        Validators.required,
+      ],
+      // printers: [this.Consumible ? this.Consumible.printers : '', Validators.required],
+      counterpart: [
+        this.Consumible ? this.Consumible.counterpart : '',
+        Validators.required,
+      ],
+    });
+  }
+
+  openConfirmDialog(index: number): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Borrar imagen de la impresora',
+      message: 'Estas seguro de querer eliminar esta imagen?',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.onRemove(index);
+        this.toastService.showSuccess('Imagen eliminada con exito', 'Aceptar');
+      }
     });
   }
 
@@ -174,6 +218,14 @@ export class ConsumiblesEditComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.removeAt(index);
+  }
+  previewImage(index: number): void {
+    const imageUrl = this.images.at(index).value;
+    this.dialog.open(DialogComponent, {
+      data: {
+        imageUrl: imageUrl,
+      },
+    });
   }
   submitForm() {
     // validate form

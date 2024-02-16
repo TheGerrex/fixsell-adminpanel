@@ -22,11 +22,13 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
     'color',
     'category',
     'price',
+    'currency',
     'action',
   ];
   dataSource = new MatTableDataSource<Printer>();
   filterValue = '';
   isAdmin = false;
+  printerData: Printer[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -43,6 +45,10 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
       .subscribe((data) => {
         console.log(data);
   
+        // save to printerdata
+        this.printerData = data;
+
+        // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -51,7 +57,13 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
-      this.displayedColumns = ['brand', 'model', 'category', 'price'];
+      this.displayedColumns = [
+        'brand',
+        'model',
+        'category',
+        'price',
+        'currency',
+      ];
     }
   }
 

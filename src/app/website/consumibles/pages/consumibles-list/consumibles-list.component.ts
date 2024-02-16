@@ -20,10 +20,10 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit{
     //consumibles columns
     'name',
     'price',
-    'weight',
+    'currency',
     'category',
-    'stock',
-    'location',
+    'brand',
+    'origen',
     'action',
   ];
   dataSource = new MatTableDataSource<Consumible>();
@@ -61,10 +61,10 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit{
       this.displayedColumns = [
         'name',
         'price',
-        'weight',
+        'currency',
         'category',
-        'stock',
-        'location',
+        'brand',
+        'origen',
       ];
     }
   }

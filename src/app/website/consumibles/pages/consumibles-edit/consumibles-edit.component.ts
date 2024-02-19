@@ -20,6 +20,7 @@ import { SharedService } from '../../../../shared/services/shared.service';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable, map, startWith, switchMap } from 'rxjs';
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 @Component({
   selector: 'app-consumibles-edit',
@@ -45,6 +46,8 @@ export class ConsumiblesEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // get printer id from consumibles.printers.id
+
     this.getConsumible();
     this.filteredPrinterNames = this.printerNameControl.valueChanges.pipe(
       startWith(''),
@@ -67,15 +70,26 @@ export class ConsumiblesEditComponent implements OnInit {
     console.log(id);
     if (id) {
       console.log('getting consumible' + id);
-      this.ConsumiblesService.getConsumible(id).subscribe((Consumible) => {
-        console.log('got consumible from service' + { Consumible });
-        console.log({ Consumible });
-        this.Consumible = Consumible;
-        this.imageUrlsArray = [...this.Consumible.img_url]; // Update the imageUrlsArray
-        this.initalizeForm(); // Moved inside the subscribe block
-        console.log(this.Consumible);
-        this.sharedService.changeConsumiblesModel(this.Consumible.name);
-      });
+      this.ConsumiblesService.getConsumible(id)
+        .pipe(
+          map((Consumible) => {
+            if (Consumible.printers) {
+              Consumible.printers = Consumible.printers.map(
+                (printer) => printer.model
+              ) as unknown as Printer[];
+            }
+            return Consumible;
+          })
+        )
+        .subscribe((Consumible) => {
+          console.log('got consumible from service' + { Consumible });
+          console.log({ Consumible });
+          this.Consumible = Consumible;
+          this.imageUrlsArray = [...this.Consumible.img_url]; // Update the imageUrlsArray
+          this.initalizeForm(); // Moved inside the subscribe block
+          console.log(this.Consumible);
+          this.sharedService.changeConsumiblesModel(this.Consumible.name);
+        });
     }
   }
   initalizeForm() {
@@ -352,9 +366,13 @@ export class ConsumiblesEditComponent implements OnInit {
     } else {
       delete formData.counterpart; // delete the old property if counterpartName is empty
     }
+
     // Replace printer names with IDs in the form data
     delete formData.printers; // delete the old property
-    formData.printersIds = printersIds; // add the new property
+    formData.printerIds = printersIds; // add the new property
+
+    // Log the final form data to check if printers has been replaced with printerIds
+    console.log('Final form data:', formData);
 
     this.ConsumiblesService.updateConsumible(formData, consumiblesId).subscribe(
       (data) => {

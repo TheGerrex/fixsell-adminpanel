@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { environment } from 'src/environments/environments';
 import { ToastService } from '../../services/toast.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
+import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 
 @Component({
   selector: 'app-file-upload',
@@ -18,6 +19,7 @@ export class FileUploadComponent {
 
   @Input() rootFolder: string = '';
   @Input() printer?: Printer;
+  @Input() consumible?: Consumible;
   @Input() file_type: string = '';
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
@@ -39,8 +41,22 @@ export class FileUploadComponent {
     if (event.dataTransfer) {
       const files = event.dataTransfer.files;
 
-      if (files.length) {
-        this.uploadFiles(files, this.rootFolder, this.printer?.brand || '', this.printer?.model || '');
+      if (files.length && this.printer) {
+        this.uploadFiles(
+          files,
+          this.rootFolder,
+          this.printer?.brand || '',
+          this.printer?.model || ''
+        );
+      }
+
+      if (files.length && this.consumible) {
+        this.uploadFiles(
+          files,
+          this.rootFolder,
+          this.consumible?.brand || '',
+          this.consumible?.name || ''
+        );
       }
     }
   }
@@ -49,19 +65,38 @@ export class FileUploadComponent {
     const fileInput = event.target as HTMLInputElement;
     const files: FileList | null = fileInput.files || null;
 
-    if (files) {
-      this.uploadFiles(files, this.rootFolder, this.printer?.brand || '', this.printer?.model || '');
+    if (files && this.printer) {
+      this.uploadFiles(
+        files,
+        this.rootFolder,
+        this.printer?.brand || '',
+        this.printer?.model || ''
+      );
+    }
+
+    if (files && this.consumible) {
+      this.uploadFiles(
+        files,
+        this.rootFolder,
+        this.consumible?.brand || '',
+        this.consumible?.name || ''
+      );
     }
   }
 
-  uploadFiles(files: FileList, rootFolder: string, brand: string, model: string) {
+  uploadFiles(
+    files: FileList,
+    rootFolder: string,
+    brand: string,
+    model: string
+  ) {
     this.isUploading = true; // Set isUploading to true when upload starts
 
     console.log(files);
     console.log(rootFolder);
     console.log(brand);
     console.log(model);
-  
+
     const formData = new FormData();
     formData.append('rootFolder', rootFolder);
     formData.append('subRootfolder', brand);
@@ -70,20 +105,23 @@ export class FileUploadComponent {
     for (let i = 0; i < files.length; i++) {
       formData.append('image', files[i], files[i].name);
     }
-    
-  
-    this.http.post(`${environment.baseUrl}/upload/image/multiple`, formData).subscribe(
-      (res: any) => {
-        this.isUploading = false; // Set isUploading to false when upload completes
-        console.log(res.urls);
-        this.fileUpload.emit(res.urls); // Emit file upload event with response body
-        this.toastService.showSuccess('Archivos agregados con exito', 'Aceptar');
-      },
-      (err) => {
-        this.isUploading = false; // Set isUploading to false if an error occurs
-        this.toastService.showError(err.error.message, 'Aceptar');
-        console.error(err);
-      }
-    );
+
+    this.http
+      .post(`${environment.baseUrl}/upload/image/multiple`, formData)
+      .subscribe(
+        (res: any) => {
+          this.isUploading = false; // Set isUploading to false when upload completes
+          this.fileUpload.emit(res.urls); // Emit file upload event with response body
+          this.toastService.showSuccess(
+            'Archivos agregados con exito',
+            'Aceptar'
+          );
+        },
+        (err) => {
+          this.isUploading = false; // Set isUploading to false if an error occurs
+          this.toastService.showError(err.error.message, 'Aceptar');
+          console.error(err);
+        }
+      );
   }
 }

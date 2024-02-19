@@ -1,3 +1,4 @@
+import { Printer } from './printer.interface';
 export interface Consumible {
   id?: string;
   name: string;
@@ -8,9 +9,16 @@ export interface Consumible {
   thumbnailImage: string;
   images: string[];
   category: string;
-  stock: number;
-  location: string;
-  // orderDetails: OrderDetail[];
+  printers?: Printer[];
+  orderDetails?: OrderDetail[];
+  counterpart?: Consumible;
+  origen?: string;
+  volume?: number;
+
+  //delete later
+  stock?: number;
+  weight?: number;
+  location?: string;
 }
 
 export interface OrderDetail {

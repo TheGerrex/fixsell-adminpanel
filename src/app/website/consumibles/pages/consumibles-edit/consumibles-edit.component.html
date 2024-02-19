@@ -1,76 +1,107 @@
-<div *ngIf="Consumible">
-  <div>
-    <form
-      [formGroup]="editConsumibleForm"
-      class="consumibles-container"
-      *ngIf="editConsumibleForm"
-    >
-      <div class="consumibles-header">
-        <h2>Editar Consumible</h2>
-        <button
-          type="submit"
-          class="button button-primary button-raised"
-          (click)="submitForm()"
-        >
-          <span class="button-label">Editar Consumible</span>
-        </button>
+<div>
+  <form
+    [formGroup]="editConsumibleForm"
+    class="consumibles-container"
+    *ngIf="editConsumibleForm"
+  >
+    <div class="consumibles-header">
+      <h2>Editar Consumible</h2>
+      <button
+        type="submit"
+        class="button button-primary button-raised"
+        (click)="submitForm()"
+      >
+        <span class="button-label">Realizar Cambios</span>
+      </button>
+    </div>
+    <div class="consumibles-info">
+      <!-- implement carusel look at file upload... only for printer... -->
+      <div class="consumibles-images">
+        <app-file-upload
+          (fileUpload)="onFileUploaded($event)"
+          [consumible]="Consumible"
+          [rootFolder]="'imagenes'"
+          [file_type]="'.png o .jpg'"
+        ></app-file-upload>
+        <app-product-image-grid
+          [imageUrls]="imageUrlsArray"
+          (remove)="openConfirmDialog($event)"
+        ></app-product-image-grid>
       </div>
-      <div class="consumibles-info">
-        <div class="consumibles-data-container">
-          <div class="consumibles-data">
-            <div class="consumibles-data-item">
-              <h5>Name</h5>
-              <input
-                formControlName="name"
-                class="form-control"
-                type="text"
-                [class.is-invalid]="
-                  editConsumibleForm.controls['name'].invalid &&
-                  editConsumibleForm.controls['name'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['name'].invalid &&
-                  editConsumibleForm.controls['name'].touched
-                "
-                class="form-text text-danger"
-              >
-                Name is required.
-              </span>
-            </div>
-            <div class="consumibles-data-item">
-              <h5>Weight</h5>
-              <input
-                formControlName="weight"
-                class="form-control"
-                type="number"
-                [class.is-invalid]="
-                  editConsumibleForm.controls['weight'].invalid &&
-                  editConsumibleForm.controls['weight'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['weight'].invalid &&
-                  editConsumibleForm.controls['weight'].touched
-                "
-                class="form-text text-danger"
-              >
-                Weight is required.
-              </span>
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['weight'].errors?.['min'] &&
-                  editConsumibleForm.controls['weight'].touched
-                "
-                class="form-text text-danger"
-              >
-                Weight must be at least 0.01.
-              </span>
-            </div>
-            <div class="consumibles-data-item">
-              <h5>Precio</h5>
+      <div class="consumibles-data-container">
+        <div class="consumibles-data">
+          <div class="consumibles-data-item">
+            <h5>Nombre</h5>
+            <input
+              formControlName="name"
+              class="form-control disabled-input"
+              type="text"
+              [class.is-invalid]="
+                editConsumibleForm.controls['name'].invalid &&
+                editConsumibleForm.controls['name'].touched
+              "
+            />
+            <span
+              *ngIf="
+                editConsumibleForm.controls['name'].invalid &&
+                editConsumibleForm.controls['name'].touched
+              "
+              class="form-text text-danger"
+            >
+              El Nombre es obligatoria.
+            </span>
+          </div>
+
+          <!-- Brand Field -->
+          <div class="consumibles-data-item">
+            <h5>Marca</h5>
+            <input
+              formControlName="brand"
+              class="form-control"
+              type="text"
+              [class.is-invalid]="
+                editConsumibleForm.controls['brand'].invalid &&
+                editConsumibleForm.controls['brand'].touched
+              "
+            />
+            <span
+              *ngIf="
+                editConsumibleForm.controls['brand'].invalid &&
+                editConsumibleForm.controls['brand'].touched
+              "
+              class="form-text text-danger"
+            >
+              La marca es obligatoria.
+            </span>
+          </div>
+
+          <!-- SKU Field -->
+          <div class="consumibles-data-item">
+            <h5>SKU</h5>
+            <input
+              formControlName="sku"
+              class="form-control"
+              type="text"
+              [class.is-invalid]="
+                editConsumibleForm.controls['sku'].invalid &&
+                editConsumibleForm.controls['sku'].touched
+              "
+            />
+            <span
+              *ngIf="
+                editConsumibleForm.controls['sku'].invalid &&
+                editConsumibleForm.controls['sku'].touched
+              "
+              class="form-text text-danger"
+            >
+              el SKU es obligatoria.
+            </span>
+          </div>
+          <!-- Price field -->
+          <div class="consumibles-data-item">
+            <h5>Precio</h5>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
               <input
                 formControlName="price"
                 class="form-control"
@@ -219,12 +250,121 @@
               </span>
             </div>
 
-            <div class="consumibles-data-item">
-              <div class="tag-inputs-container" formArrayName="images">
-                <div *ngFor="let image of images.controls; let i = index"></div>
+          <!-- origin field selector-->
+          <div class="consumibles-data-item">
+            <h5>origen</h5>
+            <mat-form-field appearance="fill">
+              <mat-label>Selleciona su origen</mat-label>
+              <mat-select formControlName="origen">
+                <mat-option value="OEM">OEM</mat-option>
+                <mat-option value="Generico">Generico</mat-option>
+                <mat-option value="Recarga">Recarga</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Compatible Models Field -->
+          <div class="consumibles-data-item">
+            <h5>Compatible Models</h5>
+            <div class="tag-inputs-container" formArrayName="compatibleModels">
+              <div
+                *ngFor="let model of compatibleModelsControls; let i = index"
+              >
+                <div class="tag-inputs">
+                  <input [formControlName]="i" class="form-control" />
+                  <button
+                    class="button button-danger button-icon"
+                    (click)="removeModel(i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
               </div>
+              <button
+                class="button button-secondary button-icon"
+                (click)="addModel()"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
             </div>
           </div>
+
+          <!-- color -->
+          <div class="consumibles-data-item">
+            <h5>Color</h5>
+            <mat-form-field appearance="fill">
+              <mat-label>Select a color</mat-label>
+              <mat-select formControlName="color">
+                <mat-option value="">None</mat-option>
+                <mat-option value="K">
+                  <span
+                    class="color-box"
+                    style="background-color: black"
+                  ></span>
+                  Black
+                </mat-option>
+                <mat-option value="C">
+                  <span class="color-box" style="background-color: cyan"></span>
+                  Cyan
+                </mat-option>
+                <mat-option value="M">
+                  <span
+                    class="color-box"
+                    style="background-color: magenta"
+                  ></span>
+                  Magenta
+                </mat-option>
+                <mat-option value="Y">
+                  <span
+                    class="color-box"
+                    style="background-color: yellow"
+                  ></span>
+                  Yellow
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- printers -->
+          <div class="consumibles-data-item">
+            <h5>Printers</h5>
+            <div class="tag-inputs-container" formArrayName="printers">
+              <div *ngFor="let printer of printers; let i = index">
+                <div class="tag-inputs">
+                  <input [formControlName]="i" class="form-control" />
+                  <button
+                    class="button button-danger button-icon"
+                    (click)="removePrinter(i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <mat-form-field class="example-full-width">
+                <input
+                  type="text"
+                  placeholder="Add printer"
+                  aria-label="Number"
+                  matInput
+                  [formControl]="printerNameControl"
+                  [matAutocomplete]="auto"
+                />
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  (optionSelected)="addPrinterFromAutocomplete($event)"
+                >
+                  <mat-option
+                    *ngFor="let printerName of filteredPrinterNames | async"
+                    [value]="printerName"
+                  >
+                    {{ printerName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- counterpart field -->
         </div>
       </div>
       <h5>Images</h5>

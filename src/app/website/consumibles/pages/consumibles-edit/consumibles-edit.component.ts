@@ -216,33 +216,47 @@ export class ConsumiblesEditComponent implements OnInit {
     return null;
   }
 
-  //Function for when user uploads file
-  //Fills up images array with the file url of the uploaded image
   onFileUploaded(event: any): void {
-    let imageUrl = event;
-    // If event is an array, extract the first element as the URL
-    if (Array.isArray(event)) {
-      imageUrl = event[0];
-    }
-    this.imageUrlsArray.push(imageUrl);
+    const files = Array.isArray(event) ? event : [event]; // The event should be an array of uploaded files
 
-    // Check if the images FormArray is not empty
-    if (this.images.length > 0) {
-      // Check if the last image URL in the form array is not empty
-      if (this.images.at(this.images.length - 1).value !== '') {
-        // If it's not empty, add a new control to the form array
-        this.addImage();
+    for (const file of files) {
+      if (file) {
+        const fileExtension = file.split('.').pop().toLowerCase();
+
+        if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+          // It's an image, so add it to the images field
+          this.imageUrlsArray.push(file);
+
+          // Get a reference to the img_url form array
+          const imgUrlArray = this.editConsumibleForm.get(
+            'img_url'
+          ) as FormArray;
+
+          // Create a new control with the URL and push it to the form array
+          imgUrlArray.push(this.fb.control(file));
+        }
       }
+    }
 
-      // Set the value of the last control in the form array to the image URL
-      this.images.at(this.images.length - 1).setValue(imageUrl);
-    } else {
-      // If the images FormArray is empty, add a new control to it
-      this.addImage();
-      // Set the value of the new control to the image URL
-      this.images.at(0).setValue(imageUrl);
+    // Handle images
+    const imagesControl = this.editConsumibleForm.get('images');
+    if (imagesControl) {
+      for (const imageUrl of this.imageUrlsArray) {
+        // Check if the images FormArray is empty or the last image URL in the form array is not empty
+        if (
+          this.images.length === 0 ||
+          this.images.at(this.images.length - 1).value !== ''
+        ) {
+          // If it's empty or the last control is not empty, add a new control to the form array
+          this.addImage();
+        }
+
+        // Set the value of the last control in the form array to the image URL
+        this.images.at(this.images.length - 1).setValue(imageUrl);
+      }
     }
   }
+
   onRemove(index: number): void {
     this.imageUrlsArray.splice(index, 1);
     this.removeImage(index);

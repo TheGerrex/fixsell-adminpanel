@@ -6,6 +6,7 @@
     background-color: $gray-50;
     border: 1px solid #e0e0e0;
     border-bottom: none;
+    border-radius: $border-radius $border-radius 0 0;
     padding: 16px;
     h2 {
         margin: 0;
@@ -14,6 +15,7 @@
 
 .responsive-table {
     overflow-x: auto;
+    border-radius: $border-radius;
 }
 
 .responsive-table tr {
@@ -29,6 +31,7 @@
 .table-paginator {
     border: 1px solid #e0e0e0;
     border-top: none;
+    border-radius: 0 0 $border-radius $border-radius;
 }
 
 //   @media screen and (max-width: 600px) {

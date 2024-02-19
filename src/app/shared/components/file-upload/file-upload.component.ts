@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 import { ToastService } from '../../services/toast.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';

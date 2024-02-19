@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 
 export interface User {
   id: string;

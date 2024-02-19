@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
-import { environment } from 'src/environments/environments';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { PrinterService } from '../../services/printer.service';
 

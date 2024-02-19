@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Deal, Printer } from 'src/app/website/interfaces/printer.interface';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 import { PackageService } from '../../services/package.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';

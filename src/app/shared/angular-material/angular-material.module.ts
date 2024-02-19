@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSortModule } from '@angular/material/sort';
+
 import { MatSelectModule } from '@angular/material/select';
 import {MatMenuModule} from '@angular/material/menu';
 @NgModule({
@@ -34,6 +36,7 @@ import {MatMenuModule} from '@angular/material/menu';
     MatDialogModule,
     MatProgressSpinnerModule,
     MatAutocompleteModule,
+    MatSortModule,
     MatSelectModule,
     MatMenuModule,
   ],

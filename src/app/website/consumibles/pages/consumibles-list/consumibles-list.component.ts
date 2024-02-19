@@ -1,20 +1,21 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injectable, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-consumibles-list',
   templateUrl: './consumibles-list.component.html',
   styleUrls: ['./consumibles-list.component.scss'],
 })
-export class ConsumiblesListComponent {
+export class ConsumiblesListComponent implements OnInit, AfterViewInit{
   displayedColumns: string[] = [
     //consumibles columns
     'name',
@@ -30,6 +31,7 @@ export class ConsumiblesListComponent {
   isAdmin = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private http: HttpClient,
@@ -49,6 +51,7 @@ export class ConsumiblesListComponent {
         // const filteredData = data.filter((consumible) => consumible.field !== null);
 
         this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       });
 
@@ -64,6 +67,10 @@ export class ConsumiblesListComponent {
         'origen',
       ];
     }
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   addConsumible() {

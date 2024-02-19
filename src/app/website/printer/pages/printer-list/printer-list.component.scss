@@ -7,6 +7,7 @@
     border: 1px solid #e0e0e0;
     border-bottom: none;
     padding: 16px;
+    border-radius: $border-radius;
     h2 {
         margin: 0;
     }
@@ -19,6 +20,7 @@
 
 .responsive-table {
     overflow-x: auto;
+    border-radius: $border-radius;
 }
 
 .responsive-table tr {

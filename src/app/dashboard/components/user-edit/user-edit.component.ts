@@ -18,7 +18,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { environment } from 'src/environments/environments';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-edit',

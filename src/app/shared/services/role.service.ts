@@ -17,6 +17,8 @@ export class RoleService {
     '/dashboard/intro-screen': ['admin', 'user', 'vendor'],
     '/dashboard/printerscrud': ['admin', 'user', 'vendor'],
     '/dashboard/users': ['admin'],
+    '/dashboard/users-table': ['admin'],
+    '/dashboard/users-edit': ['admin'],
     '/dashboard/ventas': ['admin', 'vendor'],
     '/dashboard/inventario': ['admin', 'user', 'vendor'],
     '/dashboard/chat': ['admin', 'user', 'vendor'],

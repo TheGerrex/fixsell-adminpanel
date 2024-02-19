@@ -1,131 +1,216 @@
 <div class="printer-container" *ngIf="printer">
-    <div class="printer-header">
-        <h2>{{ printer.brand }} {{ printer.model }}</h2>
-        <button class="button button-primary button-raised button-icon-text" (click)="navigateToEdit(printer.id)">
+  <div class="printer-header">
+    <h2>{{ printer.brand }} {{ printer.model }}</h2>
+    <button
+      class="button button-primary button-raised button-icon-text"
+      (click)="navigateToEdit(printer.id)"
+    >
       <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
     </button>
-    </div>
-    <div class="printer-info">
-        <div class="carousel">
-            <div class="image-container">
-                <img [src]="printer.img_url[currentImageIndex]" alt="" />
-            </div>
-            <div class="button-container">
-                <button class="button button-secondary button-raised" (click)="prevImage()">
+  </div>
+  <div class="printer-info">
+    <div class="carousel">
+      <div class="image-container">
+        <img [src]="printer.img_url[currentImageIndex]" alt="" />
+      </div>
+      <div class="button-container">
+        <button
+          class="button button-secondary button-raised"
+          (click)="prevImage()"
+        >
           < Atras
         </button>
-                <button class="button button-secondary button-raised" (click)="nextImage()">
+        <button
+          class="button button-secondary button-raised"
+          (click)="nextImage()"
+        >
           Siguiente >
         </button>
-            </div>
-        </div>
-        <div class="printer-data">
-            <div class="printer-data-item description">
-                <h5>Descripcion</h5>
-                <p>{{ printer.description }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Categoria</h5>
-                <p>{{ printer.category }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Precio</h5>
-                <p>{{ printer.price | currency }} USD</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Funciones</h5>
-                <p>{{ printer.printerFunctions }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Color</h5>
-                <p>{{ printer.color ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Renta</h5>
-                <p>{{ printer.rentable ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Venta</h5>
-                <p>{{ printer.sellable ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Etiquetas</h5>
-                <p *ngIf="!printer.tags || printer.tags.length === 0 || (printer.tags.length === 1 && printer.tags[0] === '')">Vacio</p>
-                <div *ngIf="printer.tags && printer.tags.length > 0">
-                    <span class="tag" *ngFor="let tag of printer.tags" [hidden]="tag === ''">{{ tag }}</span>
-                </div>
-            </div>
-            <div class="printer-data-item">
-                <h5>Consumo de Energia</h5>
-                <p>{{ printer.powerConsumption }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Dimensiones</h5>
-                <p>{{ printer.dimensions }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Velocidad de Impresión</h5>
-                <p>{{ printer.printVelocity }} ppm</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Tamaño de Impresión</h5>
-                <p>{{ printer.printSize }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Grosor de Papel</h5>
-                <p>{{ printer.maxPaperWeight }} g/m2</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Unidad Duplex</h5>
-                <p>{{ printer.duplexUnit ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Tamaños de Papel</h5>
-                <p>{{ printer.paperSizes }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Sistema Operativo</h5>
-                <p>{{ printer.applicableOS }}</p>
-            </div>
-        </div>
+      </div>
     </div>
-    <!-- <hr> -->
-    <div class="printer-deal-container">
-        <div class="printer-deal-header">
-            <h2>Promociones</h2>
-            <button class="button button-primary button-raised button-icon-text" (click)="navigateToCreateDeal(printer.id)">
+    <div class="printer-data">
+      <div class="printer-data-item description">
+        <h5>Descripcion</h5>
+        <p>{{ printer.description }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Categoria</h5>
+        <p>{{ printer.category }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Precio</h5>
+        <p>{{ printer.price | currency }} USD</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Funciones</h5>
+        <p>{{ printer.printerFunctions }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Color</h5>
+        <p>{{ printer.color ? "Si" : "No" }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Renta</h5>
+        <p>{{ printer.rentable ? "Si" : "No" }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Venta</h5>
+        <p>{{ printer.sellable ? "Si" : "No" }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Etiquetas</h5>
+        <p
+          *ngIf="
+            !printer.tags ||
+            printer.tags.length === 0 ||
+            (printer.tags.length === 1 && printer.tags[0] === '')
+          "
+        >
+          Vacio
+        </p>
+        <div *ngIf="printer.tags && printer.tags.length > 0">
+          <span
+            class="tag"
+            *ngFor="let tag of printer.tags"
+            [hidden]="tag === ''"
+            >{{ tag }}</span
+          >
+        </div>
+      </div>
+      <div class="printer-data-item">
+        <h5>Consumo de Energia</h5>
+        <p>{{ printer.powerConsumption }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Dimensiones</h5>
+        <p>{{ printer.dimensions }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Velocidad de Impresión</h5>
+        <p>{{ printer.printVelocity }} ppm</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Tamaño de Impresión</h5>
+        <p>{{ printer.printSize }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Grosor de Papel</h5>
+        <p>{{ printer.maxPaperWeight }} g/m2</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Unidad Duplex</h5>
+        <p>{{ printer.duplexUnit ? "Si" : "No" }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Tamaños de Papel</h5>
+        <p>{{ printer.paperSizes }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Sistema Operativo</h5>
+        <p>{{ printer.applicableOS }}</p>
+      </div>
+      <div class="printer-data-item">
+        <h5>Ficha Técnica</h5>
+        <a [href]="printer.datasheet_url" target="_blank">Ver aqui</a>
+      </div>
+    </div>
+  </div>
+  <!-- <hr> -->
+  <div class="printer-deal-container">
+    <div class="printer-deal-header">
+      <h2>Promociones</h2>
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="navigateToCreateDeal(printer.id)"
+      >
         <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
       </button>
-        </div>
-        <div class="printer-deals" *ngIf="printer.deal">
-            <div class="deal">
-                <div class="deal-header">
-                    <div class="deal-item">
-                        <p>
-                            <b>Fecha:</b> {{ printer.deal.dealStartDate | date }} - {{ printer.deal.dealEndDate | date }}
-                        </p>
-                    </div>
-                </div>
-                <div class="deal-content">
-                    <div class="deal-row">
-                        <div class="deal-item">
-                            <h5>Promoción</h5>
-                            <h3>{{ printer.deal.dealPrice | currency }} USD</h3>
-                        </div>
-                        <div class="deal-item">
-                            <h5>Descuento</h5>
-                            <h3>{{ printer.deal.dealDiscountPercentage }}%</h3>
-                        </div>
-                        <div class="deal-item w-100">
-                            <h5>Descripción</h5>
-                            <p>{{ printer.deal.dealDescription }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="deal-footer">
-                    <p><b>Días restantes:</b> {{ getDaysLeft() }} dias</p>
-                </div>
-            </div>
-        </div>
     </div>
+    <div class="printer-deals" *ngIf="printer.deal">
+      <div class="deal">
+        <div class="deal-header">
+          <div class="deal-item">
+            <p>
+              <b>Fecha:</b> {{ printer.deal.dealStartDate | date }} -
+              {{ printer.deal.dealEndDate | date }}
+            </p>
+          </div>
+        </div>
+        <div class="deal-content">
+          <div class="deal-row">
+            <div class="deal-item">
+              <h5>Promoción</h5>
+              <h3>{{ printer.deal.dealPrice | currency }} USD</h3>
+            </div>
+            <div class="deal-item">
+              <h5>Descuento</h5>
+              <h3>{{ printer.deal.dealDiscountPercentage }}%</h3>
+            </div>
+            <div class="deal-item w-100">
+              <h5>Descripción</h5>
+              <p>{{ printer.deal.dealDescription }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="deal-footer">
+          <p><b>Días restantes:</b> {{ getDaysLeft() }} dias</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- consumibles  -->
+
+  <div class="printer-consumable-container">
+    <div class="printer-consumable-header">
+      <h2>Consumibles</h2>
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="navigateToCreateDeal(printer.id)"
+      >
+        <!-- change click function -->
+        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+      </button>
+    </div>
+    <div
+      class="printer-consumables"
+      *ngFor="let consumable of printer.consumibles"
+    >
+      <div class="consumable">
+        <div class="consumable-header">
+          <div class="consumable-item">
+            <p><b>Nombre:</b> {{ consumable.name }}</p>
+          </div>
+        </div>
+        <div class="consumable-content">
+          <div class="consumable-row">
+            <div class="consumable-item image-item">
+              <img
+                class="consumable-image"
+                [src]="consumable.img_url"
+                alt="Consumable image"
+              />
+            </div>
+            <div class="consumable-item details-item">
+              <div>
+                <h5>Price</h5>
+                <h3>
+                  {{ consumable.price | currency }} {{ consumable.currency }}
+                </h3>
+              </div>
+              <div>
+                <h5>Yield</h5>
+                <h3>{{ consumable.yield }} paginas</h3>
+              </div>
+              <div class="w-100">
+                <h5>Descripción</h5>
+                <p>{{ consumable.shortDescription }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -12,7 +12,6 @@ export class ProductImageGridComponent {
   constructor() {}
 
   onRemove(index: number): void {
-    console.log('remove image at index: ', index);
     this.remove.emit(index);
   }
 }

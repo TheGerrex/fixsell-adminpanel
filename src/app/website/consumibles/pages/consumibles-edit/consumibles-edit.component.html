@@ -103,152 +103,167 @@
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input
-                formControlName="price"
-                class="form-control"
                 type="number"
+                class="form-control"
+                formControlName="price"
                 step="0.01"
                 [class.is-invalid]="
                   editConsumibleForm.controls['price'].invalid &&
                   editConsumibleForm.controls['price'].touched
                 "
               />
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['price'].invalid &&
-                  editConsumibleForm.controls['price'].touched
-                "
-                class="form-text text-danger"
-              >
-                Price is required.
-              </span>
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['price'].errors?.['min'] &&
-                  editConsumibleForm.controls['price'].touched
-                "
-                class="form-text text-danger"
-              >
-                Price must be at least 0.01.
-              </span>
+              <div class="input-group-append">
+                <select
+                  class="custom-select input-group-text flex-grow-1 custom-dropdown"
+                  formControlName="currency"
+                >
+                  <option value="USD">USD</option>
+                  <option value="MXN">MXN</option>
+                </select>
+              </div>
             </div>
-            <!-- Short Description field -->
-            <div class="consumibles-data-item">
-              <h5>Short Description</h5>
-              <textarea
-                formControlName="shortDescription"
-                class="form-control"
-                rows="1"
-                [class.is-invalid]="
-                  editConsumibleForm.controls['shortDescription'].invalid &&
-                  editConsumibleForm.controls['shortDescription'].touched
-                "
-              ></textarea>
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['shortDescription'].invalid &&
-                  editConsumibleForm.controls['shortDescription'].touched
-                "
-                class="form-text text-danger"
-              >
-                Short Description is required.
-              </span>
-            </div>
-            <!-- Long Description field -->
-            <div class="consumibles-data-item">
-              <h5>Long Description</h5>
-              <textarea
-                formControlName="longDescription"
-                class="form-control"
-                rows="5"
-                [class.is-invalid]="
-                  editConsumibleForm.controls['longDescription'].invalid &&
-                  editConsumibleForm.controls['longDescription'].touched
-                "
-              ></textarea>
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['longDescription'].invalid &&
-                  editConsumibleForm.controls['longDescription'].touched
-                "
-                class="form-text text-danger"
-              >
-                Long Description is required.
-              </span>
-            </div>
+            <span
+              *ngIf="
+                editConsumibleForm.controls['price'].invalid &&
+                editConsumibleForm.controls['price'].touched
+              "
+              class="form-text text-danger"
+            >
+              Price is required.
+            </span>
+            <span
+              *ngIf="
+                editConsumibleForm.controls['price'].errors?.['min'] &&
+                editConsumibleForm.controls['price'].touched
+              "
+              class="form-text text-danger"
+            >
+              Price must be at least 0.01.
+            </span>
+          </div>
 
-            <!-- Category field -->
-            <div class="consumibles-data-item">
-              <h5>Category</h5>
-              <input
+          <!-- Short Description field -->
+          <div class="consumibles-data-item">
+            <h5>Short Description</h5>
+            <textarea
+              formControlName="shortDescription"
+              class="form-control"
+              rows="1"
+              [class.is-invalid]="
+                editConsumibleForm.controls['shortDescription'].invalid &&
+                editConsumibleForm.controls['shortDescription'].touched
+              "
+            ></textarea>
+            <span
+              *ngIf="
+                editConsumibleForm.controls['shortDescription'].invalid &&
+                editConsumibleForm.controls['shortDescription'].touched
+              "
+              class="form-text text-danger"
+            >
+              Short Description is required.
+            </span>
+          </div>
+          <!-- Long Description field -->
+          <div class="consumibles-data-item">
+            <h5>Long Description</h5>
+            <textarea
+              formControlName="longDescription"
+              class="form-control"
+              rows="5"
+              [class.is-invalid]="
+                editConsumibleForm.controls['longDescription'].invalid &&
+                editConsumibleForm.controls['longDescription'].touched
+              "
+            ></textarea>
+            <span
+              *ngIf="
+                editConsumibleForm.controls['longDescription'].invalid &&
+                editConsumibleForm.controls['longDescription'].touched
+              "
+              class="form-text text-danger"
+            >
+              Long Description is required.
+            </span>
+          </div>
+
+          <!-- Category field -->
+          <div class="consumibles-data-item">
+            <h5>Category</h5>
+            <mat-form-field appearance="fill">
+              <mat-label>Select a category</mat-label>
+              <mat-select
                 formControlName="category"
-                class="form-control"
-                type="text"
                 [class.is-invalid]="
                   editConsumibleForm.controls['category'].invalid &&
                   editConsumibleForm.controls['category'].touched
                 "
-              />
-              <span
+              >
+                <mat-option value="Toner">Toner</mat-option>
+                <mat-option value="Drum">Drum</mat-option>
+                <mat-option value="Papel">Papel</mat-option>
+                <mat-option value="Parte">Parte</mat-option>
+              </mat-select>
+              <mat-error
                 *ngIf="
                   editConsumibleForm.controls['category'].invalid &&
                   editConsumibleForm.controls['category'].touched
                 "
-                class="form-text text-danger"
               >
                 Category is required.
-              </span>
-            </div>
-            <div class="consumibles-data-item">
-              <h5>Stock</h5>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- yield field -->
+          <div class="consumibles-data-item">
+            <h5>Yield</h5>
+            <div class="input-group">
               <input
-                formControlName="stock"
-                class="form-control"
                 type="number"
-                [class.is-invalid]="
-                  editConsumibleForm.controls['stock'].invalid &&
-                  editConsumibleForm.controls['stock'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['stock'].invalid &&
-                  editConsumibleForm.controls['stock'].touched
-                "
-                class="form-text text-danger"
-              >
-                Stock is required.
-              </span>
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['stock'].errors?.['min'] &&
-                  editConsumibleForm.controls['stock'].touched
-                "
-                class="form-text text-danger"
-              >
-                Stock must be at least 1.
-              </span>
-            </div>
-            <div class="consumibles-data-item">
-              <h5>Location</h5>
-              <input
-                formControlName="location"
                 class="form-control"
-                type="text"
+                formControlName="yield"
                 [class.is-invalid]="
-                  editConsumibleForm.controls['location'].invalid &&
-                  editConsumibleForm.controls['location'].touched
+                  editConsumibleForm.controls['yield'].invalid &&
+                  editConsumibleForm.controls['yield'].touched
                 "
               />
-              <span
-                *ngIf="
-                  editConsumibleForm.controls['location'].invalid &&
-                  editConsumibleForm.controls['location'].touched
-                "
-                class="form-text text-danger"
-              >
-                Location is required.
-              </span>
             </div>
+            <span
+              *ngIf="
+                editConsumibleForm.controls['yield'].invalid &&
+                editConsumibleForm.controls['yield'].touched
+              "
+              class="form-text text-danger"
+            >
+              Yield is required.
+            </span>
+          </div>
+
+          <!-- volume field -->
+          <div class="consumibles-data-item">
+            <h5>Volume</h5>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="volume"
+                [class.is-invalid]="
+                  editConsumibleForm.controls['volume'].invalid &&
+                  editConsumibleForm.controls['volume'].touched
+                "
+              />
+            </div>
+            <span
+              *ngIf="
+                editConsumibleForm.controls['volume'].invalid &&
+                editConsumibleForm.controls['volume'].touched
+              "
+              class="form-text text-danger"
+            >
+              Volume is required.
+            </span>
+          </div>
 
           <!-- origin field selector-->
           <div class="consumibles-data-item">
@@ -367,13 +382,6 @@
           <!-- counterpart field -->
         </div>
       </div>
-      <h5>Images</h5>
-      <app-product-image-grid
-        [imageUrls]="imageUrlsArray"
-        (remove)="onRemove($event)"
-      ></app-product-image-grid>
-
-      <app-file-upload (fileUpload)="onFileUploaded($event)"></app-file-upload>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

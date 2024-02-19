@@ -21,11 +21,13 @@ export class PrinterListComponent {
     'color',
     'category',
     'price',
+    'currency',
     'action',
   ];
   dataSource = new MatTableDataSource<Printer>();
   filterValue = '';
   isAdmin = false;
+  printerData: Printer[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
@@ -40,6 +42,8 @@ export class PrinterListComponent {
       .get<Printer[]>(`${environment.baseUrl}/printers`)
       .subscribe((data) => {
         console.log(data);
+        // save to printerdata
+        this.printerData = data;
 
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(data);
@@ -49,7 +53,13 @@ export class PrinterListComponent {
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
-      this.displayedColumns = ['brand', 'model', 'category', 'price'];
+      this.displayedColumns = [
+        'brand',
+        'model',
+        'category',
+        'price',
+        'currency',
+      ];
     }
   }
 

@@ -35,7 +35,7 @@ export class ConsumiblesDetailComponent implements OnInit {
   nextImage(): void {
     if (
       this.consumible &&
-      this.currentImageIndex < this.consumible.images.length - 1
+      this.currentImageIndex < this.consumible.img_url.length - 1
     ) {
       this.currentImageIndex++;
     }

@@ -1,3 +1,5 @@
+import { Consumible } from './consumibles.interface';
+
 export interface Printer {
   id: string;
   brand: string;
@@ -6,6 +8,7 @@ export interface Printer {
   img_url: string[];
   description: string;
   price: number;
+  currency: string;
   category: string;
   color: boolean;
   rentable: boolean;
@@ -25,6 +28,7 @@ export interface Printer {
   barcode: null;
   deal: Deal;
   packages: Package;
+  consumibles: Consumible[];
 }
 
 export interface Deal {

@@ -19,10 +19,10 @@ export class ConsumiblesListComponent {
     //consumibles columns
     'name',
     'price',
-    'weight',
+    'currency',
     'category',
-    'stock',
-    'location',
+    'brand',
+    'origen',
     'action',
   ];
   dataSource = new MatTableDataSource<Consumible>();
@@ -58,10 +58,10 @@ export class ConsumiblesListComponent {
       this.displayedColumns = [
         'name',
         'price',
-        'weight',
+        'currency',
         'category',
-        'stock',
-        'location',
+        'brand',
+        'origen',
       ];
     }
   }

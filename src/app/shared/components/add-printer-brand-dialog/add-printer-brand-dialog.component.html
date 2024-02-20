@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Agregar Marca</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput [formControl]="brandName" />
+    <mat-error *ngIf="brandName.invalid">Nombre es requerido</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="onSubmit()" [disabled]="brandName.invalid">
+    Agregar Marca
+  </button>
+</mat-dialog-actions>

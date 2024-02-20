@@ -40,12 +40,13 @@ export class PrinterService {
   // get brands from printers
   getBrands(): Observable<string[]> {
     return this.http
-      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .get<{ name: string }[]>(`${environment.baseUrl}/brands/printers`)
       .pipe(
-        map((printers: Printer[]) =>
-          printers
-            .map((printer: Printer) => printer.brand)
-            .filter((brand, index, self) => self.indexOf(brand) === index)
+        map((brands: { name: string }[]) => brands.map((brand) => brand.name)),
+        map((brandNames: string[]) =>
+          brandNames.filter(
+            (brandName, index, self) => self.indexOf(brandName) === index
+          )
         )
       );
   }
@@ -78,11 +79,13 @@ export class PrinterService {
   }
 
   deleteImagePrinter(imageUrl: string): Observable<any> {
-    return this.http.delete(`${environment.baseUrl}/upload/file`, { body: { url: imageUrl } }).pipe(
-      catchError((error) => {
-        console.error('Error:', error);
-        return throwError(error);
-      })
-    );
+    return this.http
+      .delete(`${environment.baseUrl}/upload/file`, { body: { url: imageUrl } })
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(error);
+        })
+      );
   }
 }

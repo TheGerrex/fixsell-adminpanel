@@ -14,6 +14,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { AddPrinterBrandDialogComponent } from 'src/app/shared/components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 
 @Component({
   selector: 'app-printer-create',
@@ -130,7 +131,7 @@ export class PrinterCreateComponent implements OnInit {
   handleTagsUpdated(tags: any[]) {
     const tagsFormArray = this.createPrinterForm.get('tags') as FormArray;
     tagsFormArray.clear();
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       if (tag.name) {
         tagsFormArray.push(new FormControl(tag.name));
       }
@@ -138,7 +139,9 @@ export class PrinterCreateComponent implements OnInit {
   }
 
   get tagsControls() {
-    return (this.createPrinterForm.get('tags') as FormArray).controls.map(control => control.value);
+    return (this.createPrinterForm.get('tags') as FormArray).controls.map(
+      (control) => control.value
+    );
   }
 
   get tagValues() {
@@ -346,5 +349,23 @@ export class PrinterCreateComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.removeAt(index);
+  }
+
+  openBrandDialog() {
+    const dialogRef = this.dialog.open(AddPrinterBrandDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+      this.getBrandsAndCategories();
+    });
+  }
+
+  brandSelected(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement.value === 'addNew') {
+      this.openBrandDialog();
+      // Reset the select to the previous value or to an empty value
+      this.createPrinterForm.controls['brand'].setValue('');
+    }
   }
 }

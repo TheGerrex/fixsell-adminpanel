@@ -81,4 +81,7 @@ export class PrinterDetailComponent implements OnInit {
     console.log('navigateToCreateDeal URL:', url);
     this.router.navigate(url);
   }
+  navigateToCreateConsumible() {
+    this.router.navigate(['/website', 'consumibles', 'create']);
+  }
 }

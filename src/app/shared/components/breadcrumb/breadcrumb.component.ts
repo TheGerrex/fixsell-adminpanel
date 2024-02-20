@@ -96,7 +96,7 @@ export class BreadcrumbComponent implements OnInit {
           )
         ) {
           breadcrumbObservables[i] = this.itemNameService
-            .getItemName(urlSegments[2], labelSegments[i])
+            .getItemName(urlSegments[2], labelSegments[i]) //maybe add functionality in case if different url.. e.g. /website/printer or /users or /website/consumibles/printers
             .pipe(
               map((name) => {
                 return {

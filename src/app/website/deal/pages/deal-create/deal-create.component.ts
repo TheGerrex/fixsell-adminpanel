@@ -29,6 +29,7 @@ export class DealCreateComponent implements OnInit {
   dealStartDate = new FormControl('');
   dealEndDate = new FormControl('');
   dealDescription = new FormControl('');
+  isLoadingForm = false;
 
   constructor(
     private DealService: DealService,

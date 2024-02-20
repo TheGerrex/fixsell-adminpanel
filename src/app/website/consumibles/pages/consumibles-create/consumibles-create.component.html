@@ -273,7 +273,7 @@
           <div class="consumibles-data-item">
             <h5>Origen del producto</h5>
             <mat-form-field appearance="fill">
-              <mat-label>Seleciona su origen</mat-label>
+              <mat-label>Selleciona su origen</mat-label>
               <mat-select formControlName="origen">
                 <mat-option value="OEM">OEM</mat-option>
                 <mat-option value="Generico">Generico</mat-option>
@@ -359,27 +359,26 @@
                   </button>
                 </div>
               </div>
-              <mat-form-field class="example-full-width">
-                <input
-                  type="text"
-                  placeholder="Add printer"
-                  aria-label="Number"
-                  matInput
-                  [formControl]="printerNameControl"
-                  [matAutocomplete]="auto"
-                />
-                <mat-autocomplete
-                  #auto="matAutocomplete"
-                  (optionSelected)="addPrinterFromAutocomplete($event)"
+              <input
+                type="text"
+                placeholder="Add printer"
+                aria-label="Number"
+                class="form-control example-input"
+                [formControl]="printerNameControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="addPrinterFromAutocomplete($event)"
+                class="form-control"
+              >
+                <mat-option
+                  *ngFor="let printerName of filteredPrinterNames | async"
+                  [value]="printerName"
                 >
-                  <mat-option
-                    *ngFor="let printerName of filteredPrinterNames | async"
-                    [value]="printerName"
-                  >
-                    {{ printerName }}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
+                  {{ printerName }}
+                </mat-option>
+              </mat-autocomplete>
             </div>
           </div>
 

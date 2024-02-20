@@ -1,49 +1,63 @@
-<form>
-  <div class="container">
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="printer">Equipo</label>
-          <select class="form-control" [formControl]="selectedPrinter">
-            <option
-              *ngFor="let printerName of printerNames"
-              [value]="printerName"
-            >
-              {{ printerName }}
-            </option>
-          </select>
-          <p>Price: {{ printerPrice }}</p>
-        </div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealStartDate">Fecha de Inico</label>
-          <input
-            type="date"
-            class="form-control"
-            id="dealStartDate"
-            [formControl]="dealStartDate"
-          />
-        </div>
-      </div>
+<div>
+  <form class="deal-container">
+    <div class="deal-header">
+      <h2>Nuevo Promocion</h2>
+      <button
+        type="submit"
+        class="button button-primary button-raised"
+        (click)="addPromotion()"
+      >
+        <span class="button-label">Crear Promocion</span>
+      </button>
     </div>
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealEndDate">Fecha de Finalizacion</label>
-          <input
-            type="date"
-            class="form-control"
-            id="dealEndDate"
-            [formControl]="dealEndDate"
-          />
+
+    <div class="loading-container" *ngIf="isLoadingForm">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <div class="deal-info">
+      <div class="deal-data-container">
+        <div class="row">
+          <div class="col-md-6 deal-data-item">
+            <label for="printer">Equipo</label>
+            <select class="form-control" [formControl]="selectedPrinter">
+              <option
+                *ngFor="let printerName of printerNames"
+                [value]="printerName"
+              >
+                {{ printerName }}
+              </option>
+            </select>
+            <label for="printerPrice">Precio de Multifuncional</label>
+            <input
+              type="text"
+              id="printerPrice"
+              class="form-control"
+              [value]="printerPrice"
+              disabled
+            />
+          </div>
+          <div class="col-md-6 deal-data-item">
+            <label for="dealStartDate">Fecha de Inicio</label>
+            <input
+              type="date"
+              class="form-control"
+              id="dealStartDate"
+              [formControl]="dealStartDate"
+            />
+            <label for="dealEndDate">Fecha de Finalización</label>
+            <input
+              type="date"
+              class="form-control"
+              id="dealEndDate"
+              [formControl]="dealEndDate"
+            />
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-            <label for="dealPrice">Precio de Promocion</label>
-            <div class="d-flex">
+        <div class="row">
+          <div class="col-md-6 deal-data-item">
+            <label for="dealPrice">Precio de Promoción</label>
+            <div class="input-group">
               <input
                 type="number"
                 class="form-control"
@@ -51,22 +65,20 @@
                 placeholder="Enter deal price"
                 [formControl]="dealPrice"
               />
-              <button
-                type="button"
-                class="btn btn-primary button button-primary ml-2"
-                (click)="calculatePercentage()"
-              >
-                Calcular Porcentage
-              </button>
+              <div class="input-group-append">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="calculatePercentage()"
+                >
+                  Calcular Porcentaje
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-            <label for="dealDiscountPercentage">Porcentage de Descuento</label>
-            <div class="d-flex">
+          <div class="col-md-6 deal-data-item">
+            <label for="dealDiscountPercentage">Porcentaje de Descuento</label>
+            <div class="input-group">
               <input
                 type="number"
                 class="form-control"
@@ -74,39 +86,30 @@
                 placeholder="Enter deal discount percentage"
                 [formControl]="dealDiscountPercentage"
               />
-              <button
-                type="button"
-                class="btn btn-primary button button-primary ml-2"
-                (click)="calculatePrice()"
-              >
-                Calcular Precio
-              </button>
+              <div class="input-group-append">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="calculatePrice()"
+                >
+                  Calcular Precio
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealDescription">Descripcion</label>
-          <textarea
-            class="form-control"
-            id="dealDescription"
-            rows="3"
-            [formControl]="dealDescription"
-          ></textarea>
+        <div class="row">
+          <div class="col-12 deal-data-item">
+            <label for="dealDescription">Descripción</label>
+            <textarea
+              class="form-control"
+              id="dealDescription"
+              rows="3"
+              [formControl]="dealDescription"
+            ></textarea>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row button-container">
-      <div class="col-12">
-        <button
-          type="submit"
-          class="btn btn-primary button button-primary"
-          (click)="addPromotion()"
-        >
-          Agregar Promocion
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
+  </form>
+</div>

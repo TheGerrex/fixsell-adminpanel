@@ -31,7 +31,7 @@ const routes: Routes = [
         path: ':id',
         component: ConsumiblesDetailComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Multifuncional' },
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Consumibles' },
       },
       {
         path: ':id/edit',

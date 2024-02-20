@@ -93,4 +93,11 @@ export class ConsumiblesService {
         map((id) => id || '') // provide a default value when id is undefined
       );
   }
+
+  // get consumible name by id
+  getConsumibleName(id: string): Observable<string> {
+    return this.http
+      .get<Consumible>(`${environment.baseUrl}/consumibles/${id}`)
+      .pipe(map((consumible) => consumible.name));
+  }
 }

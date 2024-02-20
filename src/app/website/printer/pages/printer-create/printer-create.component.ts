@@ -24,6 +24,7 @@ export class PrinterCreateComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
+  isLoadingForm = false;
   categories = [
     'Oficina',
     'Produccion',
@@ -73,8 +74,8 @@ export class PrinterCreateComponent implements OnInit {
   }
   initializeForm() {
     this.createPrinterForm = this.fb.group({
-      brand: ['', Validators.required],
-      model: ['', Validators.required],
+      brand: [null, Validators.required],
+      model: [null, Validators.required],
       img_url: this.fb.array([]),
       datasheet_url: [''],
       description: [''],
@@ -86,7 +87,7 @@ export class PrinterCreateComponent implements OnInit {
         ],
       ],
       currency: ['USD', Validators.required],
-      category: ['', Validators.required],
+      category: [null, Validators.required],
       color: [false],
       rentable: [false],
       sellable: [false],
@@ -125,21 +126,23 @@ export class PrinterCreateComponent implements OnInit {
     return 0;
   }
 
+  // In your parent component
+  handleTagsUpdated(tags: any[]) {
+    const tagsFormArray = this.createPrinterForm.get('tags') as FormArray;
+    tagsFormArray.clear();
+    tags.forEach(tag => {
+      if (tag.name) {
+        tagsFormArray.push(new FormControl(tag.name));
+      }
+    });
+  }
+
   get tagsControls() {
-    return (this.createPrinterForm.get('tags') as FormArray).controls;
+    return (this.createPrinterForm.get('tags') as FormArray).controls.map(control => control.value);
   }
 
-  addTag() {
-    (this.createPrinterForm.get('tags') as FormArray).push(this.fb.control(''));
-  }
-
-  removeTag(index: number) {
-    const tags = this.createPrinterForm.get('tags') as FormArray;
-    if (tags.length > 1) {
-      tags.removeAt(index);
-    } else {
-      tags.at(0).reset('');
-    }
+  get tagValues() {
+    return (this.createPrinterForm.get('tags') as FormArray).value;
   }
 
   prevImage(): void {
@@ -211,6 +214,7 @@ export class PrinterCreateComponent implements OnInit {
       this.createPrinterForm.markAllAsTouched();
       return;
     }
+    this.isLoadingForm = true;
     const formData = this.createPrinterForm.value;
     formData.price = formData.price.toString();
     // if (!formData.datasheet_url) {
@@ -218,10 +222,12 @@ export class PrinterCreateComponent implements OnInit {
     // }
     this.printerService.submitPrinterCreateForm(formData).subscribe(
       (response: Printer) => {
+        this.isLoadingForm = false;
         this.toastService.showSuccess('Multifuncional creada', 'Cerrar');
         this.router.navigate(['/website/printers', response.id]);
       },
       (error) => {
+        this.isLoadingForm = false;
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );

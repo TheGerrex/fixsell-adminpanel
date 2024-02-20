@@ -31,7 +31,8 @@
 }
 
 .currency-select {
-    height: 100%;
+    border: none;
+    background-color: transparent;
 }
 
 .printer-info {
@@ -215,6 +216,14 @@
     min-height: 8em !important;
 }
 
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
 .file-container {
     display: flex;
     align-items: center;
@@ -222,7 +231,7 @@
     padding: 8px;
     border-radius: $border-radius;
     background-color: #FFF;
-    border: 1px solid $light-300;
+    border: 1px solid #dee2e6;
     width: 100%;
     max-width: 100%;
     mat-icon {

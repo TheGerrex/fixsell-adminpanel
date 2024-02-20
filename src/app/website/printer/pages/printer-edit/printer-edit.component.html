@@ -6,6 +6,9 @@
         <span class="button-label">Realizar Cambios</span>
       </button>
         </div>
+        <div class="loading-container" *ngIf="isLoadingForm">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
         <div class="printer-info">
             <div class="printer-images">
                 <app-file-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [rootFolder]="'imagenes'" [file_type]="'.png o .jpg'"></app-file-upload>
@@ -44,15 +47,17 @@
                             <span class="input-group-text">$</span>
                             <input type="number" class="form-control" formControlName="price" [class.is-invalid]="
                               editPrinterForm.controls['price'].invalid &&
-                              editPrinterForm.controls['price'].touched
-                            " />
-                            <div class="input-group-append">
-                                <select class="custom-select currency-select input-group-text" formControlName="currency">
+                              editPrinterForm.controls['price'].touched" />
+                            <div class="input-group-text">
+                                <select class="currency-select" formControlName="currency" [value]="printer.currency">
                                   <option value="USD">USD</option>
                                   <option value="MXN">MXN</option>
                                 </select>
                             </div>
                         </div>
+                        <span *ngIf="isValidField('price')" class="form-text text-danger">
+                            {{ getFieldError('price') }}
+                        </span>
                     </div>
                     <div class="printer-data-item half-row">
                         <h5>Descripcion</h5>
@@ -174,15 +179,7 @@
                     </div>
                     <div class="printer-data-item">
                         <h5>Etiquetas</h5>
-                        <div class="tag-inputs-container" formArrayName="tags">
-                            <div *ngFor="let tag of tagsControls; let i = index">
-                                <div class="tag-inputs">
-                                    <input [formControlName]="i" class="form-control">
-                                    <button class="button button-danger button-icon" (click)="removeTag(i)"><mat-icon>delete</mat-icon></button>
-                                </div>
-                            </div>
-                            <button class="button button-secondary button-icon" (click)="addTag()"><mat-icon>add</mat-icon></button>
-                        </div>
+                        <website-input-chips [tagsControls]="tagValues" (tagsUpdated)="handleTagsUpdated($event)"></website-input-chips>
                     </div>
                     <div class="printer-data-item">
                         <h5>Consumo de Poder</h5>

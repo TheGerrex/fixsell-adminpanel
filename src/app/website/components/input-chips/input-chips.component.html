@@ -1,0 +1,11 @@
+<div class="form-control">
+    <mat-chip-grid #chipGrid aria-label="Escribe etiquetas">
+        <mat-chip-row *ngFor="let item of items;" (removed)="remove(item)" [editable]="true" [editable]="true" (edited)="edit(item, $event)" [aria-description]="'press enter to edit ' + item.name">
+            {{item.name}}
+            <button matChipRemove [attr.aria-label]="'remove ' + item.name">
+        <mat-icon>cancel</mat-icon>
+      </button>
+        </mat-chip-row>
+        <input placeholder="Nueva etiqueta..." [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
+    </mat-chip-grid>
+</div>

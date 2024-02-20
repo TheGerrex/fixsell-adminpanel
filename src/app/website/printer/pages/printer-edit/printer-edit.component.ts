@@ -24,6 +24,7 @@ export class PrinterEditComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
+  isLoadingForm = false;
   categories = [
     'Oficina',
     'Produccion',
@@ -66,7 +67,7 @@ export class PrinterEditComponent implements OnInit {
           Validators.pattern(this.validatorsService.floatNumberPattern),
         ],
       ],
-      currency: ['USD', Validators.required],
+      currency: [this.printer ? this.printer.currency : 'MXN', Validators.required],
       category: [
         this.printer ? this.printer.category : '',
         Validators.required,
@@ -138,21 +139,19 @@ export class PrinterEditComponent implements OnInit {
     return 0;
   }
 
+  // In your parent component
+  handleTagsUpdated(tags: any[]) {
+    const tagsFormArray = this.editPrinterForm.get('tags') as FormArray;
+    tagsFormArray.clear();
+    tags.forEach(tag => tagsFormArray.push(new FormControl(tag.name)));
+  }
+
   get tagsControls() {
     return (this.editPrinterForm.get('tags') as FormArray).controls;
   }
 
-  addTag() {
-    (this.editPrinterForm.get('tags') as FormArray).push(this.fb.control(''));
-  }
-
-  removeTag(index: number) {
-    const tags = this.editPrinterForm.get('tags') as FormArray;
-    if (tags.length > 1) {
-      tags.removeAt(index);
-    } else {
-      tags.at(0).reset('');
-    }
+  get tagValues() {
+    return (this.editPrinterForm.get('tags') as FormArray).value;
   }
 
   prevImage(): void {
@@ -224,6 +223,7 @@ export class PrinterEditComponent implements OnInit {
       this.editPrinterForm.markAllAsTouched();
       return;
     }
+    this.isLoadingForm = true;
     let formData = this.editPrinterForm.value;
     formData.price = formData.price.toString();
     const printerId = this.route.snapshot.paramMap.get('id');
@@ -244,10 +244,12 @@ export class PrinterEditComponent implements OnInit {
 
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       (response) => {
+        this.isLoadingForm = false;
         this.toastService.showSuccess('Multifuncional editada', 'Cerrar');
         this.router.navigate(['/website/printers', printerId]);
       },
       (error) => {
+        this.isLoadingForm = false;
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );

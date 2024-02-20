@@ -1,5 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injectable,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -15,7 +21,7 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './consumibles-list.component.html',
   styleUrls: ['./consumibles-list.component.scss'],
 })
-export class ConsumiblesListComponent implements OnInit, AfterViewInit{
+export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     //consumibles columns
     'name',
@@ -29,6 +35,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit{
   dataSource = new MatTableDataSource<Consumible>();
   filterValue = '';
   isAdmin = false;
+  consumibleData: Consumible[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -47,6 +54,8 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit{
       .subscribe((data) => {
         console.log(data);
 
+        // save to consumibledata
+        this.consumibleData = data;
         // Filter out consumibles with null or undefined fields if necessary
         // const filteredData = data.filter((consumible) => consumible.field !== null);
 

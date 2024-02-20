@@ -148,7 +148,7 @@
 
           <!-- Short Description field -->
           <div class="consumibles-data-item">
-            <h5>Short Description</h5>
+            <h5>Descripción Corto</h5>
             <textarea
               formControlName="shortDescription"
               class="form-control"
@@ -170,7 +170,7 @@
           </div>
           <!-- Long Description field -->
           <div class="consumibles-data-item">
-            <h5>Long Description</h5>
+            <h5>Descripción Largo</h5>
             <textarea
               formControlName="longDescription"
               class="form-control"
@@ -193,7 +193,7 @@
 
           <!-- Category field -->
           <div class="consumibles-data-item">
-            <h5>Category</h5>
+            <h5>Categoria</h5>
             <mat-form-field appearance="fill">
               <mat-label>Select a category</mat-label>
               <mat-select
@@ -221,7 +221,7 @@
 
           <!-- yield field -->
           <div class="consumibles-data-item">
-            <h5>Yield</h5>
+            <h5>Vida Util @ 5%</h5>
             <div class="input-group">
               <input
                 type="number"
@@ -246,7 +246,7 @@
 
           <!-- volume field -->
           <div class="consumibles-data-item">
-            <h5>Volume</h5>
+            <h5>Volumen</h5>
             <div class="input-group">
               <input
                 type="number"
@@ -271,9 +271,9 @@
 
           <!-- origin field selector-->
           <div class="consumibles-data-item">
-            <h5>origen</h5>
+            <h5>Origen del producto</h5>
             <mat-form-field appearance="fill">
-              <mat-label>Selleciona su origen</mat-label>
+              <mat-label>Seleciona su origen</mat-label>
               <mat-select formControlName="origen">
                 <mat-option value="OEM">OEM</mat-option>
                 <mat-option value="Generico">Generico</mat-option>
@@ -284,7 +284,7 @@
 
           <!-- Compatible Models Field -->
           <div class="consumibles-data-item">
-            <h5>Compatible Models</h5>
+            <h5>Modelos Compatibles</h5>
             <div class="tag-inputs-container" formArrayName="compatibleModels">
               <div
                 *ngFor="let model of compatibleModelsControls; let i = index"
@@ -320,7 +320,7 @@
                     class="color-box"
                     style="background-color: black"
                   ></span>
-                  Black
+                  Negro
                 </mat-option>
                 <mat-option value="C">
                   <span class="color-box" style="background-color: cyan"></span>
@@ -338,7 +338,7 @@
                     class="color-box"
                     style="background-color: yellow"
                   ></span>
-                  Yellow
+                  Amarillo
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -346,7 +346,7 @@
 
           <!-- printers -->
           <div class="consumibles-data-item">
-            <h5>Printers</h5>
+            <h5>Multifuncionales Compartible (En Venta/Renta)</h5>
             <div class="tag-inputs-container" formArrayName="printers">
               <div *ngFor="let printer of printers; let i = index">
                 <div class="tag-inputs">
@@ -386,9 +386,9 @@
           <!-- counterpart field -->
 
           <div class="consumibles-data-item">
-            <h5>Counterpart Consumible</h5>
+            <h5>Producto homólogo</h5>
             <mat-form-field appearance="fill">
-              <mat-label>Select a counterpart consumible</mat-label>
+              <mat-label>Seleciona el Producto homólogo</mat-label>
               <mat-select formControlName="counterpart">
                 <mat-option
                   *ngFor="let consumible of consumibles"

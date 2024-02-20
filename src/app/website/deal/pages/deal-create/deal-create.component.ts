@@ -5,7 +5,8 @@ import { FormControl } from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-
+import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 /* 
 TODO 1: add user input validation
 TODO 2: add error handling
@@ -30,6 +31,7 @@ export class DealCreateComponent implements OnInit {
   dealEndDate = new FormControl('');
   dealDescription = new FormControl('');
   isLoadingForm = false;
+  filteredPrinterNames: Observable<string[]> = new Observable<string[]>();
 
   constructor(
     private DealService: DealService,
@@ -39,6 +41,11 @@ export class DealCreateComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.filteredPrinterNames = this.selectedPrinter.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value ?? ''))
+    );
+
     const printerId = this.route.snapshot.paramMap.get('id');
 
     this.DealService.getAllPrinterNames().subscribe(
@@ -72,6 +79,14 @@ export class DealCreateComponent implements OnInit {
     });
   }
 
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.printerNames.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
   calculatePrice() {
     if (this.dealDiscountPercentage.value) {
       const discount =
@@ -87,6 +102,18 @@ export class DealCreateComponent implements OnInit {
       const percentage = (discount / this.printerPrice) * 100;
       this.dealDiscountPercentage.setValue(percentage.toString()); // Convert the percentage to a string
     }
+  }
+
+  setSelectedPrinter(event: any) {
+    const printerName = event.option.value;
+    this.selectedPrinter.setValue(printerName);
+
+    this.DealService.findPrinterPriceByName(printerName).subscribe(
+      (price: number) => {
+        this.printerPrice = price; // store the price in a variable
+        console.log('printer price: ', this.printerPrice);
+      }
+    );
   }
 
   addPromotion() {

@@ -20,14 +20,25 @@
         <div class="row">
           <div class="col-md-6 deal-data-item">
             <label for="printer">Equipo</label>
-            <select class="form-control" [formControl]="selectedPrinter">
-              <option
-                *ngFor="let printerName of printerNames"
+            <input
+              type="text"
+              id="printer"
+              class="form-control example-input"
+              [formControl]="selectedPrinter"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="setSelectedPrinter($event)"
+              class="form-control"
+            >
+              <mat-option
+                *ngFor="let printerName of filteredPrinterNames | async"
                 [value]="printerName"
               >
                 {{ printerName }}
-              </option>
-            </select>
+              </mat-option>
+            </mat-autocomplete>
             <label for="printerPrice">Precio de Multifuncional</label>
             <input
               type="text"

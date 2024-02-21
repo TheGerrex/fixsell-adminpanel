@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { PdfUploadComponent } from './components/pdf-upload/pdf-upload.component';
 import { ExportComponent } from './components/export/export.component';
 import { AddPrinterBrandDialogComponent } from './components/add-printer-brand-dialog/add-printer-brand-dialog.component';
+import { AddPrinterCategoryDialogComponent } from './components/add-printer-category-dialog/add-printer-category-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { AddPrinterBrandDialogComponent } from './components/add-printer-brand-d
     PdfUploadComponent,
     ExportComponent,
     AddPrinterBrandDialogComponent,
+    AddPrinterCategoryDialogComponent,
   ],
   imports: [
     CommonModule,

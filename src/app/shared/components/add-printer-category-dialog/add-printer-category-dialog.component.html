@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Agregar Categoria</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput [formControl]="categoryName" />
+    <mat-error *ngIf="categoryName.invalid">Nombre es requerido</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="onSubmit()" [disabled]="categoryName.invalid">
+    Agregar Marca
+  </button>
+</mat-dialog-actions>

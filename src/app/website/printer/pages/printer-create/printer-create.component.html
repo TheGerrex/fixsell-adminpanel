@@ -38,6 +38,11 @@
               "
             >
               <option
+                value="null"
+                disabled
+                [selected]="!printer?.category"
+              ></option>
+              <option
                 *ngFor="let brand of brands"
                 [value]="brand"
                 [selected]="brand === printer?.brand"

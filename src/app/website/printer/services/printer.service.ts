@@ -54,12 +54,15 @@ export class PrinterService {
   // get categories from printers
   getCategories(): Observable<string[]> {
     return this.http
-      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .get<{ name: string }[]>(`${environment.baseUrl}/categories/printers`)
       .pipe(
-        map((printers: Printer[]) =>
-          printers
-            .map((printer: Printer) => printer.category)
-            .filter((category, index, self) => self.indexOf(category) === index)
+        map((categories: { name: string }[]) =>
+          categories.map((category) => category.name)
+        ),
+        map((categoryNames: string[]) =>
+          categoryNames.filter(
+            (categoryName, index, self) => self.indexOf(categoryName) === index
+          )
         )
       );
   }

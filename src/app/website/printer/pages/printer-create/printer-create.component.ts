@@ -15,7 +15,7 @@ import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { AddPrinterBrandDialogComponent } from 'src/app/shared/components/add-printer-brand-dialog/add-printer-brand-dialog.component';
-
+import { AddPrinterCategoryDialogComponent } from 'src/app/shared/components/add-printer-category-dialog/add-printer-category-dialog.component';
 @Component({
   selector: 'app-printer-create',
   templateUrl: './printer-create.component.html',
@@ -360,12 +360,30 @@ export class PrinterCreateComponent implements OnInit {
     });
   }
 
+  openCategoryDialog() {
+    const dialogRef = this.dialog.open(AddPrinterCategoryDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+      this.getBrandsAndCategories();
+    });
+  }
+
   brandSelected(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     if (selectElement.value === 'addNew') {
       this.openBrandDialog();
       // Reset the select to the previous value or to an empty value
       this.createPrinterForm.controls['brand'].setValue('');
+    }
+  }
+
+  categorySelected(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement.value === 'addNew') {
+      this.openCategoryDialog();
+      // Reset the select to the previous value or to an empty value
+      this.createPrinterForm.controls['category'].setValue('');
     }
   }
 }

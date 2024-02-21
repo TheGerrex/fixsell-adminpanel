@@ -25,6 +25,7 @@ import {
   of,
   from,
 } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-package-create',
@@ -33,10 +34,12 @@ import {
 })
 export class PackageCreateComponent implements OnInit {
   public createPackageForm!: FormGroup;
-  printerNames$: Observable<string[]> = new Observable<string[]>();
-  filteredPrinterNames$: Observable<string[]> | undefined;
   printerControl = new FormControl();
   printerPrice: number = 0;
+
+  printerNameControl = new FormControl();
+  filteredPrinterNames: Observable<string[]> | undefined;
+
   constructor(
     private toastService: ToastService,
     private router: Router,
@@ -49,34 +52,20 @@ export class PackageCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.initalizeForm();
-    this.printerNames$ = this.PackageService.getAllPrinterNames();
-
-    // Use the _filter function inside the map operator
-    this.filteredPrinterNames$ = this.createPackageForm
-      .get('printer')!
-      .valueChanges.pipe(
-        startWith(''),
-        switchMap((value) => from(this._filter(value))) // Convert Promise<string[]> to Observable<string[]>
-      );
-
-    // Subscribe to the valueChanges event of the printerControl
-    this.printerControl.valueChanges.subscribe((selectedPrinter) => {
-      // Fetch the price of the selected printer and store it in the printerPrice variable
-      this.PackageService.getPrinterPrice(selectedPrinter).subscribe(
-        (price) => {
-          this.printerPrice = price;
-        }
-      );
-    });
+    this.filteredPrinterNames = this.printerControl.valueChanges.pipe(
+      startWith(''),
+      switchMap((value) =>
+        this.PackageService.getAllPrinterNames().pipe(
+          map((printerNames) => this._filter(value, printerNames))
+        )
+      )
+    );
   }
 
-  private async _filter(value: string): Promise<string[]> {
+  private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
-    const printerNames = await this.printerNames$.toPromise();
-    return (
-      printerNames?.filter((printerName) =>
-        printerName.toLowerCase().includes(filterValue)
-      ) ?? []
+    return printerNames.filter((printerName) =>
+      printerName.toLowerCase().includes(filterValue)
     );
   }
 
@@ -134,6 +123,33 @@ export class PackageCreateComponent implements OnInit {
     return null;
   }
 
+  addPrinterFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
+    const value = event.option.viewValue;
+    this.addPrinter(value);
+  }
+
+  addPrinter(printerName: string = ''): void {
+    if (printerName === '') {
+      printerName = this.printerNameControl.value;
+    }
+    this.PackageService.getPrinterPrice(printerName).subscribe(
+      (price) => {
+        this.printerPrice = price;
+        this.printerControl.setValue(printerName);
+        this.createPackageForm.controls['printer'].setValue(printerName);
+        this.createPackageForm.controls['packagePrice'].setValue(price);
+      },
+      (error) => {
+        console.error(error);
+        this.toastService.showError(
+          'Hubo un error: ' +
+            error.error.message +
+            '. Por favor, intenta de nuevo.',
+          'error-snackbar'
+        );
+      }
+    );
+  }
   submitForm(): void {
     // sets selected printer to printer uuid
     this.createPackageForm.controls['printer'].setValue(

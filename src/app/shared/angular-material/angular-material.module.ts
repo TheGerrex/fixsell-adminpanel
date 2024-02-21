@@ -16,8 +16,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
-import {MatMenuModule} from '@angular/material/menu';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTabsModule } from '@angular/material/tabs';
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -39,6 +39,7 @@ import {MatMenuModule} from '@angular/material/menu';
     MatSortModule,
     MatSelectModule,
     MatMenuModule,
+    MatTabsModule,
   ],
 })
 export class AngularMaterialModule {}

@@ -23,6 +23,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./package/package.module').then((m) => m.PackageModule),
   },
+  {
+    path: 'config',
+    loadChildren: () =>
+      import('./config/config.module').then((m) => m.ConfigModule),
+  },
 ];
 
 @NgModule({

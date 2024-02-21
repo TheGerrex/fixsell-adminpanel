@@ -32,6 +32,11 @@ export const navbarData = [
         routeLink: 'website/packages',
         allowedRoles: ['admin', 'user', 'vendor'],
       },
+      {
+        label: 'Configuracion',
+        routeLink: 'website/config',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
     ],
   },
   {

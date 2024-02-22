@@ -84,7 +84,8 @@ export class PackageListComponent {
   }
 
   seePackage(packages: Package) {
-    this.router.navigateByUrl(`website/package/${packages.id}`);
+    // Implement edit functionality here
+    this.router.navigateByUrl(`website/printers/${packages.printer.id}`);
   }
 
   editPackage(packages: Package) {

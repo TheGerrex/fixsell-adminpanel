@@ -26,12 +26,7 @@
 </div>
 
 <div class="responsive-table">
-  <table
-    mat-table
-    matSort
-    [dataSource]="dataSource"
-    class="consumibles-list-table"
-  >
+  <table mat-table matSort [dataSource]="dataSource" class="package-list-table">
     <ng-container matColumnDef="brand">
       <th mat-header-cell *matHeaderCellDef>Marca</th>
       <th></th>

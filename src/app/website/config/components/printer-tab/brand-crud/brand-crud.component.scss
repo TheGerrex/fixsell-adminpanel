@@ -8,17 +8,14 @@
   border-bottom: none;
   padding: 16px;
   border-radius: $border-radius;
-
   h2 {
     margin: 0;
   }
-
   .table-actions {
     display: flex;
     align-items: center;
     gap: 0.5em;
   }
-
   .table-action-buttons {
     display: flex;
     align-items: center;
@@ -35,4 +32,13 @@
   &:hover {
     background-color: #f5f5f5 !important; // replace with your preferred color
   }
+}
+
+.brand-list-table {
+  border: 1px solid #e0e0e0;
+}
+
+.table-paginator {
+  border: 1px solid #e0e0e0;
+  border-top: none;
 }

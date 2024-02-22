@@ -74,21 +74,16 @@ export class PackageEditComponent implements OnInit {
         },
         Validators.required,
       ],
-      packageDuration: [
-        this.package ? this.package.packageDuration : null,
-        [Validators.required, Validators.min(1)],
-      ],
+      packageDuration: [this.package ? this.package.packageDuration : null],
       packageStartDate: [
         this.package
           ? this.datePipe.transform(this.package.packageStartDate, 'yyyy-MM-dd')
           : '',
-        Validators.required,
       ],
       packageEndDate: [
         this.package
           ? this.datePipe.transform(this.package.packageEndDate, 'yyyy-MM-dd')
           : '',
-        Validators.required,
       ],
       packagePrice: [
         this.package ? this.package.packagePrice : 0,
@@ -100,19 +95,11 @@ export class PackageEditComponent implements OnInit {
       ],
       packageDiscountPercentage: [
         this.package ? this.package.packageDiscountPercentage : 0,
-        [Validators.required, Validators.min(0), Validators.max(100)],
       ],
-      packageDescription: [
-        this.package ? this.package.packageDescription : '',
-        Validators.required,
-      ],
-      packagePrints: [
-        this.package ? this.package.packagePrints : 0,
-        [Validators.required, Validators.min(1)],
-      ],
+      packageDescription: [this.package ? this.package.packageDescription : ''],
+      packagePrints: [this.package ? this.package.packagePrints : 0],
       packageExtraClickPrice: [
         this.package ? this.package.packageExtraClickPrice : 0,
-        [Validators.required, Validators.min(0.01)],
       ],
       packageIncludes: this.fb.array(
         this.package ? this.package.packageIncludes : []

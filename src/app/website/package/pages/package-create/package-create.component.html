@@ -250,6 +250,33 @@
                 Package Extra Click Price is required.
               </span>
             </div>
+
+            <!-- includes -->
+            <!-- Package Includes Field -->
+            <div class="packages-data-item col-md-6 col-lg-4 mb-3">
+              <h5>Paquete incluye</h5>
+              <div class="tag-inputs-container" formArrayName="packageIncludes">
+                <div
+                  *ngFor="let include of packageIncludesControls; let i = index"
+                >
+                  <div class="tag-inputs">
+                    <input [formControlName]="i" class="form-control" />
+                    <button
+                      class="button button-danger button-icon"
+                      (click)="removeInclude(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <button
+                  class="button button-secondary button-icon"
+                  (click)="addInclude()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

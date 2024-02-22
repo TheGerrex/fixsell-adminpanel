@@ -83,6 +83,7 @@ export class PackageCreateComponent implements OnInit {
       packageDescription: ['', Validators.required],
       packagePrints: [0, [Validators.required, Validators.min(1)]],
       packageExtraClickPrice: [0, [Validators.required, Validators.min(0.01)]],
+      packageIncludes: this.fb.array([]),
     });
   }
 
@@ -150,6 +151,24 @@ export class PackageCreateComponent implements OnInit {
       }
     );
   }
+
+  get packageIncludesControls() {
+    return (this.createPackageForm.get('packageIncludes') as FormArray)
+      .controls;
+  }
+
+  addInclude() {
+    (this.createPackageForm.get('packageIncludes') as FormArray).push(
+      new FormControl('')
+    );
+  }
+
+  removeInclude(index: number) {
+    (this.createPackageForm.get('packageIncludes') as FormArray).removeAt(
+      index
+    );
+  }
+
   submitForm(): void {
     // sets selected printer to printer uuid
     this.createPackageForm.controls['printer'].setValue(

@@ -76,7 +76,7 @@ export class PackageCreateComponent implements OnInit {
       packageStartDate: [''],
       packageEndDate: [''],
       packagePrice: [0, [Validators.required, Validators.min(0.01)]],
-      currency: ['USD', Validators.required],
+      packageCurrency: ['USD', Validators.required],
       packageDiscountPercentage: [0],
       packageDescription: [''],
       packagePrints: [0],

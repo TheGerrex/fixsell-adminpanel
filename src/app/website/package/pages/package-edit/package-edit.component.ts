@@ -94,8 +94,8 @@ export class PackageEditComponent implements OnInit {
         this.package ? this.package.packagePrice : 0,
         [Validators.required, Validators.min(0.01)],
       ],
-      currency: [
-        this.package ? this.package.currency : 'USD',
+      packageCurrency: [
+        this.package ? this.package.packageCurrency : 'USD',
         Validators.required,
       ],
       packageDiscountPercentage: [

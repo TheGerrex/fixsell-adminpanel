@@ -72,17 +72,15 @@ export class PackageCreateComponent implements OnInit {
   initalizeForm() {
     this.createPackageForm = this.fb.group({
       printer: ['', Validators.required],
-      packageDuration: [null, [Validators.required, Validators.min(1)]],
-      packageStartDate: ['', Validators.required],
-      packageEndDate: ['', Validators.required],
+      packageDuration: [null],
+      packageStartDate: [''],
+      packageEndDate: [''],
       packagePrice: [0, [Validators.required, Validators.min(0.01)]],
-      packageDiscountPercentage: [
-        0,
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
-      packageDescription: ['', Validators.required],
-      packagePrints: [0, [Validators.required, Validators.min(1)]],
-      packageExtraClickPrice: [0, [Validators.required, Validators.min(0.01)]],
+      currency: ['USD', Validators.required],
+      packageDiscountPercentage: [0],
+      packageDescription: [''],
+      packagePrints: [0],
+      packageExtraClickPrice: [0],
       packageIncludes: this.fb.array([]),
     });
   }
@@ -91,7 +89,7 @@ export class PackageCreateComponent implements OnInit {
     const price = this.createPackageForm.controls['packagePrice'].value;
     const discount = ((this.printerPrice - price) / this.printerPrice) * 100;
     this.createPackageForm.controls['packageDiscountPercentage'].setValue(
-      discount
+      discount.toFixed(0)
     );
   }
 

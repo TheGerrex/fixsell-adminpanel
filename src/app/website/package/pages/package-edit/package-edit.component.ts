@@ -4,6 +4,7 @@ import {
   FormGroup,
   Validators,
   FormControl,
+  FormArray,
 } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +13,7 @@ import { startWith, switchMap } from 'rxjs/operators';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { PackageService } from '../../services/package.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-package-edit',
@@ -25,7 +27,11 @@ export class PackageEditComponent implements OnInit {
   filteredPrinterNames$: Observable<string[]> | undefined;
   printerControl = new FormControl();
   printerPrice: number = 0;
+  printerBrand: string = '';
   public package: any;
+
+  printerNameControl = new FormControl();
+  filteredPrinterNames: Observable<string[]> | undefined;
 
   constructor(
     private toastService: ToastService,
@@ -51,6 +57,7 @@ export class PackageEditComponent implements OnInit {
         console.log({ packages });
         this.package = packages;
         this.printerPrice = this.package.printer.price; // set the printer price
+        this.printerBrand = this.package.printer.brand; // set the printer brand
         this.initalizeForm();
         console.log(packages);
       });
@@ -87,6 +94,10 @@ export class PackageEditComponent implements OnInit {
         this.package ? this.package.packagePrice : 0,
         [Validators.required, Validators.min(0.01)],
       ],
+      currency: [
+        this.package ? this.package.currency : 'USD',
+        Validators.required,
+      ],
       packageDiscountPercentage: [
         this.package ? this.package.packageDiscountPercentage : 0,
         [Validators.required, Validators.min(0), Validators.max(100)],
@@ -103,6 +114,9 @@ export class PackageEditComponent implements OnInit {
         this.package ? this.package.packageExtraClickPrice : 0,
         [Validators.required, Validators.min(0.01)],
       ],
+      packageIncludes: this.fb.array(
+        this.package ? this.package.packageIncludes : []
+      ),
     });
   }
   calculatePercentage() {
@@ -118,6 +132,20 @@ export class PackageEditComponent implements OnInit {
       this.editPackageForm.controls['packageDiscountPercentage'].value;
     const price = this.printerPrice * ((100 - discount) / 100);
     this.editPackageForm.controls['packagePrice'].setValue(price);
+  }
+
+  get packageIncludesControls() {
+    return (this.editPackageForm.get('packageIncludes') as FormArray).controls;
+  }
+
+  addInclude() {
+    (this.editPackageForm.get('packageIncludes') as FormArray).push(
+      new FormControl('')
+    );
+  }
+
+  removeInclude(index: number) {
+    (this.editPackageForm.get('packageIncludes') as FormArray).removeAt(index);
   }
 
   submitForm(): void {

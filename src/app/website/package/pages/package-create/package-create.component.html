@@ -120,9 +120,11 @@
                 Package End Date is required.
               </span>
             </div>
+
+            <!-- package Price -->
             <div class="col-md-6 col-lg-4 mb-3">
               <h5>Package Price</h5>
-              <div class="package-price-item">
+              <div class="package-price-item input-group">
                 <input
                   formControlName="packagePrice"
                   class="form-control"
@@ -133,6 +135,12 @@
                     createPackageForm.controls['packagePrice'].touched
                   "
                 />
+                <div class="input-group-text">
+                  <select class="currency-select" formControlName="currency">
+                    <option value="USD">USD</option>
+                    <option value="MXN">MXN</option>
+                  </select>
+                </div>
                 <button
                   class="button button-secondary button-icon"
                   (click)="calculatePercentage()"
@@ -150,9 +158,11 @@
                 Package Price is required.
               </span>
             </div>
+
+            <!-- package Discount Percentage -->
             <div class="col-md-6 col-lg-4 mb-3">
               <h5>Package Discount Percentage</h5>
-              <div class="package-price-item">
+              <div class="package-price-item input-group">
                 <input
                   formControlName="packageDiscountPercentage"
                   class="form-control"
@@ -165,6 +175,7 @@
                       .touched
                   "
                 />
+                <div class="input-group-text">%</div>
                 <button
                   class="button button-secondary button-icon"
                   (click)="calculatePrice()"
@@ -184,6 +195,8 @@
                 Package Discount Percentage is required.
               </span>
             </div>
+
+            <!-- package Discount Price -->
             <div class="col-md-6 col-lg-4 mb-3">
               <h5>Package Description</h5>
               <textarea

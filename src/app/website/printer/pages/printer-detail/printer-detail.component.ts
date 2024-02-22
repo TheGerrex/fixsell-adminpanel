@@ -62,26 +62,7 @@ export class PrinterDetailComponent implements OnInit {
     return 0;
   }
 
-  getDaysLeft(): number {
-    if (this.printer && this.printer.deal) {
-      const endDate = new Date(this.printer.deal.dealEndDate);
-      const now = new Date();
-      const diff = endDate.getTime() - now.getTime();
-      return Math.ceil(diff / (1000 * 60 * 60 * 24));
-    }
-    return 0;
-  }
-
   navigateToEdit(id: string) {
     this.router.navigate(['/website', 'printers', id, 'edit']);
-  }
-
-  navigateToCreateDeal(id: string) {
-    const url = ['/website', 'deals', 'create', id];
-    console.log('navigateToCreateDeal URL:', url);
-    this.router.navigate(url);
-  }
-  navigateToCreateConsumible() {
-    this.router.navigate(['/website', 'consumibles', 'create']);
   }
 }

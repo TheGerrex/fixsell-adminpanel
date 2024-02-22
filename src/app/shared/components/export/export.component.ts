@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-export',
+  selector: 'website-export',
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss'],
 })

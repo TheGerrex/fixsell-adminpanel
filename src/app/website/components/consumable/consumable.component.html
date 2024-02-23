@@ -5,8 +5,8 @@
             <mat-icon>add</mat-icon>
         </button>
     </div>
-    <div class="printer-consumables" *ngFor="let consumable of product.consumibles">
-        <div class="consumable">
+    <div class="printer-consumables" *ngIf="product.consumibles.length >= 1">
+        <div class="consumable" *ngFor="let consumable of product.consumibles">
             <div class="consumable-image-container">
                 <img class="consumable-image" [src]="consumable.img_url" alt="Imagen consumible" />
             </div>

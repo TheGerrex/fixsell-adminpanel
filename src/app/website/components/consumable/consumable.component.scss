@@ -3,20 +3,16 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 1em;
-    background-color: #fff;
     border: 1px solid $gray-300;
     border-radius: $border-radius;
-    padding-bottom: 1em;
     .printer-consumable-header {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         padding: 1em;
-        border-bottom: 1px solid $gray-300;
         background-color: $gray-50;
-        border-radius: $border-radius $border-radius 0 0;
+        border-radius: $border-radius;
         h4 {
             margin: 0;
         }
@@ -27,11 +23,12 @@
     .printer-consumables {
         display: flex;
         gap: 1em;
-        padding: 0em 1em;
+        padding: 1em;
         width: 100%;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        border-top: 1px solid $gray-300;
         @media(max-width: 1024px) {
             flex-direction: column;
         }

@@ -55,7 +55,7 @@ export class BrandCrudComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.brandsDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   deleteBrand(id: number, brand: Brand) {

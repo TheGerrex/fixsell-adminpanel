@@ -33,7 +33,7 @@ type Breadcrumb = { label: string; url: string };
         margin-bottom: 16px;
         align-items: center;
         height: auto;
-        background-color: #f9fafb;
+        background-color: #fff;
         padding: 8px 16px;
         border-radius: 4px;
         border: 1px solid #d1d5db;

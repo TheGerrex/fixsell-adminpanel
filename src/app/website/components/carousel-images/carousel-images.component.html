@@ -1,0 +1,19 @@
+<div class="carousel">
+    <div class="image-container">
+        <div class="default-image" *ngIf="!product.img_url[currentImageIndex]">
+            <mat-icon>image</mat-icon>
+        </div>
+        <img *ngIf="product.img_url[currentImageIndex]" [src]="product.img_url[currentImageIndex]" alt="product-image" />
+        <div class="button-container" *ngIf="product.img_url[currentImageIndex]">
+            <button class="button button-icon" (click)="prevImage()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+            <div class="dot-container">
+                <span class="dot" *ngFor="let img of product.img_url; let i = index" [class.active]="i === currentImageIndex"></span>
+            </div>
+            <button class="button button-icon" (click)="nextImage()">
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+        </div>
+    </div>
+</div>

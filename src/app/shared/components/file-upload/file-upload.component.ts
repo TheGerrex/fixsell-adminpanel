@@ -17,10 +17,10 @@ export class FileUploadComponent {
   // event emitter for file upload
   @Output() fileUpload = new EventEmitter<any>();
 
-  @Input() rootFolder: string = '';
+  @Input() productFolder: string = '';
+  @Input() typeFolder: string = '';
   @Input() printer?: Printer;
   @Input() consumible?: Consumible;
-  @Input() file_type: string = '';
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
@@ -35,31 +35,43 @@ export class FileUploadComponent {
   }
 
   onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging = false; // Set isDragging to false when drop event occurs
+  event.preventDefault();
+  this.isDragging = false; // Set isDragging to false when drop event occurs
 
-    if (event.dataTransfer) {
-      const files = event.dataTransfer.files;
+  if (event.dataTransfer) {
+    const files = event.dataTransfer.files;
 
-      if (files.length && this.printer) {
+    if (files.length) {
+      if (this.printer) {
         this.uploadFiles(
           files,
-          this.rootFolder,
+          this.productFolder,
+          this.typeFolder,
           this.printer?.brand || '',
           this.printer?.model || ''
         );
-      }
-
-      if (files.length && this.consumible) {
+      } else if (this.consumible) {
         this.uploadFiles(
           files,
-          this.rootFolder,
+          this.productFolder,
+          this.typeFolder,
           this.consumible?.brand || '',
           this.consumible?.name || ''
+        );
+      } else {
+        // Upload files to a temporary folder if printer or consumible is not yet available
+        console.log('Uploading to temporary folder');
+        this.uploadFiles(
+          files,
+          this.productFolder,
+          this.typeFolder,
+          '',
+          ''
         );
       }
     }
   }
+}
 
   onFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
@@ -68,16 +80,18 @@ export class FileUploadComponent {
     if (files && this.printer) {
       this.uploadFiles(
         files,
-        this.rootFolder,
-        this.printer?.brand || '',
-        this.printer?.model || ''
+        this.productFolder,
+        this.typeFolder,
+        this.consumible?.brand || '',
+        this.consumible?.name || ''
       );
     }
 
     if (files && this.consumible) {
       this.uploadFiles(
         files,
-        this.rootFolder,
+        this.productFolder,
+        this.typeFolder,
         this.consumible?.brand || '',
         this.consumible?.name || ''
       );
@@ -86,21 +100,24 @@ export class FileUploadComponent {
 
   uploadFiles(
     files: FileList,
-    rootFolder: string,
-    brand: string,
-    model: string
+    productFolder: string,
+    typeFolder: string,
+    brandFolder: string,
+    modelFolder: string
   ) {
     this.isUploading = true; // Set isUploading to true when upload starts
 
     console.log(files);
-    console.log(rootFolder);
-    console.log(brand);
-    console.log(model);
+    console.log(productFolder);
+    console.log(typeFolder);
+    console.log(brandFolder);
+    console.log(modelFolder);
 
     const formData = new FormData();
-    formData.append('rootFolder', rootFolder);
-    formData.append('subRootfolder', brand);
-    formData.append('childFolder', model);
+    formData.append('productFolder', productFolder);
+    formData.append('typeFolder', typeFolder);
+    formData.append('brandFolder', brandFolder);
+    formData.append('modelFolder', modelFolder);
 
     for (let i = 0; i < files.length; i++) {
       formData.append('image', files[i], files[i].name);

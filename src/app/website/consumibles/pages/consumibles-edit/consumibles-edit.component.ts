@@ -21,6 +21,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable, map, startWith, switchMap } from 'rxjs';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
+import { Brand } from '../../../config/components/printer-tab/brand-crud/brand.interface';
 
 @Component({
   selector: 'app-consumibles-edit',
@@ -33,6 +34,7 @@ export class ConsumiblesEditComponent implements OnInit {
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
   Consumible: Consumible | undefined = undefined;
+  public consumibles: Consumible[] = [];
 
   constructor(
     private toastService: ToastService,
@@ -57,6 +59,11 @@ export class ConsumiblesEditComponent implements OnInit {
         )
       )
     );
+    this.ConsumiblesService.getAllConsumibles().subscribe(
+      (consumibles: Consumible[]) => {
+        this.consumibles = consumibles;
+      }
+    );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
@@ -65,6 +72,7 @@ export class ConsumiblesEditComponent implements OnInit {
       printerName.toLowerCase().includes(filterValue)
     );
   }
+
   getConsumible() {
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
@@ -92,11 +100,12 @@ export class ConsumiblesEditComponent implements OnInit {
         });
     }
   }
+
   initalizeForm() {
     console.log('initializing form');
     this.editConsumibleForm = this.fb.group({
       name: [
-        { value: this.Consumible ? this.Consumible.name : '', disabled: true },
+        this.Consumible ? this.Consumible.name : '', [Validators.required]
       ],
       price: [
         this.Consumible ? this.Consumible.price : '',
@@ -110,14 +119,12 @@ export class ConsumiblesEditComponent implements OnInit {
         this.Consumible ? this.Consumible.brand : '',
         Validators.required,
       ],
-      sku: [this.Consumible ? this.Consumible.sku : '', Validators.required],
+      sku: [this.Consumible ? this.Consumible.sku : ''],
       shortDescription: [
         this.Consumible ? this.Consumible.shortDescription : '',
-        Validators.required,
       ],
       longDescription: [
         this.Consumible ? this.Consumible.longDescription : '',
-        Validators.required,
       ],
       img_url: this.fb.array(
         this.Consumible
@@ -132,7 +139,6 @@ export class ConsumiblesEditComponent implements OnInit {
       ],
       volume: [
         this.Consumible ? Number(this.Consumible.volume) : 0,
-        Validators.required,
       ],
       compatibleModels: this.fb.array(
         this.Consumible
@@ -152,12 +158,11 @@ export class ConsumiblesEditComponent implements OnInit {
       ],
       yield: [
         this.Consumible ? this.Consumible.yield : '',
-        Validators.required,
       ],
       printers: this.fb.array(
         this.Consumible ? this.Consumible.printers || [] : []
       ),
-      counterpart: [this.Consumible ? this.Consumible.counterpart : ''],
+      counterpart: [this.Consumible ? this.Consumible.counterpart?.brand : ''],
     });
   }
 
@@ -371,7 +376,7 @@ export class ConsumiblesEditComponent implements OnInit {
     const printersIds = await Promise.all(printerIdsPromises);
 
     // Convert counterpart to counterpartId
-    const counterpartName = formData.counterpart;
+    const counterpartName = formData.counterpart.brand;
     if (counterpartName) {
       // Replace counterpart with counterpartId in the form data
       const counterpartId = counterpartName;

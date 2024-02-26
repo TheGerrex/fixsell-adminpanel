@@ -353,8 +353,10 @@ export class ConsumiblesCreateComponent implements OnInit {
     formData.printersIds = printersIds; // add the new property
     this.isLoadingForm = true;
 
+    console.log('formData:', formData);
     this.ConsumiblesService.createConsumible(formData).subscribe(
       (response) => {
+        console.log('Response:', response);
         this.isLoadingForm = false;
         this.toastService.showSuccess('Consumible creado', 'Cerrar'); // Show success toast
         this.router.navigate(['/website/consumibles', response.id]);

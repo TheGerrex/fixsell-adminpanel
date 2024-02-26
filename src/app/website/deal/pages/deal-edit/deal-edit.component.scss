@@ -1,0 +1,36 @@
+@import "_variables.scss";
+.deal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  padding: 1em;
+}
+
+.deal-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  flex-wrap: wrap;
+  // @media(max-width: 320px) {
+  //     flex-direction: column;
+  //     gap: 1em;
+  //     align-items: flex-start;
+  // }
+  h2 {
+    margin: 0;
+  }
+  button {
+    flex-shrink: 0;
+  }
+}
+
+.currency-select {
+  border: none;
+  background-color: transparent;
+}

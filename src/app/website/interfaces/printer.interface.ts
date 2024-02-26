@@ -36,8 +36,10 @@ export interface Deal {
   dealEndDate: Date;
   dealStartDate: Date;
   dealPrice: string;
+  dealCurrency: string;
   dealDiscountPercentage: string;
   dealDescription: string;
+  printer: Printer;
 }
 
 export interface Package {

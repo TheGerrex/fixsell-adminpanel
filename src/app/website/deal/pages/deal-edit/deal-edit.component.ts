@@ -14,6 +14,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 })
 export class DealEditComponent implements OnInit {
   deal: Deal | null = null;
+  isLoadingForm = false;
 
   public editDealForm!: FormGroup;
 
@@ -27,9 +28,11 @@ export class DealEditComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.editDealForm = this.fb.group({
+      printer: ['', Validators.required],
       dealStartDate: ['', Validators.required],
       dealEndDate: ['', Validators.required],
       dealPrice: ['', Validators.required],
+      dealCurrency: ['', Validators.required],
       dealDiscountPercentage: ['', Validators.required],
       dealDescription: ['', Validators.required],
     });
@@ -49,6 +52,9 @@ export class DealEditComponent implements OnInit {
 
   initializeForm() {
     this.editDealForm = this.fb.group({
+      printer: [
+        { value: this.deal ? this.deal.printer.model : '', disabled: true },
+      ],
       dealStartDate: [
         this.deal ? this.formatDate(this.deal.dealStartDate) : '',
         Validators.required,
@@ -60,6 +66,10 @@ export class DealEditComponent implements OnInit {
       ],
 
       dealPrice: [this.deal ? this.deal.dealPrice : '', Validators.required],
+      dealCurrency: [
+        this.deal ? this.deal.dealCurrency : '',
+        Validators.required,
+      ],
       dealDiscountPercentage: [
         this.deal ? this.deal.dealDiscountPercentage : '',
         Validators.required,

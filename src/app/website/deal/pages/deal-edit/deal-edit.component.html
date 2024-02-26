@@ -1,9 +1,40 @@
-<form [formGroup]="editDealForm" (ngSubmit)="submitForm()">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealStartDate">Fecha de Inico</label>
+<div>
+  <form
+    [formGroup]="editDealForm"
+    (ngSubmit)="submitForm()"
+    class="deal-container"
+  >
+    <div class="deal-header">
+      <h2>Editar Promocion</h2>
+      <button
+        type="submit"
+        class="button button-primary button-raised"
+        (click)="submitForm()"
+      >
+        <span class="button-label">Realizar Cambios</span>
+      </button>
+    </div>
+
+    <div class="loading-container" *ngIf="isLoadingForm">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <div class="deal-info">
+      <div class="deal-form-container">
+        <!-- printer -->
+        <div class="deal-data-item">
+          <h5>Equipo</h5>
+          <input
+            type="text"
+            class="form-control"
+            id="printer"
+            formControlName="printer"
+          />
+        </div>
+
+        <!-- deal start date -->
+        <div class="deal-data-item">
+          <h5>Fecha de Inicio</h5>
           <input
             type="date"
             class="form-control"
@@ -11,10 +42,10 @@
             formControlName="dealStartDate"
           />
         </div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealEndDate">Fecha de Finalizacion</label>
+
+        <!-- deal end date -->
+        <div class="deal-data-item">
+          <h5>Fecha de Finalizacion</h5>
           <input
             type="date"
             class="form-control"
@@ -22,53 +53,59 @@
             formControlName="dealEndDate"
           />
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealPrice">Precio de Promocion</label>
-          <input
-            type="number"
-            class="form-control"
-            id="dealPrice"
-            placeholder="Enter deal price"
-            formControlName="dealPrice"
-          />
+
+        <!-- deal price -->
+        <div class="printer-data-item">
+          <h5>Precio</h5>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="dealPrice"
+              [class.is-invalid]="
+                editDealForm.controls['dealPrice'].invalid &&
+                editDealForm.controls['dealPrice'].touched
+              "
+            />
+            <div class="input-group-text">
+              <select
+                class="currency-select"
+                formControlName="dealCurrency"
+                [value]="deal?.dealCurrency"
+              >
+                <option value="USD">USD</option>
+                <option value="MXN">MXN</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- deal percentage -->
+          <div class="deal-data-item">
+            <h5>Porcentaje de Descuento</h5>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                id="dealDiscountPercentage"
+                formControlName="dealDiscountPercentage"
+              />
+              <span class="input-group-text">%</span>
+            </div>
+          </div>
+
+          <!-- deal description -->
+          <div class="deal-data-item">
+            <h5>Descripcion</h5>
+            <textarea
+              class="form-control"
+              id="dealDescription"
+              rows="3"
+              formControlName="dealDescription"
+            ></textarea>
+          </div>
         </div>
       </div>
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealDiscountPercentage">Porcentage de Descuento</label>
-          <input
-            type="number"
-            class="form-control"
-            id="dealDiscountPercentage"
-            placeholder="Enter deal discount percentage"
-            formControlName="dealDiscountPercentage"
-          />
-        </div>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          <label for="dealDescription">Descripcion</label>
-          <textarea
-            class="form-control"
-            id="dealDescription"
-            rows="3"
-            formControlName="dealDescription"
-          ></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="row button-container">
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary button button-primary">
-          Actualizar Promocion
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
+  </form>
+</div>

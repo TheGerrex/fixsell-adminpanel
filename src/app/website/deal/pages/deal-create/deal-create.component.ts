@@ -100,7 +100,7 @@ export class DealCreateComponent implements OnInit {
     if (this.dealPrice.value) {
       const discount = this.printerPrice - Number(this.dealPrice.value); // Convert the deal price value to a number
       const percentage = (discount / this.printerPrice) * 100;
-      this.dealDiscountPercentage.setValue(percentage.toString()); // Convert the percentage to a string
+      this.dealDiscountPercentage.setValue(percentage.toFixed(0).toString()); // Convert the percentage to a string
     }
   }
 

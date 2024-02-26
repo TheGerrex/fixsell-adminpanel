@@ -157,7 +157,9 @@ export class ConsumiblesEditComponent implements OnInit {
       printers: this.fb.array(
         this.Consumible ? this.Consumible.printers || [] : []
       ),
-      counterpart: [this.Consumible ? this.Consumible.counterpart : ''],
+      counterpartId: [
+        this.Consumible ? this.Consumible.counterpart?.brand : '',
+      ],
     });
   }
 

@@ -15,7 +15,10 @@
     </div>
   </div>
   <div class="table-action-buttons">
-    <app-export [data]="packageData" [ignoreFields]="['id']"></app-export>
+    <website-export
+      [data]="packageData"
+      [ignoreFields]="['id']"
+    ></website-export>
     <button
       class="button button-primary button-raised button-icon-text"
       (click)="addPackage()"

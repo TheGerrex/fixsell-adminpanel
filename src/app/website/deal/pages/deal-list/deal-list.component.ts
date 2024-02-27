@@ -22,8 +22,9 @@ export class DealListComponent {
     'model',
     'dealDiscountPercentage',
     // 'color',
-    'dealPrice',
     'price',
+    'dealPrice',
+    'dealCurrency',
     'action',
   ];
   dataSource = new MatTableDataSource<Printer>();
@@ -63,8 +64,9 @@ export class DealListComponent {
       this.displayedColumns = [
         'brand',
         'model',
-        'dealPrice',
         'price',
+        'dealPrice',
+        'dealCurrency',
         'dealDiscountPercentage',
       ];
     }

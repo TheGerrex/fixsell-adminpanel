@@ -29,6 +29,7 @@ export class DealEditComponent implements OnInit {
   ) {
     this.editDealForm = this.fb.group({
       printer: ['', Validators.required],
+      printerPrice: ['', Validators.required],
       dealStartDate: ['', Validators.required],
       dealEndDate: ['', Validators.required],
       dealPrice: ['', Validators.required],
@@ -54,6 +55,9 @@ export class DealEditComponent implements OnInit {
     this.editDealForm = this.fb.group({
       printer: [
         { value: this.deal ? this.deal.printer.model : '', disabled: true },
+      ],
+      printerPrice: [
+        { value: this.deal ? this.deal.printer.price : '', disabled: true },
       ],
       dealStartDate: [
         this.deal ? this.formatDate(this.deal.dealStartDate) : '',
@@ -121,7 +125,7 @@ export class DealEditComponent implements OnInit {
       (response) => {
         console.log('Response:', response);
         this.toastService.showSuccess('Deal updated successfully', 'OK'); // Show success toast
-        this.router.navigate(['deal-detail', dealId]);
+        this.router.navigate(['/website/deals']);
       },
       (error) => {
         console.error('Error:', error);

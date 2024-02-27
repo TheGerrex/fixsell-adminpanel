@@ -34,3 +34,92 @@
   border: none;
   background-color: transparent;
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.deal-data-item textarea {
+  min-height: 8em !important;
+}
+
+.deal-info {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 1920px;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+  .carousel {
+    display: flex;
+    flex-direction: column;
+    .image-container {
+      width: 100%;
+      border: 1px solid $gray-300;
+      border-radius: $border-radius;
+      background-color: #f8fafc;
+      text-align: center;
+      img {
+        width: 300px;
+      }
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1em;
+      gap: 1em;
+      button {
+        width: 100%;
+      }
+    }
+  }
+  .deal-images {
+    width: 100%;
+    max-width: 500px;
+    align-self: flex-start;
+    @media (max-width: 1024px) {
+      max-width: 100%;
+    }
+  }
+  .deal-form-container {
+    width: 100%;
+    max-width: 768px;
+    align-self: flex-start;
+    .deal-data {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(250px, 1fr));
+      row-gap: 1em;
+      column-gap: 1em;
+      .deal-data-item {
+        min-height: 50px;
+        p {
+          margin-bottom: 0;
+        }
+        @media (max-width: 600px) {
+          grid-column: 1 / -1;
+          gap: 1em;
+          // row-gap: 1em;
+        }
+      }
+      .full-row {
+        grid-column: 1 / -1; // This will make the description item span the entire row
+      }
+      .half-row {
+        grid-column: span 2; // This will make the description item span half row
+      }
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        row-gap: 1em;
+        column-gap: 0em;
+      }
+    }
+  }
+}

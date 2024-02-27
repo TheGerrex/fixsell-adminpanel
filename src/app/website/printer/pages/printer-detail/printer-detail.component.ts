@@ -26,21 +26,6 @@ export class PrinterDetailComponent implements OnInit {
     this.getPrinter();
   }
 
-  prevImage(): void {
-    if (this.currentImageIndex > 0) {
-      this.currentImageIndex--;
-    }
-  }
-
-  nextImage(): void {
-    if (
-      this.printer &&
-      this.currentImageIndex < this.printer.img_url.length - 1
-    ) {
-      this.currentImageIndex++;
-    }
-  }
-
   getPrinter(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

@@ -40,6 +40,8 @@ export class ConsumiblesCreateComponent implements OnInit {
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
   public consumibles: Consumible[] = [];
+  Consumible: Consumible | undefined = undefined;
+  isLoadingForm = false;
   constructor(
     private toastService: ToastService,
     private router: Router,
@@ -77,19 +79,19 @@ export class ConsumiblesCreateComponent implements OnInit {
   initalizeForm() {
     this.createConsumibleForm = this.fb.group({
       name: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0.01)]],
+      price: [null, [Validators.required, Validators.min(0.01)]],
       currency: ['USD', Validators.required],
       brand: ['', [Validators.required]],
       sku: [''],
       shortDescription: [''],
       longDescription: [''],
       img_url: this.fb.array([]),
-      origen: [''],
-      volume: [0],
+      origen: ['', Validators.required],
+      volume: [null],
       category: ['', Validators.required],
       compatibleModels: this.fb.array(['']),
-      color: [''],
-      yield: [''],
+      color: ['', Validators.required],
+      yield: [null],
       printers: this.fb.array([]),
       counterpart: [''],
     });
@@ -296,6 +298,8 @@ export class ConsumiblesCreateComponent implements OnInit {
           return 'Este campo esta en formato incorrecto';
         case 'maxlength':
           return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'min':
+          return `El precio tiene que ser minimo ${errors['min'].min}`;
         default:
           return 'Error desconocido';
       }
@@ -347,16 +351,21 @@ export class ConsumiblesCreateComponent implements OnInit {
     // Replace printer names with IDs in the form data
     delete formData.printers; // delete the old property
     formData.printersIds = printersIds; // add the new property
+    this.isLoadingForm = true;
 
+    console.log('formData:', formData);
     this.ConsumiblesService.createConsumible(formData).subscribe(
       (response) => {
-        this.toastService.showSuccess('Consumible created successfully', 'OK'); // Show success toast
-        this.router.navigate(['/website/consumibles']);
+        console.log('Response:', response);
+        this.isLoadingForm = false;
+        this.toastService.showSuccess('Consumible creado', 'Cerrar'); // Show success toast
+        this.router.navigate(['/website/consumibles', response.id]);
       },
       (error) => {
         console.log(error);
         //log object to console
         console.log(formData);
+        this.isLoadingForm = false;
         this.toastService.showError(
           'There was an error: ' + error.error.message + '. Please try again.',
           'error-snackbar'

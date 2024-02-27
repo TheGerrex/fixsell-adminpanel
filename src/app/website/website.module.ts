@@ -6,10 +6,27 @@ import { AngularMaterialModule } from '../shared/angular-material/angular-materi
 import { InputChipsComponent } from './components/input-chips/input-chips.component';
 import { DealsComponent } from './components/deals/deals.component';
 import { ConsumableComponent } from './components/consumable/consumable.component';
+import { CarouselImagesComponent } from './components/carousel-images/carousel-images.component';
 
 @NgModule({
-  declarations: [ProductImageGridComponent, InputChipsComponent, DealsComponent, ConsumableComponent],
-  imports: [CommonModule, WebsiteRoutingModule, AngularMaterialModule],
-  exports: [ProductImageGridComponent, InputChipsComponent, DealsComponent, ConsumableComponent],
+  declarations: [
+    ProductImageGridComponent, 
+    InputChipsComponent, 
+    DealsComponent, 
+    ConsumableComponent, 
+    CarouselImagesComponent
+  ],
+  imports: [
+    CommonModule, 
+    WebsiteRoutingModule, 
+    AngularMaterialModule
+  ],
+  exports: [
+    ProductImageGridComponent, 
+    InputChipsComponent, 
+    DealsComponent, 
+    ConsumableComponent, 
+    CarouselImagesComponent
+  ],
 })
 export class WebsiteModule {}

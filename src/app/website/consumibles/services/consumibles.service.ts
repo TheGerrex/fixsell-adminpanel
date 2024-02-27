@@ -100,4 +100,19 @@ export class ConsumiblesService {
       .get<Consumible>(`${environment.baseUrl}/consumibles/${id}`)
       .pipe(map((consumible) => consumible.name));
   }
+
+  // get getCounterpartIdByName
+  getCounterpartIdByName(name: string): Observable<string> {
+    return this.http
+      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
+      .pipe(
+        map((consumibles: Consumible[]) => {
+          const consumible = consumibles.find(
+            (consumible) => consumible.name === name
+          );
+          return consumible ? consumible.id : '';
+        }),
+        map((id) => id || '') // provide a default value when id is undefined
+      );
+  }
 }

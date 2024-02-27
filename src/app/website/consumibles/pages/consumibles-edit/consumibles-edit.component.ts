@@ -33,6 +33,7 @@ export class ConsumiblesEditComponent implements OnInit {
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
   Consumible: Consumible | undefined = undefined;
+  public consumibles: Consumible[] = [];
 
   constructor(
     private toastService: ToastService,
@@ -56,6 +57,11 @@ export class ConsumiblesEditComponent implements OnInit {
           map((printerNames) => this._filter(value, printerNames))
         )
       )
+    );
+    this.ConsumiblesService.getAllConsumibles().subscribe(
+      (consumibles: Consumible[]) => {
+        this.consumibles = consumibles;
+      }
     );
   }
 
@@ -157,10 +163,14 @@ export class ConsumiblesEditComponent implements OnInit {
       printers: this.fb.array(
         this.Consumible ? this.Consumible.printers || [] : []
       ),
-      counterpartId: [
-        this.Consumible ? this.Consumible.counterpart?.brand : '',
-      ],
+      counterpart: [this.Consumible?.counterpart?.name || ''],
     });
+    console.log('this.Consumible:', this.Consumible);
+    console.log('this.Consumible.counterpart:', this.Consumible?.counterpart);
+    console.log(
+      'this.Consumible.counterpart.name:',
+      this.Consumible?.counterpart?.name
+    );
   }
 
   openConfirmDialog(index: number): void {
@@ -374,9 +384,15 @@ export class ConsumiblesEditComponent implements OnInit {
 
     // Convert counterpart to counterpartId
     const counterpartName = formData.counterpart;
+    console.log('counterpartName:', counterpartName);
     if (counterpartName) {
-      // Replace counterpart with counterpartId in the form data
-      const counterpartId = counterpartName;
+      console.log('counterpartName:', counterpartName);
+      // Fetch the ID of the counterpart from the backend
+      const counterpartId =
+        await this.ConsumiblesService.getCounterpartIdByName(
+          counterpartName
+        ).toPromise();
+      console.log('counterpartId:', counterpartId);
       delete formData.counterpart; // delete the old property
       formData.counterpartId = counterpartId; // add the new property
     } else {

@@ -8,25 +8,7 @@
     <div class="printer-info">
         <div class="printer-info-container">
             <div class="printer-data-container">
-                <div class="carousel">
-                    <div class="image-container">
-                        <div class="default-image" *ngIf="!printer.img_url[currentImageIndex]">
-                            <mat-icon>image</mat-icon>
-                        </div>
-                        <img *ngIf="printer.img_url[currentImageIndex]" [src]="printer.img_url[currentImageIndex]" alt="printer-image" />
-                        <div class="button-container" *ngIf="printer.img_url[currentImageIndex]">
-                            <button class="button button-icon" (click)="prevImage()">
-                      <mat-icon>arrow_back</mat-icon>
-                    </button>
-                            <div class="dot-container">
-                                <span class="dot" *ngFor="let img of printer.img_url; let i = index" [class.active]="i === currentImageIndex"></span>
-                            </div>
-                            <button class="button button-icon" (click)="nextImage()">
-                      <mat-icon>arrow_forward</mat-icon>
-                    </button>
-                        </div>
-                    </div>
-                </div>
+                <website-carousel-images [product]="printer"></website-carousel-images>
                 <div class="printer-data">
                     <div class="printer-data-item">
                         <h5>Marca</h5>

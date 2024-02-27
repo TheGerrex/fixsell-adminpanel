@@ -73,11 +73,20 @@ export class FileUploadComponent {
   }
 }
 
-  onFileSelected(event: Event) {
-    const fileInput = event.target as HTMLInputElement;
-    const files: FileList | null = fileInput.files || null;
+onFileSelected(event: Event) {
+  const fileInput = event.target as HTMLInputElement;
+  const files: FileList | null = fileInput.files || null;
 
-    if (files && this.printer) {
+  if (files && files.length) {
+    if (this.printer) {
+      this.uploadFiles(
+        files,
+        this.productFolder,
+        this.typeFolder,
+        this.printer?.brand || '',
+        this.printer?.model || ''
+      );
+    } else if (this.consumible) {
       this.uploadFiles(
         files,
         this.productFolder,
@@ -85,18 +94,19 @@ export class FileUploadComponent {
         this.consumible?.brand || '',
         this.consumible?.name || ''
       );
-    }
-
-    if (files && this.consumible) {
+    } else {
+      // Upload files to a temporary folder if printer or consumible is not yet available
+      console.log('Uploading to temporary folder');
       this.uploadFiles(
         files,
         this.productFolder,
         this.typeFolder,
-        this.consumible?.brand || '',
-        this.consumible?.name || ''
+        '',
+        ''
       );
     }
   }
+}
 
   uploadFiles(
     files: FileList,

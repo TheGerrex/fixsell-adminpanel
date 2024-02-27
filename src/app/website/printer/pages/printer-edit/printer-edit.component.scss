@@ -2,11 +2,9 @@
 .printer-container {
     display: flex;
     flex-direction: column;
-    gap: 2em;
     background-color: #fff;
     border-radius: $border-radius;
     border: 1px solid $gray-300;
-    padding: 1em;
 }
 
 .printer-header {
@@ -14,14 +12,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     padding-bottom: 0.5em;
     border-bottom: 1px solid $gray-300;
-    flex-wrap: wrap;
-    // @media(max-width: 320px) {
-    //     flex-direction: column;
-    //     gap: 1em;
-    //     align-items: flex-start;
-    // }
+    background-color: $gray-50;
+    padding: 1em;
     h2 {
         margin: 0;
     }
@@ -42,32 +37,10 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    max-width: 1920px;
+    padding: 1em;
+    // max-width: 1920px;
     @media (max-width: 1024px) {
         flex-direction: column;
-    }
-    .carousel {
-        display: flex;
-        flex-direction: column;
-        .image-container {
-            width: 100%;
-            border: 1px solid $gray-300;
-            border-radius: $border-radius;
-            background-color: #f8fafc;
-            text-align: center;
-            img {
-                width: 300px;
-            }
-        }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1em;
-            gap: 1em;
-            button {
-                width: 100%;
-            }
-        }
     }
     .printer-images {
         width: 100%;

@@ -58,6 +58,7 @@ export class PrinterCreateComponent implements OnInit {
     this.printerService.getBrands().subscribe(
       (brands: string[]) => {
         this.brands = brands;
+        console.log('brands:', brands);
       },
       (error) => {
         console.error('Error fetching brands', error);

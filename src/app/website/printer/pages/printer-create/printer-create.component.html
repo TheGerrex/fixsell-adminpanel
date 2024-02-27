@@ -14,14 +14,14 @@
                 <app-file-upload (fileUpload)="onFileUploaded($event)" [productFolder]="'Multifuncionales'" [typeFolder]="'imagenes'"></app-file-upload>
                 <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
             </div>
-            <div class="printer-data-container">
+            <div class="printer-form-container">
                 <div class="printer-data">
                     <div class="printer-data-item">
                         <h5>Marca</h5>
                         <select formControlName="brand" class="form-select" (change)="brandSelected($event)" [class.is-invalid]="
-                createPrinterForm.controls['brand'].invalid &&
-                createPrinterForm.controls['brand'].touched
-              ">
+                          createPrinterForm.controls['brand'].invalid &&
+                          createPrinterForm.controls['brand'].touched
+                        ">
               <option
                 value="null"
                 disabled
@@ -286,7 +286,7 @@
             <!-- <input formControlName="datasheet" class="form-control" type="file" [class.is-invalid]="createPrinterForm.controls['datasheet'].invalid && createPrinterForm.controls['datasheet'].touched"> -->
             <product-pdf-upload
               (fileUpload)="onFileUploaded($event)"
-              [rootFolder]="'datasheets'"
+              [productFolder]="'Multifuncionales'" [typeFolder]="'datasheets'"
             ></product-pdf-upload>
             <span
               *ngIf="isValidField('datasheet_url')"

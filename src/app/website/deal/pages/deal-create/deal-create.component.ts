@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { Printer } from '../../../interfaces/printer.interface';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Deal, Printer } from '../../../interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
-import { FormControl } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-/* 
-TODO 1: add user input validation
-TODO 2: add error handling
-TODO 3: add success message
-TODO 4: add loading indicator
-TODO 5: add confirmation dialog 
-TODO 6: add better front end design
-*/
+import { SharedService } from 'src/app/shared/services/shared.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-deal-create',
@@ -22,135 +23,146 @@ TODO 6: add better front end design
   styleUrls: ['./deal-create.component.scss'],
 })
 export class DealCreateComponent implements OnInit {
-  printerNames: string[] = [];
-  selectedPrinter = new FormControl(''); // form control for the printer dropdown
-  printerPrice: number = 0; // initialize the printerPrice property with a default value of 0
-  dealDiscountPercentage = new FormControl('');
-  dealPrice = new FormControl('');
-  dealStartDate = new FormControl('');
-  dealEndDate = new FormControl('');
-  dealDescription = new FormControl('');
+  public createDealForm!: FormGroup;
+  deal: Deal | null = null;
   isLoadingForm = false;
-  filteredPrinterNames: Observable<string[]> = new Observable<string[]>();
+
+  // filter printers
+  printerControl = new FormControl();
+  printerPrice: number = 0;
+
+  printerNameControl = new FormControl();
+  filteredPrinterNames: Observable<string[]> | undefined;
 
   constructor(
-    private DealService: DealService,
-    private toastService: ToastService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sharedService: SharedService,
+    private dealService: DealService,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private validatorsService: ValidatorsService
   ) {}
 
   ngOnInit() {
-    this.filteredPrinterNames = this.selectedPrinter.valueChanges.pipe(
+    this.initializeForm();
+
+    this.filteredPrinterNames = this.printerControl.valueChanges.pipe(
       startWith(''),
-      map((value) => this._filter(value ?? ''))
+      switchMap((value) =>
+        this.dealService
+          .getAllPrinterNames()
+          .pipe(map((printerNames) => this._filter(value, printerNames)))
+      )
     );
+  }
 
-    const printerId = this.route.snapshot.paramMap.get('id');
-
-    this.DealService.getAllPrinterNames().subscribe(
-      (printerNames: string[]) => {
-        this.printerNames = printerNames;
-
-        if (printerId) {
-          // If a printer id is present in the URL, find the printer name with that id
-          const printerName = this.printerNames.find(
-            (name) => name === printerId
-          );
-
-          if (printerName) {
-            // If a printer with the specified id is found, select it
-            this.selectedPrinter.setValue(printerName);
-          }
-        }
-      }
+  private _filter(value: string, printerNames: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return printerNames.filter((printerName) =>
+      printerName.toLowerCase().includes(filterValue)
     );
+  }
 
-    // subscribe to the value changes of the printer dropdown
-    this.selectedPrinter.valueChanges.subscribe((name: string | null) => {
-      if (name !== null) {
-        this.DealService.findPrinterPriceByName(name).subscribe(
-          (price: number) => {
-            this.printerPrice = price; // store the price in a variable
-            console.log('printer price: ', this.printerPrice);
-          }
-        );
-      }
+  initializeForm() {
+    this.createDealForm = this.fb.group({
+      printer: ['', Validators.required],
+      printerPrice: [{ value: '', disabled: true }, Validators.required],
+      dealStartDate: ['', Validators.required],
+      dealEndDate: ['', Validators.required],
+      dealPrice: ['', Validators.required],
+      dealCurrency: ['', Validators.required],
+      dealDiscountPercentage: ['', Validators.required],
+      dealDescription: ['', Validators.required],
     });
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  addPrinterFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
+    const value = event.option.viewValue;
+    this.addPrinter(value);
+  }
 
-    return this.printerNames.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+  addPrinter(printerName: string = ''): void {
+    if (printerName === '') {
+      printerName = this.printerNameControl.value;
+    }
+    this.dealService.getPrinterPrice(printerName).subscribe(
+      (price) => {
+        this.printerPrice = price;
+        this.printerControl.setValue(printerName);
+        this.createDealForm.controls['printer'].setValue(printerName);
+        this.createDealForm.controls['printerPrice'].setValue(price);
+      },
+      (error) => {
+        console.error(error);
+        this.toastService.showError(
+          'Hubo un error: ' +
+            error.error.message +
+            '. Por favor, intenta de nuevo.',
+          'error-snackbar'
+        );
+      }
     );
   }
 
   calculatePrice() {
-    if (this.dealDiscountPercentage.value) {
+    if (this.createDealForm.get('dealDiscountPercentage')?.value) {
       const discount =
-        Number(this.printerPrice) *
-        (Number(this.dealDiscountPercentage.value) / 100);
-      this.dealPrice.setValue((this.printerPrice - discount).toString()); // Convert the calculated price to a string
+        Number(this.createDealForm.get('printerPrice')?.value) *
+        (Number(this.createDealForm.get('dealDiscountPercentage')?.value) /
+          100);
+      this.createDealForm
+        .get('dealPrice')
+        ?.setValue(
+          (
+            Number(this.createDealForm.get('printerPrice')?.value) - discount
+          ).toString()
+        ); // Convert the calculated price to a string
     }
   }
 
   calculatePercentage() {
-    if (this.dealPrice.value) {
-      const discount = this.printerPrice - Number(this.dealPrice.value); // Convert the deal price value to a number
-      const percentage = (discount / this.printerPrice) * 100;
-      this.dealDiscountPercentage.setValue(percentage.toFixed(0).toString()); // Convert the percentage to a string
+    if (this.createDealForm.get('dealPrice')?.value) {
+      const discount =
+        Number(this.createDealForm.get('printerPrice')?.value) -
+        Number(this.createDealForm.get('dealPrice')?.value); // Convert the deal price value to a number
+      const percentage =
+        (discount / Number(this.createDealForm.get('printerPrice')?.value)) *
+        100;
+      this.createDealForm
+        .get('dealDiscountPercentage')
+        ?.setValue(percentage.toFixed(0).toString()); // Convert the percentage to a string
     }
   }
 
-  setSelectedPrinter(event: any) {
-    const printerName = event.option.value;
-    this.selectedPrinter.setValue(printerName);
+  setSelectedPrinter(event: any) {}
 
-    this.DealService.findPrinterPriceByName(printerName).subscribe(
-      (price: number) => {
-        this.printerPrice = price; // store the price in a variable
-        console.log('printer price: ', this.printerPrice);
+  isValidField(field: string): boolean | null {
+    return this.validatorsService.isValidField(this.createDealForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.createDealForm.controls[field]) return null;
+
+    const errors = this.createDealForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        default:
+          return 'Error desconocido';
       }
-    );
-  }
-
-  addPromotion() {
-    if (
-      this.selectedPrinter.value &&
-      (this.dealPrice.value || this.dealDiscountPercentage.value)
-    ) {
-      const deal = {
-        dealPrice: Number(this.dealPrice.value),
-        dealDiscountPercentage: Number(this.dealDiscountPercentage.value),
-        dealStartDate: this.dealStartDate.value,
-        dealEndDate: this.dealEndDate.value,
-        dealDescription: this.dealDescription.value,
-      };
-
-      console.log('Deal object: ', deal);
-
-      this.DealService.createDealForPrinterByName(
-        this.selectedPrinter.value,
-        deal
-      ).subscribe({
-        next: (response) => {
-          console.log('Deal created successfully', response);
-          this.toastService.showSuccess('Deal created successfully', 'OK'); // Show success toast
-          this.router.navigate(['/website/deals']); // Navigate to the deals page
-        },
-        error: (error) => {
-          console.error('Error creating deal', error);
-          this.toastService.showError('Error creating deal', 'OK'); // Show error toast
-        },
-      });
-    } else {
-      console.error('Printer name, price or discount percentage is missing');
-      this.toastService.showError(
-        'Printer name, price or discount percentage is missing',
-        'OK'
-      ); // Show error toast
     }
+    return null;
   }
+
+  submitForm() {}
 }

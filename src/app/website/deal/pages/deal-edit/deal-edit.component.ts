@@ -7,6 +7,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
 @Component({
   selector: 'app-deal-edit',
   templateUrl: './deal-edit.component.html',
@@ -25,7 +26,8 @@ export class DealEditComponent implements OnInit {
     private dealService: DealService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private validatorsService: ValidatorsService
   ) {
     this.editDealForm = this.fb.group({
       printer: ['', Validators.required],
@@ -100,6 +102,60 @@ export class DealEditComponent implements OnInit {
 
   logFormData() {
     console.log(this.editDealForm.value);
+  }
+
+  calculatePrice() {
+    if (this.editDealForm.get('dealDiscountPercentage')?.value) {
+      const discount =
+        Number(this.editDealForm.get('printerPrice')?.value) *
+        (Number(this.editDealForm.get('dealDiscountPercentage')?.value) / 100);
+      this.editDealForm
+        .get('dealPrice')
+        ?.setValue(
+          (
+            Number(this.editDealForm.get('printerPrice')?.value) - discount
+          ).toString()
+        ); // Convert the calculated price to a string
+    }
+  }
+
+  calculatePercentage() {
+    if (this.editDealForm.get('dealPrice')?.value) {
+      const discount =
+        Number(this.editDealForm.get('printerPrice')?.value) -
+        Number(this.editDealForm.get('dealPrice')?.value); // Convert the deal price value to a number
+      const percentage =
+        (discount / Number(this.editDealForm.get('printerPrice')?.value)) * 100;
+      this.editDealForm
+        .get('dealDiscountPercentage')
+        ?.setValue(percentage.toFixed(0).toString()); // Convert the percentage to a string
+    }
+  }
+
+  isValidField(field: string): boolean | null {
+    return this.validatorsService.isValidField(this.editDealForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.editDealForm.controls[field]) return null;
+
+    const errors = this.editDealForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
   }
 
   submitForm() {

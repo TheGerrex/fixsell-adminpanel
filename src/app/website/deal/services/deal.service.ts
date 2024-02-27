@@ -67,7 +67,20 @@ export class DealService {
       })
     );
   }
-
+  getPrinterPrice(name: string): Observable<number> {
+    return this.findPrinterIdByName(name).pipe(
+      switchMap((id) => {
+        if (id) {
+          return this.http.get<Printer>(
+            `${environment.baseUrl}/printers/${id}`
+          );
+        } else {
+          throw new Error('Printer not found');
+        }
+      }),
+      map((printer: Printer) => printer.price)
+    );
+  }
   // delete deal by id
   deleteDealById(id: number): Observable<any> {
     return this.http.delete(`${environment.baseUrl}/deals/${id}`, {

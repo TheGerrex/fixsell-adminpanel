@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatSort } from '@angular/material/sort';
+import { ConsumiblesService } from '../../services/consumibles.service';
 
 @Component({
   selector: 'app-consumibles-list',
@@ -45,7 +46,8 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private authService: AuthService,
     private dialogService: DialogService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private consumiblesService: ConsumiblesService,
   ) {}
 
   ngOnInit() {
@@ -105,32 +107,35 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
       .afterClosed()
       .subscribe((confirmed) => {
         if (confirmed) {
-          this.http
-            .delete(`${environment.baseUrl}/consumibles/${consumible.id}`)
-            .subscribe(
-              (response) => {
-                console.log(response); // This should log "Consumible with ID x has been removed"
-                // Show a toast message after the user confirms the deletion
-                this.toastService.showSuccess(
-                  'Consumible deleted successfully',
-                  'OK'
-                );
-
-                // Remove the deleted consumible from the dataSource
-                const data = this.dataSource.data;
-                this.dataSource.data = data.filter(
-                  (c) => c.id !== consumible.id
-                );
-              },
-              (error) => {
-                console.error('Error:', error);
-                this.dialogService.openErrorDialog(
-                  'Error deleting consumible',
-                  'OK',
-                  'delete-dialog'
-                ); // Show error dialog with 'delete-dialog' class
-              }
-            );
+          if (consumible.id) {
+            this.consumiblesService.deleteConsumible(consumible.id).subscribe(
+            (response) => {
+              console.log(response); // This should log "Consumible with ID x has been removed"
+              // Show a toast message after the user confirms the deletion
+              this.toastService.showSuccess(
+                'Consumible deleted successfully',
+                'OK'
+              );
+  
+              // Remove the deleted consumible from the dataSource
+              const data = this.dataSource.data;
+              this.dataSource.data = data.filter(
+                (c) => c.id !== consumible.id
+              );
+            },
+            (error) => {
+              console.error('Error:', error);
+              this.dialogService.openErrorDialog(
+                'Error deleting consumible',
+                'OK',
+                'delete-dialog'
+              ); // Show error dialog with 'delete-dialog' class
+            }
+          );
+          } else {
+            console.error('Error: consumible.id is undefined');
+          }
+          
         }
       });
   }

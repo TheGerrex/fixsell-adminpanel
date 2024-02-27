@@ -8,8 +8,12 @@
     <div class="printer-consumables" *ngIf="product.consumibles.length >= 1">
         <div class="consumable" *ngFor="let consumable of product.consumibles">
             <div class="consumable-image-container">
-                <img class="consumable-image" [src]="consumable.img_url" alt="Imagen consumible" />
+                <img class="consumable-image" *ngIf="consumable.img_url.length > 0" [src]="consumable.img_url" alt="Imagen consumible" />
+                <div class="default-image" *ngIf="consumable.img_url.length == 0">
+                    <mat-icon>image</mat-icon>
+                </div>
             </div>
+
             <div class="consumable-content">
                 <div class="consumable-header">
                     <div class="consumable-title">
@@ -21,21 +25,21 @@
                     <mat-menu #menu="matMenu" class="export-menu">
                         <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item">
+                            <div class="menu-button-item" (click)="navigateToSeeConsumible(consumable.id)">
                                 <mat-icon>visibility</mat-icon>
                                 Ver consumible
                             </div>
                         </button>
                         <button mat-menu-item>
                         <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item">
+                            <div class="menu-button-item" (click)="navigateToEditConsumible(consumable.id)">
                                 <mat-icon style="color: #3C81F6;">edit</mat-icon>
                                 Editar consumible
                             </div>
                             </button>
                         <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item">
+                            <div class="menu-button-item" (click)="openConfirmDialog(consumable.id)">
                                 <mat-icon style="color: #ef4444;">delete</mat-icon>
                                 Borrar consumible
                             </div>
@@ -48,8 +52,8 @@
                         <p>{{ consumable.price | currency }} {{ consumable.currency }}</p>
                     </div>
                     <div class="consumable-item">
-                        <p><b>Rendimiento</b></p>
-                        <p>{{ consumable.yield }} paginas</p>
+                        <p><b>Origen</b></p>
+                        <p>{{ consumable.origen }}</p>
                     </div>
                     <div class="consumable-item">
                         <p><b>Categoria</b></p>

@@ -10,11 +10,8 @@
             <div class="deal-content">
                 <div class="deal-header">
                     <div class="deal-items">
-                        <div class="deal-item">
-                            <p><b>Fecha:</b> {{ product.deal.dealStartDate | date }} - {{ product.deal.dealEndDate | date }}</p>
-                        </div>
-                        <div class="deal-item">
-                            <p><b>Días restantes:</b> {{ getDaysLeft() }} dias</p>
+                        <div class="deal-title">
+                            <h5>Promoción</h5>
                         </div>
                     </div>
                     <button class="button-icon-option" [matMenuTriggerFor]="menu">
@@ -46,19 +43,23 @@
                 </div>
                 <div class="deal-row">
                     <div class="deal-item">
-                        <p><b>Promoción</b></p>
-                        <h3>{{ product.deal.dealPrice | currency }} USD</h3>
+                        <p><b>Precio:</b></p>
+                        <div class="deal-price-item">
+                            <h3>{{ product.deal.dealPrice | currency }} USD</h3>
+                            <p>({{ product.deal.dealDiscountPercentage }}% de descuento)</p>
+                        </div>
                     </div>
                     <div class="deal-item">
-                        <p><b>Descuento</b></p>
-                        <h3>{{ product.deal.dealDiscountPercentage }}%</h3>
-                    </div>
-                    <div class="deal-item">
-                        <p><b>Descripción</b></p>
+                        <p><b>Descripción:</b></p>
                         <p>{{ product.deal.dealDescription }}</p>
+                    </div>
+                    <div class="deal-item">
+                        <p><b>Fecha:</b> {{ product.deal.dealStartDate | date }} - {{ product.deal.dealEndDate | date }}</p>
+                    </div>
+                    <div class="deal-item">
+                        <p><b>Días restantes:</b> {{ getDaysLeft() }} dias</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

@@ -7,12 +7,18 @@ import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 import { throwError } from 'rxjs';
 import { Printer } from '../../interfaces/printer.interface';
+import { ToastService } from 'src/app/shared/services/toast.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConsumiblesService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+    private dialogService: DialogService,
+  ) {}
 
   //get all consumibles
   getAllConsumibles(): Observable<Consumible[]> {
@@ -51,12 +57,17 @@ export class ConsumiblesService {
         })
       );
   }
+
   //update consumible
   updateConsumible(consumible: Consumible, id: string): Observable<any> {
     return this.http.patch(
       `${environment.baseUrl}/consumibles/${id}`,
       consumible
     );
+  }
+
+  deleteConsumible(id: string): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}/consumibles/${id}`);
   }
 
   // get all printer names

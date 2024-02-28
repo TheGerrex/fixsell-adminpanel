@@ -1,15 +1,15 @@
 <div class="printer-consumable-container">
     <div class="printer-consumable-header">
-        <h4>Consumibles</h4>
+        <h4>Consumibles Relacionados</h4>
         <button class="button button-primary button-raised button-icon" (click)="navigateToCreateConsumible()">
             <mat-icon>add</mat-icon>
         </button>
     </div>
-    <div class="printer-consumables" *ngIf="product.consumibles.length >= 1">
-        <div class="consumable" *ngFor="let consumable of product.consumibles">
+    <div class="printer-consumables" *ngIf="product.counterpart">
+        <div class="consumable">
             <div class="consumable-image-container">
-                <img class="consumable-image" *ngIf="consumable.img_url.length > 0" [src]="consumable.img_url" alt="Imagen consumible" />
-                <div class="default-image" *ngIf="consumable.img_url.length == 0">
+                <img class="consumable-image" *ngIf="product?.counterpart?.img_url.length > 0" [src]="product?.counterpart?.img_url" alt="Imagen consumible" />
+                <div class="default-image" *ngIf="product?.counterpart?.img_url.length == 0">
                     <mat-icon>image</mat-icon>
                 </div>
             </div>
@@ -17,7 +17,7 @@
             <div class="consumable-content">
                 <div class="consumable-header">
                     <div class="consumable-title">
-                        <h5>{{ consumable.name }}</h5>
+                        <p><b>{{ product?.counterpart?.name }}</b></p>
                     </div>
                     <button class="button-icon-option" [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
@@ -25,21 +25,21 @@
                     <mat-menu #menu="matMenu" class="export-menu">
                         <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item" (click)="navigateToSeeConsumible(consumable.id)">
+                            <div class="menu-button-item" (click)="navigateToSeeConsumible(product?.counterpart?.id)">
                                 <mat-icon>visibility</mat-icon>
                                 Ver consumible
                             </div>
                         </button>
                         <button mat-menu-item>
                         <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item" (click)="navigateToEditConsumible(consumable.id)">
+                            <div class="menu-button-item" (click)="navigateToEditConsumible(product?.counterpart?.id)">
                                 <mat-icon style="color: #3C81F6;">edit</mat-icon>
                                 Editar consumible
                             </div>
                             </button>
                         <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item" (click)="openConfirmDialog(consumable.id)">
+                            <div class="menu-button-item" (click)="openConfirmDialog(product?.counterpart?.id)">
                                 <mat-icon style="color: #ef4444;">delete</mat-icon>
                                 Borrar consumible
                             </div>
@@ -49,15 +49,15 @@
                 <div class="consumable-row">
                     <div class="consumable-item">
                         <p><b>Precio</b></p>
-                        <p>{{ consumable.price | currency }} {{ consumable.currency }}</p>
+                        <p>{{ product?.counterpart?.price | currency }} {{ product?.counterpart?.currency }}</p>
                     </div>
                     <div class="consumable-item">
                         <p><b>Origen</b></p>
-                        <p>{{ consumable.origen }}</p>
+                        <p>{{ product?.counterpart?.origen }}</p>
                     </div>
                     <div class="consumable-item">
                         <p><b>Categoria</b></p>
-                        <p>{{ consumable.category }}</p>
+                        <p>{{ product?.counterpart?.category }}</p>
                     </div>
                 </div>
             </div>

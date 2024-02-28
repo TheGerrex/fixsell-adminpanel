@@ -63,9 +63,8 @@
                     border-left: 1px solid $gray-300;
                     padding: .5em 1em;
                     .consumable-title {
-                        h5 {
-                            margin: 0;
-                        }
+                        display: flex;
+                        gap: .5em;
                     }
                 }
                 .consumable-row {

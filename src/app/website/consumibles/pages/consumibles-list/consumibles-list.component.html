@@ -62,7 +62,7 @@
                 <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editConsumible(consumible)">
           <mat-icon>edit</mat-icon>
         </button>
-                <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="deleteConsumible(consumible)">
+                <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="openConfirmDialog(consumible)">
           <mat-icon>delete</mat-icon>
         </button>
             </td>

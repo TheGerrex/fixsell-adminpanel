@@ -15,6 +15,9 @@ import { environment } from 'src/environments/environment';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatSort } from '@angular/material/sort';
+import { ConsumiblesService } from '../../services/consumibles.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-consumibles-list',
@@ -45,7 +48,9 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private authService: AuthService,
     private dialogService: DialogService,
-    private toastService: ToastService
+    private dialog: MatDialog,
+    private toastService: ToastService,
+    private consumiblesService: ConsumiblesService,
   ) {}
 
   ngOnInit() {
@@ -99,39 +104,87 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  deleteConsumible(consumible: Consumible) {
-    this.dialogService
-      .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.http
-            .delete(`${environment.baseUrl}/consumibles/${consumible.id}`)
-            .subscribe(
-              (response) => {
-                console.log(response); // This should log "Consumible with ID x has been removed"
-                // Show a toast message after the user confirms the deletion
-                this.toastService.showSuccess(
-                  'Consumible deleted successfully',
-                  'OK'
-                );
+  openConfirmDialog(consumible: Consumible): void {
+    const dialogConfig = new MatDialogConfig();
 
-                // Remove the deleted consumible from the dataSource
-                const data = this.dataSource.data;
-                this.dataSource.data = data.filter(
-                  (c) => c.id !== consumible.id
-                );
-              },
-              (error) => {
-                console.error('Error:', error);
-                this.dialogService.openErrorDialog(
-                  'Error deleting consumible',
-                  'OK',
-                  'delete-dialog'
-                ); // Show error dialog with 'delete-dialog' class
-              }
-            );
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de querer eliminar esta consumible?',
+      message: 'El consumible sera eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (consumible.id){
+            this.deleteConsumible(consumible)
         }
-      });
+        
+      }
+    });
+  }
+
+  // deleteConsumible(consumible: Consumible) {
+  //   this.dialogService
+  //     .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
+  //     .afterClosed()
+  //     .subscribe((confirmed) => {
+  //       if (confirmed) {
+  //         if (consumible.id) {
+  //           this.consumiblesService.deleteConsumible(consumible.id).subscribe(
+  //           (response) => {
+  //             console.log(response); // This should log "Consumible with ID x has been removed"
+  //             // Show a toast message after the user confirms the deletion
+  //             this.toastService.showSuccess(
+  //               'Consumible deleted successfully',
+  //               'OK'
+  //             );
+  
+  //             // Remove the deleted consumible from the dataSource
+  //             const data = this.dataSource.data;
+  //             this.dataSource.data = data.filter(
+  //               (c) => c.id !== consumible.id
+  //             );
+  //           },
+  //           (error) => {
+  //             console.error('Error:', error);
+  //             this.dialogService.openErrorDialog(
+  //               'Error deleting consumible',
+  //               'OK',
+  //               'delete-dialog'
+  //             ); // Show error dialog with 'delete-dialog' class
+  //           }
+  //         );
+  //         } else {
+  //           console.error('Error: consumible.id is undefined');
+  //         }
+          
+  //       }
+  //     });
+  // }
+
+  deleteConsumible(consumible: Consumible) {
+  if (consumible.id){
+    this.consumiblesService.deleteConsumible(consumible.id).subscribe(
+      (response) => {
+        // Update consumibleData
+        this.consumibleData = this.consumibleData.filter((c) => c.id !== consumible.id);
+        
+        // Update dataSource
+        this.dataSource.data = this.consumibleData;
+
+        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 }

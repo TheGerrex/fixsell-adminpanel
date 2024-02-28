@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -8,12 +8,11 @@ import { Printer } from '../../interfaces/printer.interface';
 import { ConsumiblesService } from '../../consumibles/services/consumibles.service';
 
 @Component({
-  selector: 'website-consumable',
-  templateUrl: './consumable.component.html',
-  styleUrls: ['./consumable.component.scss']
+  selector: 'website-counterparts',
+  templateUrl: './counterparts.component.html',
+  styleUrls: ['./counterparts.component.scss']
 })
-export class ConsumableComponent {
-
+export class CounterpartsComponent implements OnInit {
   constructor(
     private router: Router,
     private toastService: ToastService,
@@ -21,13 +20,17 @@ export class ConsumableComponent {
     private consumiblesService: ConsumiblesService
   ) {}
 
+  ngOnInit(): void {
+    console.log(this.product);
+  }
+
   @Input() product: any;
 
   navigateToCreateConsumible() {
     this.router.navigate(['/website', 'consumibles', 'create']);
   }
   navigateToSeeConsumible(id: string) {
-    this.router.navigate(['/website/consumibles', id]);
+    this.router.navigate([`/website/consumibles/${id}`]);
   }
   navigateToEditConsumible(id: string) {
     this.router.navigate([`/website/consumibles/${id}/edit`]);

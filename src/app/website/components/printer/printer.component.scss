@@ -1,11 +1,11 @@
 @import "_variables.scss";
-.printer-consumable-container {
+.printers-container {
     display: flex;
     flex: 1;
     flex-direction: column;
     border: 1px solid $gray-300;
     border-radius: $border-radius;
-    .printer-consumable-header {
+    .printers-header {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -20,7 +20,7 @@
             flex-shrink: 0;
         }
     }
-    .printer-consumables {
+    .consumable-printers {
         display: flex;
         gap: 1em;
         padding: 1em;
@@ -32,29 +32,29 @@
         @media(max-width: 1024px) {
             flex-direction: column;
         }
-        .consumable {
+        .printer {
             border-radius: $border-radius;
             border: 1px solid $gray-300;
             width: 100%;
             display: flex;
-            .consumable-image-container {
+            .printer-image-container {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 width: 200px;
                 // background-color: $gray-100;
-                .consumable-image {
+                .printer-image {
                     width: 100px;
                 }
             }
-            .consumable-content {
+            .printer-content {
                 display: flex;
                 flex-direction: column;
                 width: 100%;
                 p {
                     margin-bottom: 0;
                 }
-                .consumable-header {
+                .printer-header {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
@@ -62,20 +62,20 @@
                     border-bottom: 1px solid $gray-300;
                     border-left: 1px solid $gray-300;
                     padding: .5em 1em;
-                    .consumable-title {
+                    .printer-title {
                         h5 {
-                            margin: 0;
+                            margin-bottom: 0;
                         }
                     }
                 }
-                .consumable-row {
+                .printer-row {
                     width: 100%;
                     display: flex;
                     align-items: center;
                     height: 100%;
                     flex-wrap: wrap;
                     border-left: 1px solid $gray-300;
-                    .consumable-info {
+                    .printer-info {
                         display: flex;
                         flex-direction: column;
                         gap: 1em;
@@ -86,7 +86,7 @@
     }
 }
 
-.consumable-item {
+.printer-item {
     padding: 1em;
     display: flex;
     flex-direction: column;
@@ -118,4 +118,10 @@
         height: 80px;
         color: $gray-300;
     }
+}
+
+.printer-item-container {
+    display: flex;
+    align-items: center;
+    gap: .5em;
 }

@@ -8,12 +8,11 @@ import { Printer } from '../../interfaces/printer.interface';
 import { ConsumiblesService } from '../../consumibles/services/consumibles.service';
 
 @Component({
-  selector: 'website-consumable',
-  templateUrl: './consumable.component.html',
-  styleUrls: ['./consumable.component.scss']
+  selector: 'website-printer',
+  templateUrl: './printer.component.html',
+  styleUrls: ['./printer.component.scss']
 })
-export class ConsumableComponent {
-
+export class PrinterComponent {
   constructor(
     private router: Router,
     private toastService: ToastService,
@@ -21,16 +20,16 @@ export class ConsumableComponent {
     private consumiblesService: ConsumiblesService
   ) {}
 
-  @Input() product: any;
+  @Input() product!: Consumible;
 
-  navigateToCreateConsumible() {
-    this.router.navigate(['/website', 'consumibles', 'create']);
+  navigateToCreatePrinter() {
+    this.router.navigate(['/website', 'printers', 'create']);
   }
-  navigateToSeeConsumible(id: string) {
-    this.router.navigate(['/website/consumibles', id]);
+  navigateToSeePrinter(id: string) {
+    this.router.navigate(['/website/printers', id]);
   }
-  navigateToEditConsumible(id: string) {
-    this.router.navigate([`/website/consumibles/${id}/edit`]);
+  navigateToEditPrinter(id: string) {
+    this.router.navigate([`/website/printers/${id}/edit`]);
   }
   
   openConfirmDialog(consumableId: string): void {
@@ -51,15 +50,15 @@ export class ConsumableComponent {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.deleteConsumible(consumableId)
+        this.deletePrinter(consumableId)
       }
     });
   }
 
-  deleteConsumible(id: string): void {
+  deletePrinter(id: string): void {
     this.consumiblesService.deleteConsumible(id).subscribe(
       (response) => {
-        this.product.consumibles = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
+        // this.product.consumibles = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
         this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
       },
       (error) => {

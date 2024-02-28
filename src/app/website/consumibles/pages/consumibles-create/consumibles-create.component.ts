@@ -68,7 +68,7 @@ export class ConsumiblesCreateComponent implements OnInit {
       this.counterpartNameControl.valueChanges.pipe(
         startWith(''),
         switchMap((value) =>
-          this.ConsumiblesService.getAllPrinterNames().pipe(
+          this.ConsumiblesService.getAllConsumibleNames().pipe(
             map((counterpartNames) =>
               this._counterfilter(value, counterpartNames)
             )
@@ -172,7 +172,7 @@ export class ConsumiblesCreateComponent implements OnInit {
       this.addCounterpart(counterpartName);
     }
 
-    this.printerNameControl.setValue(''); // Reset the autocomplete field
+    this.counterpartNameControl.setValue(''); // Reset the autocomplete field
   }
 
   addPrinter(printerName: string = ''): void {
@@ -183,11 +183,7 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   removePrinter(index: number) {
     const printers = this.createConsumibleForm.get('printers') as FormArray;
-    if (index !== 0) {
-      printers.removeAt(index);
-    } else {
-      printers.at(0).setValue('');
-    }
+    printers.removeAt(index);
   }
 
   addCounterpart(counterpart: string = ''): void {
@@ -200,11 +196,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     const counterparts = this.createConsumibleForm.get(
       'counterparts'
     ) as FormArray;
-    if (index !== 0) {
-      counterparts.removeAt(index);
-    } else {
-      counterparts.at(0).setValue('');
-    }
+    counterparts.removeAt(index);
   }
 
   get printers() {
@@ -398,16 +390,17 @@ export class ConsumiblesCreateComponent implements OnInit {
     );
     const printersIds = await Promise.all(printerIdsPromises);
 
-    // Convert counterpart to counterpartId
-    const counterpartName = formData.counterparts;
-    if (counterpartName) {
-      // Replace counterpart with counterpartId in the form data
-      const counterpartIds = counterpartName;
-      delete formData.counterpart; // delete the old property
-      formData.counterpartIds = counterpartIds; // add the new property
-    } else {
-      delete formData.counterparts; // delete the old property if counterpartName is empty
-    }
+    //convert counterpart names to IDs
+    const counterpartNames = formData.counterparts;
+    const counterpartIdsPromises = counterpartNames.map((name: string) =>
+      this.ConsumiblesService.getConsumibleIdByName(name).toPromise()
+    );
+    const counterpartIds = await Promise.all(counterpartIdsPromises);
+
+    //replace counterpart names with IDs in the form data
+    delete formData.counterparts; //delete the old property
+    formData.counterpartIds = counterpartIds; //add the new property
+
     // Replace printer names with IDs in the form data
     delete formData.printers; // delete the old property
     formData.printersIds = printersIds; // add the new property

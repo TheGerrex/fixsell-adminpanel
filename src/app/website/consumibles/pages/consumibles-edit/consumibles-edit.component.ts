@@ -64,16 +64,14 @@ export class ConsumiblesEditComponent implements OnInit {
       this.counterpartNameControl.valueChanges.pipe(
         startWith(''),
         switchMap((value) =>
-          this.ConsumiblesService.getAllConsumibles().pipe(
-            map((consumibles) =>
-              this._counterfilter(
-                value,
-                consumibles.map((consumible) => consumible.name)
-              )
+          this.ConsumiblesService.getAllConsumibleNames().pipe(
+            map((consumibleNames) =>
+              this._counterfilter(value, consumibleNames)
             )
           )
         )
       );
+
     this.ConsumiblesService.getAllConsumibles().subscribe(
       (consumibles: Consumible[]) => {
         this.consumibles = consumibles;
@@ -88,10 +86,10 @@ export class ConsumiblesEditComponent implements OnInit {
     );
   }
 
-  private _counterfilter(value: string, consumibles: string[]): string[] {
+  private _counterfilter(value: string, consumibleNames: string[]): string[] {
     const filterValue = value.toLowerCase();
-    return consumibles.filter((consumible) =>
-      consumible.toLowerCase().includes(filterValue)
+    return consumibleNames.filter((consumibleName) =>
+      consumibleName.toLowerCase().includes(filterValue)
     );
   }
   getConsumible() {
@@ -106,6 +104,11 @@ export class ConsumiblesEditComponent implements OnInit {
               Consumible.printers = Consumible.printers.map(
                 (printer) => printer.model
               ) as unknown as Printer[];
+            }
+            if (Consumible.counterparts) {
+              Consumible.counterparts = Consumible.counterparts.map(
+                (counterpart) => counterpart.name
+              ) as unknown as Consumible[];
             }
             return Consumible;
           })
@@ -180,6 +183,11 @@ export class ConsumiblesEditComponent implements OnInit {
     });
     console.log('this.Consumible:', this.Consumible);
     console.log('this.Consumible.counterpart:', this.Consumible?.counterparts);
+    console.log('printers', this.editConsumibleForm.get('printers')?.value);
+    console.log(
+      'counterparts',
+      this.editConsumibleForm.get('counterparts')?.value
+    );
   }
 
   openConfirmDialog(index: number): void {
@@ -364,22 +372,14 @@ export class ConsumiblesEditComponent implements OnInit {
 
   removePrinter(index: number) {
     const printers = this.editConsumibleForm.get('printers') as FormArray;
-    if (index !== 0) {
-      printers.removeAt(index);
-    } else {
-      printers.at(0).setValue('');
-    }
+    printers.removeAt(index);
   }
 
   removeCounterpart(index: number) {
     const counterparts = this.editConsumibleForm.get(
       'counterparts'
     ) as FormArray;
-    if (index !== 0) {
-      counterparts.removeAt(index);
-    } else {
-      counterparts.at(0).setValue('');
-    }
+    counterparts.removeAt(index);
   }
 
   get printers() {

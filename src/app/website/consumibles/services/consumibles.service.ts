@@ -19,6 +19,17 @@ export class ConsumiblesService {
     return this.http.get<Consumible[]>(`${environment.baseUrl}/consumibles`);
   }
 
+  // get all consumible names
+  getAllConsumibleNames(): Observable<string[]> {
+    return this.http
+      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
+      .pipe(
+        map((consumibles: Consumible[]) =>
+          consumibles.map((consumible) => consumible.name)
+        )
+      );
+  }
+
   //get consumible by id
   getConsumible(id: string): Observable<Consumible> {
     console.log('getting consumible' + id);

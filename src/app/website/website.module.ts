@@ -9,25 +9,26 @@ import { ConsumableComponent } from './components/consumable/consumable.componen
 import { CarouselImagesComponent } from './components/carousel-images/carousel-images.component';
 import { PrinterComponent } from './components/printer/printer.component';
 import { CounterpartsComponent } from './components/counterparts/counterparts.component';
+import { PackageCardComponent } from './components/package-card/package-card.component';
 
 @NgModule({
   declarations: [
-    ProductImageGridComponent, 
-    InputChipsComponent, 
-    DealsComponent, 
-    ConsumableComponent, 
-    CarouselImagesComponent, PrinterComponent, CounterpartsComponent
+    ProductImageGridComponent,
+    InputChipsComponent,
+    DealsComponent,
+    ConsumableComponent,
+    CarouselImagesComponent,
+    PrinterComponent,
+    CounterpartsComponent,
+    PackageCardComponent,
   ],
-  imports: [
-    CommonModule, 
-    WebsiteRoutingModule, 
-    AngularMaterialModule
-  ],
+  imports: [CommonModule, WebsiteRoutingModule, AngularMaterialModule],
   exports: [
-    ProductImageGridComponent, 
-    InputChipsComponent, 
-    DealsComponent, 
-    ConsumableComponent, 
+    ProductImageGridComponent,
+    InputChipsComponent,
+    DealsComponent,
+    PackageCardComponent,
+    ConsumableComponent,
     CarouselImagesComponent,
     PrinterComponent,
     CounterpartsComponent,

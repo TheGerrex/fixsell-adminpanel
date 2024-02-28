@@ -56,7 +56,10 @@
             <p>{{ packages.packageDescription }}</p>
           </div>
           <div class="package-item">
-            <p><b>Incluye</b> {{ packages.packageIncludes }}</p>
+            <b>Incluye:</b>
+            <ul>
+              <li *ngFor="let item of packages.packageIncludes">{{ item }}</li>
+            </ul>
           </div>
 
           <div class="package-item">

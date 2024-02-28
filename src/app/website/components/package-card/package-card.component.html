@@ -55,12 +55,6 @@
             <p><b>Descripción:</b></p>
             <p>{{ packages.packageDescription }}</p>
           </div>
-          <div class="package-item">
-            <b>Incluye:</b>
-            <ul>
-              <li *ngFor="let item of packages.packageIncludes">{{ item }}</li>
-            </ul>
-          </div>
 
           <div class="package-item">
             <p>
@@ -71,6 +65,16 @@
           <div *ngFor="let daysLeft of getDaysLeft(); let i = index">
             <div class="package-item">
               <p><b>Días restantes:</b> {{ daysLeft }} dias</p>
+            </div>
+          </div>
+          <div class="package-item">
+            <div class="package-item">
+              <b>Incluye:</b>
+              <ul>
+                <li *ngFor="let item of packages.packageIncludes">
+                  {{ item }}
+                </li>
+              </ul>
             </div>
           </div>
         </div>

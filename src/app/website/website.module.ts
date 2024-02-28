@@ -7,6 +7,8 @@ import { InputChipsComponent } from './components/input-chips/input-chips.compon
 import { DealsComponent } from './components/deals/deals.component';
 import { ConsumableComponent } from './components/consumable/consumable.component';
 import { CarouselImagesComponent } from './components/carousel-images/carousel-images.component';
+import { PrinterComponent } from './components/printer/printer.component';
+import { CounterpartsComponent } from './components/counterparts/counterparts.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,7 @@ import { CarouselImagesComponent } from './components/carousel-images/carousel-i
     InputChipsComponent, 
     DealsComponent, 
     ConsumableComponent, 
-    CarouselImagesComponent
+    CarouselImagesComponent, PrinterComponent, CounterpartsComponent
   ],
   imports: [
     CommonModule, 
@@ -26,7 +28,9 @@ import { CarouselImagesComponent } from './components/carousel-images/carousel-i
     InputChipsComponent, 
     DealsComponent, 
     ConsumableComponent, 
-    CarouselImagesComponent
+    CarouselImagesComponent,
+    PrinterComponent,
+    CounterpartsComponent,
   ],
 })
 export class WebsiteModule {}

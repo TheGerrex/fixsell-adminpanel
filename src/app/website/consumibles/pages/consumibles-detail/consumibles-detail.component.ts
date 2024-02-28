@@ -42,14 +42,17 @@ export class ConsumiblesDetailComponent implements OnInit {
   }
 
   getConsumible(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.consumiblesService.getConsumible(id).subscribe((consumible) => {
-        this.consumible = consumible;
-        // this.sharedService.changeConsumiblesModel(consumible.model);
-      });
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.consumiblesService.getConsumible(id).subscribe((consumible) => {
+          this.consumible = consumible;
+          // this.sharedService.changeConsumiblesModel(consumible.model);
+        });
+      }
+    });
   }
+
   navigateToEdit(id: string) {
     this.router.navigate(['/website', 'consumibles', id, 'edit']);
   }

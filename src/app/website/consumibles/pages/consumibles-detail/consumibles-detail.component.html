@@ -62,13 +62,17 @@
                     </div>
                     <div class="consumible-data-item">
                         <h5>Producto Homólogo</h5>
-                        <p>{{ consumible.counterpart }}</p>
+                        <p>{{ consumible.counterpart?.name }}</p>
                     </div>
                     <div class="consumible-data-item">
                         <h5>Modelos Compatible</h5>
                         <p *ngFor="let model of consumible.compatibleModels">{{ model }}</p>
                     </div>
                 </div>
+            </div>
+            <div class="consumible-extra-container">
+                <website-printer [product]="consumible" style="width: 100%;"></website-printer>
+                <website-counterparts [product]="consumible" style="width: 100%;"></website-counterparts>
             </div>
         </div>
     </div>

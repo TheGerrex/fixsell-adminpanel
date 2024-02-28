@@ -31,7 +31,9 @@ export class ConsumiblesEditComponent implements OnInit {
   public editConsumibleForm!: FormGroup;
   public imageUrlsArray: string[] = [];
   printerNameControl = new FormControl();
+  counterpartNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
+  filteredCounterpartNames: Observable<string[]> | undefined;
   Consumible: Consumible | undefined = undefined;
   public consumibles: Consumible[] = [];
 
@@ -58,6 +60,20 @@ export class ConsumiblesEditComponent implements OnInit {
         )
       )
     );
+    this.filteredCounterpartNames =
+      this.counterpartNameControl.valueChanges.pipe(
+        startWith(''),
+        switchMap((value) =>
+          this.ConsumiblesService.getAllConsumibles().pipe(
+            map((consumibles) =>
+              this._counterfilter(
+                value,
+                consumibles.map((consumible) => consumible.name)
+              )
+            )
+          )
+        )
+      );
     this.ConsumiblesService.getAllConsumibles().subscribe(
       (consumibles: Consumible[]) => {
         this.consumibles = consumibles;
@@ -69,6 +85,13 @@ export class ConsumiblesEditComponent implements OnInit {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
       printerName.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private _counterfilter(value: string, consumibles: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return consumibles.filter((consumible) =>
+      consumible.toLowerCase().includes(filterValue)
     );
   }
   getConsumible() {
@@ -101,9 +124,7 @@ export class ConsumiblesEditComponent implements OnInit {
   initalizeForm() {
     console.log('initializing form');
     this.editConsumibleForm = this.fb.group({
-      name: [
-        this.Consumible ? this.Consumible.name : '', Validators.required
-      ],
+      name: [this.Consumible ? this.Consumible.name : '', Validators.required],
       price: [
         this.Consumible ? this.Consumible.price : '',
         [Validators.required, Validators.min(0.01)],
@@ -120,9 +141,7 @@ export class ConsumiblesEditComponent implements OnInit {
       shortDescription: [
         this.Consumible ? this.Consumible.shortDescription : '',
       ],
-      longDescription: [
-        this.Consumible ? this.Consumible.longDescription : '',
-      ],
+      longDescription: [this.Consumible ? this.Consumible.longDescription : ''],
       img_url: this.fb.array(
         this.Consumible
           ? this.Consumible.img_url
@@ -134,9 +153,7 @@ export class ConsumiblesEditComponent implements OnInit {
         this.Consumible ? this.Consumible.origen : '',
         Validators.required,
       ],
-      volume: [
-        this.Consumible ? Number(this.Consumible.volume) : 0,
-      ],
+      volume: [this.Consumible ? Number(this.Consumible.volume) : 0],
       compatibleModels: this.fb.array(
         this.Consumible
           ? this.Consumible.compatibleModels?.map((model) =>
@@ -153,20 +170,16 @@ export class ConsumiblesEditComponent implements OnInit {
         this.Consumible ? this.Consumible.color : '',
         Validators.required,
       ],
-      yield: [
-        this.Consumible ? this.Consumible.yield : '',
-      ],
+      yield: [this.Consumible ? this.Consumible.yield : ''],
       printers: this.fb.array(
         this.Consumible ? this.Consumible.printers || [] : []
       ),
-      counterpart: [this.Consumible?.counterpart?.name || ''],
+      counterparts: this.fb.array(
+        this.Consumible ? this.Consumible.counterparts || [] : []
+      ),
     });
     console.log('this.Consumible:', this.Consumible);
-    console.log('this.Consumible.counterpart:', this.Consumible?.counterpart);
-    console.log(
-      'this.Consumible.counterpart.name:',
-      this.Consumible?.counterpart?.name
-    );
+    console.log('this.Consumible.counterpart:', this.Consumible?.counterparts);
   }
 
   openConfirmDialog(index: number): void {
@@ -319,9 +332,33 @@ export class ConsumiblesEditComponent implements OnInit {
     this.printerNameControl.setValue(''); // Reset the autocomplete field
   }
 
+  addCounterpartFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
+    const counterpartName = event.option.viewValue;
+    const counterparts = this.editConsumibleForm.get(
+      'counterparts'
+    ) as FormArray;
+    const emptyIndex = counterparts.controls.findIndex(
+      (control) => control.value === ''
+    );
+
+    if (emptyIndex !== -1) {
+      counterparts.at(emptyIndex).setValue(counterpartName);
+    } else {
+      this.addCounterpart(counterpartName);
+    }
+
+    this.counterpartNameControl.setValue(''); // Reset the autocomplete field
+  }
+
   addPrinter(printerName: string = ''): void {
     (this.editConsumibleForm.get('printers') as FormArray).push(
       this.fb.control(printerName)
+    );
+  }
+
+  addCounterpart(counterpartName: string = ''): void {
+    (this.editConsumibleForm.get('counterparts') as FormArray).push(
+      this.fb.control(counterpartName)
     );
   }
 
@@ -334,8 +371,23 @@ export class ConsumiblesEditComponent implements OnInit {
     }
   }
 
+  removeCounterpart(index: number) {
+    const counterparts = this.editConsumibleForm.get(
+      'counterparts'
+    ) as FormArray;
+    if (index !== 0) {
+      counterparts.removeAt(index);
+    } else {
+      counterparts.at(0).setValue('');
+    }
+  }
+
   get printers() {
     return (this.editConsumibleForm.get('printers') as FormArray).controls;
+  }
+
+  get counterparts() {
+    return (this.editConsumibleForm.get('counterparts') as FormArray).controls;
   }
 
   async submitForm() {
@@ -378,22 +430,16 @@ export class ConsumiblesEditComponent implements OnInit {
     );
     const printersIds = await Promise.all(printerIdsPromises);
 
-    // Convert counterpart to counterpartId
-    const counterpartName = formData.counterpart;
-    console.log('counterpartName:', counterpartName);
-    if (counterpartName) {
-      console.log('counterpartName:', counterpartName);
-      // Fetch the ID of the counterpart from the backend
-      const counterpartId =
-        await this.ConsumiblesService.getCounterpartIdByName(
-          counterpartName
-        ).toPromise();
-      console.log('counterpartId:', counterpartId);
-      delete formData.counterpart; // delete the old property
-      formData.counterpartId = counterpartId; // add the new property
-    } else {
-      delete formData.counterpart; // delete the old property if counterpartName is empty
-    }
+    // Convert counterpart names to IDs
+    const counterpartNames = formData.counterparts;
+    const counterpartIdsPromises = counterpartNames.map((name: string) =>
+      this.ConsumiblesService.getCounterpartIdByName(name).toPromise()
+    );
+    const counterpartIds = await Promise.all(counterpartIdsPromises);
+
+    // Replace counterpart names with IDs in the form data
+    delete formData.counterparts; // delete the old property
+    formData.counterpartIds = counterpartIds; // add the new property
 
     // Replace printer names with IDs in the form data
     delete formData.printers; // delete the old property

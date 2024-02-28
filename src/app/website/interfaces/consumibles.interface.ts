@@ -15,7 +15,7 @@ export interface Consumible {
   category: string;
   printers?: Printer[];
   orderDetails?: OrderDetail[];
-  counterpart?: Consumible;
+  counterparts?: Consumible[];
   origen?: string;
   volume?: number;
 

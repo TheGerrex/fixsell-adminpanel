@@ -1,75 +1,89 @@
 <div class="consumible-container" *ngIf="consumible">
-    <div class="consumible-header">
-        <h2>{{ consumible.name }}</h2>
-        <button class="button button-primary button-raised button-icon-text" *ngIf="consumible.id" (click)="navigateToEdit(consumible.id)">
+  <div class="consumible-header">
+    <h2>{{ consumible.name }}</h2>
+    <button
+      class="button button-primary button-raised button-icon-text"
+      *ngIf="consumible.id"
+      (click)="navigateToEdit(consumible.id)"
+    >
       <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
     </button>
-    </div>
+  </div>
 
-    <div class="consumible-info">
-        <div class="consumible-info-container">
-            <div class="consumible-data-container">
-                <website-carousel-images [product]="consumible"></website-carousel-images>
-                <div class="consumible-data">
-                    <div class="consumible-data-item">
-                        <h5>Nombre</h5>
-                        <p>{{ consumible.name }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Marca</h5>
-                        <p>{{ consumible.brand }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Categoria</h5>
-                        <p>{{ consumible.category }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Precio</h5>
-                        <p>{{ consumible.price | currency }} {{ consumible.currency }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Color</h5>
-                        <div [ngSwitch]="consumible.color">
-                            <p *ngSwitchCase="'K'" class="color-box"><span class="color-black"></span>Negro</p>
-                            <p *ngSwitchCase="'Y'" class="color-box"><span class="color-yellow"></span>Amarillo</p>
-                            <p *ngSwitchCase="'M'" class="color-box"><span class="color-magenta"></span>Magenta</p>
-                            <p *ngSwitchCase="'C'" class="color-box"><span class="color-cyan"></span>Cyan</p>
-                        </div>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Origen del producto</h5>
-                        <p>{{ consumible.origen }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>SKU</h5>
-                        <p>{{ consumible.sku }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Vida Util</h5>
-                        <p *ngIf="consumible.yield">{{ consumible.yield }} páginas</p>
-                    </div>
-                    <div class="consumible-data-item full-row">
-                        <h5>Descripcion Corta</h5>
-                        <p>{{ consumible.shortDescription }}</p>
-                    </div>
-                    <div class="consumible-data-item full-row">
-                        <h5>Descripcion Larga</h5>
-                        <p>{{ consumible.longDescription }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Volumen</h5>
-                        <p *ngIf="consumible.volume">{{ consumible.volume }} g</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Producto Homólogo</h5>
-                        <p>{{ consumible.counterpart }}</p>
-                    </div>
-                    <div class="consumible-data-item">
-                        <h5>Modelos Compatible</h5>
-                        <p *ngFor="let model of consumible.compatibleModels">{{ model }}</p>
-                    </div>
-                </div>
+  <div class="consumible-info">
+    <div class="consumible-info-container">
+      <div class="consumible-data-container">
+        <website-carousel-images
+          [product]="consumible"
+        ></website-carousel-images>
+        <div class="consumible-data">
+          <div class="consumible-data-item">
+            <h5>Nombre</h5>
+            <p>{{ consumible.name }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Marca</h5>
+            <p>{{ consumible.brand }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Categoria</h5>
+            <p>{{ consumible.category }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Precio</h5>
+            <p>{{ consumible.price | currency }} {{ consumible.currency }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Color</h5>
+            <div [ngSwitch]="consumible.color">
+              <p *ngSwitchCase="'K'" class="color-box">
+                <span class="color-black"></span>Negro
+              </p>
+              <p *ngSwitchCase="'Y'" class="color-box">
+                <span class="color-yellow"></span>Amarillo
+              </p>
+              <p *ngSwitchCase="'M'" class="color-box">
+                <span class="color-magenta"></span>Magenta
+              </p>
+              <p *ngSwitchCase="'C'" class="color-box">
+                <span class="color-cyan"></span>Cyan
+              </p>
             </div>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Origen del producto</h5>
+            <p>{{ consumible.origen }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>SKU</h5>
+            <p>{{ consumible.sku }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Vida Util</h5>
+            <p *ngIf="consumible.yield">{{ consumible.yield }} páginas</p>
+          </div>
+          <div class="consumible-data-item full-row">
+            <h5>Descripcion Corta</h5>
+            <p>{{ consumible.shortDescription }}</p>
+          </div>
+          <div class="consumible-data-item full-row">
+            <h5>Descripcion Larga</h5>
+            <p>{{ consumible.longDescription }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Volumen</h5>
+            <p *ngIf="consumible.volume">{{ consumible.volume }} g</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Producto Homólogo</h5>
+            <p>{{ consumible.counterparts }}</p>
+          </div>
+          <div class="consumible-data-item">
+            <h5>Modelos Compatible</h5>
+            <p *ngFor="let model of consumible.compatibleModels">{{ model }}</p>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

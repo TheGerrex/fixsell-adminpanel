@@ -38,7 +38,9 @@ export class ConsumiblesCreateComponent implements OnInit {
   public createConsumibleForm!: FormGroup;
   public imageUrlsArray: string[] = [];
   printerNameControl = new FormControl();
+  counterpartNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
+  filteredCounterpartNames: Observable<string[]> | undefined;
   public consumibles: Consumible[] = [];
   Consumible: Consumible | undefined = undefined;
   isLoadingForm = false;
@@ -62,6 +64,17 @@ export class ConsumiblesCreateComponent implements OnInit {
         )
       )
     );
+    this.filteredCounterpartNames =
+      this.counterpartNameControl.valueChanges.pipe(
+        startWith(''),
+        switchMap((value) =>
+          this.ConsumiblesService.getAllPrinterNames().pipe(
+            map((counterpartNames) =>
+              this._counterfilter(value, counterpartNames)
+            )
+          )
+        )
+      );
     this.ConsumiblesService.getAllConsumibles().subscribe(
       (consumibles: Consumible[]) => {
         this.consumibles = consumibles;
@@ -73,6 +86,13 @@ export class ConsumiblesCreateComponent implements OnInit {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
       printerName.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private _counterfilter(value: string, counterpartNames: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return counterpartNames.filter((counterpartName) =>
+      counterpartName.toLowerCase().includes(filterValue)
     );
   }
 
@@ -93,7 +113,7 @@ export class ConsumiblesCreateComponent implements OnInit {
       color: ['', Validators.required],
       yield: [null],
       printers: this.fb.array([]),
-      counterpart: [''],
+      counterparts: this.fb.array([]),
     });
   }
 
@@ -137,6 +157,24 @@ export class ConsumiblesCreateComponent implements OnInit {
     this.printerNameControl.setValue(''); // Reset the autocomplete field
   }
 
+  addCounterpartFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
+    const counterpartName = event.option.viewValue;
+    const counterparts = this.createConsumibleForm.get(
+      'counterparts'
+    ) as FormArray;
+    const emptyIndex = counterparts.controls.findIndex(
+      (control) => control.value === ''
+    );
+
+    if (emptyIndex !== -1) {
+      counterparts.at(emptyIndex).setValue(counterpartName);
+    } else {
+      this.addCounterpart(counterpartName);
+    }
+
+    this.printerNameControl.setValue(''); // Reset the autocomplete field
+  }
+
   addPrinter(printerName: string = ''): void {
     (this.createConsumibleForm.get('printers') as FormArray).push(
       this.fb.control(printerName)
@@ -152,8 +190,30 @@ export class ConsumiblesCreateComponent implements OnInit {
     }
   }
 
+  addCounterpart(counterpart: string = ''): void {
+    (this.createConsumibleForm.get('counterparts') as FormArray).push(
+      this.fb.control(counterpart)
+    );
+  }
+
+  removeCounterpart(index: number) {
+    const counterparts = this.createConsumibleForm.get(
+      'counterparts'
+    ) as FormArray;
+    if (index !== 0) {
+      counterparts.removeAt(index);
+    } else {
+      counterparts.at(0).setValue('');
+    }
+  }
+
   get printers() {
     return (this.createConsumibleForm.get('printers') as FormArray).controls;
+  }
+
+  get counterparts() {
+    return (this.createConsumibleForm.get('counterparts') as FormArray)
+      .controls;
   }
 
   get compatibleModelsControls() {
@@ -339,14 +399,14 @@ export class ConsumiblesCreateComponent implements OnInit {
     const printersIds = await Promise.all(printerIdsPromises);
 
     // Convert counterpart to counterpartId
-    const counterpartName = formData.counterpart;
+    const counterpartName = formData.counterparts;
     if (counterpartName) {
       // Replace counterpart with counterpartId in the form data
-      const counterpartId = counterpartName;
+      const counterpartIds = counterpartName;
       delete formData.counterpart; // delete the old property
-      formData.counterpartId = counterpartId; // add the new property
+      formData.counterpartIds = counterpartIds; // add the new property
     } else {
-      delete formData.counterpart; // delete the old property if counterpartName is empty
+      delete formData.counterparts; // delete the old property if counterpartName is empty
     }
     // Replace printer names with IDs in the form data
     delete formData.printers; // delete the old property

@@ -296,10 +296,10 @@
                 aria-label="Number"
                 class="form-control"
                 [formControl]="printerNameControl"
-                [matAutocomplete]="auto"
+                [matAutocomplete]="autoPrinter"
               />
               <mat-autocomplete
-                #auto="matAutocomplete"
+                #autoPrinter="matAutocomplete"
                 (optionSelected)="addPrinterFromAutocomplete($event)"
                 class="form-control"
               >
@@ -313,23 +313,44 @@
             </div>
           </div>
 
-          <!-- counterpart field -->
+          <!-- counterparts -->
           <div class="consumibles-data-item">
-            <h5>Producto homólogo</h5>
-            <select formControlName="counterpart" class="form-select">
-              <option
-                *ngFor="let consumible of consumibles"
-                [value]="consumible.name"
+            <h5>Productos homólogos</h5>
+            <div class="tag-inputs-container" formArrayName="counterparts">
+              <div *ngFor="let counterpart of counterparts; let i = index">
+                <div class="tag-inputs">
+                  <input [formControlName]="i" class="form-control" />
+                  <button
+                    class="button button-danger button-icon"
+                    (click)="removeCounterpart(i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                placeholder="Agrega un producto homólogo..."
+                aria-label="Number"
+                class="form-control"
+                [formControl]="counterpartNameControl"
+                [matAutocomplete]="autoCounterpart"
+              />
+              <mat-autocomplete
+                #autoCounterpart="matAutocomplete"
+                (optionSelected)="addCounterpartFromAutocomplete($event)"
+                class="form-control"
               >
-                {{ consumible.name }}
-              </option>
-            </select>
-            <span
-              *ngIf="isValidField('counterpart')"
-              class="form-text text-danger"
-            >
-              {{ getFieldError("counterpart") }}
-            </span>
+                <mat-option
+                  *ngFor="
+                    let counterpartName of filteredCounterpartNames | async
+                  "
+                  [value]="counterpartName"
+                >
+                  {{ counterpartName }}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
           </div>
 
           <!-- Compatible Models Field -->

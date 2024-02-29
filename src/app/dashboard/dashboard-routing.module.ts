@@ -9,18 +9,17 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { RoleGuard } from '../auth/guards/role.guard';
 
 const routes: Routes = [
-
   {
     path: '',
     component: DashboardLayoutComponent,
     children: [
       { path: '', component: IntroScreenComponent },
-      {
-        path: 'users',
-        component: UsersComponent,
-        canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin'] },
-      },
+      // {
+      //   path: 'users',
+      //   component: UsersComponent,
+      //   canActivate: [RoleGuard],
+      //   data: { allowedRoles: ['admin'] },
+      // },
       {
         path: 'users-table',
         component: UsersTableComponent,

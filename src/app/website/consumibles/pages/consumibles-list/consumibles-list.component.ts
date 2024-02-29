@@ -24,7 +24,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   templateUrl: './consumibles-list.component.html',
   styleUrls: ['./consumibles-list.component.scss'],
 })
-export class ConsumiblesListComponent implements OnInit, AfterViewInit {
+export class ConsumiblesListComponent implements OnInit {
   displayedColumns: string[] = [
     //consumibles columns
     'name',
@@ -83,10 +83,6 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
   addConsumible() {
     this.router.navigateByUrl('website/consumibles/create');
   }
@@ -129,45 +125,6 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-  // deleteConsumible(consumible: Consumible) {
-  //   this.dialogService
-  //     .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
-  //     .afterClosed()
-  //     .subscribe((confirmed) => {
-  //       if (confirmed) {
-  //         if (consumible.id) {
-  //           this.consumiblesService.deleteConsumible(consumible.id).subscribe(
-  //           (response) => {
-  //             console.log(response); // This should log "Consumible with ID x has been removed"
-  //             // Show a toast message after the user confirms the deletion
-  //             this.toastService.showSuccess(
-  //               'Consumible deleted successfully',
-  //               'OK'
-  //             );
-  
-  //             // Remove the deleted consumible from the dataSource
-  //             const data = this.dataSource.data;
-  //             this.dataSource.data = data.filter(
-  //               (c) => c.id !== consumible.id
-  //             );
-  //           },
-  //           (error) => {
-  //             console.error('Error:', error);
-  //             this.dialogService.openErrorDialog(
-  //               'Error deleting consumible',
-  //               'OK',
-  //               'delete-dialog'
-  //             ); // Show error dialog with 'delete-dialog' class
-  //           }
-  //         );
-  //         } else {
-  //           console.error('Error: consumible.id is undefined');
-  //         }
-          
-  //       }
-  //     });
-  // }
 
   deleteConsumible(consumible: Consumible) {
   if (consumible.id){

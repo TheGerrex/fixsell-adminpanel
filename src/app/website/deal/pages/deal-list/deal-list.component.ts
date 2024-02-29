@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injectable, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -10,36 +10,40 @@ import swal from 'sweetalert2';
 import { DealService } from '../../services/deal.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-deal-list',
   templateUrl: './deal-list.component.html',
   styleUrls: ['./deal-list.component.scss'],
 })
-export class DealListComponent {
+export class DealListComponent implements OnInit {
   displayedColumns: string[] = [
     'brand',
     'model',
-    'dealDiscountPercentage',
-    // 'color',
     'price',
     'dealPrice',
+    'dealDiscountPercentage',
     'dealCurrency',
     'action',
   ];
   dataSource = new MatTableDataSource<Printer>();
   filterValue = '';
   isAdmin = false;
+  dealData: Printer[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private DealService: DealService,
     private dialogService: DialogService,
-    private toastService: ToastService
+    private dialog: MatDialog,
+    private toastService: ToastService,
+    private DealService: DealService,
   ) {}
 
   ngOnInit() {
@@ -55,6 +59,8 @@ export class DealListComponent {
         );
         // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
         this.dataSource = new MatTableDataSource(filteredData);
+        this.dealData = filteredData
+        this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       });
 
@@ -92,6 +98,11 @@ export class DealListComponent {
 
   addPrinter() {
     this.router.navigate(['/website/deals/create']);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   deleteDeal(printer: Printer) {

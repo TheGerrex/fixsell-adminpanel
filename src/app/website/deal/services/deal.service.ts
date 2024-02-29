@@ -97,4 +97,9 @@ export class DealService {
   submitDealEditForm(formData: any, dealId: string): Observable<any> {
     return this.http.patch(`${environment.baseUrl}/deals/${dealId}`, formData);
   }
+
+  // submit deal edit form
+  submitDealCreateForm(formData: any): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/deals`, formData);
+  }
 }

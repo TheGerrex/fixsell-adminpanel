@@ -67,8 +67,8 @@ export const navbarData = [
         allowedRoles: ['admin', 'user', 'vendor'],
       },
       {
-        label: 'Clientes',
-        routeLink: 'users/client',
+        label: 'Configuracion',
+        routeLink: 'users/config',
         allowedRoles: ['admin', 'user', 'vendor'],
       },
     ],

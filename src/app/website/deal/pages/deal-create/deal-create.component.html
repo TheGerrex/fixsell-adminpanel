@@ -1,197 +1,126 @@
 <div>
-  <form
-    [formGroup]="createDealForm"
-    (ngSubmit)="submitForm()"
-    class="deal-container"
-  >
-    <div class="deal-header">
-      <h2>Crear Promocion</h2>
-      <button
-        type="submit"
-        class="button button-primary button-raised"
-        (click)="submitForm()"
-      >
-        <span class="button-label">Agregar Promocion</span>
-      </button>
-    </div>
-
-    <div class="loading-container" *ngIf="isLoadingForm">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
-
-    <div class="deal-info">
-      <div class="deal-form-container">
-        <!-- Printer -->
-        <div class="packages-data-item">
-          <h5>Printer</h5>
-
-          <input
-            type="text"
-            placeholder="Add printer"
-            aria-label="Number"
-            class="form-control example-input"
-            [formControl]="printerControl"
-            [matAutocomplete]="auto"
-          />
-          <mat-autocomplete
-            #auto="matAutocomplete"
-            (optionSelected)="addPrinterFromAutocomplete($event)"
-            class="form-control"
-          >
-            <mat-option
-              *ngFor="let printerName of filteredPrinterNames | async"
-              [value]="printerName"
-            >
-              {{ printerName }}
-            </mat-option>
-          </mat-autocomplete>
-        </div>
-
-        <!-- printer price -->
-        <div class="deal-data-item">
-          <h5>Precio de Multifuncional</h5>
-          <input
-            type="text"
-            class="form-control"
-            id="printerPrice"
-            formControlName="printerPrice"
-            [class.is-invalid]="
-              createDealForm.controls['printerPrice'].invalid &&
-              createDealForm.controls['printerPrice'].touched
-            "
-          />
-        </div>
-        <span
-          *ngIf="isValidField('printerPrice')"
-          class="form-text text-danger"
-        >
-          {{ getFieldError("printerPrice") }}
-        </span>
-
-        <!-- deal start date -->
-        <div class="deal-data-item">
-          <h5>Fecha de Inicio</h5>
-          <input
-            type="date"
-            class="form-control"
-            id="dealStartDate"
-            formControlName="dealStartDate"
-            [class.is-invalid]="
-              createDealForm.controls['dealStartDate'].invalid &&
-              createDealForm.controls['dealStartDate'].touched
-            "
-          />
-        </div>
-        <span
-          *ngIf="isValidField('dealStartDate')"
-          class="form-text text-danger"
-        >
-          {{ getFieldError("dealStartDate") }}
-        </span>
-
-        <!-- deal end date -->
-        <div class="deal-data-item">
-          <h5>Fecha de Finalizacion</h5>
-          <input
-            type="date"
-            class="form-control"
-            id="dealEndDate"
-            formControlName="dealEndDate"
-          />
-        </div>
-        <span *ngIf="isValidField('dealEndDate')" class="form-text text-danger">
-          {{ getFieldError("dealEndDate") }}
-        </span>
-
-        <!-- deal price -->
-        <div class="printer-data-item">
-          <h5>Precio</h5>
-          <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input
-              type="number"
-              class="form-control"
-              formControlName="dealPrice"
-              [class.is-invalid]="
-                createDealForm.controls['dealPrice'].invalid &&
-                createDealForm.controls['dealPrice'].touched
-              "
-            />
-            <div class="input-group-text">
-              <select
-                class="currency-select"
-                formControlName="dealCurrency"
-                [value]="deal?.dealCurrency"
-              >
-                <option value="USD">USD</option>
-                <option value="MXN">MXN</option>
-              </select>
-            </div>
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="calculatePercentage()"
-            >
-              Calcular Porcentaje
+    <form [formGroup]="createDealForm" (ngSubmit)="submitForm()" class="deal-container">
+        <div class="deal-header">
+            <h2>Crear Promocion</h2>
+            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
+              <span class="button-label">Agregar Promocion</span>
             </button>
-          </div>
-          <span *ngIf="isValidField('dealPrice')" class="form-text text-danger">
-            {{ getFieldError("dealPrice") }}
-          </span>
-
-          <!-- deal percentage -->
-          <div class="deal-data-item">
-            <h5>Porcentaje de Descuento</h5>
-            <div class="input-group">
-              <input
-                type="number"
-                class="form-control"
-                id="dealDiscountPercentage"
-                formControlName="dealDiscountPercentage"
-                [class.is-invalid]="
-                  createDealForm.controls['dealDiscountPercentage'].invalid &&
-                  createDealForm.controls['dealDiscountPercentage'].touched
-                "
-              />
-              <span class="input-group-text">%</span>
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="calculatePrice()"
-              >
-                Calcular Precio
-              </button>
-            </div>
-          </div>
-          <span
-            *ngIf="isValidField('dealDiscountPercentage')"
-            class="form-text text-danger"
-          >
-            {{ getFieldError("dealDiscountPercentage") }}
-          </span>
-
-          <!-- deal description -->
-          <div class="deal-data-item">
-            <h5>Descripcion</h5>
-            <textarea
-              class="form-control"
-              id="dealDescription"
-              rows="3"
-              formControlName="dealDescription"
-              [class.is-invalid]="
-                createDealForm.controls['dealDescription'].invalid &&
-                createDealForm.controls['dealDescription'].touched
-              "
-            ></textarea>
-          </div>
-          <span
-            *ngIf="isValidField('dealDescription')"
-            class="form-text text-danger"
-          >
-            {{ getFieldError("dealDescription") }}
-          </span>
         </div>
-      </div>
-    </div>
-  </form>
+
+        <div class="loading-container" *ngIf="isLoadingForm">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
+
+        <div class="deal-info">
+            <div class="deal-form-container">
+                <div class="deal-data">
+
+                    <div class="deal-data-item">
+                        <h5>Multifuncional</h5>
+                        <input type="text" placeholder="Elige multifuncional" aria-label="Number" class="form-control example-input" [formControl]="printerControl" [matAutocomplete]="auto" />
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPrinterFromAutocomplete($event)" class="form-control">
+                            <mat-option *ngFor="let printerName of filteredPrinterNames | async" [value]="printerName">
+                                {{ printerName }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+
+                    <!-- printer price -->
+                    <div class="deal-data-item">
+                        <h5>Precio</h5>
+                        <input type="text" class="form-control" id="printerPrice" formControlName="printerPrice" [class.is-invalid]="
+                          createDealForm.controls['printerPrice'].invalid &&
+                          createDealForm.controls['printerPrice'].touched
+                        " />
+                        <span *ngIf="isValidField('printerPrice')" class="form-text text-danger">
+                          {{ getFieldError("printerPrice") }}
+                        </span>
+                    </div>
+
+
+                    <!-- deal start date -->
+                    <div class="deal-data-item">
+                        <h5>Fecha de Inicio</h5>
+                        <input type="date" class="form-control" id="dealStartDate" formControlName="dealStartDate" [class.is-invalid]="
+                      createDealForm.controls['dealStartDate'].invalid &&
+                      createDealForm.controls['dealStartDate'].touched
+                    " />
+                        <span *ngIf="isValidField('dealStartDate')" class="form-text text-danger">
+                      {{ getFieldError("dealStartDate") }}
+                    </span>
+                    </div>
+
+
+                    <!-- deal end date -->
+                    <div class="deal-data-item">
+                        <h5>Fecha de Finalizacion</h5>
+                        <input type="date" class="form-control" id="dealEndDate" formControlName="dealEndDate" [class.is-invalid]="
+                          createDealForm.controls['dealEndDate'].invalid &&
+                          createDealForm.controls['dealEndDate'].touched
+                        " />
+                        <span *ngIf="isValidField('dealEndDate')" class="form-text text-danger">
+                          {{ getFieldError("dealEndDate") }}
+                        </span>
+                    </div>
+
+
+                    <!-- deal price -->
+                    <div class="deal-data-item full-row">
+                        <h5>Precio Promoción</h5>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" formControlName="dealPrice" [class.is-invalid]="
+                              createDealForm.controls['dealPrice'].invalid &&
+                              createDealForm.controls['dealPrice'].touched
+                            " />
+                            <div class="input-group-text">
+                                <select class="currency-select" formControlName="dealCurrency" [value]="deal?.dealCurrency">
+                                  <option value="USD">USD</option>
+                                  <option value="MXN">MXN</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary" (click)="calculatePercentage()">
+                          Calcular Porcentaje
+                        </button>
+                        </div>
+                        <span *ngIf="isValidField('dealPrice')" class="form-text text-danger">
+                          {{ getFieldError("dealPrice") }}
+                        </span>
+                    </div>
+
+                    <!-- deal percentage -->
+                    <div class="deal-data-item full-row">
+                        <h5>Porcentaje de Descuento</h5>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="dealDiscountPercentage" formControlName="dealDiscountPercentage" [class.is-invalid]="
+                                  createDealForm.controls['dealDiscountPercentage'].invalid &&
+                                  createDealForm.controls['dealDiscountPercentage'].touched
+                                " />
+                            <span class="input-group-text">%</span>
+                            <button type="button" class="btn btn-outline-secondary" (click)="calculatePrice()">
+                              Calcular Precio
+                            </button>
+                        </div>
+                        <span *ngIf="isValidField('dealDiscountPercentage')" class="form-text text-danger">
+                          {{ getFieldError("dealDiscountPercentage") }}
+                        </span>
+                    </div>
+
+
+                    <!-- deal description -->
+                    <div class="deal-data-item full-row">
+                        <h5>Descripcion</h5>
+                        <textarea class="form-control" id="dealDescription" rows="3" formControlName="dealDescription" [class.is-invalid]="
+                              createDealForm.controls['dealDescription'].invalid &&
+                              createDealForm.controls['dealDescription'].touched
+                            "></textarea>
+                        <span *ngIf="isValidField('dealDescription')" class="form-text text-danger">
+                      {{ getFieldError("dealDescription") }}
+                    </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
 </div>

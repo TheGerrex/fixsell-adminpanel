@@ -1,9 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Printer } from 'src/app/website/interfaces/printer.interface';
-import { environment } from 'src/environments/environment';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Deal, Printer } from '../../../interfaces/printer.interface';
+import { DealService } from '../../services/deal.service';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ToastService } from './../../../../shared/services/toast.service';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { startWith, map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-deal-detail',
@@ -11,66 +23,78 @@ import { SharedService } from 'src/app/shared/services/shared.service';
   styleUrls: ['./deal-detail.component.scss'],
 })
 export class DealDetailComponent implements OnInit {
-  printer: Printer | null = null;
-  currentImageIndex = 0;
+  deal: Deal | null = null;
+  isLoadingForm = false;
+
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
     private sharedService: SharedService,
-    private router: Router
+    private dealService: DealService,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private validatorsService: ValidatorsService
   ) {}
 
-  ngOnInit(): void {
-    this.getPrinter();
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.dealService.getDeal(id).subscribe((deal) => {
+          this.deal = deal;
+        });
+      }
+    });
   }
 
-  prevImage(): void {
-    if (this.currentImageIndex > 0) {
-      this.currentImageIndex--;
-    }
+  navigateToEditDeal(deal: Deal) {
+    this.router.navigate(['/website', 'deals', deal.id, 'edit']);
   }
+  navigateToCreatePrinter() {
+    this.router.navigate(['/website', 'printers', 'create']);
+  }
+  navigateToSeePrinter(id: string) {
+    this.router.navigate(['/website/printers', id]);
+  }
+  navigateToEditPrinter(id: string) {
+    this.router.navigate([`/website/printers/${id}/edit`]);
+  }
+  
+  // openConfirmDialog(consumableId: string): void {
+  //   const dialogConfig = new MatDialogConfig();
 
-  nextImage(): void {
-    if (
-      this.printer &&
-      this.currentImageIndex < this.printer.img_url.length - 1
-    ) {
-      this.currentImageIndex++;
-    }
-  }
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.autoFocus = true;
+  //   dialogConfig.data = {
+  //     title: 'Estas seguro de querer eliminar esta consumible?',
+  //     message: 'El consumible sera eliminado permanentemente.',
+  //     buttonText: {
+  //       ok: 'Eliminar',
+  //       cancel: 'Cancelar',
+  //     },
+  //   };
 
-  getPrinter(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.http
-      .get<Printer>(`${environment.baseUrl}/printers/${id}`)
-      .subscribe((printer) => {
-        this.printer = printer;
-        this.sharedService.changePrinterModel(printer.model);
-      });
-  }
+  //   const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
 
-  getDealDuration(): number {
-    if (this.printer && this.printer.deal) {
-      const startDate = new Date(this.printer.deal.dealStartDate);
-      const endDate = new Date(this.printer.deal.dealEndDate);
-      const diff = endDate.getTime() - startDate.getTime();
-      return Math.floor(diff / (1000 * 60 * 60 * 24));
-    }
-    return 0;
-  }
+  //   dialogRef.afterClosed().subscribe((result: any) => {
+  //     if (result) {
+  //       this.deletePrinter(consumableId)
+  //     }
+  //   });
+  // }
 
-  getDaysLeft(): number {
-    if (this.printer && this.printer.deal) {
-      const endDate = new Date(this.printer.deal.dealEndDate);
-      const now = new Date();
-      const diff = endDate.getTime() - now.getTime();
-      return Math.ceil(diff / (1000 * 60 * 60 * 24));
-    }
-    return 0;
-  }
-
-  navigateToEdit(id: string) {
-    this.router.navigate(['/website', 'printers', id, 'edit']);
-  }
+  // deletePrinter(id: string): void {
+  //   this.consumiblesService.deleteConsumible(id).subscribe(
+  //     (response) => {
+  //       // this.product.consumibles = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
+  //       this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+  //     },
+  //     (error) => {
+  //       this.toastService.showError(error.error.message, 'Cerrar');
+  //     }
+  //   );
+    
+  // }
 }

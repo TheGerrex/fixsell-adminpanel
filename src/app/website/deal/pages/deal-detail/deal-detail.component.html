@@ -1,116 +1,82 @@
-<div class="printer-container" *ngIf="printer">
-    <div class="printer-header">
-        <h2>{{ printer.brand }} {{ printer.model }}</h2>
-        <button class="button button-primary button-raised button-icon" (click)="navigateToEdit(printer.id)"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
+<div class="deal-container" *ngIf="deal">
+    <div class="deal-header">
+        <h2>Promoción</h2>
+        <button class="button button-primary button-raised button-icon-text" *ngIf="deal.id" (click)="navigateToEditDeal(deal)">
+      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+    </button>
     </div>
-    <div class="printer-info">
-        <div class="carousel">
-            <div class="image-container">
-                <img [src]="printer.img_url[currentImageIndex]" alt="">
-            </div>
-            <div class="button-container">
-                <button class="button button-secondary button-raised" (click)="prevImage()">< Atras</button>
-                <button class="button button-secondary button-raised" (click)="nextImage()">Siguiente ></button>
-            </div>
-        </div>
-        <div class="printer-data">
-            <div class="printer-data-item description">
-                <h5>Descripcion</h5>
-                <p>{{ printer.description }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Categoria</h5>
-                <p>{{ printer.category }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Precio</h5>
-                <p>{{ printer.price | currency}} USD</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Funciones</h5>
-                <p>{{ printer.printerFunctions }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Color</h5>
-                <p>{{ printer.color ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Renta</h5>
-                <p>{{ printer.rentable ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Venta</h5>
-                <p>{{ printer.sellable ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Etiquetas</h5>
-                <p>{{ printer.tags ? "Vacio" : printer.tags }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Consumo de Energia</h5>
-                <p>{{ printer.powerConsumption }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Dimensiones</h5>
-                <p>{{ printer.dimensions }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Velocidad de Impresión</h5>
-                <p>{{ printer.printVelocity }} ppm</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Tamaño de Impresión</h5>
-                <p>{{ printer.printSize }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Grosor de Papel</h5>
-                <p>{{ printer.maxPaperWeight }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Unidad Duplex</h5>
-                <p>{{ printer.duplexUnit ? "Si" : "No" }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Tamaños de Papel</h5>
-                <p>{{ printer.paperSizes }}</p>
-            </div>
-            <div class="printer-data-item">
-                <h5>Sistema Operativo</h5>
-                <p>{{ printer.applicableOS }}</p>
-            </div>
-        </div>
-    </div>
-    <!-- <hr> -->
-    <div class="printer-deal-container">
-        <div class="printer-deal-header">
-            <h2>Promociones</h2>
-            <button class="button button-primary button-raised button-icon"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
-        </div>
-        <div class="printer-deals" *ngIf="printer.deal">
-            <div class="deal">
-                <div class="deal-header">
-                    <div class="deal-item">
-                        <p><b>Fecha:</b> {{ printer.deal.dealStartDate | date }} - {{ printer.deal.dealEndDate | date}}</p>
+
+    <div class="deal-info">
+        <div class="deal-info-container">
+            <div class="deal-data-container">
+                <div class="deal-data-card">
+                    <div class="deal-card-header">
+                        <div class="deal-card-title">
+                            <h4>{{ deal.printer.model }}</h4>
+                        </div>
+                        <button class="button-icon-option" [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" class="export-menu">
+                            <button mat-menu-item>
+                            <!-- <mat-icon>ios_share</mat-icon> -->
+                            <div class="menu-button-item" (click)="navigateToSeePrinter(deal.printer.id)">
+                                <mat-icon>visibility</mat-icon>
+                                Ver multifuncional
+                            </div>
+                        </button>
+                            <button mat-menu-item>
+                        <!-- <mat-icon>ios_share</mat-icon> -->
+                            <div class="menu-button-item" (click)="navigateToEditPrinter(deal.printer.id)">
+                                <mat-icon style="color: #3C81F6;">edit</mat-icon>
+                                Editar multifuncional
+                            </div>
+                            </button>
+                            <button mat-menu-item>
+                            <!-- <mat-icon>ios_share</mat-icon> -->
+                            <div class="menu-button-item" >
+                                <mat-icon style="color: #ef4444;">delete</mat-icon>
+                                Borrar multifuncional
+                            </div>
+                        </button>
+                        </mat-menu>
                     </div>
-                </div>
-                <div class="deal-content">
-                    <div class="deal-row">
-                        <div class="deal-item">
-                            <h5>Promoción </h5>
-                            <h3>{{ printer.deal.dealPrice | currency}} USD</h3>
-                        </div>
-                        <div class="deal-item">
-                            <h5>Descuento </h5>
-                            <h3>{{ printer.deal.dealDiscountPercentage }}%</h3>
-                        </div>
-                        <div class="deal-item w-100">
-                            <h5>Descripción </h5>
-                            <p>{{ printer.deal.dealDescription }}</p>
+                    <div class="printer-card">
+                        <div class="printer-card-content">
+                            <div class="printer-image">
+                                <img [src]="deal.printer.img_url[0]" alt="printer-image">
+                            </div>
+                            <div class="printer-data">
+                                <!-- <div class="deal-data-item full-row">
+                                    <h5>Nombre</h5>
+                                    <p>{{ deal.printer.model }}</p>
+                                </div> -->
+                                <div class="deal-data-item">
+                                    <h5>Precio</h5>
+                                    <p>{{ deal.printer.price }} {{ deal.printer.currency }}</p>
+                                </div>
+                                <div class="deal-data-item">
+                                    <h5>Precio Promoción</h5>
+                                    <p>{{ deal.dealPrice }} {{ deal.dealCurrency }} <span class="deal-percentage">{{ deal.dealDiscountPercentage }}% de descuento</span></p>
+                                </div>
+                                <div class="deal-data-item full-row">
+                                    <h5>Descripción</h5>
+                                    <p>{{ deal.dealDescription }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="deal-footer">
-                    <p><b>Días restantes:</b> {{ getDaysLeft() }} dias</p>
+                    <div class="deal-card-content">
+                        <div class="deal-data-item">
+                            <!-- <h5>Fecha Inicial</h5> -->
+                            <p><b>Fecha Inicial: </b>{{ deal.dealStartDate | date: 'medium' }}</p>
+                        </div>
+                        <div class="deal-data-item">
+                            <!-- <h5>Fecha Final</h5> -->
+                            <p><b>Fecha Final: </b>{{ deal.dealEndDate | date: 'medium' }}</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

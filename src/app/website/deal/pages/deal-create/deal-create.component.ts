@@ -72,7 +72,7 @@ export class DealCreateComponent implements OnInit {
       dealStartDate: ['', Validators.required],
       dealEndDate: ['', Validators.required],
       dealPrice: ['', Validators.required],
-      dealCurrency: ['', Validators.required],
+      dealCurrency: ['USD', Validators.required],
       dealDiscountPercentage: ['', Validators.required],
       dealDescription: ['', Validators.required],
     });
@@ -164,5 +164,64 @@ export class DealCreateComponent implements OnInit {
     return null;
   }
 
-  submitForm() {}
+  async submitForm() {
+    if (this.createDealForm.invalid) {
+      Object.keys(this.createDealForm.controls).forEach((key) => {
+        console.log(
+          'Key = ' +
+            key +
+            ', Value = ' +
+            this.createDealForm.controls[key].value +
+            ', Valid = ' +
+            this.createDealForm.controls[key].valid
+        );
+      });
+      console.log('invalid form');
+      //reason of invalid form
+      console.log(this.createDealForm.errors);
+      console.log(this.createDealForm);
+      console.log(this.createDealForm.value);
+
+      this.createDealForm.markAllAsTouched();
+      return;
+    }
+    const formData = this.createDealForm.value;
+    formData.dealDiscountPercentage = Number(formData.dealDiscountPercentage);
+
+    try {
+      const id: any = await this.dealService.findPrinterIdByName(formData.printer).toPromise();
+    if (id) {
+      formData.printer = id; // set the printer id in the deal object
+    }
+    } catch (error: any) {
+      this.toastService.showError(
+        error.error.message,
+        'Cerrar'
+      );
+      return;
+    }
+    this.isLoadingForm = true;
+
+    
+    
+    console.log('formData:', formData);
+    this.dealService.submitDealCreateForm(formData).subscribe(
+      (response: Deal) => {
+        console.log('Response:', response);
+        this.isLoadingForm = false;
+        this.toastService.showSuccess('Promoción creado', 'Cerrar'); // Show success toast
+        this.router.navigate(['/website/deals']);
+      },
+      (error) => {
+        console.log("Error:", error);
+        //log object to console
+        console.log("Error FormData:",formData);
+        this.isLoadingForm = false;
+        this.toastService.showError(
+          error.error.message,
+          'Cerrar'
+        );
+      }
+    );
+  }
 }

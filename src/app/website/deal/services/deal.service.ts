@@ -67,6 +67,7 @@ export class DealService {
       })
     );
   }
+
   getPrinterPrice(name: string): Observable<number> {
     return this.findPrinterIdByName(name).pipe(
       switchMap((id) => {
@@ -93,8 +94,18 @@ export class DealService {
     return this.http.get(`${environment.baseUrl}/deals/${id}`);
   }
 
+  // get all deals
+  getAllDeals(): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/deals`);
+  }
+
   // submit deal edit form
   submitDealEditForm(formData: any, dealId: string): Observable<any> {
     return this.http.patch(`${environment.baseUrl}/deals/${dealId}`, formData);
+  }
+
+  // submit deal edit form
+  submitDealCreateForm(formData: any): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/deals`, formData);
   }
 }

@@ -33,13 +33,14 @@ export interface Printer {
 
 export interface Deal {
   id: number;
+  printer: Printer;
+  consumible: Consumible;
   dealEndDate: Date;
   dealStartDate: Date;
   dealPrice: string;
   dealCurrency: string;
   dealDiscountPercentage: string;
   dealDescription: string;
-  printer: Printer;
 }
 
 export interface Package {

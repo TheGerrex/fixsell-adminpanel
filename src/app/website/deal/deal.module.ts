@@ -9,6 +9,7 @@ import { DealEditComponent } from './pages/deal-edit/deal-edit.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { WebsiteModule } from '../website.module';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -23,6 +24,7 @@ import { FormsModule } from '@angular/forms';
     DealRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    WebsiteModule,
   ],
 })
 export class DealModule {}

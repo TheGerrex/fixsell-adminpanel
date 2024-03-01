@@ -24,14 +24,14 @@ export class DealListComponent implements OnInit {
     'model',
     'price',
     'dealPrice',
-    'dealDiscountPercentage',
-    'dealCurrency',
+    'dealStartDate',
+    'dealEndDate',
     'action',
   ];
-  dataSource = new MatTableDataSource<Printer>();
+  dataSource = new MatTableDataSource<Deal>();
   filterValue = '';
   isAdmin = false;
-  dealData: Printer[] = [];
+  dealData: Deal[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -43,27 +43,29 @@ export class DealListComponent implements OnInit {
     private dialogService: DialogService,
     private dialog: MatDialog,
     private toastService: ToastService,
-    private DealService: DealService,
+    private dealService: DealService,
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<Printer[]>(`${environment.baseUrl}/printers`)
-      .subscribe((data) => {
-        console.log(data);
-
-        // Filter out printers with null dealDiscountPercentage
-        const filteredData = data.filter(
-          (printer) =>
-            printer.deal && printer.deal.dealDiscountPercentage !== null
-        );
-        // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
-        this.dataSource = new MatTableDataSource(filteredData);
-        this.dealData = filteredData
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      });
-
+    this.dealService.getAllDeals().subscribe((deals) => {
+      console.log(deals);
+      this.dealData = deals;
+      this.dataSource = new MatTableDataSource(deals);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.filterPredicate = (data: Deal, filter: string) => {
+      const dataStr = data.printer.brand 
+        + data.printer.model 
+        + data.printer.price 
+        + data.dealPrice 
+        + data.dealCurrency 
+        + data.dealDiscountPercentage 
+        + data.dealEndDate 
+        + data.dealStartDate;
+        return dataStr.trim().toLowerCase().indexOf(filter) != -1;
+      };
+    });
+    
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -78,25 +80,20 @@ export class DealListComponent implements OnInit {
     }
   }
 
-  seePrinter(printer: Printer) {
-    // Implement edit functionality here
-    this.router.navigate([`/website/printers/${printer.id}`], {
-      state: { printer },
+  
+  seeDeal(deal: Deal) {
+    this.router.navigate([`/website/deals/${deal.id}`], {
+      state: { deal },
     });
   }
-  editPrinter(printer: Printer) {
-    // Check if the printer has a deal
-    if (printer.deal) {
-      this.router.navigate([`/website/deals/${printer.deal.id}/edit`], {
-        state: { deal: printer.deal },
-      });
-    } else {
-      // Handle the case where the printer does not have a deal
-      console.error('This printer does not have a deal to edit.');
-    }
+
+  editDeal(deal: Deal) {
+    this.router.navigate([`/website/deals/${deal.id}/edit`], {
+      state: { deal },
+    });
   }
 
-  addPrinter() {
+  addDeal() {
     this.router.navigate(['/website/deals/create']);
   }
 
@@ -105,13 +102,13 @@ export class DealListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  deleteDeal(printer: Printer) {
+  deleteDeal(deal: Deal) {
     this.dialogService
       .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
       .afterClosed()
       .subscribe((confirmed) => {
         if (confirmed) {
-          this.DealService.deleteDealById(printer.deal.id).subscribe(
+          this.dealService.deleteDealById(deal.id).subscribe(
             (response) => {
               console.log(response); // This should log "Deal with ID 10 has been removed"
               // Show a toast message after the user confirms the deletion
@@ -123,7 +120,7 @@ export class DealListComponent implements OnInit {
               // Remove the deleted deal from the dataSource
               const data = this.dataSource.data;
               this.dataSource.data = data.filter(
-                (p) => p.deal.id !== printer.deal.id
+                (d) => d.id !== deal.id
               );
             },
             (error) => {

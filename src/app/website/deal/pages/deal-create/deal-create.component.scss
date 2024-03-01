@@ -34,10 +34,11 @@
     display: flex;
     gap: 1em;
     width: 100%;
+    height: 100%;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 1em;
+    padding: 3em 1em;
     @media (max-width: 1024px) {
         flex-direction: column;
     }
@@ -63,6 +64,9 @@
                 p {
                     margin-bottom: 0;
                 }
+                textarea {
+                    min-height: 8em !important;
+                }
                 @media (max-width: 600px) {
                     grid-column: 1 / -1;
                     gap: 1em;
@@ -85,19 +89,4 @@
             }
         }
     }
-}
-
-.tag-inputs-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-}
-
-.tag-inputs {
-    display: flex;
-    gap: 0.5em;
-}
-
-.printer-data-item textarea {
-    min-height: 8em !important;
 }

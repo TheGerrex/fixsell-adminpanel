@@ -101,6 +101,6 @@ export class AuthService {
 
   getCurrentUserRoles(): string[] {
     const user = this.getCurrentUser();
-    return user ? user.roles : [];
+    return user ? user.roles.map((role) => role.name) : [];
   }
 }

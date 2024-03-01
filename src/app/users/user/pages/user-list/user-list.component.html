@@ -44,7 +44,7 @@
       <ng-container matColumnDef="roles">
         <th mat-header-cell *matHeaderCellDef>Rol</th>
         <td mat-cell *matCellDef="let user" data-column="roles">
-          {{ user.roles.join(", ") }}
+          {{ getRoleNames(user.roles) }}
         </td>
       </ng-container>
 

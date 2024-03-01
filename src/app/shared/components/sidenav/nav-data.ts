@@ -39,20 +39,20 @@ export const navbarData = [
       },
     ],
   },
-  // {
-  //   label: 'Usuarios',
-  //   routeLink: 'dashboard/users',
-  //   allowedRoles: ['admin', 'user', 'vendor'],
-  //   icon: 'fal fa-users',
-  //   isExpanded: false,
-  //   subRoutes: [
-  //     {
-  //       label: 'Usuarios',
-  //       routeLink: 'dashboard/users',
-  //       allowedRoles: ['admin', 'user', 'vendor'],
-  //     },
-  //   ],
-  // },
+  {
+    label: 'Usuarios2',
+    routeLink: 'dashboard/users',
+    allowedRoles: ['admin', 'user', 'vendor'],
+    icon: 'fal fa-users',
+    isExpanded: false,
+    subRoutes: [
+      {
+        label: 'Usuarios2',
+        routeLink: 'dashboard/users',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+    ],
+  },
 
   {
     label: 'Usuarios',

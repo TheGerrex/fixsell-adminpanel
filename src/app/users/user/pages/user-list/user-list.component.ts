@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { User } from 'src/app/users/interfaces/users.interface';
+import { Role, User } from 'src/app/users/interfaces/users.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -65,6 +65,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  getRoleNames(roles: Role[]): string {
+    return roles.map((role) => role.name).join(', ');
+  }
+
   deleteUser(id: string) {
     // console.log(id);
     this.http.delete(`${environment.baseUrl}/users/${id}`).subscribe((data) => {
@@ -84,6 +88,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   addUser() {
-    this.router.navigate(['/users/add']);
+    this.router.navigate(['/users/user/create']);
   }
 }

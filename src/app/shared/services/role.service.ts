@@ -35,6 +35,7 @@ export class RoleService {
     '/website/packages/*': ['admin', 'user', 'vendor'],
     '/website/packages/*/edit': ['admin', 'user', 'vendor'],
     '/users/user': ['admin', 'user', 'vendor'],
+    '/users/user/create': ['admin'],
   };
 
   getAllowedRoles(path: string): string[] {

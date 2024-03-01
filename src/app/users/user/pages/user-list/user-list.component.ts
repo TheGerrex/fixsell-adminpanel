@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Role, User } from 'src/app/users/interfaces/users.interface';
 import { environment } from 'src/environments/environment';
+import { DialogService } from '../../../../shared/services/dialog.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-user-list',
@@ -26,7 +28,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialogService: DialogService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -69,14 +73,46 @@ export class UserListComponent implements OnInit, AfterViewInit {
     return roles.map((role) => role.name).join(', ');
   }
 
-  deleteUser(id: string) {
-    // console.log(id);
-    this.http.delete(`${environment.baseUrl}/users/${id}`).subscribe((data) => {
-      console.log(data);
-      this.dataSource.data = this.dataSource.data.filter(
-        (user) => user.id !== id
-      );
-    });
+  deleteUser(user: User) {
+    this.dialogService
+      .openConfirmDialog(
+        `Are you sure you want to delete the user: ${user.name}?`,
+        'Yes',
+        'delete-dialog'
+      )
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.http
+            .delete(`${environment.baseUrl}/auth/${user.id}`, {
+              headers: {
+                Authorization:
+                  'Bearer ' + (localStorage.getItem('token') || ''),
+              },
+            })
+            .subscribe(
+              (response) => {
+                console.log(response);
+                this.toastService.showSuccess(
+                  'User deleted successfully',
+                  'OK'
+                );
+
+                // Remove the deleted user from the dataSource
+                const data = this.dataSource.data;
+                this.dataSource.data = data.filter((u) => u.id !== user.id);
+              },
+              (error) => {
+                console.error('Error:', error);
+                this.dialogService.openErrorDialog(
+                  'Error deleting user',
+                  'OK',
+                  'delete-dialog'
+                );
+              }
+            );
+        }
+      });
   }
 
   editUser(id: string) {

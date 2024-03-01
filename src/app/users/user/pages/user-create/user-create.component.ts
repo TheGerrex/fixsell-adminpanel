@@ -14,6 +14,7 @@ import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { repeat } from 'rxjs';
+import { R } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-user-create',
   templateUrl: './user-create.component.html',
@@ -22,7 +23,7 @@ import { repeat } from 'rxjs';
 export class UserCreateComponent implements OnInit {
   public createUserForm!: FormGroup;
   user: User | null = null;
-
+  roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
 
   constructor(
@@ -38,8 +39,24 @@ export class UserCreateComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+    this.getRoles();
   }
 
+  getRoles(): void {
+    this.usersService.getRoles().subscribe(
+      (roles: string[]) => {
+        this.roles = roles;
+        console.log('roles:', this.roles);
+      },
+      (error) => {
+        console.error('Error fetching roles', error);
+      }
+    );
+  }
+
+  isRoleSelected(roleName: string): boolean {
+    return this.user?.roles?.some((role) => role.name === roleName) || false;
+  }
   initializeForm() {
     this.createUserForm = this.fb.group(
       {
@@ -137,6 +154,13 @@ export class UserCreateComponent implements OnInit {
 
   updateValidationStatus() {
     // Do nothing. This is just to trigger change detection.
+  }
+
+  roleSelected(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement.value === 'addNew') {
+      console.log('Add new role');
+    }
   }
 
   submitForm() {

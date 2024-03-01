@@ -204,6 +204,33 @@
         </div>
 
         <!-- roles -->
+        <div class="user-data-item">
+          <h5>Roles</h5>
+          <select
+            formControlName="roles"
+            class="form-select"
+            (change)="roleSelected($event)"
+            [class.is-invalid]="
+              createUserForm.controls['roles'].invalid &&
+              createUserForm.controls['roles'].touched
+            "
+          >
+            <option value="null" disabled [selected]="!user?.roles"></option>
+            <option
+              *ngFor="let role of roles"
+              [value]="role"
+              [selected]="isRoleSelected(role)"
+            >
+              {{ role }}
+            </option>
+            <option value="addNew" style="color: grey; font-style: italic">
+              - Agregar Rol -
+            </option>
+          </select>
+          <span *ngIf="isValidField('roles')" class="form-text text-danger">
+            {{ getFieldError("roles") }}
+          </span>
+        </div>
       </div>
     </div>
   </form>

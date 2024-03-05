@@ -14,7 +14,8 @@ import { PdfUploadComponent } from './components/pdf-upload/pdf-upload.component
 import { ExportComponent } from './components/export/export.component';
 import { AddPrinterBrandDialogComponent } from './components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 import { AddPrinterCategoryDialogComponent } from './components/add-printer-category-dialog/add-printer-category-dialog.component';
-
+import { InputChipsComponent } from './components/input-chips/input-chips.component';
+import { AddUserRoleDialogComponent } from './components/add-user-role-dialog/add-user-role-dialog.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -27,6 +28,8 @@ import { AddPrinterCategoryDialogComponent } from './components/add-printer-cate
     ExportComponent,
     AddPrinterBrandDialogComponent,
     AddPrinterCategoryDialogComponent,
+    InputChipsComponent,
+    AddUserRoleDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +46,7 @@ import { AddPrinterCategoryDialogComponent } from './components/add-printer-cate
     FileUploadComponent,
     PdfUploadComponent,
     ExportComponent,
+    InputChipsComponent,
   ],
 })
 export class SharedModule {}

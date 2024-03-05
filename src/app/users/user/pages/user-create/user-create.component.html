@@ -6,11 +6,7 @@
   >
     <div class="user-header">
       <h2>Crear Usuario</h2>
-      <button
-        type="submit"
-        class="button button-primary button-raised"
-        (click)="submitForm()"
-      >
+      <button type="submit" class="button button-primary button-raised">
         <span class="button-label">Agregar Usuario</span>
       </button>
     </div>
@@ -36,6 +32,14 @@
               createUserForm.controls['email'].touched
             "
           />
+          <span
+            *ngIf="
+              createUserForm.controls['email'].invalid &&
+              createUserForm.controls['email'].touched
+            "
+            class="invalid-feedback"
+            >El correo es requerido, en formato: nombre@ejemplo.mx</span
+          >
         </div>
 
         <!-- password -->
@@ -53,8 +57,15 @@
               createUserForm.controls['password'].touched
             "
             (keyup)="updateValidationStatus()"
+            (focus)="passwordFieldFocused = true"
+            (blur)="passwordFieldFocused = false"
           />
-          <div *ngIf="createUserForm.controls['password'].touched">
+          <div
+            *ngIf="
+              passwordFieldFocused ||
+              createUserForm.controls['password'].touched
+            "
+          >
             <p>Password must contain:</p>
             <ul>
               <li
@@ -184,7 +195,7 @@
 
         <!-- is active -->
         <div class="user-data-item">
-          <h5>Is Active</h5>
+          <h5>Es Activo</h5>
           <div class="form-check form-switch">
             <input
               class="form-check-input"
@@ -207,9 +218,13 @@
         <div class="user-data-item">
           <h5>Roles</h5>
           <select
+            #selectElem
             formControlName="roles"
             class="form-select"
-            (change)="roleSelected($event)"
+            (change)="
+              roleSelected($event);
+              selectElem.value === 'addNew' && openAddUserRoleDialog()
+            "
             [class.is-invalid]="
               createUserForm.controls['roles'].invalid &&
               createUserForm.controls['roles'].touched
@@ -230,6 +245,14 @@
           <span *ngIf="isValidField('roles')" class="form-text text-danger">
             {{ getFieldError("roles") }}
           </span>
+        </div>
+
+        <div class="user-data-item">
+          <h5>Roles Seleccionado</h5>
+          <website-input-chips
+            [tagsControls]="selectedRoles"
+            (tagsUpdated)="handleTagsUpdated($event)"
+          ></website-input-chips>
         </div>
       </div>
     </div>

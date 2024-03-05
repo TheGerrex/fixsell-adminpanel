@@ -15,6 +15,14 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { repeat } from 'rxjs';
 import { R } from '@angular/cdk/keycodes';
+import {
+  InputChipsComponent,
+  Chip,
+} from '../../../../shared/components/input-chips/input-chips.component';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { AddUserRoleDialogComponent } from '../../../../shared/components/add-user-role-dialog/add-user-role-dialog.component';
 @Component({
   selector: 'app-user-create',
   templateUrl: './user-create.component.html',
@@ -25,7 +33,8 @@ export class UserCreateComponent implements OnInit {
   user: User | null = null;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
-
+  selectedRoles: string[] = [];
+  passwordFieldFocused = false;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -34,7 +43,9 @@ export class UserCreateComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
+    private http: HttpClient,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -67,8 +78,8 @@ export class UserCreateComponent implements OnInit {
           [Validators.required, this.validatorsService.isStrongPassword()],
         ],
         repeatPassword: ['', Validators.required],
-        isActive: [false],
-        roles: [[]],
+        isActive: [true],
+        roles: [this.fb.array([])],
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -158,12 +169,74 @@ export class UserCreateComponent implements OnInit {
 
   roleSelected(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    if (selectElement.value === 'addNew') {
-      console.log('Add new role');
+    const selectedOption = selectElement.value;
+
+    if (
+      selectedOption !== 'addNew' &&
+      !this.selectedRoles.includes(selectedOption)
+    ) {
+      this.selectedRoles = [...this.selectedRoles, selectedOption];
+      this.createUserForm.get('roles')?.setValue(this.selectedRoles);
+      console.log('selectedRoles:', this.selectedRoles);
     }
   }
 
+  handleTagsUpdated(chips: Chip[]) {
+    const newRoles = chips.map((chip) => chip.name);
+
+    // Filter out any roles not in the original set
+    const validRoles = newRoles.filter((role) =>
+      this.selectedRoles.includes(role)
+    );
+
+    // Update the selected roles and form control value
+    this.selectedRoles = validRoles;
+    this.createUserForm.get('roles')?.setValue(this.selectedRoles);
+
+    console.log('selectedRoles:', this.selectedRoles);
+    console.log('chips:', chips);
+  }
+
+  isSubset(subset: string[], set: string[]): boolean {
+    return subset.every((val) => set.includes(val));
+  }
+
+  openAddUserRoleDialog() {
+    const dialogRef = this.dialog.open(AddUserRoleDialogComponent);
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Refresh the roles here
+      this.getRoles();
+    });
+  }
+
   submitForm() {
-    console.log(this.createUserForm.value);
+    if (this.createUserForm.invalid) {
+      console.log('Invalid form');
+      this.createUserForm.markAllAsTouched();
+      return;
+    }
+    this.isLoadingForm = true;
+    const user = this.createUserForm.value;
+    delete user.repeatPassword; // Delete the repeat field
+    console.log('user:', user);
+    this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
+      next: (response) => {
+        this.isLoadingForm = false;
+        this.toastService.showSuccess('Userio creado con exito', 'Close');
+        // Navigate to the user detail page
+        this.router.navigate(['/users/user']);
+        // Reset the form
+        this.createUserForm.reset();
+      },
+      error: (error) => {
+        this.isLoadingForm = false;
+        this.toastService.showError(
+          `Error creando userio: ${error.error.message}`,
+          'Close'
+        );
+        console.error('Error creando userio:', error.error.message);
+      },
+    });
   }
 }

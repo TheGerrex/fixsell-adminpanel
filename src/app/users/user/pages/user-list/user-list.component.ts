@@ -46,10 +46,21 @@ export class UserListComponent implements OnInit, AfterViewInit {
         // save to userData
         this.userData = data;
 
-        // const users = data.map(({ _id,   }) => ({ _id, name, email, isActive, roles }));
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+
+        this.dataSource.filterPredicate = (data: User, filter: string) => {
+          const dataStr =
+            (data.name ?? '') +
+            data.email +
+            (data.isActive ? 'activo' : 'inactive') +
+            (data.roles?.map((role) => role.name).join(' ') ?? '');
+          return dataStr.toLowerCase().includes(filter);
+        };
+
+        // Apply the filter
+        this.dataSource.filter = this.filterValue.trim().toLowerCase();
       });
 
     const userRoles = this.authService.getCurrentUserRoles();
@@ -116,7 +127,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   editUser(id: string) {
-    this.router.navigate(['/users/edit', id]);
+    console.log('navigating to:', `/users/user/${id}/edit`);
+    this.router.navigate([`/users/user/${id}/edit`]);
   }
 
   seeUser(id: string) {

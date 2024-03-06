@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PrinterService } from 'src/app/website/printer/services/printer.service';
 import { ConsumiblesService } from '../../../website/consumibles/services/consumibles.service';
+import { UsersService } from 'src/app/users/services/users.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,8 +10,11 @@ import { Observable } from 'rxjs';
 export class ItemNameService {
   constructor(
     private printerService: PrinterService,
-    private consumiblesService: ConsumiblesService
+    private consumiblesService: ConsumiblesService,
+    private usersService: UsersService
   ) {}
+
+  token = localStorage.getItem('token');
 
   getItemName(type: string, id: string): Observable<string> {
     switch (type) {
@@ -18,7 +22,8 @@ export class ItemNameService {
         return this.printerService.getPrinterName(id);
       case 'consumibles':
         return this.consumiblesService.getConsumibleName(id);
-      // Add more cases here as needed
+      case 'user':
+        return this.usersService.getUserName(id, this.token ?? '');
       default:
         throw new Error(`Unsupported item type: ${type}`);
     }

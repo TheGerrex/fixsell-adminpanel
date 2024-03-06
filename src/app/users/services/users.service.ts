@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -14,6 +14,12 @@ export class UsersService {
   //update user
   // delete user
   // get user by id
+  getUser(id: string, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${environment.baseUrl}/auth/finduser/${id}`, {
+      headers,
+    });
+  }
   // get user by email
   // get user by name
   // get roles names
@@ -29,5 +35,27 @@ export class UsersService {
           roles.map((role) => role.name)
         )
       );
+  }
+
+  // get user name
+  getUserName(id: string, token: string): Observable<string> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http
+      .get<any>(`${environment.baseUrl}/auth/finduser/${id}`, { headers })
+      .pipe(map((response) => response.name));
+  }
+
+  // edit user
+  editUser(user: any, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const userId = user.id;
+    delete user.id; // Remove the id property from the user object
+
+    console.log('userId:', userId); // Log the userId
+    console.log('user:', user); // Log the user object
+
+    return this.http.patch(`${environment.baseUrl}/auth/${userId}`, user, {
+      headers,
+    });
   }
 }

@@ -63,7 +63,7 @@
             mat-icon-button
             color="basic"
             *ngIf="isAdmin"
-            (click)="seeUser(user)"
+            (click)="seeUser(user.id)"
           >
             <mat-icon>visibility</mat-icon>
           </button>
@@ -79,7 +79,7 @@
             mat-icon-button
             color="warn"
             *ngIf="isAdmin"
-            (click)="deleteUser(user)"
+            (click)="deleteUser(user.id)"
           >
             <mat-icon>delete</mat-icon>
           </button>

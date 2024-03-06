@@ -132,7 +132,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   seeUser(id: string) {
-    this.router.navigate(['/users/see', id]);
+    console.log('navigating to:', `/users/user/${id}/`);
+    this.router.navigate([`/users/user/${id}/`]);
   }
 
   addUser() {

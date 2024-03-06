@@ -1,0 +1,41 @@
+<div class="user-container" *ngIf="user">
+  <div class="user-header">
+    <h2>Usuario</h2>
+    <button
+      class="button button-primary button-raised button-icon-text"
+      *ngIf="user.id"
+      (click)="navigateToEditUser(user)"
+    >
+      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+    </button>
+  </div>
+
+  <div class="user-info">
+    <div class="user-info-container">
+      <div class="user-data-container">
+        <div class="user-data-card">
+          <div class="user-card-header">
+            <div class="user-card-title">
+              <h4>{{ user.name }}</h4>
+            </div>
+
+            <div class="user-data-item">
+              <h5>Correo:</h5>
+              <p>{{ user.email }}</p>
+            </div>
+
+            <div class="user-data-item">
+              <h5>Roles</h5>
+              <p *ngFor="let role of user.roles">{{ role.name }}</p>
+            </div>
+
+            <div class="user-data-item">
+              <h5>Estado</h5>
+              <p>{{ user.isActive }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -250,7 +250,7 @@ export class UserEditComponent implements OnInit {
         next: (response) => {
           this.isLoadingForm = false;
           this.toastService.showSuccess(
-            'Userio actualizado con exito',
+            'Usuario actualizado con exito',
             'Close'
           );
           // Navigate to the user detail page
@@ -264,7 +264,7 @@ export class UserEditComponent implements OnInit {
             `Error creando userio: ${error.error.message}`,
             'Close'
           );
-          console.error('Error actualizando userio:', error.error.message);
+          console.error('Error actualizando usuario:', error.error.message);
         },
       });
   }

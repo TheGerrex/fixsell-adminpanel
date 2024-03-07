@@ -26,7 +26,6 @@ export class DealDetailComponent implements OnInit {
   deal: Deal | null = null;
   isLoadingForm = false;
 
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -47,6 +46,8 @@ export class DealDetailComponent implements OnInit {
         });
       }
     });
+
+    console.log(this.deal);
   }
 
   navigateToEditDeal(deal: Deal) {
@@ -61,7 +62,7 @@ export class DealDetailComponent implements OnInit {
   navigateToEditPrinter(id: string) {
     this.router.navigate([`/website/printers/${id}/edit`]);
   }
-  
+
   // openConfirmDialog(consumableId: string): void {
   //   const dialogConfig = new MatDialogConfig();
 
@@ -95,6 +96,6 @@ export class DealDetailComponent implements OnInit {
   //       this.toastService.showError(error.error.message, 'Cerrar');
   //     }
   //   );
-    
+
   // }
 }

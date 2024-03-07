@@ -1,5 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injectable,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -43,29 +49,33 @@ export class DealListComponent implements OnInit {
     private dialogService: DialogService,
     private dialog: MatDialog,
     private toastService: ToastService,
-    private dealService: DealService,
+    private dealService: DealService
   ) {}
 
   ngOnInit() {
     this.dealService.getAllDeals().subscribe((deals) => {
-      console.log(deals);
-      this.dealData = deals;
-      this.dataSource = new MatTableDataSource(deals);
+      this.dealData = deals.filter(
+        (deal: { printer: null; consumible: null }) =>
+          deal.printer !== null || deal.consumible !== null
+      );
+      console.log(this.dealData);
+      this.dataSource = new MatTableDataSource(this.dealData);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.dataSource.filterPredicate = (data: Deal, filter: string) => {
-      const dataStr = data.printer.brand 
-        + data.printer.model 
-        + data.printer.price 
-        + data.dealPrice 
-        + data.dealCurrency 
-        + data.dealDiscountPercentage 
-        + data.dealEndDate 
-        + data.dealStartDate;
+        const dataStr =
+          data.printer.brand +
+          data.printer.model +
+          data.printer.price +
+          data.dealPrice +
+          data.dealCurrency +
+          data.dealDiscountPercentage +
+          data.dealEndDate +
+          data.dealStartDate;
         return dataStr.trim().toLowerCase().indexOf(filter) != -1;
       };
     });
-    
+
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -80,7 +90,6 @@ export class DealListComponent implements OnInit {
     }
   }
 
-  
   seeDeal(deal: Deal) {
     this.router.navigate([`/website/deals/${deal.id}`], {
       state: { deal },
@@ -119,9 +128,7 @@ export class DealListComponent implements OnInit {
 
               // Remove the deleted deal from the dataSource
               const data = this.dataSource.data;
-              this.dataSource.data = data.filter(
-                (d) => d.id !== deal.id
-              );
+              this.dataSource.data = data.filter((d) => d.id !== deal.id);
             },
             (error) => {
               console.error('Error:', error);

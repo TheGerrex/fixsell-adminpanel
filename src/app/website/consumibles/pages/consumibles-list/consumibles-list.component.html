@@ -1,3 +1,4 @@
+<app-loading-spinner *ngIf="isLoadingData"></app-loading-spinner>
 <div class="table-header">
     <h2>Consumibles</h2>
     <div class="table-action-buttons">
@@ -15,7 +16,6 @@
     </button>
     </div>
 </div>
-
 <div class="responsive-table">
     <div class="table-container">
         <table mat-table matSort [dataSource]="dataSource" class="consumibles-list-table">
@@ -24,28 +24,32 @@
                 <td mat-cell *matCellDef="let consumible">{{ consumible.name }}</td>
             </ng-container>
 
+            <ng-container matColumnDef="sku">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>SKU</th>
+                <td mat-cell *matCellDef="let consumible">
+                    {{ consumible.sku }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="brand">
+                <th mat-header-cell *matHeaderCellDef>Fabricante</th>
+                <td mat-cell *matCellDef="let consumible">{{ consumible.brand }}</td>
+            </ng-container>
+            <ng-container matColumnDef="yield">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Vida Util</th>
+                <td mat-cell *matCellDef="let consumible">
+                    <span *ngIf="consumible.yield">{{ consumible.yield }} paginas</span>
+                </td>
+            </ng-container>
             <ng-container matColumnDef="price">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
                 <td mat-cell *matCellDef="let consumible">
-                    {{ consumible.price | currency }}
+                    {{ consumible.price }} {{ consumible.currency }}
                 </td>
-            </ng-container>
-
-            <!-- currency -->
-
-            <ng-container matColumnDef="currency">
-                <th mat-header-cell *matHeaderCellDef>Moneda</th>
-                <td mat-cell *matCellDef="let consumible">{{ consumible.currency }}</td>
             </ng-container>
 
             <ng-container matColumnDef="category">
                 <th mat-header-cell *matHeaderCellDef>Categoria</th>
                 <td mat-cell *matCellDef="let consumible">{{ consumible.category }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="brand">
-                <th mat-header-cell *matHeaderCellDef>Fabricante</th>
-                <td mat-cell *matCellDef="let consumible">{{ consumible.brand }}</td>
             </ng-container>
 
             <ng-container matColumnDef="origen">
@@ -72,6 +76,5 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
     </div>
-
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="8" showFirstLastButtons class="table-paginator"></mat-paginator>
 </div>

@@ -200,6 +200,20 @@
         height: 20px;
         border-radius: 50px;
     }
+    &-black-gloss {
+        display: block;
+        background-color: #252324;
+        width: 20px;
+        height: 20px;
+        border-radius: 50px;
+    }
+    &-black-matte {
+        display: block;
+        background-color: #28282B;
+        width: 20px;
+        height: 20px;
+        border-radius: 50px;
+    }
     &-cyan {
         display: block;
         background-color: $cyan;

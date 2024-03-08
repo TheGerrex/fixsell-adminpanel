@@ -9,6 +9,7 @@
     <div class="consumible-info">
         <div class="consumible-info-container">
             <div class="consumible-data-container">
+                <website-carousel-images [product]="consumible"></website-carousel-images>
                 <div class="consumible-data">
                     <div class="consumible-data-item">
                         <h5>Nombre</h5>
@@ -41,6 +42,12 @@
                             <p *ngSwitchCase="'C'" class="color-box">
                                 <span class="color-cyan"></span>Cyan
                             </p>
+                            <p *ngSwitchCase="'BK'" class="color-box">
+                                <span class="color-black-gloss"></span>Negro Gloss
+                            </p>
+                            <p *ngSwitchCase="'MK'" class="color-box">
+                                <span class="color-black-matte"></span>Negro Matte
+                            </p>
                         </div>
                     </div>
                     <div class="consumible-data-item">
@@ -67,12 +74,12 @@
                         <h5>Volumen</h5>
                         <p *ngIf="consumible.volume">{{ consumible.volume }} g</p>
                     </div>
-                    <div class="consumible-data-item">
+                    <!-- <div class="consumible-data-item">
                         <h5>Consumibles Relacionados</h5>
                         <p *ngFor="let counterpart of consumible.counterparts">
                             {{ counterpart.name }}
                         </p>
-                    </div>
+                    </div> -->
                     <div class="consumible-data-item">
                         <h5>Modelos Compatible</h5>
                         <p *ngFor="let model of consumible.compatibleModels">{{ model }}</p>

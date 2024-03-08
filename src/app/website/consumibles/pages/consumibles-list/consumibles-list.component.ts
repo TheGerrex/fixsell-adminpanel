@@ -25,23 +25,25 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   styleUrls: ['./consumibles-list.component.scss'],
 })
 export class ConsumiblesListComponent implements OnInit {
-  displayedColumns: string[] = [
-    //consumibles columns
-    'name',
-    'price',
-    'currency',
-    'category',
-    'brand',
-    'origen',
-    'action',
-  ];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Consumible>();
   filterValue = '';
   isAdmin = false;
   consumibleData: Consumible[] = [];
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  isLoadingData = false;
+  displayedColumns: string[] = [
+    //consumibles columns
+    'name',
+    'sku',
+    'brand',
+    'yield',
+    'origen',
+    'price',
+    // 'currency',
+    'category',
+    'action',
+  ];
 
   constructor(
     private http: HttpClient,
@@ -54,34 +56,34 @@ export class ConsumiblesListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
-      .subscribe((data) => {
-        console.log(data);
-
-        // save to consumibledata
-        this.consumibleData = data;
-        // Filter out consumibles with null or undefined fields if necessary
-        // const filteredData = data.filter((consumible) => consumible.field !== null);
-
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      });
+    this.isLoadingData = true;
+    this.consumiblesService.getAllConsumibles().subscribe((consumibles) => {
+      this.consumibleData = consumibles;
+      this.dataSource = new MatTableDataSource(consumibles);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.isLoadingData = false;
+    }, (error) => {
+      console.error('Error:', error);
+      this.isLoadingData = false;
+    });
 
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
       this.displayedColumns = [
         'name',
-        'price',
-        'currency',
-        'category',
+        'sku',
         'brand',
+        'yield',
         'origen',
+        'price',
+        // 'currency',
+        'category',
       ];
     }
   }
+  
 
   addConsumible() {
     this.router.navigateByUrl('website/consumibles/create');

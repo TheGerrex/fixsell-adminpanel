@@ -5,9 +5,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { UsersModule } from '../users.module';
 import { ConfigRoutingModule } from './config-routing.module';
 import { ConfigTabsComponent } from './components/config-tabs/config-tabs.component';
+import { RolesCrudComponent } from './components/roles-tab/roles-crud/roles-crud.component';
 
 @NgModule({
-  declarations: [LayoutPageComponent, ConfigTabsComponent],
+  declarations: [LayoutPageComponent, ConfigTabsComponent, RolesCrudComponent],
   imports: [CommonModule, SharedModule, UsersModule, ConfigRoutingModule],
 })
 export class ConfigModule {}

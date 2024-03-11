@@ -6,6 +6,11 @@ const routes: Routes = [
     path: 'user',
     loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
   },
+  {
+    path: 'config',
+    loadChildren: () =>
+      import('./config/config.module').then((m) => m.ConfigModule),
+  },
 ];
 
 @NgModule({

@@ -8,9 +8,6 @@ import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-l
 import { BodyComponent } from './components/body/body.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { IntroScreenComponent } from './components/intro-screen/intro-screen.component';
-import { UsersComponent } from './components/users/users.component';
-import { UsersTableComponent } from './components/users-create/users-table.component';
-import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -19,9 +16,7 @@ import { SharedModule } from '../shared/shared.module';
     BodyComponent,
     SettingsComponent,
     IntroScreenComponent,
-    UsersComponent,
-    UsersTableComponent,
-    UserEditComponent, // Add the PrintersRegisterComponent to the declarations array
+    // Add the PrintersRegisterComponent to the declarations array
   ],
   imports: [
     CommonModule,
@@ -31,8 +26,6 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     SharedModule,
   ],
-  exports: [
-    
-  ],
+  exports: [],
 })
 export class DashboardModule {}

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
+import { Consumible } from '../../interfaces/consumibles.interface';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 
@@ -28,6 +29,17 @@ export class DealService {
       );
   }
 
+  // get all consumibles names
+  getAllConsumiblesNames(): Observable<string[]> {
+    return this.http
+      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
+      .pipe(
+        map((consumibles: Consumible[]) =>
+          consumibles.map((consumible) => consumible.name)
+        )
+      );
+  }
+
   //find printer id by name
   findPrinterIdByName(name: string): Observable<string> {
     return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
@@ -36,6 +48,21 @@ export class DealService {
         return printer ? printer.id : '';
       })
     );
+  }
+
+  //
+  findConsumibleIdByName(name: string): Observable<string> {
+    return this.http
+      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
+      .pipe(
+        map((consumibles: Consumible[]) => {
+          const consumible = consumibles.find(
+            (consumible) => consumible.name === name
+          );
+          return consumible ? consumible.id : '';
+        }),
+        map((id: string | undefined) => id || '') // handle undefined case and return empty string
+      );
   }
 
   //find price of printer by name
@@ -81,6 +108,20 @@ export class DealService {
       }),
       map((printer: Printer) => printer.price)
     );
+  }
+
+  // get consumible price by name
+  getConsumiblePrice(name: string): Observable<number> {
+    return this.http
+      .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
+      .pipe(
+        map((consumibles: Consumible[]) => {
+          const consumible = consumibles.find(
+            (consumible) => consumible.name === name
+          );
+          return consumible ? consumible.price : 0;
+        })
+      );
   }
   // delete deal by id
   deleteDealById(id: number): Observable<any> {

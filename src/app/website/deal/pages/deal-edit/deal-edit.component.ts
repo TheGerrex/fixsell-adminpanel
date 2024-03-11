@@ -56,10 +56,30 @@ export class DealEditComponent implements OnInit {
   initializeForm() {
     this.editDealForm = this.fb.group({
       printer: [
-        { value: this.deal ? this.deal.printer.model : '', disabled: true },
+        {
+          value: this.deal && this.deal.printer ? this.deal.printer.model : '',
+          disabled: true,
+        },
       ],
       printerPrice: [
-        { value: this.deal ? this.deal.printer.price : '', disabled: true },
+        {
+          value: this.deal && this.deal.printer ? this.deal.printer.price : '',
+          disabled: true,
+        },
+      ],
+      consumible: [
+        {
+          value:
+            this.deal && this.deal.consumible ? this.deal.consumible.name : '',
+          disabled: true,
+        },
+      ],
+      consumiblePrice: [
+        {
+          value:
+            this.deal && this.deal.consumible ? this.deal.consumible.price : '',
+          disabled: true,
+        },
       ],
       dealStartDate: [
         this.deal ? this.formatDate(this.deal.dealStartDate) : '',
@@ -105,27 +125,33 @@ export class DealEditComponent implements OnInit {
   }
 
   calculatePrice() {
+    const priceControl = this.editDealForm.get('printerPrice')?.value
+      ? 'printerPrice'
+      : 'consumiblePrice';
     if (this.editDealForm.get('dealDiscountPercentage')?.value) {
       const discount =
-        Number(this.editDealForm.get('printerPrice')?.value) *
+        Number(this.editDealForm.get(priceControl)?.value) *
         (Number(this.editDealForm.get('dealDiscountPercentage')?.value) / 100);
       this.editDealForm
         .get('dealPrice')
         ?.setValue(
           (
-            Number(this.editDealForm.get('printerPrice')?.value) - discount
+            Number(this.editDealForm.get(priceControl)?.value) - discount
           ).toString()
         ); // Convert the calculated price to a string
     }
   }
 
   calculatePercentage() {
+    const priceControl = this.editDealForm.get('printerPrice')?.value
+      ? 'printerPrice'
+      : 'consumiblePrice';
     if (this.editDealForm.get('dealPrice')?.value) {
       const discount =
-        Number(this.editDealForm.get('printerPrice')?.value) -
+        Number(this.editDealForm.get(priceControl)?.value) -
         Number(this.editDealForm.get('dealPrice')?.value); // Convert the deal price value to a number
       const percentage =
-        (discount / Number(this.editDealForm.get('printerPrice')?.value)) * 100;
+        (discount / Number(this.editDealForm.get(priceControl)?.value)) * 100;
       this.editDealForm
         .get('dealDiscountPercentage')
         ?.setValue(percentage.toFixed(0).toString()); // Convert the percentage to a string

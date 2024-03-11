@@ -54,6 +54,7 @@ export class DealListComponent implements OnInit {
 
   ngOnInit() {
     this.dealService.getAllDeals().subscribe((deals) => {
+      console.log('all deals:', deals);
       this.dealData = deals.filter(
         (deal: { printer: null; consumible: null }) =>
           deal.printer !== null || deal.consumible !== null

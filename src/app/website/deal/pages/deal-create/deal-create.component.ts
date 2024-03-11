@@ -12,7 +12,7 @@ import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { startWith, map, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -26,7 +26,9 @@ export class DealCreateComponent implements OnInit {
   public createDealForm!: FormGroup;
   deal: Deal | null = null;
   isLoadingForm = false;
-
+  selectedType = new BehaviorSubject<string>('multifuncional');
+  filteredProductNames: Observable<string[]> | undefined;
+  productControl = new FormControl();
   // filter printers
   printerControl = new FormControl();
   printerPrice: number = 0;
@@ -56,6 +58,19 @@ export class DealCreateComponent implements OnInit {
           .pipe(map((printerNames) => this._filter(value, printerNames)))
       )
     );
+
+    this.filteredProductNames = this.productControl.valueChanges.pipe(
+      startWith(''),
+      switchMap((value) =>
+        this.selectedType.getValue() === 'multifuncional'
+          ? this.dealService
+              .getAllPrinterNames()
+              .pipe(map((productNames) => this._filter(value, productNames)))
+          : this.dealService
+              .getAllConsumiblesNames()
+              .pipe(map((productNames) => this._filter(value, productNames)))
+      )
+    );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
@@ -67,6 +82,7 @@ export class DealCreateComponent implements OnInit {
 
   initializeForm() {
     this.createDealForm = this.fb.group({
+      selectedType: ['multifuncional'],
       printer: ['', Validators.required],
       printerPrice: [{ value: '', disabled: true }, Validators.required],
       dealStartDate: ['', Validators.required],
@@ -76,6 +92,46 @@ export class DealCreateComponent implements OnInit {
       dealDiscountPercentage: ['', Validators.required],
       dealDescription: ['', Validators.required],
     });
+  }
+
+  onTypeChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const value = target?.value;
+    // Update the BehaviorSubject with the new value
+    this.selectedType.next(value);
+
+    //if multifuncional
+    if (value === 'multifuncional') {
+      this.filteredProductNames = this.productControl.valueChanges.pipe(
+        startWith(''),
+        switchMap((value) =>
+          this.dealService
+            .getAllPrinterNames()
+            .pipe(map((productNames) => this._filter(value, productNames)))
+        )
+      );
+    } else {
+      //if consumible
+      this.filteredProductNames = this.productControl.valueChanges.pipe(
+        startWith(''),
+        switchMap((value) =>
+          this.dealService
+            .getAllConsumiblesNames()
+            .pipe(map((productNames) => this._filter(value, productNames)))
+        )
+      );
+    }
+  }
+
+  addProductFromAutocomplete(event: MatAutocompleteSelectedEvent) {
+    if (this.selectedType.getValue() === 'multifuncional') {
+      // Add selected printer
+      this.addPrinter(event.option.viewValue);
+    } else {
+      // Add selected consumible
+      // You need to implement a method similar to addPrinter for consumibles
+      this.addConsumible(event.option.viewValue);
+    }
   }
 
   addPrinterFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
@@ -92,6 +148,29 @@ export class DealCreateComponent implements OnInit {
         this.printerPrice = price;
         this.printerControl.setValue(printerName);
         this.createDealForm.controls['printer'].setValue(printerName);
+        this.createDealForm.controls['printerPrice'].setValue(price);
+      },
+      (error) => {
+        console.error(error);
+        this.toastService.showError(
+          'Hubo un error: ' +
+            error.error.message +
+            '. Por favor, intenta de nuevo.',
+          'error-snackbar'
+        );
+      }
+    );
+  }
+
+  addConsumible(consumibleName: string): void {
+    console.log('Consumible:', consumibleName);
+    if (consumibleName === '') {
+      consumibleName = this.productControl.value;
+    }
+    this.dealService.getConsumiblePrice(consumibleName).subscribe(
+      (price) => {
+        console.log('Price:', price);
+        this.createDealForm.controls['printer'].setValue(consumibleName);
         this.createDealForm.controls['printerPrice'].setValue(price);
       },
       (error) => {
@@ -189,21 +268,31 @@ export class DealCreateComponent implements OnInit {
     formData.dealDiscountPercentage = Number(formData.dealDiscountPercentage);
 
     try {
-      const id: any = await this.dealService.findPrinterIdByName(formData.printer).toPromise();
-    if (id) {
-      formData.printer = id; // set the printer id in the deal object
-    }
+      let id: any;
+      if (formData.selectedType === 'multifuncional') {
+        id = await this.dealService
+          .findPrinterIdByName(formData.printer)
+          .toPromise();
+        if (id) {
+          formData.printer = id; // set the printer id in the deal object
+        }
+      } else if (formData.selectedType === 'consumible') {
+        id = await this.dealService
+          .findConsumibleIdByName(formData.printer)
+          .toPromise();
+        console.log('Consumible id:', id);
+        if (id) {
+          formData.consumible = id; // set the consumible id in the deal object
+          delete formData.printer; // delete the printer property
+        }
+      }
+      delete formData.selectedType; // remove the selectedType property
     } catch (error: any) {
-      this.toastService.showError(
-        error.error.message,
-        'Cerrar'
-      );
+      this.toastService.showError(error.error.message, 'Cerrar');
       return;
     }
     this.isLoadingForm = true;
 
-    
-    
     console.log('formData:', formData);
     this.dealService.submitDealCreateForm(formData).subscribe(
       (response: Deal) => {
@@ -213,14 +302,11 @@ export class DealCreateComponent implements OnInit {
         this.router.navigate(['/website/deals']);
       },
       (error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
         //log object to console
-        console.log("Error FormData:",formData);
+        console.log('Error FormData:', formData);
         this.isLoadingForm = false;
-        this.toastService.showError(
-          error.error.message,
-          'Cerrar'
-        );
+        this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
   }

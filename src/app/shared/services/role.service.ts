@@ -39,6 +39,7 @@ export class RoleService {
     '/users/user/create/*': ['admin'],
     '/users/user/*': ['admin'],
     '/users/user/*/edit': ['admin'],
+    '/users/config': ['admin'],
   };
 
   getAllowedRoles(path: string): string[] {

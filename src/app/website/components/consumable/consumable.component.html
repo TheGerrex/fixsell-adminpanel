@@ -1,38 +1,29 @@
 <div class="printer-consumable-container">
-  <div class="printer-consumable-header">
-    <h4>Consumibles</h4>
-    <button
-      class="button button-primary button-raised button-icon"
-      (click)="navigateToCreateConsumible()"
-    >
+    <div class="printer-consumable-header">
+        <h4>Consumibles</h4>
+        <button class="button button-primary button-raised button-icon" (click)="navigateToCreateConsumible()">
       <mat-icon>add</mat-icon>
     </button>
-  </div>
-  <div class="printer-consumables" *ngIf="product.consumibles.length >= 1">
-    <div class="consumable" *ngFor="let consumable of product.consumibles">
-      <div class="consumable-image-container">
-        <img
-          class="consumable-image"
-          *ngIf="consumable.img_url.length > 0"
-          [src]="consumable.img_url[0]"
-          alt="Imagen consumible"
-        />
-        <div class="default-image" *ngIf="consumable.img_url.length == 0">
-          <mat-icon>image</mat-icon>
-        </div>
-      </div>
+    </div>
+    <div class="printer-consumables" *ngIf="product.consumibles.length >= 1">
+        <div class="consumable" *ngFor="let consumable of product.consumibles">
+            <div class="consumable-image-container">
+                <img class="consumable-image" *ngIf="consumable.img_url.length > 0" [src]="consumable.img_url[0]" alt="Imagen consumible" />
+                <div class="default-image" *ngIf="consumable.img_url.length == 0">
+                    <mat-icon>image</mat-icon>
+                </div>
+            </div>
 
-      <div class="consumable-content">
-        <div class="consumable-header">
-          <div class="consumable-title">
-            <h5>{{ consumable.name }}</h5>
-          </div>
-          <button class="button-icon-option" [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" class="export-menu">
-            <button mat-menu-item>
-              <!-- <mat-icon>ios_share</mat-icon> -->
+            <div class="consumable-content">
+                <div class="consumable-header">
+                    <div class="consumable-title">
+                        <h5>{{ consumable.name }}</h5>
+                    </div>
+                    <button class="button-icon-option" [matMenuTriggerFor]="menu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" class="export-menu">
+                        <button mat-menu-item>
               <div
                 class="menu-button-item"
                 (click)="navigateToSeeConsumible(consumable.id)"
@@ -41,7 +32,7 @@
                 Ver consumible
               </div>
             </button>
-            <button mat-menu-item>
+                        <button mat-menu-item>
               <!-- <mat-icon>ios_share</mat-icon> -->
               <div
                 class="menu-button-item"
@@ -51,7 +42,7 @@
                 Editar consumible
               </div>
             </button>
-            <button mat-menu-item>
+                        <button mat-menu-item>
               <!-- <mat-icon>ios_share</mat-icon> -->
               <div
                 class="menu-button-item"
@@ -61,23 +52,23 @@
                 Borrar consumible
               </div>
             </button>
-          </mat-menu>
+                    </mat-menu>
+                </div>
+                <div class="consumable-row">
+                    <div class="consumable-item">
+                        <p class="item-title">Marca</p>
+                        <p class="item-body">{{ consumable.brand }}</p>
+                    </div>
+                    <div class="consumable-item">
+                        <p class="item-title">Categoria</p>
+                        <p class="item-body">{{ consumable.category }}</p>
+                    </div>
+                    <div class="consumable-item">
+                        <p class="item-title">Origen</p>
+                        <p class="item-body">{{ consumable.origen }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="consumable-row">
-          <div class="consumable-item">
-            <p><b>Precio</b></p>
-            <p>{{ consumable.price | currency }} {{ consumable.currency }}</p>
-          </div>
-          <div class="consumable-item">
-            <p><b>Origen</b></p>
-            <p>{{ consumable.origen }}</p>
-          </div>
-          <div class="consumable-item">
-            <p><b>Categoria</b></p>
-            <p>{{ consumable.category }}</p>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

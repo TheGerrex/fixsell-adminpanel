@@ -13,6 +13,7 @@ import { ConsumiblesService } from '../../services/consumibles.service';
 export class ConsumiblesDetailComponent implements OnInit {
   consumible: Consumible | null = null;
   currentImageIndex = 0;
+  isLoadingData = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,11 +43,14 @@ export class ConsumiblesDetailComponent implements OnInit {
   }
 
   getConsumible(): void {
+    this.isLoadingData = true;
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.consumiblesService.getConsumible(id).subscribe((consumible) => {
+          console.log(consumible);
           this.consumible = consumible;
+          this.isLoadingData = false;
           // this.sharedService.changeConsumiblesModel(consumible.model);
         });
       }

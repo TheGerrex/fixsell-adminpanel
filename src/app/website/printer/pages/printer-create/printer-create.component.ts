@@ -109,9 +109,9 @@ export class PrinterCreateComponent implements OnInit {
   }
 
   getDealDuration(): number {
-    if (this.printer && this.printer.deal) {
-      const startDate = new Date(this.printer.deal.dealStartDate);
-      const endDate = new Date(this.printer.deal.dealEndDate);
+    if (this.printer && this.printer.deals) {
+      const startDate = new Date(this.printer.deals[0].dealStartDate);
+      const endDate = new Date(this.printer.deals[0].dealEndDate);
       const diff = endDate.getTime() - startDate.getTime();
       return Math.floor(diff / (1000 * 60 * 60 * 24));
     }
@@ -119,8 +119,8 @@ export class PrinterCreateComponent implements OnInit {
   }
 
   getDaysLeft(): number {
-    if (this.printer && this.printer.deal) {
-      const endDate = new Date(this.printer.deal.dealEndDate);
+    if (this.printer && this.printer.deals) {
+      const endDate = new Date(this.printer.deals[0].dealEndDate);
       const now = new Date();
       const diff = endDate.getTime() - now.getTime();
       return Math.ceil(diff / (1000 * 60 * 60 * 24));

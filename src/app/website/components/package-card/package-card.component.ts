@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { PackageService } from '../../package/services/package.service';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { Package } from '../../interfaces/printer.interface';
+import { Package } from '../../interfaces/package.interface';
 
 @Component({
   selector: 'website-package-card',

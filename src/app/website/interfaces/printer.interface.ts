@@ -1,4 +1,6 @@
 import { Consumible } from './consumibles.interface';
+import { Deal } from './deal.interface';
+import { Package } from './package.interface';
 
 export interface Printer {
   id: string;
@@ -16,44 +18,17 @@ export interface Printer {
   tags: string[];
   powerConsumption: string;
   dimensions: string;
-  printVelocity: string;
+  printVelocity: number;
   maxPrintSizeSimple: string;
   maxPrintSize: string;
   printSize: string;
-  maxPaperWeight: string;
+  maxPaperWeight: number;
   duplexUnit: boolean;
   paperSizes: string;
   applicableOS: string;
   printerFunctions: string;
-  barcode: null;
-  deal: Deal;
+  barcode: string[];
+  deals: Deal[];
   packages: Package[];
   consumibles: Consumible[];
-}
-
-export interface Deal {
-  id: number;
-  printer: Printer;
-  consumible: Consumible;
-  dealEndDate: Date;
-  dealStartDate: Date;
-  dealPrice: string;
-  dealCurrency: string;
-  dealDiscountPercentage: string;
-  dealDescription: string;
-}
-
-export interface Package {
-  id: number;
-  packageDuration: number;
-  packagePrice: string;
-  packageCurrency: string;
-  packageEndDate: Date;
-  packageStartDate: Date;
-  packageDiscountPercentage: string;
-  packageDescription: string;
-  packagePrints: number;
-  packageExtraClickPrice: string;
-  packageDepositPrice: number;
-  printer: Printer;
 }

@@ -43,7 +43,7 @@ export class ConsumiblesCreateComponent implements OnInit {
   filteredCounterpartNames: Observable<string[]> | undefined;
   public consumibles: Consumible[] = [];
   Consumible: Consumible | undefined = undefined;
-  isLoadingForm = false;
+  isSubmitting = false;
   constructor(
     private toastService: ToastService,
     private router: Router,
@@ -404,13 +404,13 @@ export class ConsumiblesCreateComponent implements OnInit {
     // Replace printer names with IDs in the form data
     delete formData.printers; // delete the old property
     formData.printersIds = printersIds; // add the new property
-    this.isLoadingForm = true;
+    this.isSubmitting = true;
 
     console.log('formData:', formData);
     this.ConsumiblesService.createConsumible(formData).subscribe(
       (response) => {
         console.log('Response:', response);
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showSuccess('Consumible creado', 'Cerrar'); // Show success toast
         this.router.navigate(['/website/consumibles', response.id]);
       },
@@ -418,7 +418,7 @@ export class ConsumiblesCreateComponent implements OnInit {
         console.log(error);
         //log object to console
         console.log(formData);
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showError(
           'There was an error: ' + error.error.message + '. Please try again.',
           'error-snackbar'

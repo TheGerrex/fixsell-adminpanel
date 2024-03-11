@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { Deal } from 'src/app/website/interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { Deal } from 'src/app/website/interfaces/deal.interface';
 @Component({
   selector: 'app-deal-edit',
   templateUrl: './deal-edit.component.html',

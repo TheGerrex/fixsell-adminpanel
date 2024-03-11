@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Deal, Printer } from '../../../interfaces/printer.interface';
+import { Printer } from '../../../interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import {
   FormArray,
@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Deal } from 'src/app/website/interfaces/deal.interface';
 
 @Component({
   selector: 'app-deal-detail',

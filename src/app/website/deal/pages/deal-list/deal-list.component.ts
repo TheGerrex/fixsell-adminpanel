@@ -10,7 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Deal, Printer } from 'src/app/website/interfaces/printer.interface';
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
 import swal from 'sweetalert2';
 import { DealService } from '../../services/deal.service';
@@ -18,6 +18,7 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
+import { Deal } from 'src/app/website/interfaces/deal.interface';
 
 @Component({
   selector: 'app-deal-list',

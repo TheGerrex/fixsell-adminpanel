@@ -4,16 +4,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import {
-  Deal,
-  Package,
-  Printer,
-} from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
 import { PackageService } from '../../services/package.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatSort } from '@angular/material/sort';
+import { Package } from 'src/app/website/interfaces/package.interface';
 
 @Component({
   selector: 'app-package-list',

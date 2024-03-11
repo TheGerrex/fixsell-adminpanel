@@ -58,7 +58,8 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    // background-color: #FFF;
+                    background-color: $gray-50;
+                    border-radius: 0 $border-radius 0 0;
                     border-bottom: 1px solid $gray-300;
                     border-left: 1px solid $gray-300;
                     padding: .5em 1em;
@@ -91,6 +92,12 @@
     display: flex;
     flex-direction: column;
     gap: .5em;
+    .item-title {
+        font-weight: 500;
+    }
+    .item-body {
+        color: $gray-600;
+    }
 }
 
 .menu-button-item {
@@ -112,6 +119,7 @@
     justify-content: center;
     align-items: center;
     background-color: $light-50;
+    border-radius: $border-radius;
     mat-icon {
         font-size: 80px;
         width: 80px;

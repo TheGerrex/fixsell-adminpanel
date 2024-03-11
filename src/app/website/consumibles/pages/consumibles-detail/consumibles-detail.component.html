@@ -1,4 +1,5 @@
-<div class="consumible-container" *ngIf="consumible">
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div class="consumible-container" *ngIf="consumible && !isLoadingData">
     <div class="consumible-header">
         <h2>{{ consumible.name }}</h2>
         <button class="button button-primary button-raised button-icon-text" *ngIf="consumible.id" (click)="navigateToEdit(consumible.id)">
@@ -25,7 +26,7 @@
                     </div>
                     <div class="consumible-data-item">
                         <h5>Precio</h5>
-                        <p>{{ consumible.price | currency }} {{ consumible.currency }}</p>
+                        <p>${{ consumible.price }} {{ consumible.currency }}</p>
                     </div>
                     <div class="consumible-data-item">
                         <h5>Color</h5>

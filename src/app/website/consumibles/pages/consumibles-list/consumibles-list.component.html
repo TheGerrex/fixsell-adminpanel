@@ -1,5 +1,5 @@
-<app-loading-spinner *ngIf="isLoadingData"></app-loading-spinner>
-<div class="table-header">
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div class="table-header" *ngIf="!isLoadingData">
     <h2>Consumibles</h2>
     <div class="table-action-buttons">
         <div class="search-box">
@@ -16,7 +16,7 @@
     </button>
     </div>
 </div>
-<div class="responsive-table">
+<div class="responsive-table" *ngIf="!isLoadingData">
     <div class="table-container">
         <table mat-table matSort [dataSource]="dataSource" class="consumibles-list-table">
             <ng-container matColumnDef="name">

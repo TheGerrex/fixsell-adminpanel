@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { AddPrinterBrandDialogComponent } from 'src/app/shared/components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
-
+import { AddUserRoleDialogComponent } from 'src/app/shared/components/add-user-role-dialog/add-user-role-dialog.component';
 @Component({
   selector: 'app-roles-crud',
   templateUrl: './roles-crud.component.html',
@@ -82,7 +82,7 @@ export class RolesCrudComponent implements OnInit {
 
   addRole() {
     //open dialog
-    const dialogRef = this.dialog.open(AddPrinterBrandDialogComponent);
+    const dialogRef = this.dialog.open(AddUserRoleDialogComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);

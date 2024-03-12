@@ -34,6 +34,7 @@ export class PackageListComponent {
   filterValue = '';
   isAdmin = false;
   packageData: Package[] = [];
+  isLoadingData = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -48,6 +49,7 @@ export class PackageListComponent {
   ) {}
 
   ngOnInit() {
+    this.isLoadingData = true;
     this.http
       .get<Package[]>(`${environment.baseUrl}/packages`)
       .subscribe((data) => {
@@ -60,6 +62,7 @@ export class PackageListComponent {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+        this.isLoadingData = false;
       });
 
     const userRoles = this.authService.getCurrentUserRoles();

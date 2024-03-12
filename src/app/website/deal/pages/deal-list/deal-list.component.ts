@@ -38,6 +38,7 @@ export class DealListComponent implements OnInit {
   filterValue = '';
   isAdmin = false;
   dealData: Deal[] = [];
+  isLoadingData = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -53,6 +54,7 @@ export class DealListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isLoadingData = true;
     this.dealService.getAllDeals().subscribe((deals) => {
       console.log('all deals:', deals);
       this.dealData = deals.filter(
@@ -75,6 +77,7 @@ export class DealListComponent implements OnInit {
           data.dealStartDate;
         return dataStr.trim().toLowerCase().indexOf(filter) != -1;
       };
+      this.isLoadingData = false;
     });
 
     const userRoles = this.authService.getCurrentUserRoles();

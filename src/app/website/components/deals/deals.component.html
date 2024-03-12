@@ -1,12 +1,12 @@
 <div class="printer-deal-container">
     <div class="printer-deal-header">
         <h4>Promociones</h4>
-        <button class="button button-primary button-raised button-icon" (click)="navigateToCreateDeal(product.id)">
+        <button class="button button-primary button-raised button-icon" (click)="navigateToCreateDeal(deals[0].id)">
                               <mat-icon>add</mat-icon>
                             </button>
     </div>
-    <div class="printer-deals" *ngIf="product.deals">
-        <div class="deal">
+    <div class="printer-deals" *ngIf="deals">
+        <div class="deal" *ngFor="let deal of deals">
             <div class="deal-content">
                 <div class="deal-header">
                     <div class="deal-items">
@@ -43,21 +43,30 @@
                 </div>
                 <div class="deal-row">
                     <div class="deal-item">
-                        <p><b>Precio:</b></p>
+                        <p class="item-title">Precio</p>
                         <div class="deal-price-item">
-                            <h3>{{ product.deal.dealPrice | currency }} USD</h3>
-                            <p>({{ product.deal.dealDiscountPercentage }}% de descuento)</p>
+                            <h3 class="item-title">${{ deal.dealPrice }} {{deal.dealCurrency}}</h3>
+                            <p class="deal-percentage">{{ deal.dealDiscountPercentage }}% de descuento</p>
                         </div>
                     </div>
                     <div class="deal-item">
-                        <p><b>Descripción:</b></p>
-                        <p>{{ product.deal.dealDescription }}</p>
+                        <p class="item-title">Descripción</p>
+                        <p class="item-body">{{ deal.dealDescription }}</p>
                     </div>
                     <div class="deal-item">
-                        <p><b>Fecha:</b> {{ product.deal.dealStartDate | date }} - {{ product.deal.dealEndDate | date }}</p>
-                    </div>
-                    <div class="deal-item">
-                        <p><b>Días restantes:</b> {{ getDaysLeft() }} dias</p>
+                        <p class="item-title">Fecha</p>
+                        <div class="deal-time-item">
+                            <p class="item-body">{{ deal.dealStartDate | date : "longDate" }} - {{ deal.dealEndDate | date : "longDate" }}</p>
+                            <p class="deal-time-left" [ngClass]="
+                            {
+                                'green': getDaysLeft() > 10,
+                                'yellow': getDaysLeft() <= 10 && getDaysLeft() > 5,
+                                'orange': getDaysLeft() <= 5 && getDaysLeft() > 2,
+                                'red': getDaysLeft() <= 2
+                            }">
+                                {{ getDaysLeft() }} dias restantes
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -46,10 +46,8 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private dialogService: DialogService,
     private dialog: MatDialog,
     private toastService: ToastService,
     private consumiblesService: ConsumiblesService,
@@ -74,7 +72,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadData();
+    // this.loadData();
   }
 
   loadData() {

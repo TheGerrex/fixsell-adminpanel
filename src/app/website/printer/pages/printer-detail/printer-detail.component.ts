@@ -13,6 +13,7 @@ import { PrinterService } from '../../services/printer.service';
 export class PrinterDetailComponent implements OnInit {
   printer: Printer | null = null;
   currentImageIndex = 0;
+  isLoadingData = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,12 +28,14 @@ export class PrinterDetailComponent implements OnInit {
   }
 
   getPrinter(): void {
+    this.isLoadingData = true;
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.printerService.getPrinter(id).subscribe((printer) => {
         this.printer = printer;
         console.log('Printer:', printer);
         this.sharedService.changePrinterModel(printer.model);
+        this.isLoadingData = false;
       });
     }
   }

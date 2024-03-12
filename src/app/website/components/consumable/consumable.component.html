@@ -54,6 +54,12 @@
             </button>
                     </mat-menu>
                 </div>
+                <div class="consumable-image-container-mobile">
+                    <img class="consumable-image" *ngIf="consumable.img_url.length > 0" [src]="consumable.img_url[0]" alt="Imagen consumible" />
+                    <div class="default-image" *ngIf="consumable.img_url.length == 0">
+                        <mat-icon>image</mat-icon>
+                    </div>
+                </div>
                 <div class="consumable-row">
                     <div class="consumable-item">
                         <p class="item-title">Marca</p>

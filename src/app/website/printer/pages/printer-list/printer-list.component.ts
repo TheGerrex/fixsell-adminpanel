@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
 import swal from 'sweetalert2';
+import { PrinterService } from '../../services/printer.service';
 
 @Component({
   selector: 'app-printer-list',
@@ -15,6 +16,13 @@ import swal from 'sweetalert2';
   styleUrls: ['./printer-list.component.scss'],
 })
 export class PrinterListComponent implements OnInit, AfterViewInit{
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource = new MatTableDataSource<Printer>();
+  filterValue = '';
+  isAdmin = false;
+  printerData: Printer[] = [];
+  isLoadingData = false;
   displayedColumns: string[] = [
     'brand',
     'model',
@@ -22,38 +30,19 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
     'color',
     'category',
     'price',
-    'currency',
     'action',
   ];
-  dataSource = new MatTableDataSource<Printer>();
-  filterValue = '';
-  isAdmin = false;
-  printerData: Printer[] = [];
 
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private printerService: PrinterService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<Printer[]>(`${environment.baseUrl}/printers`)
-      .subscribe((data) => {
-        console.log(data);
-  
-        // save to printerdata
-        this.printerData = data;
-
-        // const printers = data.map(({ _id,   }) => ({ _id, brand, model, category, price }));
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      });
-  
+    Promise.resolve().then(() => this.loadData());
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -62,13 +51,26 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
         'model',
         'category',
         'price',
-        'currency',
       ];
     }
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+    // this.loadData();
+  }
+
+  loadData() {
+    this.isLoadingData = true;
+    this.printerService.getAllPrinters().subscribe((printers) => {
+      this.printerData = printers;
+      this.dataSource = new MatTableDataSource(printers);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.isLoadingData = false;
+    }, (error) => {
+      console.error('Error:', error);
+      this.isLoadingData = false;
+    });
   }
 
   applyFilter(event: Event) {

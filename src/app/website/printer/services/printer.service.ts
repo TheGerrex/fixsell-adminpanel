@@ -11,6 +11,12 @@ import { environment } from 'src/environments/environment';
 export class PrinterService {
   constructor(private http: HttpClient) {}
 
+  getAllPrinters(): Observable<Printer[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(map((printerResponse) => printerResponse));
+  }
+
   getPrinter(id: string): Observable<Printer> {
     return this.http
       .get<Printer>(`${environment.baseUrl}/printers/${id}`)

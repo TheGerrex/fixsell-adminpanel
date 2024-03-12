@@ -83,7 +83,7 @@ export class DealService {
     );
   }
   // delete deal by id
-  deleteDealById(id: number): Observable<any> {
+  deleteDealById(id: string): Observable<any> {
     return this.http.delete(`${environment.baseUrl}/deals/${id}`, {
       responseType: 'text',
     });

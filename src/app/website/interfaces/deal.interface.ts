@@ -2,7 +2,7 @@ import { Consumible } from "./consumibles.interface";
 import { Printer } from "./printer.interface";
 
 export interface Deal {
-  id: number;
+  id: string;
   printer: Printer;
   consumible: Consumible;
   dealEndDate: Date;

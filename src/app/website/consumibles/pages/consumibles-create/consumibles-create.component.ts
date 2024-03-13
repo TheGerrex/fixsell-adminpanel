@@ -123,7 +123,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Borrar imagen de la impresora',
+      title: 'Eliminar imagen de la impresora',
       message: 'Estas seguro de querer eliminar esta imagen?',
       buttonText: {
         ok: 'Eliminar',

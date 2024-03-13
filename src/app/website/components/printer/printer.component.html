@@ -1,70 +1,100 @@
 <div class="printers-container">
-    <div class="printers-header">
-        <h4>Multifuncionales</h4>
-        <button class="button button-primary button-raised button-icon" (click)="navigateToCreatePrinter()">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
-    <div class="consumable-printers" *ngIf="product && product.printers && product.printers.length >= 1">
-        <div class="printer" *ngFor="let printer of product?.printers">
-            <div class="printer-image-container">
-                <img class="printer-image" *ngIf="printer.img_url.length > 0" [src]="printer.img_url[0]" alt="Imagen consumible" />
-                <div class="default-image" *ngIf="printer.img_url.length == 0">
-                    <mat-icon>image</mat-icon>
-                </div>
-            </div>
-
-            <div class="printer-content">
-                <div class="printer-header">
-                    <div class="printer-title">
-                        <h5>{{ printer.model }}</h5>
-                    </div>
-                    <button class="button-icon-option" [matMenuTriggerFor]="menu">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu" class="export-menu">
-                        <button mat-menu-item>
-                            <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item" (click)="navigateToSeePrinter(printer.id)">
-                                <mat-icon>visibility</mat-icon>
-                                Ver multifuncional
-                            </div>
-                        </button>
-                        <button mat-menu-item>
-                        <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item" (click)="navigateToEditPrinter(printer.id)">
-                                <mat-icon style="color: #3C81F6;">edit</mat-icon>
-                                Editar multifuncional
-                            </div>
-                            </button>
-                        <button mat-menu-item>
-                            <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item" (click)="openConfirmDialog(printer.id)">
-                                <mat-icon style="color: #ef4444;">delete</mat-icon>
-                                Borrar multifuncional
-                            </div>
-                        </button>
-                    </mat-menu>
-                </div>
-                <div class="printer-row">
-                    <div class="printer-item">
-                        <p><b>Marca</b></p>
-                        <p>{{ printer.brand }}</p>
-                    </div>
-                    <div class="printer-item">
-                        <p><b>Categoria</b></p>
-                        <p>{{ printer.category }}</p>
-                    </div>
-                    <div class="printer-item">
-                        <p><b>Color</b></p>
-                        <div class="printer-item-container">
-                            <img *ngIf="!printer.color" class="black-and-white-icon" src="../../../../../assets/icons/products/B&W.svg" alt="B&W Icon" />
-                            <img *ngIf="printer.color" class="cmyk-icon" src="../../../../../assets/icons/products/CMYK.svg" alt="CMYK Icon" />
-                            <p>{{ printer.color ? "CMYK" : "B&N" }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="printers-header">
+    <h4>Multifuncionales</h4>
+    <button
+      class="button button-primary button-raised button-icon"
+      (click)="navigateToCreatePrinter()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div
+    class="consumable-printers"
+    *ngIf="product && product.printers && product.printers.length >= 1"
+  >
+    <div class="printer" *ngFor="let printer of product?.printers">
+      <div class="printer-image-container">
+        <img
+          class="printer-image"
+          *ngIf="printer.img_url.length > 0"
+          [src]="printer.img_url[0]"
+          alt="Imagen consumible"
+        />
+        <div class="default-image" *ngIf="printer.img_url.length == 0">
+          <mat-icon>image</mat-icon>
         </div>
+      </div>
+
+      <div class="printer-content">
+        <div class="printer-header">
+          <div class="printer-title">
+            <h5>{{ printer.model }}</h5>
+          </div>
+          <button class="button-icon-option" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="export-menu">
+            <button mat-menu-item>
+              <!-- <mat-icon>ios_share</mat-icon> -->
+              <div
+                class="menu-button-item"
+                (click)="navigateToSeePrinter(printer.id)"
+              >
+                <mat-icon>visibility</mat-icon>
+                Ver multifuncional
+              </div>
+            </button>
+            <button mat-menu-item>
+              <!-- <mat-icon>ios_share</mat-icon> -->
+              <div
+                class="menu-button-item"
+                (click)="navigateToEditPrinter(printer.id)"
+              >
+                <mat-icon style="color: #3c81f6">edit</mat-icon>
+                Editar multifuncional
+              </div>
+            </button>
+            <button mat-menu-item>
+              <!-- <mat-icon>ios_share</mat-icon> -->
+              <div
+                class="menu-button-item"
+                (click)="openConfirmDialog(printer.id)"
+              >
+                <mat-icon style="color: #ef4444">delete</mat-icon>
+                Eliminar multifuncional
+              </div>
+            </button>
+          </mat-menu>
+        </div>
+        <div class="printer-row">
+          <div class="printer-item">
+            <p><b>Marca</b></p>
+            <p>{{ printer.brand }}</p>
+          </div>
+          <div class="printer-item">
+            <p><b>Categoria</b></p>
+            <p>{{ printer.category }}</p>
+          </div>
+          <div class="printer-item">
+            <p><b>Color</b></p>
+            <div class="printer-item-container">
+              <img
+                *ngIf="!printer.color"
+                class="black-and-white-icon"
+                src="../../../../../assets/icons/products/B&W.svg"
+                alt="B&W Icon"
+              />
+              <img
+                *ngIf="printer.color"
+                class="cmyk-icon"
+                src="../../../../../assets/icons/products/CMYK.svg"
+                alt="CMYK Icon"
+              />
+              <p>{{ printer.color ? "CMYK" : "B&N" }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

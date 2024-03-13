@@ -64,7 +64,7 @@ export class RolesCrudComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Delete role',
-        message: `Seguro que quieres borrar la marca ${role}?`,
+        message: `Seguro que quieres elimnar la marca ${role}?`,
         buttonText: { cancel: 'Cancelar', ok: 'Si' },
       },
     });

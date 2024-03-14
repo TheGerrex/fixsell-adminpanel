@@ -2,114 +2,73 @@
     <div class="printer-deal-header">
         <h4>Promociones</h4>
         <button class="button button-primary button-raised button-icon" (click)="navigateToCreateDeal()">
-      <mat-icon>add</mat-icon>
-    </button>
+            <mat-icon>add</mat-icon>
+        </button>
     </div>
-    <div class="printer-deals" *ngIf="deals">
-        <div class="deal">
+    <div class="printer-deals" *ngIf="deals.length > 0">
+        <div class="deal" *ngFor="let deal of deals">
             <div class="deal-content">
                 <div class="deal-header">
                     <div class="deal-items">
                         <div class="deal-title">
                             <h5>Promoción</h5>
-                            <div class="printer-deal-header">
-                                <h4>Promociones</h4>
-                                <button class="button button-primary button-raised button-icon" (click)="navigateToCreateDeal()">
-            <mat-icon>add</mat-icon>
-        </button>
-                            </div>
-                            <div class="printer-deals" *ngIf="deals.length > 0">
-                                <div class="deal" *ngFor="let deal of deals">
-                                    <div class="deal-content">
-                                        <div class="deal-header">
-                                            <div class="deal-items">
-                                                <div class="deal-title">
-                                                    <h5>Promoción</h5>
-                                                </div>
-                                                <p class="deal-time-left" [ngClass]="
+                        </div>
+                        <p class="deal-time-left" [ngClass]="
                             {
                                 'green': getDaysLeft() > 10,
                                 'yellow': getDaysLeft() <= 10 && getDaysLeft() > 5,
                                 'orange': getDaysLeft() <= 5 && getDaysLeft() > 2,
                                 'red': getDaysLeft() <= 2
                             }">
-                                                    {{ getDaysLeft() }} dias restantes
-                                                </p>
-                                            </div>
-                                            <button class="button-icon-option" [matMenuTriggerFor]="menu">
+                            {{ getDaysLeft() }} dias restantes
+                        </p>
+                    </div>
+                    <button class="button-icon-option" [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
-                                            <mat-menu #menu="matMenu" class="export-menu">
-                                                <button mat-menu-item>
+                    <mat-menu #menu="matMenu" class="export-menu">
+                        <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
                             <div class="menu-button-item" (click)="navigateToSeeDeal(deal.id)">
                                 <mat-icon>visibility</mat-icon>
                                 Ver promocion
                             </div>
                         </button>
-                                                <button mat-menu-item>
+                        <button mat-menu-item>
                         <!-- <mat-icon>ios_share</mat-icon> -->
                             <div class="menu-button-item" (click)="navigateToEditDeal(deal.id)">
                                 <mat-icon style="color: #3C81F6;">edit</mat-icon>
                                 Editar promocion
                             </div>
                             </button>
-                                                <button mat-menu-item>
+                        <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
                             <div class="menu-button-item" (click)="openConfirmDialog(deal.id)">
                                 <mat-icon style="color: #ef4444;">delete</mat-icon>
                                 Eliminar promocion
                             </div>
                         </button>
-                                            </mat-menu>
-                                        </div>
-                                        <div class="deal-row">
-                                            <div class="deal-item">
-                                                <p class="item-title">Precio</p>
-                                                <div class="deal-price-item">
-                                                    <h3 class="item-title">${{ deal.dealPrice }} {{deal.dealCurrency}}</h3>
-                                                    <p class="deal-percentage">{{ deal.dealDiscountPercentage }}% de descuento</p>
-                                                </div>
-                                            </div>
-                                            <div class="deal-item">
-                                                <p class="item-title">Descripción</p>
-                                                <p class="item-body">{{ deal.dealDescription }}</p>
-                                            </div>
-                                            <div class="deal-item">
-                                                <p class="item-title">Fecha</p>
-                                                <div class="deal-time-item">
-                                                    <p class="item-body">{{ deal.dealStartDate | date : "longDate" }} - {{ deal.dealEndDate | date : "longDate" }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="button-icon-option" [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-                                <mat-menu #menu="matMenu" class="export-menu">
-                                    <button mat-menu-item>
-              <!-- <mat-icon>ios_share</mat-icon> -->
-              <div class="menu-button-item">
-                <mat-icon>visibility</mat-icon>
-                Ver promocion
-              </div>
-            </button>
-                                    <button mat-menu-item>
-              <!-- <mat-icon>ios_share</mat-icon> -->
-              <div class="menu-button-item">
-                <mat-icon style="color: #3c81f6">edit</mat-icon>
-                Editar promocion
-              </div>
-            </button>
-                                    <button mat-menu-item>
-              <!-- <mat-icon>ios_share</mat-icon> -->
-              <div class="menu-button-item">
-                <mat-icon style="color: #ef4444">delete</mat-icon>
-                Eliminar promocion
-              </div>
-            </button>
-                                </mat-menu>
-                            </div>
+                    </mat-menu>
+                </div>
+                <div class="deal-row">
+                    <div class="deal-item">
+                        <p class="item-title">Precio</p>
+                        <div class="deal-price-item">
+                            <h3 class="item-title">${{ deal.dealPrice }} {{deal.dealCurrency}}</h3>
+                            <p class="deal-percentage">{{ deal.dealDiscountPercentage }}% de descuento</p>
                         </div>
                     </div>
+                    <div class="deal-item">
+                        <p class="item-title">Descripción</p>
+                        <p class="item-body">{{ deal.dealDescription }}</p>
+                    </div>
+                    <div class="deal-item">
+                        <p class="item-title">Fecha</p>
+                        <div class="deal-time-item">
+                            <p class="item-body">{{ deal.dealStartDate | date : "longDate" }} - {{ deal.dealEndDate | date : "longDate" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

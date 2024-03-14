@@ -6,18 +6,37 @@
   border-radius: 8px;
   padding: 1em;
 
-  .config-title {
+  .config-table-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid #e0e0e0;
-    h2 {
-      margin: 0;
+    flex-wrap: wrap; /* Add this line */
+    gap: 2em; /* Add some space between the items */
+
+    .config-item {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 100%; /* Add this line */
+      box-sizing: border-box; /* Add this line */
     }
-    button {
-      flex-shrink: 0;
+
+    .config-title {
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.5em;
+      border-bottom: 1px solid #e0e0e0;
+      h2 {
+        margin: 0;
+      }
+      button {
+        flex-shrink: 0;
+      }
     }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .tab-page .config-table-container .config-item {
+    flex-basis: 0;
+    flex-grow: 1;
   }
 }

@@ -1,6 +1,8 @@
 @import "_variables.scss";
 .table-header {
   display: flex;
+  flex-wrap: wrap; /* Add this line */
+  gap: 0.5em; /* Add some space between the items */
   justify-content: space-between;
   align-items: center;
   background-color: $gray-50;
@@ -8,6 +10,7 @@
   border-bottom: none;
   padding: 16px;
   border-radius: $border-radius;
+
   h2 {
     margin: 0;
   }

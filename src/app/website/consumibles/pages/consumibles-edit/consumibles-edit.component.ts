@@ -35,6 +35,8 @@ export class ConsumiblesEditComponent implements OnInit {
   filteredPrinterNames: Observable<string[]> | undefined;
   filteredCounterpartNames: Observable<string[]> | undefined;
   Consumible: Consumible | undefined = undefined;
+  isLoadingData = false;
+  isSubmitting = false;
   public consumibles: Consumible[] = [];
 
   constructor(
@@ -92,11 +94,13 @@ export class ConsumiblesEditComponent implements OnInit {
       consumibleName.toLowerCase().includes(filterValue)
     );
   }
+
   getConsumible() {
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
     if (id) {
       console.log('getting consumible' + id);
+      this.isLoadingData = true;
       this.ConsumiblesService.getConsumible(id)
         .pipe(
           map((Consumible) => {
@@ -121,6 +125,7 @@ export class ConsumiblesEditComponent implements OnInit {
           this.initalizeForm(); // Moved inside the subscribe block
           console.log(this.Consumible);
           this.sharedService.changeConsumiblesModel(this.Consumible.name);
+          this.isLoadingData = false;
         });
     }
   }
@@ -447,10 +452,11 @@ export class ConsumiblesEditComponent implements OnInit {
 
     // Log the final form data to check if printers has been replaced with printerIds
     console.log('Final form data:', formData);
-
+    this.isSubmitting = true;
     this.ConsumiblesService.updateConsumible(formData, consumiblesId).subscribe(
       (data) => {
         console.log(data);
+        this.isSubmitting = false;
         this.toastService.showSuccess(
           'Consumible actualizado',
           'Consumible actualizado correctamente'
@@ -459,6 +465,7 @@ export class ConsumiblesEditComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.isSubmitting = false;
         this.toastService.showError(
           'Error',
           'Error al actualizar consumible' + error.error.message

@@ -1,89 +1,53 @@
 <div>
-  <form
-    [formGroup]="createConsumibleForm"
-    class="consumibles-container"
-    *ngIf="createConsumibleForm"
-  >
-    <div class="consumibles-header">
-      <h2>Nuevo Consumible</h2>
-      <button
-        type="submit"
-        class="button button-primary button-raised"
-        (click)="submitForm()"
-      >
+    <form [formGroup]="createConsumibleForm" class="consumibles-container" *ngIf="createConsumibleForm">
+        <div class="consumibles-header">
+            <h2>Nuevo Consumible</h2>
+            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
         <span class="button-label">Agregar Consumible</span>
       </button>
-    </div>
-    <div class="loading-container" *ngIf="isLoadingForm">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
-    <div class="consumibles-info">
-      <div class="consumibles-images">
-        <app-file-upload
-          (fileUpload)="onFileUploaded($event)"
-          [productFolder]="'Consumibles'"
-          [typeFolder]="'imagenes'"
-        ></app-file-upload>
-        <app-product-image-grid
-          [imageUrls]="imageUrlsArray"
-          (remove)="openConfirmDialog($event)"
-        ></app-product-image-grid>
-        <span
-          *ngIf="createConsumibleForm.controls['img_url'].invalid"
-          class="form-text text-danger"
-        >
+        </div>
+        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+        <div class="consumibles-info">
+            <div class="consumibles-images">
+                <app-file-upload (fileUpload)="onFileUploaded($event)" [productFolder]="'Consumibles'" [typeFolder]="'imagenes'"></app-file-upload>
+                <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
+                <span *ngIf="createConsumibleForm.controls['img_url'].invalid" class="form-text text-danger">
           Por favor, sube una imagen.
         </span>
-      </div>
+            </div>
 
-      <div class="consumibles-form-container">
-        <div class="consumibles-data">
-          <div class="consumibles-data-item">
-            <h5>Nombre</h5>
-            <input
-              formControlName="name"
-              class="form-control"
-              type="text"
-              placeholder="Ej. TN011"
-              [class.is-invalid]="
+            <div class="consumibles-form-container">
+                <div class="consumibles-data">
+                    <div class="consumibles-data-item">
+                        <h5>Nombre</h5>
+                        <input formControlName="name" class="form-control" type="text" placeholder="Ej. TN011" [class.is-invalid]="
                 createConsumibleForm.controls['name'].invalid &&
                 createConsumibleForm.controls['name'].touched
-              "
-            />
-            <span *ngIf="isValidField('name')" class="form-text text-danger">
+              " />
+                        <span *ngIf="isValidField('name')" class="form-text text-danger">
               {{ getFieldError("name") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- Brand Field -->
-          <div class="consumibles-data-item">
-            <h5>Marca</h5>
-            <input
-              formControlName="brand"
-              class="form-control"
-              type="text"
-              placeholder="Ej. Konica Minolta"
-              [class.is-invalid]="
+                    <!-- Brand Field -->
+                    <div class="consumibles-data-item">
+                        <h5>Marca</h5>
+                        <input formControlName="brand" class="form-control" type="text" placeholder="Ej. Konica Minolta" [class.is-invalid]="
                 createConsumibleForm.controls['brand'].invalid &&
                 createConsumibleForm.controls['brand'].touched
-              "
-            />
-            <span *ngIf="isValidField('brand')" class="form-text text-danger">
+              " />
+                        <span *ngIf="isValidField('brand')" class="form-text text-danger">
               {{ getFieldError("brand") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- Category field -->
-          <div class="consumibles-data-item">
-            <h5>Categoria</h5>
-            <select
-              class="form-select"
-              formControlName="category"
-              [class.is-invalid]="
+                    <!-- Category field -->
+                    <div class="consumibles-data-item">
+                        <h5>Categoria</h5>
+                        <select class="form-select" formControlName="category" [class.is-invalid]="
                 createConsumibleForm.controls['category'].invalid &&
                 createConsumibleForm.controls['category'].touched
-              "
-            >
+              ">
               <option value="Toner">Cartucho de tóner</option>
               <option value="Toner">Cartucho de tinta</option>
               <option value="Drum">Fusor</option>
@@ -91,52 +55,39 @@
               <option value="Drum">Cilindros y rodillos</option>
               <option value="Papel">Papel</option>
             </select>
-            <span
-              *ngIf="isValidField('category')"
-              class="form-text text-danger"
-            >
+                        <span *ngIf="isValidField('category')" class="form-text text-danger">
               {{ getFieldError("category") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- Price field -->
-          <div class="consumibles-data-item">
-            <h5>Precio</h5>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input
-                type="number"
-                class="form-control"
-                formControlName="price"
-                step="0.01"
-                [class.is-invalid]="
+                    <!-- Price field -->
+                    <div class="consumibles-data-item">
+                        <h5>Precio</h5>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" formControlName="price" step="0.01" [class.is-invalid]="
                   createConsumibleForm.controls['price'].invalid &&
                   createConsumibleForm.controls['price'].touched
-                "
-              />
-              <div class="input-group-text">
-                <select class="currency-select" formControlName="currency">
+                " />
+                            <div class="input-group-text">
+                                <select class="currency-select" formControlName="currency">
                   <option value="USD">USD</option>
                   <option value="MXN">MXN</option>
                 </select>
-              </div>
-            </div>
-            <span *ngIf="isValidField('price')" class="form-text text-danger">
+                            </div>
+                        </div>
+                        <span *ngIf="isValidField('price')" class="form-text text-danger">
               {{ getFieldError("price") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- color -->
-          <div class="consumibles-data-item">
-            <h5>Color</h5>
-            <select
-              formControlName="color"
-              class="form-select"
-              [class.is-invalid]="
+                    <!-- color -->
+                    <div class="consumibles-data-item">
+                        <h5>Color</h5>
+                        <select formControlName="color" class="form-select" [class.is-invalid]="
                 createConsumibleForm.controls['color'].invalid &&
                 createConsumibleForm.controls['color'].touched
-              "
-            >
+              ">
               >
               <option value="K">
                 <span class="color-box" style="background-color: black"></span>
@@ -158,236 +109,158 @@
                 Amarillo
               </option>
             </select>
-            <span *ngIf="isValidField('color')" class="form-text text-danger">
+                        <span *ngIf="isValidField('color')" class="form-text text-danger">
               {{ getFieldError("color") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- origin field selector-->
-          <div class="consumibles-data-item">
-            <h5>Origen del producto</h5>
-            <select
-              formControlName="origen"
-              class="form-select"
-              [class.is-invalid]="
+                    <!-- origin field selector-->
+                    <div class="consumibles-data-item">
+                        <h5>Origen del producto</h5>
+                        <select formControlName="origen" class="form-select" [class.is-invalid]="
                 createConsumibleForm.controls['origen'].invalid &&
                 createConsumibleForm.controls['origen'].touched
-              "
-            >
+              ">
               <option value="OEM">OEM</option>
               <option value="Generico">Generico</option>
               <option value="Recarga">Recarga</option>
             </select>
-            <span *ngIf="isValidField('origen')" class="form-text text-danger">
+                        <span *ngIf="isValidField('origen')" class="form-text text-danger">
               {{ getFieldError("origen") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- SKU Field -->
-          <div class="consumibles-data-item">
-            <h5>SKU</h5>
-            <input
-              formControlName="sku"
-              class="form-control"
-              type="text"
-              placeholder="Ej. A0TH030"
-              [class.is-invalid]="
+                    <!-- SKU Field -->
+                    <div class="consumibles-data-item">
+                        <h5>SKU</h5>
+                        <input formControlName="sku" class="form-control" type="text" placeholder="Ej. A0TH030" [class.is-invalid]="
                 createConsumibleForm.controls['sku'].invalid &&
                 createConsumibleForm.controls['sku'].touched
-              "
-            />
-            <span *ngIf="isValidField('sku')" class="form-text text-danger">
+              " />
+                        <span *ngIf="isValidField('sku')" class="form-text text-danger">
               {{ getFieldError("sku") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- yield field -->
-          <div class="consumibles-data-item">
-            <h5>Vida Util @ 5%</h5>
-            <div class="input-group">
-              <input
-                type="number"
-                class="form-control"
-                formControlName="yield"
-                [class.is-invalid]="
+                    <!-- yield field -->
+                    <div class="consumibles-data-item">
+                        <h5>Vida Util @ 5%</h5>
+                        <div class="input-group">
+                            <input type="number" class="form-control" formControlName="yield" [class.is-invalid]="
                   createConsumibleForm.controls['yield'].invalid &&
                   createConsumibleForm.controls['yield'].touched
-                "
-              />
-              <span class="input-group-text">páginas</span>
-            </div>
-            <span *ngIf="isValidField('yield')" class="form-text text-danger">
+                " />
+                            <span class="input-group-text">páginas</span>
+                        </div>
+                        <span *ngIf="isValidField('yield')" class="form-text text-danger">
               {{ getFieldError("yield") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- Short Description field -->
-          <div class="consumibles-data-item full-row">
-            <h5>Descripción corta</h5>
-            <textarea
-              formControlName="shortDescription"
-              class="form-control text-area-small"
-              rows="1"
-              [class.is-invalid]="
+                    <!-- Short Description field -->
+                    <div class="consumibles-data-item full-row">
+                        <h5>Descripción corta</h5>
+                        <textarea formControlName="shortDescription" class="form-control text-area-small" rows="1" [class.is-invalid]="
                 createConsumibleForm.controls['shortDescription'].invalid &&
                 createConsumibleForm.controls['shortDescription'].touched
-              "
-            >
+              ">
             </textarea>
-            <span
-              *ngIf="isValidField('shortDescription')"
-              class="form-text text-danger"
-            >
+                        <span *ngIf="isValidField('shortDescription')" class="form-text text-danger">
               {{ getFieldError("shortDescription") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- Long Description field -->
-          <div class="consumibles-data-item full-row">
-            <h5>Descripción larga</h5>
-            <textarea
-              formControlName="longDescription"
-              class="form-control text-area-large"
-              rows="5"
-              [class.is-invalid]="
+                    <!-- Long Description field -->
+                    <div class="consumibles-data-item full-row">
+                        <h5>Descripción larga</h5>
+                        <textarea formControlName="longDescription" class="form-control text-area-large" rows="5" [class.is-invalid]="
                 createConsumibleForm.controls['longDescription'].invalid &&
                 createConsumibleForm.controls['longDescription'].touched
-              "
-            >
+              ">
             </textarea>
-            <span
-              *ngIf="isValidField('longDescription')"
-              class="form-text text-danger"
-            >
+                        <span *ngIf="isValidField('longDescription')" class="form-text text-danger">
               {{ getFieldError("longDescription") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- volume field -->
-          <div class="consumibles-data-item">
-            <h5>Volumen</h5>
-            <div class="input-group">
-              <input
-                type="number"
-                class="form-control"
-                formControlName="volume"
-                [class.is-invalid]="
+                    <!-- volume field -->
+                    <div class="consumibles-data-item">
+                        <h5>Volumen</h5>
+                        <div class="input-group">
+                            <input type="number" class="form-control" formControlName="volume" [class.is-invalid]="
                   createConsumibleForm.controls['volume'].invalid &&
                   createConsumibleForm.controls['volume'].touched
-                "
-              />
-              <span class="input-group-text">gr</span>
-            </div>
-            <span *ngIf="isValidField('volume')" class="form-text text-danger">
+                " />
+                            <span class="input-group-text">gr</span>
+                        </div>
+                        <span *ngIf="isValidField('volume')" class="form-text text-danger">
               {{ getFieldError("volume") }}
             </span>
-          </div>
+                    </div>
 
-          <!-- printers -->
-          <div class="consumibles-data-item">
-            <h5>Multifuncionales compatibles</h5>
-            <div class="tag-inputs-container" formArrayName="printers">
-              <div *ngFor="let printer of printers; let i = index">
-                <div class="tag-inputs">
-                  <input [formControlName]="i" class="form-control" />
-                  <button
-                    class="button button-danger button-icon"
-                    (click)="removePrinter(i)"
-                  >
+                    <!-- printers -->
+                    <div class="consumibles-data-item">
+                        <h5>Multifuncionales compatibles</h5>
+                        <div class="tag-inputs-container" formArrayName="printers">
+                            <div *ngFor="let printer of printers; let i = index">
+                                <div class="tag-inputs">
+                                    <input [formControlName]="i" class="form-control" />
+                                    <button class="button button-danger button-icon" (click)="removePrinter(i)">
                     <mat-icon>delete</mat-icon>
                   </button>
-                </div>
-              </div>
-              <input
-                type="text"
-                placeholder="Agrega una multifuncional..."
-                aria-label="Number"
-                class="form-control"
-                [formControl]="printerNameControl"
-                [matAutocomplete]="autoPrinter"
-              />
-              <mat-autocomplete
-                #autoPrinter="matAutocomplete"
-                (optionSelected)="addPrinterFromAutocomplete($event)"
-                class="form-control"
-              >
-                <mat-option
-                  *ngFor="let printerName of filteredPrinterNames | async"
-                  [value]="printerName"
-                >
-                  {{ printerName }}
-                </mat-option>
-              </mat-autocomplete>
-            </div>
-          </div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Agrega una multifuncional..." aria-label="Number" class="form-control" [formControl]="printerNameControl" [matAutocomplete]="autoPrinter" />
+                            <mat-autocomplete #autoPrinter="matAutocomplete" (optionSelected)="addPrinterFromAutocomplete($event)" class="form-control">
+                                <mat-option *ngFor="let printerName of filteredPrinterNames | async" [value]="printerName">
+                                    {{ printerName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
 
-          <!-- counterparts -->
-          <div class="consumibles-data-item">
-            <h5>Consumibles Relacionados</h5>
-            <div class="tag-inputs-container" formArrayName="counterparts">
-              <div *ngFor="let counterpart of counterparts; let i = index">
-                <div class="tag-inputs">
-                  <input [formControlName]="i" class="form-control" />
-                  <button
-                    class="button button-danger button-icon"
-                    (click)="removeCounterpart(i)"
-                  >
+                    <!-- counterparts -->
+                    <div class="consumibles-data-item">
+                        <h5>Consumibles Relacionados</h5>
+                        <div class="tag-inputs-container" formArrayName="counterparts">
+                            <div *ngFor="let counterpart of counterparts; let i = index">
+                                <div class="tag-inputs">
+                                    <input [formControlName]="i" class="form-control" />
+                                    <button class="button button-danger button-icon" (click)="removeCounterpart(i)">
                     <mat-icon>delete</mat-icon>
                   </button>
-                </div>
-              </div>
-              <input
-                type="text"
-                placeholder="Agrega un Consumibles Relacionados..."
-                aria-label="Number"
-                class="form-control"
-                [formControl]="counterpartNameControl"
-                [matAutocomplete]="autoCounterpart"
-              />
-              <mat-autocomplete
-                #autoCounterpart="matAutocomplete"
-                (optionSelected)="addCounterpartFromAutocomplete($event)"
-                class="form-control"
-              >
-                <mat-option
-                  *ngFor="
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Agrega un Consumibles Relacionados..." aria-label="Number" class="form-control" [formControl]="counterpartNameControl" [matAutocomplete]="autoCounterpart" />
+                            <mat-autocomplete #autoCounterpart="matAutocomplete" (optionSelected)="addCounterpartFromAutocomplete($event)" class="form-control">
+                                <mat-option *ngFor="
                     let counterpartName of filteredCounterpartNames | async
-                  "
-                  [value]="counterpartName"
-                >
-                  {{ counterpartName }}
-                </mat-option>
-              </mat-autocomplete>
-            </div>
-          </div>
+                  " [value]="counterpartName">
+                                    {{ counterpartName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
 
-          <!-- Compatible Models Field -->
-          <div class="consumibles-data-item">
-            <h5>Modelos compatibles</h5>
-            <div class="tag-inputs-container" formArrayName="compatibleModels">
-              <div
-                *ngFor="let model of compatibleModelsControls; let i = index"
-              >
-                <div class="tag-inputs">
-                  <input [formControlName]="i" class="form-control" />
-                  <button
-                    class="button button-danger button-icon"
-                    (click)="removeModel(i)"
-                  >
+                    <!-- Compatible Models Field -->
+                    <div class="consumibles-data-item">
+                        <h5>Modelos compatibles</h5>
+                        <div class="tag-inputs-container" formArrayName="compatibleModels">
+                            <div *ngFor="let model of compatibleModelsControls; let i = index">
+                                <div class="tag-inputs">
+                                    <input [formControlName]="i" class="form-control" />
+                                    <button class="button button-danger button-icon" (click)="removeModel(i)">
                     <mat-icon>delete</mat-icon>
                   </button>
-                </div>
-              </div>
-              <button
-                class="button button-secondary button-icon"
-                (click)="addModel()"
-              >
+                                </div>
+                            </div>
+                            <button class="button button-secondary button-icon" (click)="addModel()">
                 <mat-icon>add</mat-icon>
               </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

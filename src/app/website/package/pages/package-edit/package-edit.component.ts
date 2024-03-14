@@ -29,6 +29,8 @@ export class PackageEditComponent implements OnInit {
   printerPrice: number = 0;
   printerBrand: string = '';
   public package: any;
+  isLoadingData = false;
+  isSubmitting = false;
 
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
@@ -48,6 +50,7 @@ export class PackageEditComponent implements OnInit {
   }
 
   getPackage() {
+    this.isLoadingData = true;
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
     if (id) {
@@ -60,6 +63,7 @@ export class PackageEditComponent implements OnInit {
         this.printerBrand = this.package.printer.brand; // set the printer brand
         this.initalizeForm();
         console.log(packages);
+        this.isLoadingData = false;
       });
     }
   }
@@ -144,7 +148,7 @@ export class PackageEditComponent implements OnInit {
       this.editPackageForm.markAllAsTouched();
       return;
     }
-
+    this.isSubmitting = true;
     const formData = {
       ...this.editPackageForm.value,
       packagePrice: Number(this.editPackageForm.value.packagePrice),
@@ -158,10 +162,12 @@ export class PackageEditComponent implements OnInit {
 
     this.PackageService.updatePackage(this.package.id, formData).subscribe(
       (response) => {
+        this.isSubmitting = false;
         this.toastService.showSuccess('Package updated successfully', 'OK'); // Show success toast
         this.router.navigate(['/website/packages']);
       },
       (error) => {
+        this.isSubmitting = false;
         console.log(error);
         this.toastService.showError(
           'There was an error: ' + error.error.message + '. Please try again.',

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Deal, Printer } from '../../../interfaces/printer.interface';
+import { Printer } from '../../../interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import {
   FormArray,
@@ -16,6 +16,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Deal } from 'src/app/website/interfaces/deal.interface';
 
 @Component({
   selector: 'app-deal-create',
@@ -29,6 +30,8 @@ export class DealCreateComponent implements OnInit {
   selectedType = new BehaviorSubject<string>('multifuncional');
   filteredProductNames: Observable<string[]> | undefined;
   productControl = new FormControl();
+  isSubmitting = false;
+
   // filter printers
   printerControl = new FormControl();
   printerPrice: number = 0;
@@ -291,22 +294,25 @@ export class DealCreateComponent implements OnInit {
       this.toastService.showError(error.error.message, 'Cerrar');
       return;
     }
-    this.isLoadingForm = true;
+    this.isSubmitting = true;
 
     console.log('formData:', formData);
     this.dealService.submitDealCreateForm(formData).subscribe(
       (response: Deal) => {
         console.log('Response:', response);
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showSuccess('Promoción creado', 'Cerrar'); // Show success toast
-        this.router.navigate(['/website/deals']);
+        this.router.navigate(['/website/deals/', response.id,]);
       },
       (error) => {
         console.log('Error:', error);
         //log object to console
-        console.log('Error FormData:', formData);
-        this.isLoadingForm = false;
-        this.toastService.showError(error.error.message, 'Cerrar');
+        console.log("Error FormData:",formData);
+        this.isSubmitting = false;
+        this.toastService.showError(
+          error.error.message,
+          'Cerrar'
+        );
       }
     );
   }

@@ -1,24 +1,22 @@
 @import "_variables.scss";
-
-
 .export-menu {
     width: max-content;
-  }
-  
-  .export-button-item {
+}
+
+.export-button-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1em;
     width: 100%;
-  }
-  
-  .icon-filetype {
-    color: $green-600;
-    background-color: $green-100;
-    border: 2px solid $green-400;
-    padding: 0px 2px;
+}
+
+.icon-filetype {
+    color: $gray-600;
+    background-color: $gray-100;
+    border: 2px solid $gray-200;
+    padding: 0px 5px;
     border-radius: $border-radius;
     font-weight: 600;
     font-size: 14px;
-  }
+}

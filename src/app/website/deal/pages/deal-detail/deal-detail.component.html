@@ -1,28 +1,30 @@
-<div class="deal-container" *ngIf="deal">
-  <div class="deal-header">
-    <h2>Promoción</h2>
-    <button
-      class="button button-primary button-raised button-icon-text"
-      *ngIf="deal.id"
-      (click)="navigateToEditDeal(deal)"
-    >
-      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-    </button>
-  </div>
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div class="deal-container" *ngIf="deal && !isLoadingData">
+    <div class="deal-header">
+        <h2>Promoción</h2>
+        <div class="button-actions">
+            <button class="button button-danger button-raised button-icon-text" *ngIf="deal.id" (click)="openConfirmDialog(deal)">
+                <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+            </button>
+            <button class="button button-primary button-raised button-icon-text" *ngIf="deal.id" (click)="navigateToEditDeal(deal)">
+                <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+            </button>
+        </div>
+    </div>
 
-  <div class="deal-info">
-    <div class="deal-info-container">
-      <div class="deal-data-container">
-        <div class="deal-data-card">
-          <div class="deal-card-header">
-            <div class="deal-card-title">
-              <h4>{{ deal.printer.model }}</h4>
-            </div>
-            <button class="button-icon-option" [matMenuTriggerFor]="menu">
+    <div class="deal-info">
+        <div class="deal-info-container">
+            <div class="deal-data-container">
+                <div class="deal-data-card">
+                    <div class="deal-card-header">
+                        <div class="deal-card-title">
+                            <h4>{{ deal.printer.model }}</h4>
+                        </div>
+                        <button class="button-icon-option" [matMenuTriggerFor]="menu">
               <mat-icon>more_vert</mat-icon>
             </button>
-            <mat-menu #menu="matMenu" class="export-menu">
-              <button mat-menu-item>
+                        <mat-menu #menu="matMenu" class="export-menu">
+                            <button mat-menu-item>
                 <!-- <mat-icon>ios_share</mat-icon> -->
                 <div
                   class="menu-button-item"
@@ -32,7 +34,7 @@
                   Ver multifuncional
                 </div>
               </button>
-              <button mat-menu-item>
+                            <button mat-menu-item>
                 <!-- <mat-icon>ios_share</mat-icon> -->
                 <div
                   class="menu-button-item"
@@ -42,35 +44,34 @@
                   Editar multifuncional
                 </div>
               </button>
-              <button mat-menu-item>
+                            <button mat-menu-item>
                 <!-- <mat-icon>ios_share</mat-icon> -->
                 <div class="menu-button-item">
                   <mat-icon style="color: #ef4444">delete</mat-icon>
                   Eliminar multifuncional
                 </div>
               </button>
-            </mat-menu>
-          </div>
-          <div class="printer-card">
-            <div class="printer-card-content">
-              <div class="printer-image">
-                <img [src]="deal.printer.img_url[0]" alt="printer-image" />
-              </div>
-              <div class="printer-data">
-                <!-- <div class="deal-data-item full-row">
+                        </mat-menu>
+                    </div>
+                    <div class="printer-card">
+                        <div class="printer-card-content">
+                            <div class="printer-image">
+                                <img [src]="deal.printer.img_url[0]" alt="printer-image" />
+                            </div>
+                            <div class="printer-data">
+                                <!-- <div class="deal-data-item full-row">
                                     <h5>Nombre</h5>
                                     <p>{{ deal.printer.model }}</p>
                                 </div> -->
-                <div class="deal-data-item">
-                  <h5>Precio</h5>
-                  <p>{{ deal.printer.price }} {{ deal.printer.currency }}</p>
-                </div>
-                <div class="deal-data-item">
-                  <h5>Precio Promoción</h5>
-                  <p>
-                    {{ deal.dealPrice }} {{ deal.dealCurrency }}
-                    <span class="deal-percentage"
-                      >{{ deal.dealDiscountPercentage }}% de descuento</span
+                                <div class="deal-data-item">
+                                    <h5>Precio</h5>
+                                    <p>${{ deal.printer.price }} {{ deal.printer.currency }}</p>
+                                </div>
+                                <div class="deal-data-item">
+                                    <h5>Precio Promoción</h5>
+                                    <p>
+                                        ${{ deal.dealPrice }} {{ deal.dealCurrency }}
+                                        <span class="deal-percentage">{{ deal.dealDiscountPercentage }}% de descuento</span
                     >
                   </p>
                 </div>

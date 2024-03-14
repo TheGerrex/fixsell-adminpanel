@@ -25,7 +25,7 @@ export class PrinterCreateComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
-  isLoadingForm = false;
+  isSubmitting = false;
   categories = [
     'Oficina',
     'Produccion',
@@ -93,7 +93,7 @@ export class PrinterCreateComponent implements OnInit {
       color: [false],
       rentable: [false],
       sellable: [false],
-      tags: this.fb.array(['']),
+      tags: this.fb.array([]),
       powerConsumption: [''],
       dimensions: [''],
       printVelocity: [null],
@@ -109,9 +109,9 @@ export class PrinterCreateComponent implements OnInit {
   }
 
   getDealDuration(): number {
-    if (this.printer && this.printer.deal) {
-      const startDate = new Date(this.printer.deal.dealStartDate);
-      const endDate = new Date(this.printer.deal.dealEndDate);
+    if (this.printer && this.printer.deals) {
+      const startDate = new Date(this.printer.deals[0].dealStartDate);
+      const endDate = new Date(this.printer.deals[0].dealEndDate);
       const diff = endDate.getTime() - startDate.getTime();
       return Math.floor(diff / (1000 * 60 * 60 * 24));
     }
@@ -119,8 +119,8 @@ export class PrinterCreateComponent implements OnInit {
   }
 
   getDaysLeft(): number {
-    if (this.printer && this.printer.deal) {
-      const endDate = new Date(this.printer.deal.dealEndDate);
+    if (this.printer && this.printer.deals) {
+      const endDate = new Date(this.printer.deals[0].dealEndDate);
       const now = new Date();
       const diff = endDate.getTime() - now.getTime();
       return Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -218,7 +218,7 @@ export class PrinterCreateComponent implements OnInit {
       this.createPrinterForm.markAllAsTouched();
       return;
     }
-    this.isLoadingForm = true;
+    this.isSubmitting = true;
     const formData = this.createPrinterForm.value;
     formData.price = formData.price.toString();
     // if (!formData.datasheet_url) {
@@ -226,12 +226,12 @@ export class PrinterCreateComponent implements OnInit {
     // }
     this.printerService.submitPrinterCreateForm(formData).subscribe(
       (response: Printer) => {
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showSuccess('Multifuncional creada', 'Cerrar');
         this.router.navigate(['/website/printers', response.id]);
       },
       (error) => {
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );

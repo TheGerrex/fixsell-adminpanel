@@ -3,15 +3,8 @@
         <div class="printer-header">
             <h2>Nuevo Multifuncional</h2>
             <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
-    <form [formGroup]="createPrinterForm" class="printer-container">
-        <div class="printer-header">
-            <h2>Nuevo Multifuncional</h2>
-            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
         <span class="button-label">Agregar Multifuncional</span>
       </button>
-        </div>
-        <div class="loading-container" *ngIf="isLoadingForm">
-            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
         </div>
         <div class="printer-info">
             <div class="printer-images">

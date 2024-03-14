@@ -98,6 +98,9 @@ export class PackageService {
   getPackage(id: string): Observable<any> {
     return this.http.get(`${environment.baseUrl}/packages/${id}`);
   }
+  getAllPackages(): Observable<any> {
+    return this.http.get(`${environment.baseUrl}/packages`);
+  }
 
   getPrinterById(id: string): Observable<Printer> {
     return this.http.get<Printer>(`${environment.baseUrl}/printers/${id}`);

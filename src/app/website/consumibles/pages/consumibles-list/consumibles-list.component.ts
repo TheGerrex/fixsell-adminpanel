@@ -24,7 +24,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   templateUrl: './consumibles-list.component.html',
   styleUrls: ['./consumibles-list.component.scss'],
 })
-export class ConsumiblesListComponent implements OnInit {
+export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Consumible>();
@@ -46,28 +46,15 @@ export class ConsumiblesListComponent implements OnInit {
   ];
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private dialogService: DialogService,
     private dialog: MatDialog,
     private toastService: ToastService,
     private consumiblesService: ConsumiblesService,
   ) {}
 
   ngOnInit() {
-    this.isLoadingData = true;
-    this.consumiblesService.getAllConsumibles().subscribe((consumibles) => {
-      this.consumibleData = consumibles;
-      this.dataSource = new MatTableDataSource(consumibles);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.isLoadingData = false;
-    }, (error) => {
-      console.error('Error:', error);
-      this.isLoadingData = false;
-    });
-
+    Promise.resolve().then(() => this.loadData());
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -82,6 +69,24 @@ export class ConsumiblesListComponent implements OnInit {
         'category',
       ];
     }
+  }
+
+  ngAfterViewInit() {
+    // this.loadData();
+  }
+
+  loadData() {
+    this.isLoadingData = true;
+    this.consumiblesService.getAllConsumibles().subscribe((consumibles) => {
+      this.consumibleData = consumibles;
+      this.dataSource = new MatTableDataSource(consumibles);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.isLoadingData = false;
+    }, (error) => {
+      console.error('Error:', error);
+      this.isLoadingData = false;
+    });
   }
   
 

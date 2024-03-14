@@ -79,6 +79,7 @@ export class BreadcrumbComponent implements OnInit {
     const labelMap: { [key: string]: string } = {
       printers: 'Multifuncionales',
       consumibles: 'Consumibles',
+      packages: 'Paquetes',
       deals: 'Promociones',
       edit: 'Editar',
       create: 'Crear',

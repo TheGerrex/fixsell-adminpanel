@@ -36,6 +36,7 @@ export class PackageCreateComponent implements OnInit {
   public createPackageForm!: FormGroup;
   printerControl = new FormControl();
   printerPrice: number = 0;
+  isSubmitting = false;
 
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
@@ -73,14 +74,14 @@ export class PackageCreateComponent implements OnInit {
     this.createPackageForm = this.fb.group({
       printer: ['', Validators.required],
       packageDuration: [null],
-      packageStartDate: [''],
-      packageEndDate: [''],
-      packagePrice: [0, [Validators.required, Validators.min(0.01)]],
+      packageStartDate: ['', Validators.required],
+      packageEndDate: ['', Validators.required],
+      packagePrice: [null, [Validators.required, Validators.min(0.01)]],
       packageCurrency: ['USD', Validators.required],
-      packageDiscountPercentage: [0],
+      packageDiscountPercentage: [null],
       packageDescription: [''],
-      packagePrints: [0],
-      packageExtraClickPrice: [0],
+      packagePrints: [null],
+      packageExtraClickPrice: [null],
       packageIncludes: this.fb.array([]),
     });
   }
@@ -89,7 +90,7 @@ export class PackageCreateComponent implements OnInit {
     const price = this.createPackageForm.controls['packagePrice'].value;
     const discount = ((this.printerPrice - price) / this.printerPrice) * 100;
     this.createPackageForm.controls['packageDiscountPercentage'].setValue(
-      discount.toFixed(0)
+      Number(discount.toFixed(1))
     );
   }
 
@@ -98,6 +99,11 @@ export class PackageCreateComponent implements OnInit {
       this.createPackageForm.controls['packageDiscountPercentage'].value;
     const price = this.printerPrice * ((100 - discount) / 100);
     this.createPackageForm.controls['packagePrice'].setValue(price);
+  }
+
+  isValidField(field: string): boolean | null {
+    // console.log(this.validatorsService.isValidField(this.createPrinterForm, field))
+    return this.validatorsService.isValidField(this.createPackageForm, field);
   }
 
   getFieldError(field: string): string | null {
@@ -197,6 +203,8 @@ export class PackageCreateComponent implements OnInit {
       return;
     }
     const formData = this.createPackageForm.value;
+
+    this.isSubmitting = true;
     // gets id from printer name and creates package
     this.PackageService.findPrinterIdByName(formData.printer).subscribe(
       (id) => {
@@ -206,11 +214,13 @@ export class PackageCreateComponent implements OnInit {
         console.log(formData);
         this.PackageService.createPackage(formData).subscribe(
           (response) => {
-            this.toastService.showSuccess('Package created successfully', 'OK'); // Show success toast
+            this.toastService.showSuccess('Package created successfully', 'OK');
+            this.isSubmitting = false;
             this.router.navigate(['/website/packages']);
           },
           (error) => {
             console.log(error);
+            this.isSubmitting = false;
             this.toastService.showError(
               'There was an error: ' +
                 error.error.message +

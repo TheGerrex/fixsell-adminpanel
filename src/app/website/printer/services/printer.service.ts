@@ -11,9 +11,21 @@ import { environment } from 'src/environments/environment';
 export class PrinterService {
   constructor(private http: HttpClient) {}
 
+  getAllPrinters(): Observable<Printer[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(map((printerResponse) => printerResponse));
+  }
+
   getPrinter(id: string): Observable<Printer> {
     return this.http
       .get<Printer>(`${environment.baseUrl}/printers/${id}`)
+      .pipe(map((printerResponse) => printerResponse));
+  }
+
+  deletePrinter(id: string): Observable<Printer> {
+    return this.http
+      .delete<Printer>(`${environment.baseUrl}/printers/${id}`)
       .pipe(map((printerResponse) => printerResponse));
   }
 
@@ -29,6 +41,20 @@ export class PrinterService {
     console.log(`${environment.baseUrl}/printers/${id}`);
     return this.http
       .patch(`${environment.baseUrl}/printers/${id}`, formData)
+      .pipe(
+        catchError((error) => {
+          console.error('Error:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  submitPrinterCreateForm(data: Printer): Observable<Printer> {
+    const formData = data;
+    console.log('formData:', formData);
+    console.log(`${environment.baseUrl}/printers`);
+    return this.http
+      .post<Printer>(`${environment.baseUrl}/printers`, formData)
       .pipe(
         catchError((error) => {
           console.error('Error:', error);
@@ -64,20 +90,6 @@ export class PrinterService {
             (categoryName, index, self) => self.indexOf(categoryName) === index
           )
         )
-      );
-  }
-
-  submitPrinterCreateForm(data: Printer): Observable<Printer> {
-    const formData = data;
-    console.log('formData:', formData);
-    console.log(`${environment.baseUrl}/printers`);
-    return this.http
-      .post<Printer>(`${environment.baseUrl}/printers`, formData)
-      .pipe(
-        catchError((error) => {
-          console.error('Error:', error);
-          return throwError(error);
-        })
       );
   }
 

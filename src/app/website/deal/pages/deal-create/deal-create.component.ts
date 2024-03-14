@@ -296,6 +296,8 @@ export class DealCreateComponent implements OnInit {
     }
     this.isSubmitting = true;
 
+    
+    
     console.log('formData:', formData);
     this.dealService.submitDealCreateForm(formData).subscribe(
       (response: Deal) => {

@@ -1,8 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import {
-  AfterViewInit,
   Component,
-  Injectable,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -10,9 +7,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Printer } from 'src/app/website/interfaces/printer.interface';
-import { environment } from 'src/environments/environment';
-import swal from 'sweetalert2';
 import { DealService } from '../../services/deal.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';

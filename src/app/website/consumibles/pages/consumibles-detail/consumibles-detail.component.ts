@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ConsumiblesService } from '../../services/consumibles.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-consumibles-detail',
@@ -17,9 +20,9 @@ export class ConsumiblesDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private sharedService: SharedService,
     private consumiblesService: ConsumiblesService,
+    private toastService: ToastService,
+    private dialog: MatDialog,
     private router: Router
   ) {}
 
@@ -61,7 +64,43 @@ export class ConsumiblesDetailComponent implements OnInit {
     this.router.navigate(['/website', 'consumibles', id, 'edit']);
   }
 
-  navigateToCreateDeal(id: string) {
-    // Implement this if needed
+  openConfirmDialog(consumible: Consumible): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar este consumible?',
+      message: 'El consumible será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (consumible.id){
+            this.deleteConsumible(consumible)
+        }
+        
+      }
+    });
+  }
+
+  deleteConsumible(consumible: Consumible) {
+  if (consumible.id){
+    this.consumiblesService.deleteConsumible(consumible.id).subscribe(
+      (response) => {
+        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+        this.router.navigateByUrl('website/consumibles');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 }

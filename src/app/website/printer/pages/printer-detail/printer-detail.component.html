@@ -2,9 +2,14 @@
 <div class="printer-container" *ngIf="printer && !isLoadingData">
     <div class="printer-header">
         <h2>{{ printer.brand }} {{ printer.model }}</h2>
-        <button class="button button-primary button-raised button-icon-text" (click)="navigateToEdit(printer.id)">
-      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-    </button>
+        <div class="button-actions">
+            <button class="button button-danger button-raised button-icon-text" (click)="openConfirmDialog(printer)">
+                <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+            </button>
+            <button class="button button-primary button-raised button-icon-text" (click)="navigateToEdit(printer.id)">
+                <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+            </button>
+        </div>
     </div>
 
     <div class="printer-info">
@@ -26,7 +31,7 @@
                     </div>
                     <div class="printer-data-item">
                         <h5>Precio</h5>
-                        <p>{{ printer.price | currency }} {{ printer.currency }}</p>
+                        <p>${{ printer.price }} {{ printer.currency }}</p>
                     </div>
                     <div class="printer-data-item full-row">
                         <h5>Descripcion</h5>

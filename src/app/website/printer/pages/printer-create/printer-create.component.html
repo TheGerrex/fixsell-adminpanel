@@ -6,9 +6,7 @@
         <span class="button-label">Crear Multifuncional</span>
       </button>
         </div>
-        <div class="loading-container" *ngIf="isLoadingForm">
-            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-        </div>
+        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
         <div class="printer-info">
             <div class="printer-images">
                 <app-file-upload (fileUpload)="onFileUploaded($event)" [productFolder]="'Multifuncionales'" [typeFolder]="'imagenes'"></app-file-upload>
@@ -138,8 +136,8 @@
               }}</label>
                         </div>
                         <span *ngIf="isValidField('rentable')" class="form-text text-danger">
-              {{ getFieldError("rentable") }}
-            </span>
+                          {{ getFieldError("rentable") }}
+                        </span>
                     </div>
                     <div class="printer-data-item">
                         <h5>Venta</h5>

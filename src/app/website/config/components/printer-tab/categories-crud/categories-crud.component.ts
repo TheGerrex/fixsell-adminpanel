@@ -63,8 +63,8 @@ export class CategoriesCrudComponent {
     // open confirm-dialog
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Delete Category',
-        message: `Seguro que quieres borrar la categoria ${category}?`,
+        title: 'Eliminar categoria',
+        message: `Seguro que quieres eliminar la categoria ${category}?`,
         buttonText: { cancel: 'Cancelar', ok: 'Si' },
       },
     });

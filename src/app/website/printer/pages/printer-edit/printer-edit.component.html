@@ -1,4 +1,5 @@
-<div *ngIf="printer">
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div *ngIf="printer && !isLoadingData">
     <form [formGroup]="editPrinterForm" class="printer-container" *ngIf="editPrinterForm">
         <div class="printer-header">
             <h2>Editar Multifuncional</h2>
@@ -6,9 +7,7 @@
         <span class="button-label">Realizar Cambios</span>
       </button>
         </div>
-        <div class="loading-container" *ngIf="isLoadingForm">
-            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-        </div>
+        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
         <div class="printer-info">
             <div class="printer-images">
                 <app-file-upload (fileUpload)="onFileUploaded($event)" [printer]="printer" [productFolder]="'Multifuncionales'" [typeFolder]="'imagenes'"></app-file-upload>

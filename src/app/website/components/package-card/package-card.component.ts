@@ -21,7 +21,7 @@ export class PackageCardComponent {
 
   @Input() product: any;
 
-  getDaysLeft(): number[] {
+  getDaysLeft(): number {
     if (this.product && this.product.packages) {
       return this.product.packages.map(
         (pkg: { packageEndDate: string | number | Date }) => {
@@ -32,7 +32,7 @@ export class PackageCardComponent {
         }
       );
     }
-    return [];
+    return 0;
   }
 
   navigateToCreatePackage(id: number) {

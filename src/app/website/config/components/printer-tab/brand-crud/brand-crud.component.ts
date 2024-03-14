@@ -62,8 +62,8 @@ export class BrandCrudComponent implements OnInit {
     // open confirm-dialog
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Delete Brand',
-        message: `Seguro que quieres borrar la marca ${brand}?`,
+        title: 'Eliminar marca',
+        message: `Seguro que quieres eliminar la marca ${brand}?`,
         buttonText: { cancel: 'Cancelar', ok: 'Si' },
       },
     });

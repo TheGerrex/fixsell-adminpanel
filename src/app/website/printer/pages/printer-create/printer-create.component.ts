@@ -25,7 +25,7 @@ export class PrinterCreateComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
-  isLoadingForm = false;
+  isSubmitting = false;
   categories = [
     'Oficina',
     'Produccion',
@@ -93,7 +93,7 @@ export class PrinterCreateComponent implements OnInit {
       color: [false],
       rentable: [false],
       sellable: [false],
-      tags: this.fb.array(['']),
+      tags: this.fb.array([]),
       powerConsumption: [''],
       dimensions: [''],
       printVelocity: [null],
@@ -218,7 +218,7 @@ export class PrinterCreateComponent implements OnInit {
       this.createPrinterForm.markAllAsTouched();
       return;
     }
-    this.isLoadingForm = true;
+    this.isSubmitting = true;
     const formData = this.createPrinterForm.value;
     formData.price = formData.price.toString();
     // if (!formData.datasheet_url) {
@@ -226,12 +226,12 @@ export class PrinterCreateComponent implements OnInit {
     // }
     this.printerService.submitPrinterCreateForm(formData).subscribe(
       (response: Printer) => {
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showSuccess('Multifuncional creada', 'Cerrar');
         this.router.navigate(['/website/printers', response.id]);
       },
       (error) => {
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
@@ -300,7 +300,7 @@ export class PrinterCreateComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Borrar imagen de la impresora',
+      title: 'Eliminar imagen de la impresora',
       message: 'Estas seguro de querer eliminar esta imagen?',
       buttonText: {
         ok: 'Eliminar',

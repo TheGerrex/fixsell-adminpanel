@@ -1,9 +1,15 @@
-<div class="deal-container" *ngIf="deal">
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div class="deal-container" *ngIf="deal && !isLoadingData">
     <div class="deal-header">
         <h2>Promoción</h2>
-        <button class="button button-primary button-raised button-icon-text" *ngIf="deal.id" (click)="navigateToEditDeal(deal)">
-      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-    </button>
+        <div class="button-actions">
+            <button class="button button-danger button-raised button-icon-text" *ngIf="deal.id" (click)="openConfirmDialog(deal)">
+                <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+            </button>
+            <button class="button button-primary button-raised button-icon-text" *ngIf="deal.id" (click)="navigateToEditDeal(deal)">
+                <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+            </button>
+        </div>
     </div>
 
     <div class="deal-info">
@@ -36,7 +42,7 @@
                             <!-- <mat-icon>ios_share</mat-icon> -->
                             <div class="menu-button-item" >
                                 <mat-icon style="color: #ef4444;">delete</mat-icon>
-                                Borrar multifuncional
+                                Eliminar multifuncional
                             </div>
                         </button>
                         </mat-menu>

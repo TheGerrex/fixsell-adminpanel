@@ -2,9 +2,14 @@
 <div class="consumible-container" *ngIf="consumible && !isLoadingData">
     <div class="consumible-header">
         <h2>{{ consumible.name }}</h2>
-        <button class="button button-primary button-raised button-icon-text" *ngIf="consumible.id" (click)="navigateToEdit(consumible.id)">
-      <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-    </button>
+        <div class="button-actions">
+            <button class="button button-danger button-raised button-icon-text" *ngIf="consumible.id" (click)="openConfirmDialog(consumible)">
+                <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+            </button>
+            <button class="button button-primary button-raised button-icon-text" *ngIf="consumible.id" (click)="navigateToEdit(consumible.id)">
+                <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+            </button>
+        </div>
     </div>
 
     <div class="consumible-info">

@@ -26,7 +26,7 @@ import { Deal } from 'src/app/website/interfaces/deal.interface';
 export class DealCreateComponent implements OnInit {
   public createDealForm!: FormGroup;
   deal: Deal | null = null;
-  isLoadingForm = false;
+  isSubmitting = false;
 
   // filter printers
   printerControl = new FormControl();
@@ -201,7 +201,7 @@ export class DealCreateComponent implements OnInit {
       );
       return;
     }
-    this.isLoadingForm = true;
+    this.isSubmitting = true;
 
     
     
@@ -209,15 +209,15 @@ export class DealCreateComponent implements OnInit {
     this.dealService.submitDealCreateForm(formData).subscribe(
       (response: Deal) => {
         console.log('Response:', response);
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showSuccess('Promoción creado', 'Cerrar'); // Show success toast
-        this.router.navigate(['/website/deals']);
+        this.router.navigate(['/website/deals/', response.id,]);
       },
       (error) => {
         console.log("Error:", error);
         //log object to console
         console.log("Error FormData:",formData);
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showError(
           error.error.message,
           'Cerrar'

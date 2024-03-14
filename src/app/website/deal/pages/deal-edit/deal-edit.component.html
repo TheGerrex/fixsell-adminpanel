@@ -1,4 +1,5 @@
-<div>
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div *ngIf="deal && !isLoadingData">
     <form [formGroup]="editDealForm" (ngSubmit)="submitForm()" class="deal-container">
         <div class="deal-header">
             <h2>Editar Promocion</h2>
@@ -7,9 +8,7 @@
             </button>
         </div>
 
-        <div class="loading-container" *ngIf="isLoadingForm">
-            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-        </div>
+        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
 
         <div class="deal-info">
             <div class="deal-form-container">
@@ -74,7 +73,7 @@
                               editDealForm.controls['dealPrice'].touched
                             " />
                             <div class="input-group-text">
-                                <select class="currency-select" formControlName="dealCurrency" [value]="deal?.dealCurrency">
+                                <select class="currency-select" formControlName="dealCurrency" [value]="deal.dealCurrency">
                                   <option value="USD">USD</option>
                                   <option value="MXN">MXN</option>
                                 </select>

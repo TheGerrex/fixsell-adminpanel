@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injectable, ViewChild } from '@angular/core';
+import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -10,54 +10,44 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatSort } from '@angular/material/sort';
 import { Package } from 'src/app/website/interfaces/package.interface';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-package-list',
   templateUrl: './package-list.component.html',
   styleUrls: ['./package-list.component.scss'],
 })
-export class PackageListComponent {
-  displayedColumns: string[] = [
-    'brand',
-    'model',
-    'price',
-    'currency',
-    'packageDuration',
-    'packageDiscountPercentage',
-    'action',
-  ];
+export class PackageListComponent implements OnInit {
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Package>();
   filterValue = '';
   isAdmin = false;
   packageData: Package[] = [];
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  isLoadingData = false;
+  displayedColumns: string[] = [
+    'brand',
+    'model',
+    'price',
+    'packageStartDate',
+    'packageEndDate',
+    'packageDuration',
+    'action',
+  ];
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
     private dialogService: DialogService,
-    private PackageService: PackageService,
+    private packageService: PackageService,
+    private dialog: MatDialog,
     private toastService: ToastService
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<Package[]>(`${environment.baseUrl}/packages`)
-      .subscribe((data) => {
-        console.log(data);
-
-        // save to packagedata
-        this.packageData = data;
-        // Filter out packages with null or undefined fields if necessary
-        // const filteredData = data.filter((package) => package.field !== null);
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      });
-
+    Promise.resolve().then(() => this.loadData());
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -72,7 +62,22 @@ export class PackageListComponent {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+    // this.dataSource.sort = this.sort;
+  }
+
+  loadData() {
+    this.isLoadingData = true;
+    this.packageService.getAllPackages().subscribe((data) => {
+        console.log(data);
+        this.packageData = data;
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.isLoadingData = false;
+    }, (error) => {
+      console.error('Error:', error);
+      this.isLoadingData = false;
+    });
   }
 
   addPackage() {
@@ -93,28 +98,46 @@ export class PackageListComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  deletePackage(packages: Package) {
-    this.dialogService
-      .openConfirmDialog(
-        `Are you sure you want to delete the package for ${packages.printer.brand}, with the cost of ${packages.packagePrice}?`,
-        'Yes',
-        'delete-dialog.'
-      )
-      .afterClosed()
-      .subscribe((res) => {
-        if (res) {
-          this.PackageService.deletePackageById(packages.id).subscribe(() => {
-            this.toastService.showSuccess('paquete borrado exitosamente', 'OK');
-            this.http
-              .get<Package[]>(`${environment.baseUrl}/packages`)
-              .subscribe((data) => {
-                this.packageData = data;
-                this.dataSource = new MatTableDataSource(data);
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-              });
-          });
+  openConfirmDialog(packages: Package): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de querer eliminar este paquete?',
+      message: 'El paquete será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (packages.id){
+            this.deletePackage(packages)
         }
-      });
+        
+      }
+    });
+  }
+
+  deletePackage(packages: Package) {
+  if (packages.id){
+    this.packageService.deletePackageById(packages.id).subscribe(
+      (response) => {
+        // Update consumibleData
+        this.packageData = this.packageData.filter((c) => c.id !== packages.id);
+        // Update dataSource
+        this.dataSource.data = this.packageData;
+        this.toastService.showSuccess('Paquete eliminado con exito', 'Aceptar');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 }

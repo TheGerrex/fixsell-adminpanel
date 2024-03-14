@@ -1,301 +1,170 @@
 <div>
-  <form
-    [formGroup]="createPackageForm"
-    class="packages-container"
-    *ngIf="createPackageForm"
-  >
-    <div class="packages-header">
-      <h2>Crear Package</h2>
-      <button
-        type="submit"
-        class="button button-primary button-raised"
-        (click)="submitForm()"
-      >
-        <span class="button-label">Agregar Package</span>
+    <form [formGroup]="createPackageForm" class="packages-container" *ngIf="createPackageForm">
+        <div class="packages-header">
+            <h2>Nuevo Paquete</h2>
+            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
+        <span class="button-label">Crear paquete</span>
       </button>
-    </div>
-    <div class="packages-info">
-      <div class="packages-data-container">
-        <div class="packages-data">
-          <div class="row">
-            <!-- Printer -->
-            <div class="packages-data-item">
-              <h5>Printer</h5>
+        </div>
+        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+        <div class="packages-info">
+            <div class="packages-form-container">
+                <div class="packages-data">
+                    <!-- Printer -->
+                    <div class="packages-data-item full-row">
+                        <h5>Multifuncional</h5>
+                        <input type="text" placeholder="Agrega una multifuncional..." aria-label="Number" class="form-control" [formControl]="printerControl" [matAutocomplete]="auto" [class.is-invalid]="
+                              createPackageForm.controls['printer'].invalid &&
+                              createPackageForm.controls['printer'].touched">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPrinterFromAutocomplete($event)" class="form-control">
+                            <mat-option *ngFor="let printerName of filteredPrinterNames | async" [value]="printerName">
+                                {{ printerName }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span *ngIf="isValidField('printer')" class="form-text text-danger">
+                              {{ getFieldError("printer") }}
+                            </span>
+                        <div>
+                            <p>Precio: {{ printerPrice }}</p>
+                        </div>
+                    </div>
 
-              <input
-                type="text"
-                placeholder="Add printer"
-                aria-label="Number"
-                class="form-control example-input"
-                [formControl]="printerControl"
-                [matAutocomplete]="auto"
-              />
-              <mat-autocomplete
-                #auto="matAutocomplete"
-                (optionSelected)="addPrinterFromAutocomplete($event)"
-                class="form-control"
-              >
-                <mat-option
-                  *ngFor="let printerName of filteredPrinterNames | async"
-                  [value]="printerName"
-                >
-                  {{ printerName }}
-                </mat-option>
-              </mat-autocomplete>
-              <div>
-                <p>Price: {{ printerPrice }}</p>
-              </div>
-              <span
-                *ngIf="
-                  createPackageForm.controls['printer'].invalid &&
-                  createPackageForm.controls['printer'].touched
-                "
-                class="form-text text-danger"
-              >
-                Printer is required.
-              </span>
-            </div>
+                    <div class="packages-data-item">
+                        <h5>Fecha inicial</h5>
+                        <input formControlName="packageStartDate" class="form-control" type="date" [class.is-invalid]="
+                              createPackageForm.controls['packageStartDate'].invalid &&
+                              createPackageForm.controls['packageStartDate'].touched
+                            " />
+                        <span *ngIf="isValidField('packageStartDate')" class="form-text text-danger">
+                              {{ getFieldError("packageStartDate") }}
+                            </span>
+                    </div>
 
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Duration</h5>
-              <input
-                formControlName="packageDuration"
-                class="form-control"
-                type="number"
-                placeholder="Duracion del paquete en meses"
-                [class.is-invalid]="
-                  createPackageForm.controls['packageDuration'].invalid &&
-                  createPackageForm.controls['packageDuration'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  createPackageForm.controls['packageDuration'].invalid &&
-                  createPackageForm.controls['packageDuration'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package Duration is required.
-              </span>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Start Date</h5>
-              <input
-                formControlName="packageStartDate"
-                class="form-control"
-                type="date"
-                [class.is-invalid]="
-                  createPackageForm.controls['packageStartDate'].invalid &&
-                  createPackageForm.controls['packageStartDate'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  createPackageForm.controls['packageStartDate'].invalid &&
-                  createPackageForm.controls['packageStartDate'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package Start Date is required.
-              </span>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package End Date</h5>
-              <input
-                formControlName="packageEndDate"
-                class="form-control"
-                type="date"
-                [class.is-invalid]="
-                  createPackageForm.controls['packageEndDate'].invalid &&
-                  createPackageForm.controls['packageEndDate'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  createPackageForm.controls['packageEndDate'].invalid &&
-                  createPackageForm.controls['packageEndDate'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package End Date is required.
-              </span>
-            </div>
+                    <div class="packages-data-item">
+                        <h5>Fecha final</h5>
+                        <input formControlName="packageEndDate" class="form-control" type="date" [class.is-invalid]="
+                              createPackageForm.controls['packageEndDate'].invalid &&
+                              createPackageForm.controls['packageEndDate'].touched" />
+                        <span *ngIf="isValidField('packageEndDate')" class="form-text text-danger">
+                              {{ getFieldError("packageEndDate") }}
+                            </span>
+                    </div>
 
-            <!-- package Price -->
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Price</h5>
-              <div class="package-price-item input-group">
-                <input
-                  formControlName="packagePrice"
-                  class="form-control"
-                  type="number"
-                  step="0.01"
-                  [class.is-invalid]="
-                    createPackageForm.controls['packagePrice'].invalid &&
-                    createPackageForm.controls['packagePrice'].touched
-                  "
-                />
-                <div class="input-group-text">
-                  <select
-                    class="currency-select"
-                    formControlName="packageCurrency"
-                  >
-                    <option value="USD">USD</option>
-                    <option value="MXN">MXN</option>
-                  </select>
-                </div>
-                <button
-                  class="button button-secondary button-icon"
-                  (click)="calculatePercentage()"
-                >
-                  Calculate Discount
-                </button>
-              </div>
-              <span
-                *ngIf="
-                  createPackageForm.controls['packagePrice'].invalid &&
-                  createPackageForm.controls['packagePrice'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package Price is required.
-              </span>
-            </div>
+                    <div class="packages-data-item full-row">
+                        <h5>Duración del paquete</h5>
+                        <div class="input-group">
+                            <input formControlName="packageDuration" class="form-control" type="number" placeholder="2" [class.is-invalid]="
+                                  createPackageForm.controls['packageDuration'].invalid &&
+                                  createPackageForm.controls['packageDuration'].touched" />
+                            <div class="input-group-text">meses</div>
+                        </div>
+                        <span *ngIf="isValidField('packageDuration')" class="form-text text-danger">
+                              {{ getFieldError("packageDuration") }}
+                            </span>
+                    </div>
 
-            <!-- package Discount Percentage -->
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Discount Percentage</h5>
-              <div class="package-price-item input-group">
-                <input
-                  formControlName="packageDiscountPercentage"
-                  class="form-control"
-                  type="number"
-                  step="0.01"
-                  [class.is-invalid]="
+                    <!-- package price -->
+                    <div class="packages-data-item full-row">
+                        <h5>Precio</h5>
+                        <div class="package-price-item input-group">
+                            <div class="input-group-text">$</div>
+                            <input formControlName="packagePrice" class="form-control" type="number" step="0.01" placeholder="250" [class.is-invalid]="
+                                  createPackageForm.controls['packagePrice'].invalid &&
+                                  createPackageForm.controls['packagePrice'].touched" />
+                            <div class="input-group-text">
+                                <select class="currency-select" formControlName="packageCurrency">
+                                      <option value="USD">USD</option>
+                                      <option value="MXN">MXN</option>
+                                    </select>
+                            </div>
+                            <button class="btn btn-outline-secondary" (click)="calculatePercentage()">
+                                  Calcular descuento
+                                </button>
+                        </div>
+                        <span *ngIf="isValidField('packagePrice')" class="form-text text-danger">
+                              {{ getFieldError("packagePrice") }}
+                            </span>
+                    </div>
+
+                    <!-- package discount percentage -->
+                    <div class="packages-data-item full-row">
+                        <h5>Package Discount Percentage</h5>
+                        <div class="package-price-item input-group">
+                            <input formControlName="packageDiscountPercentage" class="form-control" type="number" step="0.01" placeholder="20" [class.is-invalid]="
                     createPackageForm.controls['packageDiscountPercentage']
                       .invalid &&
                     createPackageForm.controls['packageDiscountPercentage']
                       .touched
-                  "
-                />
-                <div class="input-group-text">%</div>
-                <button
-                  class="button button-secondary button-icon"
-                  (click)="calculatePrice()"
-                >
-                  Calculate Price
+                  " />
+                            <div class="input-group-text">%</div>
+                            <button class="btn btn-outline-secondary" (click)="calculatePrice()">
+                  Calcular precio
                 </button>
-              </div>
-              <span
-                *ngIf="
-                  createPackageForm.controls['packageDiscountPercentage']
-                    .invalid &&
-                  createPackageForm.controls['packageDiscountPercentage']
-                    .touched
-                "
-                class="form-text text-danger"
-              >
-                Package Discount Percentage is required.
-              </span>
-            </div>
+                        </div>
+                        <span *ngIf="isValidField('packagePrice')" class="form-text text-danger">
+                              {{ getFieldError("packagePrice") }}
+                            </span>
+                    </div>
 
-            <!-- package Discount Price -->
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Description</h5>
-              <textarea
-                formControlName="packageDescription"
-                class="form-control"
-                rows="5"
-                [class.is-invalid]="
-                  createPackageForm.controls['packageDescription'].invalid &&
-                  createPackageForm.controls['packageDescription'].touched
-                "
-              ></textarea>
-              <span
-                *ngIf="
-                  createPackageForm.controls['packageDescription'].invalid &&
-                  createPackageForm.controls['packageDescription'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package Description is required.
-              </span>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Prints</h5>
-              <input
-                formControlName="packagePrints"
-                class="form-control"
-                type="number"
-                [class.is-invalid]="
+                    <!-- package description -->
+                    <div class="packages-data-item full-row">
+                        <h5>Descripción</h5>
+                        <textarea formControlName="packageDescription" class="form-control" rows="5" [class.is-invalid]="
+                          createPackageForm.controls['packageDescription'].invalid &&
+                          createPackageForm.controls['packageDescription'].touched">
+                        </textarea>
+                        <span *ngIf="isValidField('packageDuration')" class="form-text text-danger">
+                          {{ getFieldError("packageDuration") }}
+                        </span>
+                    </div>
+
+                    <div class="packages-data-item">
+                        <h5>Impresiónes incluidas</h5>
+                        <div class="input-group">
+                            <input formControlName="packagePrints" class="form-control" type="number" placeholder="5000" [class.is-invalid]="
                   createPackageForm.controls['packagePrints'].invalid &&
-                  createPackageForm.controls['packagePrints'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  createPackageForm.controls['packagePrints'].invalid &&
-                  createPackageForm.controls['packagePrints'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package Prints is required.
-              </span>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-3">
-              <h5>Package Extra Click Price</h5>
-              <input
-                formControlName="packageExtraClickPrice"
-                class="form-control"
-                type="number"
-                step="0.01"
-                [class.is-invalid]="
+                  createPackageForm.controls['packagePrints'].touched" />
+                            <div class="input-group-text">impresiónes</div>
+                            <span *ngIf="isValidField('packageDuration')" class="form-text text-danger">
+                              {{ getFieldError("packageDuration") }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="packages-data-item">
+                        <h5>Costo por click</h5>
+                        <div class="input-group">
+                            <div class="input-group-text">$</div>
+                            <input formControlName="packageExtraClickPrice" class="form-control" type="number" step="0.01" placeholder=".25" [class.is-invalid]="
                   createPackageForm.controls['packageExtraClickPrice']
                     .invalid &&
                   createPackageForm.controls['packageExtraClickPrice'].touched
-                "
-              />
-              <span
-                *ngIf="
-                  createPackageForm.controls['packageExtraClickPrice']
-                    .invalid &&
-                  createPackageForm.controls['packageExtraClickPrice'].touched
-                "
-                class="form-text text-danger"
-              >
-                Package Extra Click Price is required.
-              </span>
-            </div>
+                " />
+                            <span *ngIf="isValidField('packageDuration')" class="form-text text-danger">
+                              {{ getFieldError("packageDuration") }}
+                            </span>
+                        </div>
+                    </div>
 
-            <!-- includes -->
-            <!-- Package Includes Field -->
-            <div class="packages-data-item col-md-6 col-lg-4 mb-3">
-              <h5>Paquete incluye</h5>
-              <div class="tag-inputs-container" formArrayName="packageIncludes">
-                <div
-                  *ngFor="let include of packageIncludesControls; let i = index"
-                >
-                  <div class="tag-inputs">
-                    <input [formControlName]="i" class="form-control" />
-                    <button
-                      class="button button-danger button-icon"
-                      (click)="removeInclude(i)"
-                    >
+                    <!-- Package Includes Field -->
+                    <div class="packages-data-item full-row">
+                        <h5>Paquete incluye</h5>
+                        <div class="tag-inputs-container" formArrayName="packageIncludes">
+                            <div *ngFor="let include of packageIncludesControls; let i = index">
+                                <div class="tag-inputs">
+                                    <input [formControlName]="i" class="form-control" />
+                                    <button class="button button-danger button-icon" (click)="removeInclude(i)">
                       <mat-icon>delete</mat-icon>
                     </button>
-                  </div>
-                </div>
-                <button
-                  class="button button-secondary button-icon"
-                  (click)="addInclude()"
-                >
+                                </div>
+                            </div>
+                            <button class="button button-secondary button-icon" (click)="addInclude()">
                   <mat-icon>add</mat-icon>
                 </button>
-              </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

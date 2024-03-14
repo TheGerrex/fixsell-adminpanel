@@ -15,14 +15,19 @@
     justify-content: space-between;
     padding-bottom: 0.5em;
     border-bottom: 1px solid $gray-300;
+    border-radius: $border-radius $border-radius 0 0;
     background-color: $gray-50;
     border-radius: $border-radius $border-radius 0 0;
     padding: 1em;
     h2 {
         margin: 0;
     }
-    button {
-        flex-shrink: 0;
+    .button-actions {
+        display: flex;
+        gap: .5em;
+        button {
+            flex-shrink: 0;
+        }
     }
 }
 

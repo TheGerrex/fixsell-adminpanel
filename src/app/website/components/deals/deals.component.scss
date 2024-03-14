@@ -26,7 +26,7 @@
         gap: 1em;
         padding: 1em;
         width: 100%;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: flex-start;
         align-items: center;
         border-top: 1px solid $gray-300;
@@ -60,9 +60,10 @@
                 justify-content: space-between;
                 .deal-items {
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: row;
+                    align-items: center;
+                    flex-wrap: wrap;
                     gap: .5em;
-                    align-items: flex-start;
                 }
                 p {
                     margin-bottom: 0;
@@ -139,26 +140,31 @@
     flex-direction: row;
     align-items: center;
     gap: .5em;
-    .deal-time-left {
-        padding: 4px 8px;
-        border-radius: $border-radius;
-        background-color: $green-100;
-        color: $green-700;
-    }
-    .green {
-        background-color: $green-100;
-        color: $green-700;
-    }
-    .yellow {
-        background-color: $yellow-100;
-        color: $yellow-700;
-    }
-    .orange {
-        background-color: $orange-100;
-        color: $orange-700;
-    }
-    .red {
-        background-color: $red-100;
-        color: $red-700;
-    }
+}
+
+.deal-time-left {
+    padding: 4px 8px;
+    border-radius: $border-radius;
+    background-color: $green-100;
+    color: $green-700;
+}
+
+.green {
+    background-color: $green-100;
+    color: $green-700;
+}
+
+.yellow {
+    background-color: $yellow-100;
+    color: $yellow-700;
+}
+
+.orange {
+    background-color: $orange-100;
+    color: $orange-700;
+}
+
+.red {
+    background-color: $red-100;
+    color: $red-700;
 }

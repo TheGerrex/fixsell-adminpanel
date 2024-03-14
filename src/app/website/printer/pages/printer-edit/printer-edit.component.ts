@@ -24,7 +24,8 @@ export class PrinterEditComponent implements OnInit {
   public imageUrlsArray: string[] = [];
   printer: Printer | null = null;
   currentImageIndex = 0;
-  isLoadingForm = false;
+  isLoadingData = false;
+  isSubmitting = false;
   categories = [
     'Oficina',
     'Produccion',
@@ -78,7 +79,7 @@ export class PrinterEditComponent implements OnInit {
       tags: this.fb.array(
         (this.printer && this.printer.tags.length > 0
           ? this.printer.tags
-          : ['']
+          : []
         ).map((tag) => this.fb.control(tag))
       ),
       powerConsumption: [this.printer ? this.printer.powerConsumption : ''],
@@ -96,6 +97,7 @@ export class PrinterEditComponent implements OnInit {
   }
 
   getPrinter(): void {
+    this.isLoadingData = true;
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.printerService.getPrinter(id).subscribe((printerResponse) => {
@@ -105,6 +107,7 @@ export class PrinterEditComponent implements OnInit {
         console.log(this.printer);
         console.log(this.printer.model);
         this.sharedService.changePrinterModel(printerResponse.model);
+        this.isLoadingData = false;
       });
     }
   }
@@ -223,7 +226,7 @@ export class PrinterEditComponent implements OnInit {
       this.editPrinterForm.markAllAsTouched();
       return;
     }
-    this.isLoadingForm = true;
+    this.isSubmitting = true;
     let formData = this.editPrinterForm.value;
     formData.price = formData.price.toString();
     const printerId = this.route.snapshot.paramMap.get('id');
@@ -244,12 +247,12 @@ export class PrinterEditComponent implements OnInit {
 
     this.printerService.submitPrinterEditForm(formData, printerId).subscribe(
       (response) => {
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showSuccess('Multifuncional editada', 'Cerrar');
         this.router.navigate(['/website/printers', printerId]);
       },
       (error) => {
-        this.isLoadingForm = false;
+        this.isSubmitting = false;
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );

@@ -1,84 +1,80 @@
 <div class="printer-package-container">
-  <div class="printer-package-header">
-    <h4>Paquetes</h4>
-    <button
-      class="button button-primary button-raised button-icon"
-      (click)="navigateToCreatePackage(product.id)"
-    >
+    <div class="printer-package-header">
+        <h4>Paquetes</h4>
+        <button class="button button-primary button-raised button-icon" (click)="navigateToCreatePackage(product.id)">
       <mat-icon>add</mat-icon>
     </button>
-  </div>
-  <div class="printer-packages" *ngIf="product.packages.length >= 1">
-    <div class="package" *ngFor="let packages of product.packages">
-      <div class="package-content">
-        <div class="package-header">
-          <div class="package-items">
-            <div class="package-title">
-              <h5>Paquete</h5>
-            </div>
-          </div>
-          <button class="button-icon-option" [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" class="export-menu">
-            <button mat-menu-item>
-              <!-- <mat-icon>ios_share</mat-icon> -->
-              <div
-                class="menu-button-item"
-                (click)="navigateToPackageEdit(packages.id)"
-              >
-                <mat-icon style="color: #3c81f6">edit</mat-icon>
-                Editar paquete
-              </div>
-            </button>
-            <button mat-menu-item>
-              <!-- <mat-icon>ios_share</mat-icon> -->
-              <div
-                class="menu-button-item"
-                (click)="openConfirmDialog(packages.id)"
-              >
-                <mat-icon style="color: #ef4444">delete</mat-icon>
-                Borrar paquete
-              </div>
-            </button>
-          </mat-menu>
-        </div>
-        <div class="package-row">
-          <div class="package-item">
-            <p><b>Precio:</b></p>
-            <div class="package-price-item">
-              <h3>{{ packages.packagePrice | currency }} USD</h3>
-              <p>({{ packages.packageDiscountPercentage }}% de descuento)</p>
-            </div>
-          </div>
-          <div class="package-item">
-            <p><b>Descripción:</b></p>
-            <p>{{ packages.packageDescription }}</p>
-          </div>
-
-          <div class="package-item">
-            <p>
-              <b>Fecha:</b> {{ packages.packageStartDate | date }} -
-              {{ packages.packageEndDate | date }}
-            </p>
-          </div>
-          <div *ngFor="let daysLeft of getDaysLeft(); let i = index">
-            <div class="package-item">
-              <p><b>Días restantes:</b> {{ daysLeft }} dias</p>
-            </div>
-          </div>
-          <div class="package-item">
-            <div class="package-item">
-              <b>Incluye:</b>
-              <ul>
-                <li *ngFor="let item of packages.packageIncludes">
-                  {{ item }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+    <div class="printer-packages" *ngIf="product.packages.length > 0">
+        <div class="package" *ngFor="let packages of product.packages">
+            <div class="package-content">
+                <div class="package-header">
+                    <div class="package-items">
+                        <div class="package-title">
+                            <h5>Paquete</h5>
+                        </div>
+                        <p class="package-time-left" [ngClass]="
+                            {
+                                'green': getDaysLeft() > 10,
+                                'yellow': getDaysLeft() <= 10 && getDaysLeft() > 5,
+                                'orange': getDaysLeft() <= 5 && getDaysLeft() > 2,
+                                'red': getDaysLeft() <= 2
+                            }">
+                            {{ getDaysLeft() }} dias restantes
+                        </p>
+                    </div>
+                    <button class="button-icon-option" [matMenuTriggerFor]="menu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" class="export-menu">
+                        <button mat-menu-item>
+                          <div
+                            class="menu-button-item"
+                            (click)="navigateToPackageEdit(packages.id)"
+                          >
+                            <mat-icon style="color: #3c81f6">edit</mat-icon>
+                            Editar paquete
+                          </div>
+                        </button>
+                        <button mat-menu-item>
+                          <div
+                            class="menu-button-item"
+                            (click)="openConfirmDialog(packages.id)"
+                          >
+                            <mat-icon style="color: #ef4444">delete</mat-icon>
+                            Eliminar paquete
+                          </div>
+                        </button>
+                    </mat-menu>
+                </div>
+                <div class="package-row">
+                    <div class="package-item">
+                        <p class="item-title">Precio</p>
+                        <div class="package-price-item">
+                            <h3 class="item-title">${{ packages.packagePrice}} {{packages.packageCurrency}}</h3>
+                            <p class="package-percentage">{{ packages.packageDiscountPercentage }}% de descuento</p>
+                        </div>
+                    </div>
+                    <div class="package-item">
+                        <p class="item-title">Descripción</p>
+                        <p class="item-body">{{ packages.packageDescription }}</p>
+                    </div>
+                    <div class="package-item">
+                        <div class="package-item">
+                            <p class="item-title">Incluye:</p>
+                            <ul style="margin: 0;">
+                                <li *ngFor="let item of packages.packageIncludes">
+                                    <p class="item-body">{{ item }}</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="package-item">
+                        <p class="item-title">Fecha</p>
+                        <p class="item-body">{{ packages.packageStartDate | date : "longDate" }} - {{ packages.packageEndDate | date : "longDate" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

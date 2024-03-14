@@ -17,8 +17,9 @@ import { DealService } from '../../services/deal.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Deal } from 'src/app/website/interfaces/deal.interface';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-deal-list',
@@ -26,6 +27,13 @@ import { Deal } from 'src/app/website/interfaces/deal.interface';
   styleUrls: ['./deal-list.component.scss'],
 })
 export class DealListComponent implements OnInit {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource = new MatTableDataSource<Deal>();
+  filterValue = '';
+  isAdmin = false;
+  dealData: Deal[] = [];
+  isLoadingData = false;
   displayedColumns: string[] = [
     'brand',
     'model',
@@ -35,25 +43,34 @@ export class DealListComponent implements OnInit {
     'dealEndDate',
     'action',
   ];
-  dataSource = new MatTableDataSource<Deal>();
-  filterValue = '';
-  isAdmin = false;
-  dealData: Deal[] = [];
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private dialogService: DialogService,
     private dialog: MatDialog,
+    private dialogService: DialogService,
     private toastService: ToastService,
     private dealService: DealService
   ) {}
 
   ngOnInit() {
+    Promise.resolve().then(() => this.loadData());
+    const userRoles = this.authService.getCurrentUserRoles();
+    this.isAdmin = userRoles.includes('admin');
+    if (!this.isAdmin) {
+      this.displayedColumns = [
+        'brand',
+        'model',
+        'price',
+        'dealPrice',
+        'dealCurrency',
+        'dealDiscountPercentage',
+      ];
+    }
+  }
+
+  loadData() {
+    this.isLoadingData = true;
     this.dealService.getAllDeals().subscribe((deals) => {
       this.dealData = deals.filter(
         (deal: { printer: null; consumible: null }) =>
@@ -63,6 +80,7 @@ export class DealListComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.dealData);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
+      this.isLoadingData = false;
       this.dataSource.filterPredicate = (data: Deal, filter: string) => {
         const dataStr =
           data.printer.brand +
@@ -76,19 +94,6 @@ export class DealListComponent implements OnInit {
         return dataStr.trim().toLowerCase().indexOf(filter) != -1;
       };
     });
-
-    const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
-    if (!this.isAdmin) {
-      this.displayedColumns = [
-        'brand',
-        'model',
-        'price',
-        'dealPrice',
-        'dealCurrency',
-        'dealDiscountPercentage',
-      ];
-    }
   }
 
   seeDeal(deal: Deal) {
@@ -112,36 +117,45 @@ export class DealListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  deleteDeal(deal: Deal) {
-    this.dialogService
-      .openConfirmDialog('Are you sure?', 'Yes', 'delete-dialog') // Add 'delete-dialog' class
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.dealService.deleteDealById(deal.id).subscribe(
-            (response) => {
-              console.log(response); // This should log "Deal with ID 10 has been removed"
-              // Show a toast message after the user confirms the deletion
-              this.toastService.showSuccess(
-                'Printer deleted successfully',
-                'OK'
-              );
+  openConfirmDialog(deal: Deal): void {
+    const dialogConfig = new MatDialogConfig();
 
-              // Remove the deleted deal from the dataSource
-              const data = this.dataSource.data;
-              this.dataSource.data = data.filter((d) => d.id !== deal.id);
-            },
-            (error) => {
-              console.error('Error:', error);
-              this.dialogService.openErrorDialog(
-                'Error deleting deal',
-                'OK',
-                'delete-dialog'
-              ); // Show error dialog with 'delete-dialog' class
-            }
-          );
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar esta promoción?',
+      message: 'La promoción será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (deal.id){
+            this.deleteDeal(deal)
         }
-      });
+        
+      }
+    });
+  }
+
+  deleteDeal(deal: Deal) {
+  if (deal.id){
+    this.dealService.deleteDealById(deal.id).subscribe(
+      (response) => {
+        this.dealData = this.dealData.filter((d) => d.id !== deal.id);
+        this.dataSource.data = this.dealData;
+        this.toastService.showSuccess('Promoción eliminado con exito', 'Aceptar');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 
   addPaquete() {

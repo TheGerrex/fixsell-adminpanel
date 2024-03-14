@@ -1,11 +1,11 @@
 <div class="printer-deal-container">
     <div class="printer-deal-header">
         <h4>Promociones</h4>
-        <button class="button button-primary button-raised button-icon" (click)="navigateToCreateDeal(deals[0].id)">
-                              <mat-icon>add</mat-icon>
-                            </button>
+        <button class="button button-primary button-raised button-icon" (click)="navigateToCreateDeal()">
+            <mat-icon>add</mat-icon>
+        </button>
     </div>
-    <div class="printer-deals" *ngIf="deals">
+    <div class="printer-deals" *ngIf="deals.length > 0">
         <div class="deal" *ngFor="let deal of deals">
             <div class="deal-content">
                 <div class="deal-header">
@@ -13,6 +13,15 @@
                         <div class="deal-title">
                             <h5>Promoción</h5>
                         </div>
+                        <p class="deal-time-left" [ngClass]="
+                            {
+                                'green': getDaysLeft() > 10,
+                                'yellow': getDaysLeft() <= 10 && getDaysLeft() > 5,
+                                'orange': getDaysLeft() <= 5 && getDaysLeft() > 2,
+                                'red': getDaysLeft() <= 2
+                            }">
+                            {{ getDaysLeft() }} dias restantes
+                        </p>
                     </div>
                     <button class="button-icon-option" [matMenuTriggerFor]="menu">
                         <mat-icon>more_vert</mat-icon>
@@ -20,23 +29,23 @@
                     <mat-menu #menu="matMenu" class="export-menu">
                         <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item">
+                            <div class="menu-button-item" (click)="navigateToSeeDeal(deal.id)">
                                 <mat-icon>visibility</mat-icon>
                                 Ver promocion
                             </div>
                         </button>
                         <button mat-menu-item>
                         <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item">
+                            <div class="menu-button-item" (click)="navigateToEditDeal(deal.id)">
                                 <mat-icon style="color: #3C81F6;">edit</mat-icon>
                                 Editar promocion
                             </div>
                             </button>
                         <button mat-menu-item>
                             <!-- <mat-icon>ios_share</mat-icon> -->
-                            <div class="menu-button-item">
+                            <div class="menu-button-item" (click)="openConfirmDialog(deal.id)">
                                 <mat-icon style="color: #ef4444;">delete</mat-icon>
-                                Borrar promocion
+                                Eliminar promocion
                             </div>
                         </button>
                     </mat-menu>
@@ -57,15 +66,6 @@
                         <p class="item-title">Fecha</p>
                         <div class="deal-time-item">
                             <p class="item-body">{{ deal.dealStartDate | date : "longDate" }} - {{ deal.dealEndDate | date : "longDate" }}</p>
-                            <p class="deal-time-left" [ngClass]="
-                            {
-                                'green': getDaysLeft() > 10,
-                                'yellow': getDaysLeft() <= 10 && getDaysLeft() > 5,
-                                'orange': getDaysLeft() <= 5 && getDaysLeft() > 2,
-                                'red': getDaysLeft() <= 2
-                            }">
-                                {{ getDaysLeft() }} dias restantes
-                            </p>
                         </div>
                     </div>
                 </div>

@@ -15,9 +15,10 @@ import { Deal } from 'src/app/website/interfaces/deal.interface';
 })
 export class DealEditComponent implements OnInit {
   deal: Deal | null = null;
-  isLoadingForm = false;
-
+  isLoadingData = false;
+  isSubmitting = false;
   public editDealForm!: FormGroup;
+
 
   constructor(
     private router: Router,
@@ -88,6 +89,7 @@ export class DealEditComponent implements OnInit {
   }
 
   getDeal(): void {
+    this.isLoadingData = true;
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.dealService.getDeal(id).subscribe((dealResponse) => {
@@ -95,7 +97,8 @@ export class DealEditComponent implements OnInit {
         this.deal = dealResponse;
         this.initializeForm(); // Move this inside the subscribe block
         console.log(this.editDealForm);
-        this.sharedService.changeDealName(dealResponse.dealName);
+        this.sharedService.changeDealName(dealResponse.dealName);  
+        this.isLoadingData = false;
       });
     }
   }
@@ -176,16 +179,18 @@ export class DealEditComponent implements OnInit {
       dealPrice: parseFloat(formData.dealPrice),
       dealDiscountPercentage: parseFloat(formData.dealDiscountPercentage),
     };
-
+    this.isSubmitting = true;
     this.dealService.submitDealEditForm(formData, dealId).subscribe(
       (response) => {
         console.log('Response:', response);
         this.toastService.showSuccess('Deal updated successfully', 'OK'); // Show success toast
         this.router.navigate(['/website/deals']);
+        this.isSubmitting = false;
       },
       (error) => {
         console.error('Error:', error);
         this.toastService.showError('Error updating deal', 'OK'); // Show error toast
+        this.isSubmitting = false;
       }
     );
   }

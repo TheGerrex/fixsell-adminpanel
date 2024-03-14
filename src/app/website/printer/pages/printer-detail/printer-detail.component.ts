@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { PrinterService } from '../../services/printer.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-printer-detail',
@@ -17,9 +19,10 @@ export class PrinterDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
+    private dialog: MatDialog,
     private sharedService: SharedService,
     private printerService: PrinterService,
+    private toastService: ToastService,
     private router: Router
   ) {}
 
@@ -52,5 +55,46 @@ export class PrinterDetailComponent implements OnInit {
 
   navigateToEdit(id: string) {
     this.router.navigate(['/website', 'printers', id, 'edit']);
+  }
+
+
+  openConfirmDialog(printer: Printer): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar esta multifuncional?',
+      message: 'La multifuncional será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (printer.id){
+            this.deletePrinter(printer)
+        }
+        
+      }
+    });
+  }
+
+  deletePrinter(printer: Printer) {
+  if (printer.id){
+    this.printerService.deletePrinter(printer.id).subscribe(
+      (response) => {
+        this.toastService.showSuccess('Multifuncional eliminado con exito', 'Aceptar');
+        this.router.navigateByUrl('website/printers');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 }

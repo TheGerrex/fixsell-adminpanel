@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
-import { environment } from 'src/environments/environment';
-import swal from 'sweetalert2';
 import { PrinterService } from '../../services/printer.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-printer-list',
@@ -39,6 +40,8 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
     private router: Router,
     private printerService: PrinterService,
     private authService: AuthService,
+    private toastService: ToastService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -84,6 +87,7 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
       state: { printer },
     });
   }
+
   editPrinter(printer: Printer) {
     // Implement edit functionality here
     this.router.navigate([`/website/printers/${printer.id}/edit`], {
@@ -91,39 +95,48 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
     });
   }
 
-  deletePrinter(printer: Printer) {
-    swal
-      .fire({
-        title: 'Are you sure?',
-        text: 'Once deleted, you will not be able to recover this printer!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          const url = `${environment.baseUrl}/printers/${printer.id}`;
-          this.http.delete(url).subscribe(
-            () => {
-              console.log(`Printer ${printer.id} deleted successfully`);
-              // Remove the deleted printer from the data source
-              const index = this.dataSource.data.indexOf(printer);
-              if (index >= 0) {
-                this.dataSource.data.splice(index, 1);
-                this.dataSource._updateChangeSubscription();
-              }
-            },
-            (error) => {
-              console.error(
-                `Error deleting printer ${printer.id}: ${error.message}`
-              );
-            }
-          );
-          swal.fire('Deleted!', 'The printer has been deleted.', 'success');
+  openConfirmDialog(printer: Printer): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar esta multifuncional?',
+      message: 'La multifuncional será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (printer.id){
+            this.deletePrinter(printer)
         }
-      });
+        
+      }
+    });
+  }
+
+  deletePrinter(printer: Printer) {
+  if (printer.id){
+    this.printerService.deletePrinter(printer.id).subscribe(
+      (response) => {
+        // Update consumibleData
+        this.printerData = this.printerData.filter((p) => p.id !== printer.id);
+        
+        // Update dataSource
+        this.dataSource.data = this.printerData;
+        this.toastService.showSuccess('Multifuncional eliminado con exito', 'Aceptar');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 
   addPrinter() {

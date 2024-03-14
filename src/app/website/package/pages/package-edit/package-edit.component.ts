@@ -139,6 +139,33 @@ export class PackageEditComponent implements OnInit {
     (this.editPackageForm.get('packageIncludes') as FormArray).removeAt(index);
   }
 
+  isValidField(field: string): boolean | null {
+    // console.log(this.validatorsService.isValidField(this.createPrinterForm, field))
+    return this.validatorsService.isValidField(this.editPackageForm, field);
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.editPackageForm.controls[field]) return null;
+
+    const errors = this.editPackageForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
   submitForm(): void {
     if (this.editPackageForm.invalid) {
       this.toastService.showError(

@@ -1,16 +1,15 @@
 <app-loading-spinner *ngIf="isLoadingData"></app-loading-spinner>
 <div class="table-header">
     <h2>Paquetes</h2>
-    <!-- search field -->
-    <div class="search-box">
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">
-        <mat-icon>search</mat-icon>
-      </span>
-            <input class="form-control" type="text" placeholder="Buscar" (input)="applyFilter($event)" />
-        </div>
-    </div>
     <div class="table-action-buttons">
+        <div class="search-box">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">
+                    <mat-icon>search</mat-icon>
+                </span>
+                <input class="form-control" type="text" placeholder="Buscar" (input)="applyFilter($event)" />
+            </div>
+        </div>
         <website-export [data]="packageData" [ignoreFields]="['id']"></website-export>
         <button class="button button-primary button-raised button-icon-text" (click)="addPackage()">
       <mat-icon>add</mat-icon><span class="button-label">Agregar</span>

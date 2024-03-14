@@ -21,8 +21,8 @@
     flex-wrap: wrap;
     padding-bottom: 0.5em;
     border-bottom: 1px solid $gray-300;
-    background-color: $gray-50;
     border-radius: $border-radius $border-radius 0 0;
+    background-color: $gray-50;
     padding: 1em;
     h2 {
         margin: 0;
@@ -43,13 +43,13 @@
     @media (max-width: 1024px) {
         flex-direction: column;
     }
-    .packages-data-container {
+    .packages-form-container {
         width: 100%;
         max-width: 768px;
         align-self: flex-start;
         .packages-data {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, minmax(250px, 1fr));
             row-gap: 1em;
             column-gap: 1em;
             .packages-data-item {
@@ -64,9 +64,13 @@
                 }
                 .package-price-item {
                     display: flex;
-                    flex-direction: column;
+                    align-items: center;
+                    align-items: stretch; // Make the items stretch to fill the container
                     input {
                         flex-grow: 1; // Make the input field take up the remaining space
+                    }
+                    button {
+                        flex-shrink: 0; // Prevent the button from shrinking
                     }
                 }
             }

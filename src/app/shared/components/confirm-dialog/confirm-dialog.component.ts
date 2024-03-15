@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   template: `
     <h1 mat-dialog-title>{{data.title}}</h1>
     <div mat-dialog-content>
-      <p>{{ data.message }}</p>
+      <p style="margin-bottom: 2em;">{{ data.message }}</p>
       <div class="d-flex justify-content-between">
         <button class="button button-secondary button-raised" (click)="onCancel()"><span class="button-label">{{data.buttonText.cancel}}</span></button>
         <button class="button button-danger button-raised" (click)="onConfirm()"><mat-icon>delete</mat-icon> <span class="button-label">{{data.buttonText.ok}}</span> </button>

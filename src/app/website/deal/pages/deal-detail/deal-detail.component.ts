@@ -55,14 +55,21 @@ export class DealDetailComponent implements OnInit {
   navigateToEditDeal(deal: Deal) {
     this.router.navigate(['/website', 'deals', deal.id, 'edit']);
   }
-  navigateToCreatePrinter() {
-    this.router.navigate(['/website', 'printers', 'create']);
+
+  navigateToSeeItem(id: string) {
+    if (this.deal?.printer) {
+      this.router.navigate(['/website/printers', id]);
+    } else if (this.deal?.consumible) {
+      this.router.navigate(['/website/consumibles', id]);
+    }
   }
-  navigateToSeePrinter(id: string) {
-    this.router.navigate(['/website/printers', id]);
-  }
-  navigateToEditPrinter(id: string) {
-    this.router.navigate([`/website/printers/${id}/edit`]);
+
+  navigateToEditItem(id: string) {
+    if (this.deal?.printer) {
+      this.router.navigate([`/website/printers/${id}/edit`]);
+    } else if (this.deal?.consumible) {
+      this.router.navigate([`/website/consumibles/${id}/edit`]);
+    }
   }
 
   openConfirmDialog(deal: Deal): void {

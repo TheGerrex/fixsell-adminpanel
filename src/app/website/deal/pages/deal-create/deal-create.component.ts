@@ -152,6 +152,7 @@ export class DealCreateComponent implements OnInit {
         this.printerControl.setValue(printerName);
         this.createDealForm.controls['printer'].setValue(printerName);
         this.createDealForm.controls['printerPrice'].setValue(price);
+        this.createDealForm.controls['dealPrice'].setValue(price);
       },
       (error) => {
         console.error(error);
@@ -175,6 +176,7 @@ export class DealCreateComponent implements OnInit {
         console.log('Price:', price);
         this.createDealForm.controls['printer'].setValue(consumibleName);
         this.createDealForm.controls['printerPrice'].setValue(price);
+        this.createDealForm.controls['dealPrice'].setValue(price);
       },
       (error) => {
         console.error(error);
@@ -190,17 +192,10 @@ export class DealCreateComponent implements OnInit {
 
   calculatePrice() {
     if (this.createDealForm.get('dealDiscountPercentage')?.value) {
-      const discount =
-        Number(this.createDealForm.get('printerPrice')?.value) *
-        (Number(this.createDealForm.get('dealDiscountPercentage')?.value) /
-          100);
+      const discount = Number(this.createDealForm.get('printerPrice')?.value) * (Number(this.createDealForm.get('dealDiscountPercentage')?.value) /100);
       this.createDealForm
         .get('dealPrice')
-        ?.setValue(
-          (
-            Number(this.createDealForm.get('printerPrice')?.value) - discount
-          ).toString()
-        ); // Convert the calculated price to a string
+        ?.setValue((Number(this.createDealForm.get('printerPrice')?.value) - discount).toFixed(1).toString()); // Convert the calculated price to a string
     }
   }
 

@@ -3,9 +3,9 @@
     <form [formGroup]="editPrinterForm" class="printer-container" *ngIf="editPrinterForm">
         <div class="printer-header">
             <h2>Editar Multifuncional</h2>
-            <button type="submit" class="button button-primary button-raised" [disabled]="editPrinterForm.invalid" (click)="submitForm()">
-        <span class="button-label">Realizar Cambios</span>
-      </button>
+            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+              <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
+            </button>
         </div>
         <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
         <div class="printer-info">

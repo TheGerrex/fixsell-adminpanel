@@ -2,9 +2,9 @@
     <form [formGroup]="createConsumibleForm" class="consumibles-container" *ngIf="createConsumibleForm">
         <div class="consumibles-header">
             <h2>Nuevo Consumible</h2>
-            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
-        <span class="button-label">Agregar Consumible</span>
-      </button>
+            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+            </button>
         </div>
         <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
         <div class="consumibles-info">

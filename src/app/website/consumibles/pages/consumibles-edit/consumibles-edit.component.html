@@ -3,8 +3,8 @@
     <form [formGroup]="editConsumibleForm" class="consumibles-container" *ngIf="editConsumibleForm">
         <div class="consumibles-header">
             <h2>Editar Consumible</h2>
-            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
-              <span class="button-label">Guardar Cambios</span>
+            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+              <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
             </button>
         </div>
         <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>

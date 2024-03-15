@@ -3,8 +3,8 @@
     <form [formGroup]="editDealForm" (ngSubmit)="submitForm()" class="deal-container">
         <div class="deal-header">
             <h2>Editar Promocion</h2>
-            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
-              <span class="button-label">Agregar Promocion</span>
+            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+              <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
             </button>
         </div>
 
@@ -34,7 +34,7 @@
 
                     <!-- printer price -->
                     <div class="deal-data-item" *ngIf="deal && deal.printer">
-                        <h5>Precio Multifuncional</h5>
+                        <h5>Precio</h5>
                         <input type="text" class="form-control" id="printerPrice" formControlName="printerPrice" [class.is-invalid]="
                 editDealForm.controls['printerPrice'].invalid &&
                 editDealForm.controls['printerPrice'].touched
@@ -46,7 +46,7 @@
 
                     <!-- consumible price -->
                     <div class="deal-data-item" *ngIf="deal && deal.consumible">
-                        <h5>Precio Consumible</h5>
+                        <h5>Precio</h5>
                         <input type="text" class="form-control" id="consumiblePrice" formControlName="consumiblePrice" [class.is-invalid]="
                 editDealForm.controls['consumiblePrice'].invalid &&
                 editDealForm.controls['consumiblePrice'].touched

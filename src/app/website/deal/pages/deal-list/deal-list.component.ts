@@ -77,10 +77,17 @@ export class DealListComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.isLoadingData = false;
       this.dataSource.filterPredicate = (data: Deal, filter: string) => {
-        const dataStr =
-          data.printer.brand +
-          data.printer.model +
-          data.printer.price +
+        let dataStr = '';
+        if (data.printer) {
+          dataStr +=
+            data.printer.brand +
+            data.printer.model +
+            data.printer.price;
+        }
+        if (data.consumible) {
+          dataStr += data.consumible.name;
+        }
+        dataStr +=
           data.dealPrice +
           data.dealCurrency +
           data.dealDiscountPercentage +

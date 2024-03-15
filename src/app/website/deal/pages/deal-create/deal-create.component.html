@@ -2,8 +2,8 @@
     <form [formGroup]="createDealForm" class="deal-container">
         <div class="deal-header">
             <h2>Crear Promocion</h2>
-            <button type="submit" class="button button-primary button-raised" (click)="submitForm()">
-              <span class="button-label">Agregar Promocion</span>
+            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
             </button>
         </div>
 
@@ -12,19 +12,18 @@
         <div class="deal-info">
             <div class="deal-form-container">
                 <div class="deal-data">
+
                     <!-- Type Selector -->
                     <div class="deal-data-item full-row">
                         <h5>Tipo</h5>
                         <select class="form-control" formControlName="selectedType" (change)="onTypeChange($event)">
-              <option value="multifuncional">Multifuncional</option>
-              <option value="consumible">Consumible</option>
-            </select>
-                    </div>
-                </div>
+                          <option value="multifuncional">Multifuncional</option>
+                          <option value="consumible">Consumible</option>
+                        </select>
+                    </div>  
 
-                <div class="deal-data">
                     <!-- Product Selector -->
-                    <div class="deal-data-item full-row">
+                    <div class="deal-data-item">
                         <h5>
                             {{ (selectedType | async) === "multifuncional" ? "Multifuncional" : "Consumible" }}
                         </h5>
@@ -35,19 +34,16 @@
                             </mat-option>
                         </mat-autocomplete>
                     </div>
-                </div>
 
-                <div class="deal-data">
                     <!-- printer price -->
-                    <div class="deal-data-item full-row">
+                    <div class="deal-data-item">
                         <h5>Precio</h5>
                         <input type="text" class="form-control" id="printerPrice" formControlName="printerPrice" [class.is-invalid]="
-                createDealForm.controls['printerPrice'].invalid &&
-                createDealForm.controls['printerPrice'].touched
-              " />
+                          createDealForm.controls['printerPrice'].invalid &&
+                          createDealForm.controls['printerPrice'].touched" />
                         <span *ngIf="isValidField('printerPrice')" class="form-text text-danger">
-              {{ getFieldError("printerPrice") }}
-            </span>
+                          {{ getFieldError("printerPrice") }}
+                        </span>
                     </div>
 
                     <!-- deal start date -->

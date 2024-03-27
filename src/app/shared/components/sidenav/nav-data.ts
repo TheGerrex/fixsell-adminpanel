@@ -39,6 +39,27 @@ export const navbarData = [
       },
     ],
   },
+  // sales, subroutes: clientes potenciales
+  {
+    label: 'Ventas',
+    routeLink: 'sales/sales',
+    icon: 'fal fa-shopping-cart',
+    allowedRoles: ['admin', 'vendor'],
+    isExpanded: false,
+    subRoutes: [
+      {
+        label: 'Clientes Potenciales',
+        routeLink: 'sales/leads',
+        allowedRoles: ['admin', 'vendor'],
+      },
+      // Cotización
+      {
+        label: 'Cotización',
+        routeLink: 'sales/quote',
+        allowedRoles: ['admin', 'vendor'],
+      },
+    ],
+  },
   {
     label: 'Usuarios',
     routeLink: 'users/user',

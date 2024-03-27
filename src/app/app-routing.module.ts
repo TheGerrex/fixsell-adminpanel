@@ -22,6 +22,12 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
+    path: 'sales',
+    canActivate: [NavigationGuard, isAuthenticatedGuard],
+    loadChildren: () =>
+      import('./sales/sales.module').then((m) => m.SalesModule),
+  },
+  {
     path: 'users',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
     loadChildren: () =>

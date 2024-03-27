@@ -1,0 +1,137 @@
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div [hidden]="isLoadingData">
+  <div class="table-header">
+    <h2>Clientes Potenciales</h2>
+    <div class="table-action-buttons">
+      <div class="search-box">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">
+            <mat-icon>search</mat-icon>
+          </span>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Buscar"
+            (input)="applyFilter($event)"
+          />
+        </div>
+      </div>
+      <website-export
+        [data]="leadData"
+        [ignoreFields]="['id']"
+      ></website-export>
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="addLead()"
+      >
+        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+      </button>
+    </div>
+  </div>
+  <div class="responsive-table">
+    <div class="table-container">
+      <table
+        mat-table
+        matSort
+        [dataSource]="dataSource"
+        class="lead-list-table"
+      >
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>id</th>
+          <td mat-cell *matCellDef="let lead" data-column="id">
+            {{ lead.id }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="client">
+          <th mat-header-cell *matHeaderCellDef>Cliente</th>
+          <td
+            mat-cell
+            *matCellDef="let lead"
+            data-column="client"
+            class="wrap-text"
+          >
+            {{ lead.client }}
+          </td>
+        </ng-container>
+
+        <!-- Model Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Estatus</th>
+          <td mat-cell *matCellDef="let lead" data-column="status">
+            {{ lead.status }}
+          </td>
+        </ng-container>
+
+        <!-- Assigned Column -->
+        <ng-container matColumnDef="assigned">
+          <th mat-header-cell *matHeaderCellDef>Asignado</th>
+          <td mat-cell *matCellDef="let lead" data-column="assigned">
+            {{ lead.assigned?.name }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="product_interested">
+          <th mat-header-cell *matHeaderCellDef>Producto Interesado</th>
+          <td mat-cell *matCellDef="let lead" data-column="product_interested">
+            {{ lead.product_interested }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Contacto</th>
+          <td mat-cell *matCellDef="let lead" data-column="email">
+            {{ lead.email }} <br />
+            {{ lead.phone }}
+          </td>
+        </ng-container>
+
+        <!-- last_contacted Column -->
+        <ng-container matColumnDef="last_contacted">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Último Contacto
+          </th>
+          <td mat-cell *matCellDef="let lead" data-column="last_contacted">
+            <div
+              style="display: inline-block; padding: 5px; border-radius: 5px"
+              [class]="getCommunicationClass(lead)"
+            >
+              {{ getLastCommunicationTime(lead) }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Edit Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let lead" data-column="actions">
+            <button mat-icon-button color="basic" (click)="seeLead(lead)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="editLead(lead)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="openConfirmDialog(lead)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <div>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        [pageSize]="8"
+        showFirstLastButtons
+        class="table-paginator"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>

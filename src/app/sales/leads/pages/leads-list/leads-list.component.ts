@@ -52,6 +52,20 @@ export class LeadsListComponent implements OnInit {
         this.leadsService.getAllLeads().subscribe(
           (leads) => {
             this.leadData = leads;
+            this.leadData.sort((a, b) => {
+              const lastCommunicationA =
+                a.communications && a.communications.length > 0
+                  ? new Date(a.communications[a.communications.length - 1].date)
+                  : new Date(0);
+              const lastCommunicationB =
+                b.communications && b.communications.length > 0
+                  ? new Date(b.communications[b.communications.length - 1].date)
+                  : new Date(0);
+
+              return (
+                lastCommunicationB.getTime() - lastCommunicationA.getTime()
+              );
+            });
             this.dataSource.data = this.leadData; // Assign the data to the dataSource
             console.log(this.leadData);
           },
@@ -65,6 +79,24 @@ export class LeadsListComponent implements OnInit {
           this.leadsService.getLeadsbyVendor(currentUser.id).subscribe(
             (leads) => {
               this.leadData = leads;
+              this.leadData.sort((a, b) => {
+                const lastCommunicationA =
+                  a.communications && a.communications.length > 0
+                    ? new Date(
+                        a.communications[a.communications.length - 1].date
+                      )
+                    : new Date(0);
+                const lastCommunicationB =
+                  b.communications && b.communications.length > 0
+                    ? new Date(
+                        b.communications[b.communications.length - 1].date
+                      )
+                    : new Date(0);
+
+                return (
+                  lastCommunicationB.getTime() - lastCommunicationA.getTime()
+                );
+              });
               this.dataSource.data = this.leadData; // Assign the data to the dataSource
               console.log(this.leadData);
             },
@@ -75,6 +107,22 @@ export class LeadsListComponent implements OnInit {
         }
       }
     }
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (item: Lead, property: string) => {
+      switch (property) {
+        case 'last_contacted':
+          return item.communications && item.communications.length > 0
+            ? new Date(
+                item.communications[item.communications.length - 1].date
+              ).getTime()
+            : 0;
+        default:
+          return String(item[property as keyof Lead]);
+      }
+    };
   }
 
   applyFilter(event: Event) {

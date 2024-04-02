@@ -41,6 +41,12 @@ export class LeadsService {
       .pipe(map((leadsResponse) => leadsResponse));
   }
 
+  // create sales communication
+  createSalesCommunication(data: any): Observable<any> {
+    return this.http
+      .post(`${environment.baseUrl}/sale-communication`, data)
+      .pipe(map((leadsResponse) => leadsResponse));
+  }
   //delete lead {{baseURL}}/leads/:id
   deleteLead(id: string): Observable<any> {
     return this.http

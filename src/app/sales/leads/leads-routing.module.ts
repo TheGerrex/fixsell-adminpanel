@@ -5,6 +5,7 @@ import { LeadsListComponent } from './pages/leads-list/leads-list.component';
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
 import { LeadsEditComponent } from './pages/leads-edit/leads-edit.component';
 import { LeadsDetailComponent } from './pages/leads-detail/leads-detail.component';
+import { LeadsCreateComponent } from './pages/leads-create/leads-create.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: 'create',
-        component: LeadsListComponent,
+        component: LeadsCreateComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
       },

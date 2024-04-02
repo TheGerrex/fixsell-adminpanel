@@ -196,7 +196,7 @@ export class LeadsListComponent implements OnInit {
     });
   }
   addLead() {
-    this.router.navigate(['sales/leads/add']);
+    this.router.navigate(['sales/leads/create']);
   }
 
   seeLead(lead: Lead) {

@@ -70,4 +70,18 @@ export class ValidatorsService {
       return null;
     };
   }
+
+  public phoneValidator() {
+    return (control: AbstractControl) => {
+      const value = control.value;
+
+      const phoneValid = value.match(this.numberPattern);
+
+      if (!phoneValid) {
+        return { phoneInvalid: true };
+      }
+
+      return null;
+    };
+  }
 }

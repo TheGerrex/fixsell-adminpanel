@@ -10,6 +10,7 @@ import { LeadsListComponent } from './pages/leads-list/leads-list.component';
 import { LeadsEditComponent } from './pages/leads-edit/leads-edit.component';
 import { LeadsDetailComponent } from './pages/leads-detail/leads-detail.component';
 import { WebsiteModule } from 'src/app/website/website.module';
+import { LeadsCreateComponent } from './pages/leads-create/leads-create.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { WebsiteModule } from 'src/app/website/website.module';
     LeadsListComponent,
     LeadsEditComponent,
     LeadsDetailComponent,
+    LeadsCreateComponent,
   ],
   imports: [
     CommonModule,

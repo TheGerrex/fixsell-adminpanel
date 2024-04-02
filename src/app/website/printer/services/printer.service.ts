@@ -23,6 +23,24 @@ export class PrinterService {
       .pipe(map((printerResponse) => printerResponse));
   }
 
+  // get printer id by name
+  getPrinterIdByName(name: string): Observable<string> {
+    return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
+      map((printers: Printer[]) => {
+        const printer = printers.find((printer) => printer.model === name);
+        if (printer) {
+          return printer.id;
+        } else {
+          throw new Error('Printer not found');
+        }
+      }),
+      catchError((err) => {
+        console.error(err);
+        throw err;
+      })
+    );
+  }
+
   deletePrinter(id: string): Observable<Printer> {
     return this.http
       .delete<Printer>(`${environment.baseUrl}/printers/${id}`)

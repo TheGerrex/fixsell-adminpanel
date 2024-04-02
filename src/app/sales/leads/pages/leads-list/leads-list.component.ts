@@ -204,8 +204,31 @@ export class LeadsListComponent implements OnInit {
   }
 
   editLead(lead: Lead) {
-    this.router.navigate([`sales/leads/edit/${lead.id}`]);
+    this.router.navigate([`sales/leads/${lead.id}/edit`]);
   }
 
-  deleteLead(lead: Lead) {}
+  //{{baseURL}}/leads/:id
+  //deletes a lead
+  deleteLead(lead: Lead) {
+    if (lead.id) {
+      //show dialog
+
+      this.leadsService.deleteLead(String(lead.id)).subscribe(
+        (response) => {
+          // Update consumibleData
+          this.leadData = this.leadData.filter((p) => p.id !== lead.id);
+
+          // Update dataSource
+          this.dataSource.data = this.leadData;
+          this.toastService.showSuccess(
+            'Cliente potencial eliminado con exito',
+            'Aceptar'
+          );
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
+    }
+  }
 }

@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 import { LeadsListComponent } from './pages/leads-list/leads-list.component';
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
+import { LeadsEditComponent } from './pages/leads-edit/leads-edit.component';
+import { LeadsDetailComponent } from './pages/leads-detail/leads-detail.component';
 
 const routes: Routes = [
   {
@@ -24,13 +26,13 @@ const routes: Routes = [
       },
       {
         path: ':id',
-        component: LeadsListComponent,
+        component: LeadsDetailComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'leads' },
       },
       {
         path: ':id/edit',
-        component: LeadsListComponent,
+        component: LeadsEditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Editar' },
       },

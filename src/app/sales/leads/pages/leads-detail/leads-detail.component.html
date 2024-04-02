@@ -1,0 +1,10 @@
+<website-consumable *ngIf="consumable" [product]="product"></website-consumable>
+<website-printer
+  *ngIf="
+    typeOfProduct === 'printer' &&
+    product &&
+    product.consumibles &&
+    product.consumibles[0].printers
+  "
+  [product]="product.consumibles[0]"
+></website-printer>

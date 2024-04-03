@@ -1,1 +1,140 @@
-<p>leads-edit works!</p>
+<div>
+  <form [formGroup]="editLeadForm" class="deal-container">
+    <div class="deal-header">
+      <h2>Crear Cliente Potencial</h2>
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="submitForm()"
+      >
+        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+      </button>
+    </div>
+
+    <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+
+    <div class="deal-info">
+      <div class="deal-form-container">
+        <div class="deal-data">
+          <!-- client -->
+          <div class="deal-data-item full-row">
+            <h5>Cliente</h5>
+            <input
+              type="text"
+              class="form-control"
+              id="client"
+              formControlName="client"
+              [class.is-invalid]="
+                editLeadForm.controls['client'].invalid &&
+                editLeadForm.controls['client'].touched
+              "
+            />
+            <span *ngIf="isValidField('client')" class="form-text text-danger">
+              {{ getFieldError("client") }}
+            </span>
+          </div>
+          <!-- email -->
+          <div class="deal-data-item full-row">
+            <h5>Email</h5>
+            <input
+              type="text"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              [class.is-invalid]="
+                editLeadForm.controls['email'].invalid &&
+                editLeadForm.controls['email'].touched
+              "
+            />
+            <span *ngIf="isValidField('email')" class="form-text text-danger">
+              {{ getFieldError("email") }}
+            </span>
+          </div>
+
+          <!-- phone -->
+          <div class="deal-data-item full-row">
+            <h5>Telefono</h5>
+            <input
+              type="text"
+              class="form-control"
+              id="phone"
+              formControlName="phone"
+              [class.is-invalid]="
+                editLeadForm.controls['phone'].invalid &&
+                editLeadForm.controls['phone'].touched
+              "
+            />
+            <span *ngIf="isValidField('phone')" class="form-text text-danger">
+              {{ getFieldError("phone") }}
+            </span>
+          </div>
+          <!-- status: prospect etc. -->
+          <div class="deal-data-item full-row">
+            <h5>Estado</h5>
+            <select
+              class="form-control"
+              id="status"
+              formControlName="status"
+              [class.is-invalid]="
+                editLeadForm.controls['status'].invalid &&
+                editLeadForm.controls['status'].touched
+              "
+            >
+              <option value="prospect">Prospecto</option>
+              <option value="client">Cliente</option>
+              <option value="lost">Perdido</option>
+            </select>
+            <span *ngIf="isValidField('status')" class="form-text text-danger">
+              {{ getFieldError("status") }}
+            </span>
+          </div>
+
+          <!-- type_of_product -->
+          <div class="deal-data-item">
+            <h5>Tipo</h5>
+            <select
+              class="form-control"
+              formControlName="selectedType"
+              (change)="onTypeChange($event)"
+            >
+              <option value="multifuncional">Multifuncional</option>
+              <option value="consumible">Consumible</option>
+            </select>
+          </div>
+
+          <!-- product_interested -->
+          <div class="deal-data-item">
+            <h5>
+              {{
+                (selectedType | async) === "multifuncional"
+                  ? "Multifuncional"
+                  : "Consumible"
+              }}
+            </h5>
+            <input
+              type="text"
+              placeholder="Elige {{ selectedType.value }}"
+              aria-label="Number"
+              class="form-control example-input"
+              [formControl]="productControl"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="addProductFromAutocomplete($event)"
+              class="form-control"
+            >
+              <mat-option
+                *ngFor="let productName of filteredProductNames | async"
+                [value]="productName"
+              >
+                {{ productName }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+
+          <!-- communication -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

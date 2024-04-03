@@ -4,7 +4,11 @@ import { LeadsService } from '../../services/leads.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { Lead } from 'src/app/sales/interfaces/leads.interface';
-
+import { Communication } from 'src/app/sales/interfaces/leads.interface';
+import { Router } from '@angular/router';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { ToastService } from 'src/app/shared/services/toast.service';
 export interface Product {
   // other properties...
   consumibles?: Consumible[]; // consumibles is optional and is an array of Consumible objects
@@ -24,7 +28,10 @@ export class LeadsDetailComponent implements OnInit {
   displayedColumns: string[] = ['date', 'message', 'type', 'notes', 'action']; // add 'actions'
   constructor(
     private leadsService: LeadsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private dialog: MatDialog,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -82,18 +89,83 @@ export class LeadsDetailComponent implements OnInit {
     });
   }
 
-  viewCommunication(id: number) {
+  addCommunication(): void {
+    // code to add a communication
+    console.log(
+      'navigating to: ',
+      `sales/leads/${this.lead?.id}/communication/create`
+    );
+    this.router.navigate([`sales/leads/${this.lead?.id}/communication/create`]);
+  }
+
+  viewCommunication(communication: Communication) {
     // code to view the communication with the given id
+    console.log(communication);
+    console.log(communication.id);
+    console.log(
+      'navigating to: ',
+      `sales/leads/communication/${communication.id}`
+    );
+    this.router.navigate([`sales/leads/communication/${communication.id}`]);
   }
 
-  editCommunication(id: number) {
+  editCommunication(communication: Communication) {
     // code to edit the communication with the given id
+    console.log(communication);
+    console.log(communication.id);
+    console.log(
+      'navigating to: ',
+      `sales/leads/communication/${communication.id}/edit`
+    );
+    this.router.navigate([
+      `sales/leads/communication/${communication.id}/edit`,
+    ]);
   }
 
-  openConfirmDialog(id: number): void {
-    // code to open a dialog to confirm the deletion of the communication with the given id
+  openConfirmDialog(communication: Communication): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar esta comunicación?',
+      message: 'La comunicación será eliminada permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (communication.id) {
+          this.deleteCommunication(communication);
+        }
+      }
+    });
   }
-  deleteCommunication(id: number) {
-    // code to delete the communication with the given id
+  deleteCommunication(communication: Communication) {
+    if (communication.id) {
+      this.leadsService.deleteCommunication(String(communication.id)).subscribe(
+        (response) => {
+          // Update communications
+          if (this.lead && this.lead.communications) {
+            this.lead.communications = this.lead.communications.filter(
+              (c) => c.id !== communication.id
+            );
+          }
+
+          this.toastService.showSuccess(
+            'Comunicación eliminada con exito',
+            'Aceptar'
+          );
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
+    }
   }
 }

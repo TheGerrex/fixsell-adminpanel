@@ -47,10 +47,23 @@ export class LeadsService {
       .post(`${environment.baseUrl}/sale-communication`, data)
       .pipe(map((leadsResponse) => leadsResponse));
   }
+
+  // update lead
+  updateLead(data: any, id: string): Observable<any> {
+    return this.http
+      .patch(`${environment.baseUrl}/leads/${id}`, data)
+      .pipe(map((leadsResponse) => leadsResponse));
+  }
   //delete lead {{baseURL}}/leads/:id
   deleteLead(id: string): Observable<any> {
     return this.http
       .delete(`${environment.baseUrl}/leads/${id}`)
+      .pipe(map((leadsResponse) => leadsResponse));
+  }
+
+  deleteCommunication(id: string): Observable<any> {
+    return this.http
+      .delete(`${environment.baseUrl}/sale-communication/${id}`)
       .pipe(map((leadsResponse) => leadsResponse));
   }
 
@@ -86,5 +99,11 @@ export class LeadsService {
     else {
       throw new Error(`Invalid product type: ${productType}`);
     }
+  }
+
+  getCommunicationById(id: string): Observable<any> {
+    return this.http
+      .get(`${environment.baseUrl}/sale-communication/${id}`)
+      .pipe(map((communicationResponse) => communicationResponse));
   }
 }

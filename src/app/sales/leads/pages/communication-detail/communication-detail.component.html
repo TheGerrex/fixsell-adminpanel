@@ -1,0 +1,17 @@
+<div *ngIf="communication">
+  <h2>Communication Details</h2>
+  <p>ID: {{ communication.id }}</p>
+  <p>Message: {{ communication.message }}</p>
+  <p>Date: {{ communication.date }}</p>
+  <p>Type: {{ communication.type }}</p>
+  <p>Notes: {{ communication.notes }}</p>
+
+  <h2>Lead Details</h2>
+  <p>ID: {{ communication.lead.id }}</p>
+  <p>Client: {{ communication.lead.client }}</p>
+  <p>Status: {{ communication.lead.status }}</p>
+  <p>Product Interested: {{ communication.lead.product_interested }}</p>
+  <p>Type of Product: {{ communication.lead.type_of_product }}</p>
+  <p>Email: {{ communication.lead.email }}</p>
+  <p>Phone: {{ communication.lead.phone }}</p>
+</div>

@@ -35,7 +35,15 @@
 
   <div class="table-header">
     <h2>Communications</h2>
+
+    <button
+      class="button button-primary button-raised button-icon-text"
+      (click)="addCommunication()"
+    >
+      <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+    </button>
   </div>
+
   <div class="responsive-table">
     <div class="table-container">
       <table
@@ -98,7 +106,6 @@
               mat-icon-button
               color="warn"
               (click)="openConfirmDialog(communication)"
-              onclick="openConfirmDialog(printer)"
             >
               <mat-icon>delete</mat-icon>
             </button>

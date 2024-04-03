@@ -6,6 +6,9 @@ import { RoleGuard } from 'src/app/auth/guards/role.guard';
 import { LeadsEditComponent } from './pages/leads-edit/leads-edit.component';
 import { LeadsDetailComponent } from './pages/leads-detail/leads-detail.component';
 import { LeadsCreateComponent } from './pages/leads-create/leads-create.component';
+import { CommunicationDetailComponent } from './pages/communication-detail/communication-detail.component';
+import { CommunicationCreateComponent } from './pages/communication-create/communication-create.component';
+import { CommunicationEditComponent } from './pages/communication-edit/communication-edit.component';
 
 const routes: Routes = [
   {
@@ -36,6 +39,31 @@ const routes: Routes = [
         component: LeadsEditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Editar' },
+      },
+      {
+        path: 'communication/:id',
+        component: CommunicationDetailComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Comunicación' },
+      },
+      {
+        path: ':id/communication/create',
+        component: CommunicationCreateComponent,
+        canActivate: [RoleGuard],
+        data: {
+          allowedRoles: ['admin', 'user'],
+          breadcrumb: 'Crear Comunicación',
+        },
+      },
+
+      {
+        path: 'communication/:id/edit',
+        component: CommunicationEditComponent,
+        canActivate: [RoleGuard],
+        data: {
+          allowedRoles: ['admin', 'user'],
+          breadcrumb: 'Editar Comunicación',
+        },
       },
     ],
   },

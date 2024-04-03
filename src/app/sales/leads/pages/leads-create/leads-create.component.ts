@@ -222,7 +222,7 @@ export class LeadsCreateComponent implements OnInit {
           return 'Este campo esta en formato incorrecto';
         case 'maxlength':
           return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'phone':
+        case 'phoneInvalid':
           return 'El número de teléfono debe tener 10 dígitos';
         case 'email':
           return 'El email no es válido';
@@ -282,7 +282,7 @@ export class LeadsCreateComponent implements OnInit {
           this.productControl.value
         }`,
         date: new Date().toISOString(),
-        type: 'email',
+        type: 'manual',
         leadId: this.lead?.id,
         notes: 'generado automáticamente por el sistema',
       };

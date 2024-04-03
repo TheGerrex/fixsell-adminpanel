@@ -36,7 +36,9 @@ export class RoleService {
     '/sales/leads/create/*': ['admin', 'vendor'],
     '/sales/leads/*': ['admin', 'vendor'],
     '/sales/leads/*/edit': ['admin', 'vendor'],
-
+    '/sales/leads/communication/*': ['admin', 'vendor'],
+    '/sales/leads/communication/*/edit': ['admin', 'vendor'],
+    '/sales/leads/*/communication/create': ['admin', 'vendor'],
     '/users/user': ['admin', 'user', 'vendor'],
     '/users/user/create': ['admin'],
     '/users/user/create/*': ['admin'],

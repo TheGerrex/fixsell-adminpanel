@@ -1,1 +1,108 @@
-<p>communication-edit works!</p>
+<div *ngIf="editCommunicationForm">
+  <div>
+    <form [formGroup]="editCommunicationForm" class="deal-container">
+      <div class="deal-header">
+        <h2>editar Communicacion</h2>
+        <button
+          class="button button-primary button-raised button-icon-text"
+          (click)="submitForm()"
+        >
+          <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
+        </button>
+      </div>
+
+      <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+
+      <div class="deal-info">
+        <div class="deal-form-container">
+          <div class="deal-data">
+            <!-- client, greyed out selected -->
+            <div class="deal-data-item full-row">
+              <h5>Cliente</h5>
+              <input
+                type="text"
+                class="form-control"
+                id="client"
+                formControlName="client"
+                [class.is-invalid]="
+                  editCommunicationForm.controls['client'].invalid &&
+                  editCommunicationForm.controls['client'].touched
+                "
+              />
+              <span
+                *ngIf="isValidField('client')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("client") }}
+              </span>
+            </div>
+            <!-- message -->
+            <div class="deal-data-item full-row">
+              <h5>Mensaje</h5>
+              <input
+                type="text"
+                class="form-control"
+                id="client"
+                formControlName="message"
+                [class.is-invalid]="
+                  editCommunicationForm.controls['message'].invalid &&
+                  editCommunicationForm.controls['message'].touched
+                "
+              />
+              <span
+                *ngIf="isValidField('message')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("message") }}
+              </span>
+            </div>
+            <!-- type export enum Type {
+    EMAIL = 'email',
+    CALL = 'llamada',
+    MEETING = 'reunión',
+    Manual = 'manual',
+  } -->
+            <div class="deal-data-item full-row">
+              <h5>Tipo</h5>
+              <select
+                class="form-select"
+                id="type"
+                formControlName="type"
+                [class.is-invalid]="
+                  editCommunicationForm.controls['type'].invalid &&
+                  editCommunicationForm.controls['type'].touched
+                "
+              >
+                <option value="email">Email</option>
+                <option value="llamada">Llamada</option>
+                <option value="reunión">Reunión</option>
+                <option value="manual">Manual</option>
+              </select>
+              <span *ngIf="isValidField('type')" class="form-text text-danger">
+                {{ getFieldError("type") }}
+              </span>
+            </div>
+
+            <!-- notes -->
+            <div class="deal-data-item full-row">
+              <h5>Notas</h5>
+              <textarea
+                type="text"
+                class="form-control"
+                id="notes"
+                formControlName="notes"
+                [class.is-invalid]="
+                  editCommunicationForm.controls['notes'].invalid &&
+                  editCommunicationForm.controls['notes'].touched
+                "
+              ></textarea>
+              <span *ngIf="isValidField('notes')" class="form-text text-danger">
+                {{ getFieldError("notes") }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

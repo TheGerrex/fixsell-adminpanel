@@ -54,6 +54,20 @@ export class LeadsService {
       .patch(`${environment.baseUrl}/leads/${id}`, data)
       .pipe(map((leadsResponse) => leadsResponse));
   }
+
+  // update sales communication
+  updateSalesCommunication(data: any, id: any): Observable<any> {
+    console.log('Data:', data);
+    console.log('ID:', id);
+    console.log('ID Type:', typeof id);
+
+    const url = environment.baseUrl + '/sale-communication/' + id;
+    console.log('URL:', url);
+
+    return this.http
+      .patch(url, data)
+      .pipe(map((leadsResponse) => leadsResponse));
+  }
   //delete lead {{baseURL}}/leads/:id
   deleteLead(id: string): Observable<any> {
     return this.http

@@ -1,17 +1,77 @@
-<div *ngIf="communication">
-  <h2>Communication Details</h2>
-  <p>ID: {{ communication.id }}</p>
-  <p>Message: {{ communication.message }}</p>
-  <p>Date: {{ communication.date }}</p>
-  <p>Type: {{ communication.type }}</p>
-  <p>Notes: {{ communication.notes }}</p>
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div class="communication-container" *ngIf="communication && !isLoadingData">
+  <div class="communication-header">
+    <h2>Communication Details</h2>
+    <div class="button-actions">
+      <button
+        class="button button-danger button-raised button-icon-text"
+        *ngIf="communication.id"
+        (click)="openConfirmDialog(communication)"
+      >
+        <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+      </button>
+      <button
+        class="button button-primary button-raised button-icon-text"
+        *ngIf="communication.id"
+        (click)="navigateToEditCommunication(communication)"
+      >
+        <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+      </button>
+    </div>
+  </div>
+  <div class="communication-info">
+    <div class="communication-info-container">
+      <div class="communication-data-container">
+        <div class="communication-card">
+          <div class="communication-card-header">
+            <div class="communication-card-title">
+              <h4>
+                {{ communication.type }} con {{ communication.lead.client }}
+              </h4>
+            </div>
+          </div>
 
-  <h2>Lead Details</h2>
-  <p>ID: {{ communication.lead.id }}</p>
-  <p>Client: {{ communication.lead.client }}</p>
-  <p>Status: {{ communication.lead.status }}</p>
-  <p>Product Interested: {{ communication.lead.product_interested }}</p>
-  <p>Type of Product: {{ communication.lead.type_of_product }}</p>
-  <p>Email: {{ communication.lead.email }}</p>
-  <p>Phone: {{ communication.lead.phone }}</p>
+          <div class="communication-card-body">
+            <div class="communication-card-body-content">
+              <div class="lead-data">
+                <div class="communication-data-item">
+                  <div class="lead-details">
+                    <p>
+                      <strong>Estado:</strong> {{ communication.lead.status }}
+                    </p>
+                    <p>
+                      <strong>Producto de Interés:</strong>
+                      {{ communication.lead.product_interested }}
+                    </p>
+                    <p>
+                      <strong>Tipo de Producto:</strong>
+                      {{ communication.lead.type_of_product }}
+                    </p>
+                    <p>
+                      <strong>Correo Electrónico:</strong>
+                      {{ communication.lead.email }}
+                    </p>
+                    <p>
+                      <strong>Teléfono:</strong> {{ communication.lead.phone }}
+                    </p>
+                  </div>
+                  <div class="communication-details">
+                    <p><strong>Mensaje:</strong> {{ communication.message }}</p>
+                    <p>
+                      <strong>Fecha:</strong>
+                      {{ communication.date | date : "dd/MM/yyyy" }}
+                      <strong>Hora:</strong>
+                      {{ communication.date | date : "HH:mm" }}
+                    </p>
+                    <p><strong>Tipo:</strong> {{ communication.type }}</p>
+                    <p><strong>Notas:</strong> {{ communication.notes }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

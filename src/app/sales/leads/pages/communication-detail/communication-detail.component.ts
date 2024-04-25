@@ -10,7 +10,7 @@ import { Communication } from 'src/app/sales/interfaces/leads.interface';
 })
 export class CommunicationDetailComponent implements OnInit {
   communication: Communication | null = null;
-
+  isLoadingData = false;
   constructor(
     private route: ActivatedRoute,
     private leadsService: LeadsService
@@ -27,4 +27,8 @@ export class CommunicationDetailComponent implements OnInit {
       }
     );
   }
+
+  openConfirmDialog(communication: any) {}
+
+  navigateToEditCommunication(communication: any) {}
 }

@@ -132,9 +132,10 @@ export class LeadsListComponent implements OnInit {
 
   getLastCommunicationTime(lead: Lead): string {
     if (lead.communications && lead.communications.length > 0) {
-      const lastCommunicationDate = new Date(
-        lead.communications[lead.communications.length - 1].date
+      const sortedCommunications = lead.communications.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
+      const lastCommunicationDate = new Date(sortedCommunications[0].date);
       const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
       const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
 
@@ -150,9 +151,10 @@ export class LeadsListComponent implements OnInit {
 
   getCommunicationClass(lead: Lead): string {
     if (lead.communications && lead.communications.length > 0) {
-      const lastCommunicationDate = new Date(
-        lead.communications[lead.communications.length - 1].date
+      const sortedCommunications = lead.communications.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
+      const lastCommunicationDate = new Date(sortedCommunications[0].date);
       const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
       const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
 

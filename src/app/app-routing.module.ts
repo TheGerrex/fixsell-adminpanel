@@ -28,6 +28,12 @@ const routes: Routes = [
       import('./sales/sales.module').then((m) => m.SalesModule),
   },
   {
+    path: 'support',
+    canActivate: [NavigationGuard, isAuthenticatedGuard],
+    loadChildren: () =>
+      import('./support/support.module').then((m) => m.SupportModule),
+  },
+  {
     path: 'users',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
     loadChildren: () =>

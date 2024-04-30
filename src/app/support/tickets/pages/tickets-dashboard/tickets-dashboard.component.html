@@ -1,0 +1,52 @@
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<!-- header -->
+<div [hidden]="isLoadingData">
+  <div class="table-header">
+    <h2>Mis Tickets</h2>
+    <div class="table-action-buttons">
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="addTicket()"
+      >
+        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+      </button>
+    </div>
+  </div>
+  <!-- open tickets and closed tickets -->
+  <div class="card-container">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <mat-icon>folder_open</mat-icon> Mis Tickets Abiertos
+        </div>
+        <div class="card-count">20</div>
+      </div>
+      <div class="card-body">
+        <!-- Add content for open tickets card here -->
+        <button
+          class="button button-primary button-raised button-icon-text"
+          (click)="openTickets()"
+        >
+          <mat-icon>visibility</mat-icon><span class="button-label">Ver</span>
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <mat-icon>done</mat-icon> Mis Tickets Cerrados
+        </div>
+        <div class="card-count">87</div>
+      </div>
+      <div class="card-body">
+        <!-- Add content for closed tickets card here -->
+        <button
+          class="button button-primary button-raised button-icon-text"
+          (click)="closedTickets()"
+        >
+          <mat-icon>visibility</mat-icon><span class="button-label">Ver</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

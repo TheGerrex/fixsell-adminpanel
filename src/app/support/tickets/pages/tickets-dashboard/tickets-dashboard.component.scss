@@ -1,0 +1,53 @@
+@import "_variables.scss";
+.table-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $gray-50;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  border-radius: $border-radius $border-radius 0 0;
+  width: 100%;
+  gap: 1em;
+  h2 {
+    margin: 0;
+  }
+  .table-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    @media (max-width: 576px) {
+      .search-box {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .card-container {
+    flex-direction: column;
+  }
+}

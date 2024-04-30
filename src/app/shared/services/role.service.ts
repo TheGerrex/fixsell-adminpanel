@@ -45,6 +45,13 @@ export class RoleService {
     '/users/user/*': ['admin'],
     '/users/user/*/edit': ['admin'],
     '/users/config': ['admin'],
+    '/support/tickets': ['admin', 'user', 'vendor'],
+    '/support/tickets/create': ['admin', 'user', 'vendor'],
+    '/support/tickets/create/*': ['admin', 'user', 'vendor'],
+    '/support/tickets/*': ['admin', 'user', 'vendor'],
+    '/support/tickets/*/edit': ['admin', 'user', 'vendor'],
+    '/support/config': ['admin', 'user', 'vendor'],
+    '/support/tickets/list': ['admin', 'user', 'vendor'],
   };
 
   getAllowedRoles(path: string): string[] {

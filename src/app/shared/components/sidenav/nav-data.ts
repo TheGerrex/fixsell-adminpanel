@@ -60,6 +60,26 @@ export const navbarData = [
       },
     ],
   },
+  // tickets
+  {
+    label: 'Soporte',
+    routeLink: 'support/tickets',
+    icon: 'fal fa-headset',
+    allowedRoles: ['admin', 'user', 'vendor'],
+    isExpanded: false,
+    subRoutes: [
+      {
+        label: 'Tickets',
+        routeLink: 'support/tickets',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+      {
+        label: 'Configuracion',
+        routeLink: 'support/config',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+    ],
+  },
   {
     label: 'Usuarios',
     routeLink: 'users/user',

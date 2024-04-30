@@ -72,10 +72,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "fixsell-adminpanel-front:build:production"
+                          "buildTarget": "fixsell-adminpanel-front:build:production"
                         },
                         "development": {
-                            "browserTarget": "fixsell-adminpanel-front:build:development"
+                          "buildTarget": "fixsell-adminpanel-front:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "fixsell-adminpanel-front:build"
+                      "buildTarget": "fixsell-adminpanel-front:build"
                     }
                 },
                 "test": {

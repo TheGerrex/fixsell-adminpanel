@@ -6,8 +6,9 @@ import { TicketRoutingModule } from './tickets-routing.module';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 import { TicketsDashboardComponent } from './pages/tickets-dashboard/tickets-dashboard.component';
 import { TicketsListComponent } from './pages/tickets-list/tickets-list.component';
+import { TicketsViewComponent } from './pages/tickets-view/tickets-view.component';
 @NgModule({
-  declarations: [LayoutPageComponent, TicketsDashboardComponent, TicketsListComponent],
+  declarations: [LayoutPageComponent, TicketsDashboardComponent, TicketsListComponent, TicketsViewComponent],
   imports: [CommonModule, SharedModule, SupportModule, TicketRoutingModule],
 
   // imports: [CommonModule, SharedModule, UsersModule, UserRoutingModule],

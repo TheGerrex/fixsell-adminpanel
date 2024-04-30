@@ -4,6 +4,7 @@ import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
 import { TicketsDashboardComponent } from './pages/tickets-dashboard/tickets-dashboard.component';
 import { TicketsListComponent } from './pages/tickets-list/tickets-list.component';
+import { TicketsViewComponent } from './pages/tickets-view/tickets-view.component';
 
 const routes: Routes = [
   {
@@ -29,12 +30,12 @@ const routes: Routes = [
       //     canActivate: [RoleGuard],
       //     data: { allowedRoles: ['admin'], breadcrumb: 'editar' },
       //   },
-      //   {
-      //     path: ':id',
-      //     component: UserDetailComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin'], breadcrumb: 'usuario' },
-      //   },
+      {
+        path: ':id',
+        component: TicketsViewComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'usuario' },
+      },
     ],
   },
 ];

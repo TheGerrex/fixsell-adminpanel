@@ -170,14 +170,14 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
 
   seeTicket(ticket: Ticket) {
     console.log('See ticket:', ticket);
-    console.log('routing to: /support/tickets/view/' + ticket.id);
-    this.router.navigate(['/support/tickets/view/' + ticket.id]);
+    console.log('routing to: /support/tickets/' + ticket.id);
+    this.router.navigate(['/support/tickets/' + ticket.id]);
   }
 
   editTicket(ticket: Ticket) {
     console.log('Edit ticket:', ticket);
-    console.log('routing to: /support/tickets/edit/' + ticket.id);
-    this.router.navigate(['/support/tickets/edit/' + ticket.id]);
+    console.log('routing to: /support/tickets/' + ticket.id + '/edit');
+    this.router.navigate(['/support/tickets/' + ticket.id + '/edit']);
   }
 
   openConfirmDialog(ticket: Ticket): void {}

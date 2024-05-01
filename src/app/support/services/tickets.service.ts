@@ -28,4 +28,10 @@ export class TicketsService {
       .get<Ticket[]>(`${environment.baseUrl}/tickets?userId=${userId}`)
       .pipe(map((ticketResponse) => ticketResponse));
   }
+
+  getTicketById(ticketId: string): Observable<Ticket> {
+    return this.http
+      .get<Ticket>(`${environment.baseUrl}/tickets/${ticketId}`)
+      .pipe(map((ticketResponse) => ticketResponse));
+  }
 }

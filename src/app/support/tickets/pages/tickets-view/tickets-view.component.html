@@ -1,1 +1,6 @@
-<p>tickets-view works!</p>
+<p>Asunto:</p>
+<quill-editor [(ngModel)]="ticketIssue" [readOnly]="readOnly"></quill-editor>
+
+<button (click)="readOnly ? toggleEdit() : submit()">
+  {{ readOnly ? "Edit" : "Submit" }}
+</button>

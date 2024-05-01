@@ -17,6 +17,8 @@ import { AddPrinterCategoryDialogComponent } from './components/add-printer-cate
 import { InputChipsComponent } from './components/input-chips/input-chips.component';
 import { AddUserRoleDialogComponent } from './components/add-user-role-dialog/add-user-role-dialog.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { QuillModule } from 'ngx-quill';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -39,6 +41,8 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
     AngularMaterialModule,
     ReactiveFormsModule,
     DragDropModule,
+    QuillModule,
+    FormsModule,
   ],
   exports: [
     SidenavComponent,
@@ -50,6 +54,8 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
     ExportComponent,
     InputChipsComponent,
     LoadingSpinnerComponent,
+    QuillModule,
+    FormsModule,
   ],
 })
 export class SharedModule {}

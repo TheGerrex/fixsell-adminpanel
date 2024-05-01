@@ -33,7 +33,6 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     'Client',
     'clientEmail',
     'clientPhone',
-    'issue',
     'status',
     'priority',
     'updatedDate', //time since last update
@@ -129,7 +128,6 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         'Client',
         'clientEmail',
         'clientPhone',
-        'issue',
         'status',
         'priority',
         'updatedDate',

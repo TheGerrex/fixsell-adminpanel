@@ -5,6 +5,7 @@ import { TicketsService } from 'src/app/support/services/tickets.service';
 import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 @Component({
   selector: 'app-tickets-view',
   templateUrl: './tickets-view.component.html',
@@ -14,7 +15,8 @@ export class TicketsViewComponent implements OnInit {
   constructor(
     private ticketsService: TicketsService,
     private route: ActivatedRoute,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private toastService: ToastService
   ) {
     this.ticket = {} as Ticket;
   }
@@ -29,6 +31,7 @@ export class TicketsViewComponent implements OnInit {
   clientPhone = '';
   ticketPriority = '';
   assignedUser: string = ''; // Initialize the 'assignedUser' property
+  assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
   // Add statusOptions and ticketStatus
   statusOptions = [
@@ -140,6 +143,8 @@ export class TicketsViewComponent implements OnInit {
       this.clientEmail = ticket.clientEmail;
       this.clientPhone = ticket.clientPhone;
       this.ticketPriority = ticket.priority;
+      this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
+      this.assignee = ticket.assignee ? ticket.assignee.name : '';
       this.activities =
         ticket.activity && ticket.activity.length > 0
           ? ticket.activity.flatMap((activityGroup) =>
@@ -169,6 +174,8 @@ export class TicketsViewComponent implements OnInit {
             this.clientEmail = ticket.clientEmail;
             this.clientPhone = ticket.clientPhone;
             this.ticketPriority = ticket.priority;
+            this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
+            this.assignee = ticket.assignee ? ticket.assignee.name : '';
             this.activities =
               ticket.activity && ticket.activity.length > 0
                 ? ticket.activity.flatMap((activityGroup) =>
@@ -192,17 +199,25 @@ export class TicketsViewComponent implements OnInit {
   }
 
   transferTicket(): void {
-    const assignedUser = this.users.find(
+    const assignedUserId = this.users.find(
       (user) => user.id === this.assignedUser
-    );
+    )?.id;
     this.ticketsService
-      .updateTicket(this.ticket.id, { assigned: assignedUser?.id }) // Fix: Pass the id property of assignedUser
+      .updateTicket(this.ticket.id, { assigned: assignedUserId }) // Pass the id of the assignedUser
       .subscribe(
         (response) => {
           console.log('Ticket transferred successfully:', response);
+          this.toastService.showSuccess(
+            'Ticket transferred successfully',
+            'OK'
+          );
         },
         (error) => {
           console.error('Error:', error);
+          this.toastService.showError(
+            'Error transferring ticket',
+            error.message
+          );
         }
       );
   }
@@ -216,7 +231,33 @@ export class TicketsViewComponent implements OnInit {
   }
 
   deleteActivity(index: number) {
+    // Remove the activity from the local array
     this.activities.splice(index, 1);
+
+    // Prepare the updated activities for the updateTicket call
+    const updatedActivities = this.activities.map(
+      (activity) => activity.activity
+    );
+
+    // Call the updateTicket method with the ticket id and the updated activities
+    this.ticketsService
+      .updateTicket(this.ticket.id, { activity: updatedActivities })
+      .subscribe(
+        (response) => {
+          console.log('Ticket updated successfully:', response);
+          this.toastService.showSuccess(
+            'Activity deleted and ticket updated successfully',
+            'OK'
+          );
+        },
+        (error) => {
+          console.error('Error:', error);
+          this.toastService.showError(
+            'Error updating ticket after deleting activity',
+            error.message
+          );
+        }
+      );
   }
 
   submitActivity(index: number) {
@@ -235,9 +276,11 @@ export class TicketsViewComponent implements OnInit {
       .subscribe(
         (response) => {
           console.log('Ticket updated successfully:', response);
+          this.toastService.showSuccess('Ticket updated successfully', 'OK');
         },
         (error) => {
           console.error('Error:', error);
+          this.toastService.showError('Error updating ticket', error.message);
         }
       );
   }
@@ -245,16 +288,17 @@ export class TicketsViewComponent implements OnInit {
   submitIssue() {
     console.log('Submit issue');
     // Call the updateTicket method with the ticket id and the updated issue
-
     this.ticketsService
       .updateTicket(this.ticket.id, { issue: this.ticketIssue })
       .subscribe(
         (response) => {
           console.log('Ticket updated successfully:', response);
+          this.toastService.showSuccess('Ticket updated successfully', 'OK');
           this.toggleIssueEdit(); // Switch back to read-only mode
         },
         (error) => {
           console.error('Error:', error);
+          this.toastService.showError('Error updating ticket', error.message);
         }
       );
   }
@@ -267,9 +311,17 @@ export class TicketsViewComponent implements OnInit {
       .subscribe(
         (response) => {
           console.log('Ticket status updated successfully:', response);
+          this.toastService.showSuccess(
+            'Ticket status updated successfully',
+            'OK'
+          );
         },
         (error) => {
           console.error('Error:', error);
+          this.toastService.showError(
+            'Error updating ticket status',
+            error.message
+          );
         }
       );
   }

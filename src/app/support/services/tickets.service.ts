@@ -34,4 +34,11 @@ export class TicketsService {
       .get<Ticket>(`${environment.baseUrl}/tickets/${ticketId}`)
       .pipe(map((ticketResponse) => ticketResponse));
   }
+
+  updateTicket(id: number, ticket: Partial<Ticket>): Observable<Ticket> {
+    console.log('submitting ticket with id:', id);
+    return this.http
+      .patch<Ticket>(`${environment.baseUrl}/tickets/${id}`, ticket)
+      .pipe(map((ticketResponse) => ticketResponse));
+  }
 }

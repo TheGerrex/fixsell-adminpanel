@@ -9,8 +9,8 @@ export interface Ticket {
   activity: any[];
   priority: Priority;
   status: Status;
-  assigned: User;
-  assignee: User;
+  assigned: string;
+  assignee: string;
   ticketFiles: any;
   createdDate: string;
   updatedDate: string;

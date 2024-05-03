@@ -1,6 +1,153 @@
-<p>Asunto:</p>
-<quill-editor [(ngModel)]="ticketIssue" [readOnly]="readOnly"></quill-editor>
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div class="ticket-container" *ngIf="!isLoadingData">
+  <div class="ticket-header">
+    <h2>Ticket {{ ticketNumber }}</h2>
+    <div>
+      <div
+        style="
+          display: inline-block;
+          padding: 5px;
+          border-radius: 5px;
+          margin-right: 10px;
+        "
+        [class]="getPriorityClass(ticket)"
+      >
+        {{ getPriorityTranslation(ticket.priority) }}
+      </div>
+      <div
+        style="display: inline-block; padding: 5px; border-radius: 5px"
+        [class]="getStatusClass(ticket)"
+      >
+        {{ getStatusTranslation(ticket.status) }}
+      </div>
+    </div>
+  </div>
 
-<button (click)="readOnly ? toggleEdit() : submit()">
-  {{ readOnly ? "Edit" : "Submit" }}
-</button>
+  <div class="ticket-info-container">
+    <div class="ticket-data-container">
+      <div class="ticket-data">
+        <div class="ticket-data-row">
+          <div class="ticket-data-item">
+            <h3>Client Name</h3>
+            <p>{{ clientName }}</p>
+          </div>
+
+          <div class="ticket-data-item">
+            <h3>Client Email</h3>
+            <p>{{ clientEmail }}</p>
+          </div>
+
+          <div class="ticket-data-item">
+            <h3>Client Phone</h3>
+            <p>{{ clientPhone }}</p>
+          </div>
+        </div>
+
+        <div class="ticket-data-item">
+          <h3>Creado el</h3>
+          <p>{{ ticket.createdDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+        </div>
+
+        <div class="ticket-data-item">
+          <h3>Última actualización</h3>
+          <p>{{ ticket.updatedDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+        </div>
+        <div class="ticket-data-item">
+          <h3>Estado</h3>
+          <select
+            [(ngModel)]="ticketStatus"
+            class="form-select"
+            (change)="changeStatus()"
+          >
+            <option *ngFor="let option of statusOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="ticket-data-item">
+          <h3>Problema</h3>
+
+          <quill-editor
+            *ngIf="!issueReadOnly"
+            [(ngModel)]="ticketIssue"
+          ></quill-editor>
+          <p *ngIf="issueReadOnly" [innerHTML]="ticketIssue"></p>
+
+          <button
+            class="button button-primary button-raised button-icon-text"
+            (click)="issueReadOnly ? toggleIssueEdit() : submitIssue()"
+          >
+            <mat-icon>edit</mat-icon
+            ><span class="button-label">{{
+              issueReadOnly ? "Edit" : "Submit"
+            }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ticket-data-item">
+        <h3>Transferir ticket:</h3>
+        <select
+          [(ngModel)]="assignedUser"
+          class="form-select"
+          (change)="transferTicket()"
+        >
+          <option *ngFor="let user of users" [value]="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticket-info-container">
+    <div class="ticket-data-container">
+      <div class="ticket-data">
+        <div>
+          <h3>
+            Actividad
+            <!-- Add button next to the title -->
+          </h3>
+          <button
+            class="button button-primary button-raised button-icon-text"
+            (click)="addActivity()"
+          >
+            <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+          </button>
+        </div>
+
+        <div
+          class="ticket-data-item"
+          *ngFor="let activity of activities; let i = index"
+        >
+          <quill-editor
+            [(ngModel)]="activity.activity"
+            *ngIf="!activity.readOnly"
+          ></quill-editor>
+          <p *ngIf="activity.readOnly" [innerHTML]="activity.activity"></p>
+
+          <button
+            class="button button-primary button-raised button-icon-text"
+            (click)="
+              activity.readOnly ? toggleActivityEdit(i) : submitActivity(i)
+            "
+          >
+            <mat-icon>edit</mat-icon
+            ><span class="button-label">{{
+              activity.readOnly ? "Edit" : "Submit"
+            }}</span>
+          </button>
+
+          <!-- Delete button -->
+          <button
+            class="button button-danger button-raised button-icon-text"
+            (click)="deleteActivity(i)"
+          >
+            <mat-icon>delete</mat-icon><span class="button-label">Delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

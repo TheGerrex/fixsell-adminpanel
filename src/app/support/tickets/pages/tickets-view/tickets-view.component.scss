@@ -1,0 +1,124 @@
+@import "_variables.scss";
+
+.ticket-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  padding-bottom: 1em;
+  justify-content: center;
+}
+
+.ticket-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  border-radius: $border-radius $border-radius 0 0;
+  background-color: $gray-50;
+  padding: 1em;
+  h2 {
+    margin: 0;
+  }
+  .button-actions {
+    display: flex;
+    gap: 0.5em;
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+.ticket-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1em;
+}
+.ticket-data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  border-bottom: 1px solid $gray-300;
+}
+
+.ticket-data-item {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  align-items: center;
+}
+.ticket-data-label {
+  font-weight: bold;
+}
+
+.ticket-info {
+  display: flex;
+  gap: 1em;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 1em;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+  .ticket-info-container {
+    width: 100%;
+    max-width: 768px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    .ticket-data-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      row-gap: 1em;
+      column-gap: 1em;
+      width: 100%;
+      border: 1px solid $gray-300;
+      border-radius: $border-radius;
+      padding: 1em;
+      .ticket-data-item {
+        min-height: 50px;
+        p {
+          margin-bottom: 0;
+        }
+        @media (max-width: 600px) {
+          grid-column: 1 / -1;
+          gap: 1em;
+        }
+      }
+    }
+  }
+}
+
+.status-open {
+  background-color: $green-400;
+}
+
+.status-in-progress {
+  background-color: $yellow-300;
+}
+
+.status-without-resolution {
+  background-color: $orange-400;
+}
+
+.status-completed {
+  background-color: $blue-400;
+}
+
+.priority-low {
+  background-color: $green-200;
+}
+
+.priority-medium {
+  background-color: $yellow-300;
+}
+
+.priority-high {
+  background-color: $red-400;
+}

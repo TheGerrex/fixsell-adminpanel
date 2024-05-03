@@ -20,6 +20,11 @@ export class UsersService {
       headers,
     });
   }
+
+  getUsers(token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${environment.baseUrl}/auth`, { headers });
+  }
   // get user by email
   // get user by name
   // get roles names

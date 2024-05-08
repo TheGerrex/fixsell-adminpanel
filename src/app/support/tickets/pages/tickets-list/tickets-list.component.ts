@@ -14,7 +14,9 @@ import { TicketsService } from '../../../services/tickets.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
-
+import { Observable } from 'rxjs';
+import { TicketsDashboardComponent } from '../tickets-dashboard/tickets-dashboard.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-tickets-list',
   templateUrl: './tickets-list.component.html',
@@ -115,11 +117,16 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     private ticketsService: TicketsService,
     private authService: AuthService,
     private toastService: ToastService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    Promise.resolve().then(() => this.loadData());
+    this.route.queryParams.subscribe((params) => {
+      const status = params['status'];
+      // Use the status to filter the tickets
+      this.loadData(status);
+    });
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -140,10 +147,29 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     // this.loadData();
   }
 
-  loadData() {
+  loadData(statuses?: string) {
     this.isLoadingData = true;
-    this.ticketsService.getAllTickets().subscribe(
+    let ticketsObservable: Observable<Ticket[]>;
+    if (this.isAdmin) {
+      ticketsObservable = this.ticketsService.getAllTickets();
+    } else {
+      const user = this.authService.getCurrentUser();
+      if (user) {
+        ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
+      } else {
+        // Handle the case where there is no current user
+        console.error('No current user');
+        return;
+      }
+    }
+    ticketsObservable.subscribe(
       (tickets) => {
+        if (statuses !== undefined) {
+          const statusArray = statuses.split(','); // Split the statuses string into an array
+          tickets = tickets.filter((ticket) =>
+            statusArray.includes(ticket.status)
+          );
+        }
         this.TicketData = tickets;
         this.dataSource = new MatTableDataSource(tickets);
         this.dataSource.sort = this.sort;
@@ -164,6 +190,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
 
   addTicket() {
     console.log('Add ticket');
+    this.router.navigate(['/support/tickets/create']);
   }
 
   seeTicket(ticket: Ticket) {

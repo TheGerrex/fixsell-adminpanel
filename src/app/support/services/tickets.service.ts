@@ -24,11 +24,15 @@ export class TicketsService {
   }
 
   getAllTicketsForUser(userId: string): Observable<Ticket[]> {
-    return this.http
-      .get<Ticket[]>(`${environment.baseUrl}/tickets?userId=${userId}`)
-      .pipe(map((ticketResponse) => ticketResponse));
+    const url = `${environment.baseUrl}/tickets/assigned?userId=${userId}`;
+    console.log('Fetching tickets with URL:', url);
+    return this.http.get<Ticket[]>(url).pipe(
+      map((ticketResponse) => {
+        console.log('Received tickets:', ticketResponse);
+        return ticketResponse;
+      })
+    );
   }
-
   getTicketById(ticketId: string): Observable<Ticket> {
     return this.http
       .get<Ticket>(`${environment.baseUrl}/tickets/${ticketId}`)
@@ -42,6 +46,12 @@ export class TicketsService {
     console.log('submitting ticket with id:', id);
     return this.http
       .patch<Ticket>(`${environment.baseUrl}/tickets/${id}`, ticket)
+      .pipe(map((ticketResponse) => ticketResponse));
+  }
+
+  createTicket(ticket: Omit<Ticket, 'id'>): Observable<Ticket> {
+    return this.http
+      .post<Ticket>(`${environment.baseUrl}/tickets`, ticket)
       .pipe(map((ticketResponse) => ticketResponse));
   }
 }

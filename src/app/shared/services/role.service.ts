@@ -55,8 +55,11 @@ export class RoleService {
   };
 
   getAllowedRoles(path: string): string[] {
+    // Split the path by the '?' character to separate the base path from the query parameters
+    const basePath = path.split('?')[0];
+
     const route = Object.keys(this.roles).find((key) =>
-      new RegExp(`^${key.replace('*', '[0-9a-zA-Z-]+')}$`).test(path)
+      new RegExp(`^${key.replace('*', '[0-9a-zA-Z-]+')}$`).test(basePath)
     );
     return route ? this.roles[route] : [];
   }

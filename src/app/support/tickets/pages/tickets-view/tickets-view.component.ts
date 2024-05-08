@@ -6,6 +6,7 @@ import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 @Component({
   selector: 'app-tickets-view',
   templateUrl: './tickets-view.component.html',
@@ -16,7 +17,8 @@ export class TicketsViewComponent implements OnInit {
     private ticketsService: TicketsService,
     private route: ActivatedRoute,
     private usersService: UsersService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {
     this.ticket = {} as Ticket;
   }

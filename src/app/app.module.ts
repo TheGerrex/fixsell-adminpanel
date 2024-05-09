@@ -9,6 +9,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from './shared/shared.module';
 import localEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 registerLocaleData(localEs, 'es');
 
 @NgModule({
@@ -21,6 +23,7 @@ registerLocaleData(localEs, 'es');
     FlexLayoutModule,
     BrowserAnimationsModule,
     SharedModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es'}],
   bootstrap: [AppComponent],

@@ -5,6 +5,7 @@ export interface Ticket {
   clientName: string;
   clientEmail: string;
   clientPhone: string;
+  clientAddress: string;
   issue: string;
   activity: any[];
   priority: Priority;
@@ -15,6 +16,8 @@ export interface Ticket {
   createdDate: string;
   updatedDate: string;
   id: number;
+  appointmentStartTime: Date;
+  appointmentEndTime: Date;
 }
 
 export enum Status {

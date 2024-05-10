@@ -9,23 +9,18 @@ import {
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
-import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PackageService } from '../../services/package.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { PrinterService } from '../../../printer/services/printer.service';
 import {
   Observable,
   map,
   startWith,
-  combineLatest,
   switchMap,
-  of,
-  from,
 } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { PrinterService } from 'src/app/website/printer/services/printer.service';
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 @Component({
   selector: 'app-package-create',
@@ -37,6 +32,7 @@ export class PackageCreateComponent implements OnInit {
   printerControl = new FormControl();
   printerPrice: number = 0;
   isSubmitting = false;
+  selectedPrinter!: Printer;
 
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
@@ -44,11 +40,10 @@ export class PackageCreateComponent implements OnInit {
   constructor(
     private toastService: ToastService,
     private router: Router,
-    private route: ActivatedRoute,
     private fb: FormBuilder,
-    private dialog: MatDialog,
     private validatorsService: ValidatorsService,
-    private PackageService: PackageService
+    private packageService: PackageService,
+    private printerService: PrinterService
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +51,8 @@ export class PackageCreateComponent implements OnInit {
     this.filteredPrinterNames = this.printerControl.valueChanges.pipe(
       startWith(''),
       switchMap((value) =>
-        this.PackageService.getAllPrinterNames().pipe(
+        this.printerService.getAllRentablePrinters().pipe(
+          map((printers) => printers.map((printer) => printer.model)),
           map((printerNames) => this._filter(value, printerNames))
         )
       )
@@ -76,12 +72,15 @@ export class PackageCreateComponent implements OnInit {
       packageDuration: [null],
       packageStartDate: ['', Validators.required],
       packageEndDate: ['', Validators.required],
-      packagePrice: [null, [Validators.required, Validators.min(0.01)]],
-      packageCurrency: ['USD', Validators.required],
+      packageMonthlyPrice: [null, [Validators.required, Validators.min(0.01)]],
+      packageDepositPrice: [null, [Validators.required, Validators.min(0.01)]],
+      packageCurrency: ['MXN', Validators.required],
       packageDiscountPercentage: [null],
       packageDescription: [''],
-      packagePrints: [null],
-      packageExtraClickPrice: [null],
+      packagePrintsBw: [null],
+      packagePrintsColor: [null],
+      packageExtraClickPriceBw: [null],
+      packageExtraClickPriceColor: [null],
       packageIncludes: this.fb.array([]),
     });
   }
@@ -137,12 +136,17 @@ export class PackageCreateComponent implements OnInit {
     if (printerName === '') {
       printerName = this.printerNameControl.value;
     }
-    this.PackageService.getPrinterPrice(printerName).subscribe(
+    // Fetch the printer details
+    this.printerService.getPrinterByName(printerName).subscribe((printer) => {
+      this.selectedPrinter = printer;
+      console.log(this.selectedPrinter);
+    });
+    this.packageService.getPrinterPrice(printerName).subscribe(
       (price) => {
-        this.printerPrice = price;
+        // this.printerPrice = price;
         this.printerControl.setValue(printerName);
         this.createPackageForm.controls['printer'].setValue(printerName);
-        this.createPackageForm.controls['packagePrice'].setValue(price);
+        // this.createPackageForm.controls['packagePrice'].setValue(price);
       },
       (error) => {
         console.error(error);
@@ -206,13 +210,13 @@ export class PackageCreateComponent implements OnInit {
 
     this.isSubmitting = true;
     // gets id from printer name and creates package
-    this.PackageService.findPrinterIdByName(formData.printer).subscribe(
+    this.packageService.findPrinterIdByName(formData.printer).subscribe(
       (id) => {
         console.log(id);
         formData.printer = id;
         // this.createPackage(formData);
         console.log(formData);
-        this.PackageService.createPackage(formData).subscribe(
+        this.packageService.createPackage(formData).subscribe(
           (response) => {
             this.toastService.showSuccess('Package created successfully', 'OK');
             this.isSubmitting = false;

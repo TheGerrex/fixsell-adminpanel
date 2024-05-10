@@ -28,7 +28,7 @@ export const navbarData = [
         allowedRoles: ['admin', 'user', 'vendor'],
       },
       {
-        label: 'Paquetes',
+        label: 'Paquetes de Renta',
         routeLink: 'website/packages',
         allowedRoles: ['admin', 'user', 'vendor'],
       },

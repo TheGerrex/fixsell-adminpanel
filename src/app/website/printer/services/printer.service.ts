@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
@@ -14,6 +14,12 @@ export class PrinterService {
   getAllPrinters(): Observable<Printer[]> {
     return this.http
       .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .pipe(map((printerResponse) => printerResponse));
+  }
+
+  getAllRentablePrinters(): Observable<Printer[]> {
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers?rentable=true`)
       .pipe(map((printerResponse) => printerResponse));
   }
 
@@ -32,6 +38,24 @@ export class PrinterService {
           return printer.id;
         } else {
           throw new Error('Printer not found');
+        }
+      }),
+      catchError((err) => {
+        console.error(err);
+        throw err;
+      })
+    );
+  }
+
+  getPrinterByName(name: string): Observable<Printer> {
+    let params = new HttpParams().append('model', name);
+    return this.http.get<Printer[]>(`${environment.baseUrl}/printers`, { params }).pipe(
+      map((printers: Printer[]) => {
+        const printer = printers[0];
+        if (printer) {
+          return printer;
+        } else {
+          throw new Error('Multifuncional no encontrada');
         }
       }),
       catchError((err) => {

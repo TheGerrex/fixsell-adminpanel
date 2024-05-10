@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
@@ -12,9 +12,16 @@ import { of } from 'rxjs';
 export class PackageService {
   constructor(private http: HttpClient) {}
   //get all printer names
-  getAllPrinterNames(): Observable<string[]> {
+  getAllPrinterNames(rentable?: boolean, sellable?: boolean): Observable<string[]> {
+    let params = new HttpParams();
+    if (rentable !== undefined) {
+      params = params.append('rentable', rentable.toString());
+    }
+    if (sellable !== undefined) {
+      params = params.append('sellable', sellable.toString());
+    }
     return this.http
-      .get<Printer[]>(`${environment.baseUrl}/printers`)
+      .get<Printer[]>(`${environment.baseUrl}/printers`, { params })
       .pipe(
         map((printers: Printer[]) => printers.map((printer) => printer.model))
       );

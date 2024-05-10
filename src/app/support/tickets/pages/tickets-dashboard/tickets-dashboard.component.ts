@@ -4,7 +4,7 @@ import { EventEmitter } from '@angular/core';
 import { Status } from 'src/app/support/interfaces/tickets.interface';
 import { CalendarView } from 'angular-calendar';
 import { CalendarEvent } from 'angular-calendar';
-import { Ticket } from '../../../interfaces/tickets.interface';
+import { Ticket, Priority } from '../../../interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Observable } from 'rxjs';
@@ -71,6 +71,7 @@ export class TicketsDashboardComponent implements OnInit {
         clientName: ticket.clientName,
         clientPhone: ticket.clientPhone,
         clientAddress: ticket.clientAddress,
+        priority: ticket.Priority,
       };
     });
   }
@@ -140,6 +141,11 @@ export class TicketsDashboardComponent implements OnInit {
   eventClicked({ event }: { event: CalendarEvent }): void {
     console.log('Event clicked', event);
     this.router.navigate(['/support/tickets/', event.id]);
+  }
+
+  dayClicked(date: Date): void {
+    this.viewDate = date;
+    this.view = CalendarView.Day;
   }
 
   addTicket() {

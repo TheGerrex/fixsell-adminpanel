@@ -50,7 +50,12 @@
     </div>
   </div>
 
-  <select [(ngModel)]="view" (change)="setView()" class="form-select">
+  <select
+    [(ngModel)]="view"
+    (change)="setView()"
+    class="form-select"
+    style="width: 10%"
+  >
     <option value="day">Dia</option>
     <option value="week">Semana</option>
     <option value="month">Mes</option>
@@ -73,7 +78,7 @@
       <button class="nav-button" (click)="previousWeek()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 class="date-title">{{ viewDate | date : "week" }}</h2>
+      <h2 class="date-title">Semana {{ viewDate | date : "w" }}</h2>
       <button class="nav-button" (click)="nextWeek()">
         <mat-icon>arrow_forward</mat-icon>
       </button>
@@ -104,14 +109,13 @@
   </mwl-calendar-day-view>
 
   <ng-template #customEventTitleTemplate let-event="event">
-    <div>
-      {{ event.title }}
-      <br />
-      {{ event.clientName }}
-      <br />
-      {{ event.clientPhone }}
-      <br />
-      {{ event.clientAddress }}
+    <div style="padding: 0.5em">
+      <div style="font-weight: bold">{{ event.clientName }}</div>
+      <div>
+        {{ event.start | date : "shortTime" }} -
+        {{ event.end | date : "shortTime" }}
+      </div>
+      <div>{{ event.clientAddress }}</div>
     </div>
   </ng-template>
 
@@ -127,6 +131,7 @@
     *ngIf="view === 'month'"
     [viewDate]="viewDate"
     [events]="events"
+    (dayClicked)="dayClicked($event.day.date)"
     (eventClicked)="eventClicked($event)"
   >
   </mwl-calendar-month-view>

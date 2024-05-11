@@ -7,9 +7,9 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from './shared/shared.module';
-import localEs from '@angular/common/locales/es';
+import localeEs from '@angular/common/locales/es-MX';
 import { registerLocaleData } from '@angular/common';
-registerLocaleData(localEs, 'es');
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +22,7 @@ registerLocaleData(localEs, 'es');
     BrowserAnimationsModule,
     SharedModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'es'}],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-MX'}],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

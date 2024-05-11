@@ -27,12 +27,13 @@ export class PackageListComponent implements OnInit {
   packageData: Package[] = [];
   isLoadingData = false;
   displayedColumns: string[] = [
-    'brand',
     'model',
-    'price',
-    'packageStartDate',
-    'packageEndDate',
+    'deposit',
+    'monthlyPrice',
     'packageDuration',
+    'bwPrints',
+    'colorPrints',
+    'packageEndDate',
     'action',
   ];
 

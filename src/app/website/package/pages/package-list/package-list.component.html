@@ -19,46 +19,50 @@
 
 <div class="responsive-table">
     <table mat-table matSort [dataSource]="dataSource" class="package-list-table">
-        <ng-container matColumnDef="brand">
+        <!-- <ng-container matColumnDef="brand">
             <th mat-header-cell *matHeaderCellDef>Marca</th>
             <th></th>
             <td mat-cell *matCellDef="let pkg">{{ pkg.printer.brand }}</td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="model">
             <th mat-header-cell *matHeaderCellDef>Modelo</th>
             <td mat-cell *matCellDef="let pkg">{{ pkg.printer.model }}</td>
         </ng-container>
+        <ng-container matColumnDef="deposit">
+            <th mat-header-cell *matHeaderCellDef>Deposito Inicial</th>
+            <td mat-cell *matCellDef="let pkg">{{ pkg.packageDepositPrice | currency:'$' : 'symbol' : '1.2-3' }} {{ pkg.packageCurrency }} </td>
+        </ng-container>
 
-        <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+        <ng-container matColumnDef="monthlyPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Pago Mensual</th>
             <td mat-cell *matCellDef="let pkg">
-                ${{ pkg.packagePrice}} {{ pkg.packageCurrency }} ({{ pkg.packageDiscountPercentage }}% de descuento)
+                ${{ pkg.packageMonthlyPrice}} {{ pkg.packageCurrency }} ({{ pkg.packageDiscountPercentage }}% de descuento)
             </td>
         </ng-container>
 
-        <!-- currency -->
-        <!-- <ng-container matColumnDef="currency">
-                <th mat-header-cell *matHeaderCellDef>Moneda</th>
-                <td mat-cell *matCellDef="let pkg">{{ pkg.packageCurrency }}</td>
-            </ng-container> -->
+        <!-- packageStartDate-->
+        <ng-container matColumnDef="bwPrints">
+            <th mat-header-cell *matHeaderCellDef>Impresiónes B/N</th>
+            <td mat-cell *matCellDef="let pkg">{{ pkg.packagePrintsBw | currency:' ' : 'symbol' : '1.0-2' }}</td>
+        </ng-container>
 
         <!-- packageStartDate-->
-        <ng-container matColumnDef="packageStartDate">
-            <th mat-header-cell *matHeaderCellDef>Fecha Inicial</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packageStartDate | date: "longDate" }}</td>
+        <ng-container matColumnDef="colorPrints">
+            <th mat-header-cell *matHeaderCellDef>Impresiónes Color</th>
+            <td mat-cell *matCellDef="let pkg">{{ pkg.packagePrintsColor | currency:' ' : 'symbol' : '1.0-2' }}</td>
         </ng-container>
 
         <!-- packageEndDate-->
         <ng-container matColumnDef="packageEndDate">
-            <th mat-header-cell *matHeaderCellDef>Fecha Final</th>
+            <th mat-header-cell *matHeaderCellDef>Terminacion de paquete</th>
             <td mat-cell *matCellDef="let pkg">{{ pkg.packageEndDate | date: "longDate" }}</td>
         </ng-container>
 
         <!-- packageDuration-->
         <ng-container matColumnDef="packageDuration">
-            <th mat-header-cell *matHeaderCellDef>Duración</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packageDuration }} mes</td>
+            <th mat-header-cell *matHeaderCellDef>Duración de Contrato</th>
+            <td mat-cell *matCellDef="let pkg">{{ pkg.packageDuration }} meses</td>
         </ng-container>
 
         <!-- packageDiscountPercentage -->

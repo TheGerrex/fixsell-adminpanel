@@ -14,6 +14,7 @@ import { ToastService } from './../../../../shared/services/toast.service';
 import { PackageService } from '../../services/package.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Printer } from 'src/app/website/interfaces/printer.interface';
 
 @Component({
   selector: 'app-package-edit',
@@ -31,6 +32,7 @@ export class PackageEditComponent implements OnInit {
   public package: any;
   isLoadingData = false;
   isSubmitting = false;
+  selectedPrinter!: Printer;
 
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
@@ -59,6 +61,7 @@ export class PackageEditComponent implements OnInit {
         console.log('got package from service' + { packages });
         console.log({ packages });
         this.package = packages;
+        this.selectedPrinter = this.package.printer; // set the selected printer
         this.printerPrice = this.package.printer.price; // set the printer price
         this.printerBrand = this.package.printer.brand; // set the printer brand
         this.initalizeForm();
@@ -89,21 +92,26 @@ export class PackageEditComponent implements OnInit {
           ? this.datePipe.transform(this.package.packageEndDate, 'yyyy-MM-dd')
           : '',
       ],
-      packagePrice: [
-        this.package ? this.package.packagePrice : 0,
+      packageMonthlyPrice: [
+        this.package ? this.package.packageMonthlyPrice : 0,
         [Validators.required, Validators.min(0.01)],
       ],
       packageCurrency: [
-        this.package ? this.package.packageCurrency : 'USD',
+        this.package ? this.package.packageCurrency : 'MXN',
         Validators.required,
       ],
       packageDiscountPercentage: [
         this.package ? this.package.packageDiscountPercentage : 0,
       ],
       packageDescription: [this.package ? this.package.packageDescription : ''],
-      packagePrints: [this.package ? this.package.packagePrints : 0],
-      packageExtraClickPrice: [
-        this.package ? this.package.packageExtraClickPrice : 0,
+      packageDepositPrice: [this.package ? this.package.packageDepositPrice : 0],
+      packagePrintsBw: [this.package ? this.package.packagePrintsBw : 0],
+      packagePrintsColor: [this.package ? this.package.packagePrintsColor : 0],
+      packageExtraClickPriceBw: [
+        this.package ? this.package.packageExtraClickPriceBw : 0,
+      ],
+      packageExtraClickPriceColor: [
+        this.package ? this.package.packageExtraClickPriceColor : 0,
       ],
       packageIncludes: this.fb.array(
         this.package ? this.package.packageIncludes : []

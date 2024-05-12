@@ -48,11 +48,49 @@
                     </mat-menu>
                 </div>
                 <div class="package-row">
-                    <div class="package-item">
-                        <p class="item-title">Precio</p>
-                        <div class="package-price-item">
-                            <h3 class="item-title">${{ packages.packagePrice}} {{packages.packageCurrency}}</h3>
-                            <p class="package-percentage">{{ packages.packageDiscountPercentage }}% de descuento</p>
+                    <div class="package-prices-container">
+                        <div class="package-item">
+                            <p class="item-title">Deposito Inicial</p>
+                            <div class="package-price-item">
+                                <h3 class="item-title">${{ packages.packageDepositPrice }} {{packages.packageCurrency}}</h3>
+                            </div>
+                        </div>
+                        <div class="package-item">
+                            <p class="item-title">Pago Mensual</p>
+                            <div class="package-price-item">
+                                <h3 class="item-title">${{ packages.packageMonthlyPrice}} {{packages.packageCurrency}}</h3>
+                                <p class="package-percentage">{{ packages.packageDiscountPercentage }}% de descuento</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="package-prints">
+                        <div class="package-prints-container">
+                            <div class="package-item">
+                                <p class="item-title">Impresiones B/N</p>
+                                <div class="package-price-item">
+                                    <p class="item-body">{{ packages.packagePrintsBw | currency:' ' : 'symbol' : '1.0-2' }}</p>
+                                </div>
+                            </div>
+                            <div class="package-item">
+                                <p class="item-title">Click Extra de B/N</p>
+                                <div class="package-price-item">
+                                    <p class="item-body">{{ packages.packageExtraClickPriceBw | currency:'$' : 'symbol' : '1.0-2' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="package-prints-container">
+                            <div class="package-item">
+                                <p class="item-title">Impresiones Color</p>
+                                <div class="package-price-item">
+                                    <p class="item-body">{{ packages.packagePrintsColor | currency:' ' : 'symbol' : '1.0-2' }}</p>
+                                </div>
+                            </div>
+                            <div class="package-item">
+                                <p class="item-title">Click Extra de Color</p>
+                                <div class="package-price-item">
+                                    <p class="item-body">{{ packages.packageExtraClickPriceColor | currency:'$' : 'symbol' : '1.0-2' }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="package-item">
@@ -61,7 +99,7 @@
                     </div>
                     <div class="package-item">
                         <div class="package-item">
-                            <p class="item-title">Incluye:</p>
+                            <p class="item-title">Incluye</p>
                             <ul style="margin: 0;">
                                 <li *ngFor="let item of packages.packageIncludes">
                                     <p class="item-body">{{ item }}</p>

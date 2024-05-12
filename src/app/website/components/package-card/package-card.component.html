@@ -68,7 +68,7 @@
                             <div class="package-item">
                                 <p class="item-title">Impresiones B/N</p>
                                 <div class="package-price-item">
-                                    <p class="item-body">{{ packages.packagePrintsBw | currency:' ' : 'symbol' : '1.0-2' }}</p>
+                                    <p class="item-body">{{ packages.packagePrintsBw | currency:' ' : 'symbol' : '1.0-2' }} impresiones/mes</p>
                                 </div>
                             </div>
                             <div class="package-item">
@@ -78,11 +78,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="package-prints-container">
+                        <div class="package-prints-container" *ngIf="packages.packagePrintsColor">
                             <div class="package-item">
                                 <p class="item-title">Impresiones Color</p>
                                 <div class="package-price-item">
-                                    <p class="item-body">{{ packages.packagePrintsColor | currency:' ' : 'symbol' : '1.0-2' }}</p>
+                                    <p class="item-body">{{ packages.packagePrintsColor | currency:' ' : 'symbol' : '1.0-2' }} impresiones/mes</p>
                                 </div>
                             </div>
                             <div class="package-item">

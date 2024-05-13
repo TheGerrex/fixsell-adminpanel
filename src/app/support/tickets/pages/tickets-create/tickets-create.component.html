@@ -21,12 +21,92 @@
             <input type="text" formControlName="title" class="form-control" />
           </div>
 
+          <!-- type -->
+          <div class="ticket-data-item full-row">
+            <h5>Type</h5>
+            <select formControlName="type" class="form-select">
+              <option *ngFor="let type of types" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Appointment Start Date -->
+          <div
+            class="ticket-data-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <h5>Appointment Start Date</h5>
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              formControlName="appointmentStartTime"
+              class="form-control"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </div>
+
+          <!-- Appointment Start Time -->
+          <div
+            class="ticket-data-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <h5>Appointment Start Time</h5>
+            <input
+              type="time"
+              formControlName="startTime"
+              class="form-control"
+            />
+          </div>
+
+          <!-- Duration -->
+          <div
+            class="ticket-data-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <h5>Duration (hours)</h5>
+            <select formControlName="duration" class="form-select">
+              <option *ngFor="let hour of hours" [value]="hour">
+                {{ hour }}
+              </option>
+            </select>
+          </div>
+          <!-- Appointment End Date -->
+          <div
+            class="ticket-data-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <h5>Appointment End Date</h5>
+            <input
+              matInput
+              formControlName="appointmentEndTime"
+              class="form-control"
+              readonly
+            />
+          </div>
           <!-- Client Name -->
           <div class="ticket-data-item full-row">
             <h5>Client Name</h5>
             <input
               type="text"
               formControlName="clientName"
+              class="form-control"
+            />
+          </div>
+
+          <!-- Client Address -->
+          <div
+            class="ticket-data-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <h5>Client Address</h5>
+            <input
+              type="text"
+              formControlName="clientAddress"
               class="form-control"
             />
           </div>

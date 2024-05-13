@@ -2,6 +2,7 @@ import { User } from 'src/app/auth/interfaces';
 
 export interface Ticket {
   title: string;
+  type: Type;
   clientName: string;
   clientEmail: string;
   clientPhone: string;
@@ -31,4 +32,9 @@ export enum Priority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
+}
+
+export enum Type {
+  REMOTE = 'remote',
+  ON_SITE = 'on-site',
 }

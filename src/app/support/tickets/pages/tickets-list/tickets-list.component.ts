@@ -205,9 +205,46 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/support/tickets/' + ticket.id + '/edit']);
   }
 
-  openConfirmDialog(ticket: Ticket): void {}
+  openConfirmDialog(ticket: Ticket): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar este ticket?',
+      message: 'El ticket será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (ticket.id) {
+          this.deleteTicket(ticket);
+        }
+      }
+    });
+  }
 
   deleteTicket(ticket: Ticket) {
-    console.log('Delete ticket:', ticket.id);
+    if (ticket.id) {
+      this.ticketsService.deleteTicket(ticket.id).subscribe(
+        (response) => {
+          this.TicketData = this.TicketData.filter((t) => t.id !== ticket.id);
+          this.dataSource.data = this.TicketData;
+          this.toastService.showSuccess(
+            'Ticket eliminado con exito',
+            'Aceptar'
+          );
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
+    }
   }
 }

@@ -54,4 +54,17 @@ export class TicketsService {
       .post<Ticket>(`${environment.baseUrl}/tickets`, ticket)
       .pipe(map((ticketResponse) => ticketResponse));
   }
+
+  deleteTicket(ticketId: number): Observable<any> {
+    return this.http
+      .delete(`${environment.baseUrl}/tickets/${ticketId}`, {
+        responseType: 'text',
+      })
+      .pipe(
+        tap({
+          next: () => console.log('Ticket deleted successfully'),
+          error: (error) => console.log('Error deleting ticket:', error),
+        })
+      );
+  }
 }

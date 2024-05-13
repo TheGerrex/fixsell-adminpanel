@@ -94,3 +94,31 @@
 .month-view-header {
   // Add any specific styles for the month view header here
 }
+
+.status-open {
+  background-color: $green-400;
+}
+
+.status-in-progress {
+  background-color: $yellow-300;
+}
+
+.status-without-resolution {
+  background-color: $orange-400;
+}
+
+.status-completed {
+  background-color: $blue-400;
+}
+
+.priority-low {
+  background-color: $green-200;
+}
+
+.priority-medium {
+  background-color: $yellow-300;
+}
+
+.priority-high {
+  background-color: $red-400;
+}

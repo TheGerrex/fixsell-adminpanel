@@ -7,6 +7,7 @@ import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
+
 @Component({
   selector: 'app-tickets-view',
   templateUrl: './tickets-view.component.html',
@@ -204,14 +205,20 @@ export class TicketsViewComponent implements OnInit {
   }
 
   transferTicket(): void {
-    const assignedUserId = this.users.find(
+    const assignedUser = this.users.find(
       (user) => user.id === this.assignedUser
-    )?.id;
+    );
+    if (!assignedUser) {
+      console.error('Assigned user not found');
+      return;
+    }
+    const assignedUserId = assignedUser.id;
     this.ticketsService
-      .updateTicket(this.ticket.id, { assigned: assignedUserId }) // Pass the id of the assignedUser
+      .updateTicket(this.ticket.id, { assigned: assignedUserId }) // Pass the assigned user ID
       .subscribe(
         (response) => {
           console.log('Ticket transferred successfully:', response);
+          this.assignedUser = assignedUser.name; // Update the assignedUser property with the username
           this.toastService.showSuccess(
             'Ticket transferred successfully',
             'OK'

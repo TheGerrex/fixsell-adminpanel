@@ -38,7 +38,15 @@ export class TicketsDashboardComponent implements OnInit {
   loadUserTickets() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.ticketsService.getAllTicketsForUser(user.id).subscribe(
+      const userRoles = this.authService.getCurrentUserRoles();
+      const isAdmin = userRoles.includes('admin');
+      let ticketsObservable: Observable<Ticket[]>;
+      if (isAdmin) {
+        ticketsObservable = this.ticketsService.getAllTickets();
+      } else {
+        ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
+      }
+      ticketsObservable.subscribe(
         (tickets) => {
           this.populateCalendarWithTickets(tickets);
           this.openTicketsCount = tickets.filter((ticket) =>
@@ -63,17 +71,20 @@ export class TicketsDashboardComponent implements OnInit {
 
   populateCalendarWithTickets(tickets: any[]) {
     this.events = tickets.map((ticket) => {
+      console.log('Ticket:', ticket); // Log ticket data to inspect it
       return {
-        id: ticket.id, // ensure this line is present
+        id: ticket.id,
         start: new Date(ticket.appointmentStartTime),
         end: new Date(ticket.appointmentEndTime),
         title: ticket.title,
         clientName: ticket.clientName,
         clientPhone: ticket.clientPhone,
         clientAddress: ticket.clientAddress,
-        priority: ticket.Priority,
+        priority: ticket.priority,
+        assigned: ticket.assigned ? ticket.assigned.name : '', // Ensure assignee is included
       };
     });
+    console.log('Events:', this.events); // Log events data to inspect it
   }
 
   setDayView(): void {

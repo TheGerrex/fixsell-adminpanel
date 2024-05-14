@@ -55,26 +55,26 @@
     <div class="ticket-data-container">
       <div class="ticket-data">
         <div class="client-info">
-          <h2>Client Info</h2>
+          <h2>Información del Cliente</h2>
           <div class="ticket-data-row">
             <div class="ticket-data-item">
-              <h3>Client Name</h3>
+              <h3>Nombre del Cliente</h3>
               <p>{{ clientName }}</p>
             </div>
 
             <div class="ticket-data-item">
-              <h3>Client Email</h3>
+              <h3>Email del Cliente</h3>
               <p>{{ clientEmail }}</p>
             </div>
 
             <div class="ticket-data-item">
-              <h3>Client Phone</h3>
+              <h3>Teléfono del Cliente</h3>
               <p>{{ clientPhone }}</p>
             </div>
 
             <!-- address -->
             <div class="ticket-data-item">
-              <h3>Client Address</h3>
+              <h3>Dirección del Cliente</h3>
               <p>{{ clientAdress }}</p>
             </div>
           </div>
@@ -93,12 +93,12 @@
 
             <div class="user-info">
               <div class="ticket-data-item">
-                <h3>Assigned User</h3>
+                <h3>Usuario Asignado</h3>
                 <p>{{ assignedUser }}</p>
               </div>
 
               <div class="ticket-data-item">
-                <h3>Assignee</h3>
+                <h3>Asignado a</h3>
                 <p>{{ assignee }}</p>
               </div>
             </div>
@@ -123,7 +123,7 @@
           >
             <mat-icon>edit</mat-icon
             ><span class="button-label">{{
-              issueReadOnly ? "Edit" : "Submit"
+              issueReadOnly ? "Editar" : "Enviar"
             }}</span>
           </button>
         </div>
@@ -180,7 +180,7 @@
               >
                 <mat-icon>edit</mat-icon
                 ><span class="button-label">{{
-                  activity.readOnly ? "Edit" : "Submit"
+                  activity.readOnly ? "Editar" : "Enviar"
                 }}</span>
               </button>
 
@@ -190,7 +190,7 @@
                 (click)="deleteActivity(i)"
               >
                 <mat-icon>delete</mat-icon
-                ><span class="button-label">Delete</span>
+                ><span class="button-label">Eliminar</span>
               </button>
             </div>
 

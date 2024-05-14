@@ -18,67 +18,170 @@
           <!-- Title -->
           <div class="ticket-data-item full-row">
             <h5>Title</h5>
-            <input type="text" formControlName="title" class="form-control" />
+            <input
+              type="text"
+              formControlName="title"
+              class="form-control"
+              [class.is-invalid]="
+                createTicketForm.controls['title'].invalid &&
+                createTicketForm.controls['title'].touched
+              "
+            />
+            <span *ngIf="isValidField('title')" class="form-text text-danger">
+              {{ getFieldError("title") }}
+            </span>
           </div>
 
           <!-- type -->
           <div class="ticket-data-item full-row">
             <h5>Type</h5>
-            <select formControlName="type" class="form-select">
+            <select
+              formControlName="type"
+              class="form-select"
+              [class.is-invalid]="
+                createTicketForm.controls['type'].invalid &&
+                createTicketForm.controls['type'].touched
+              "
+            >
               <option *ngFor="let type of types" [value]="type">
                 {{ type }}
               </option>
             </select>
+            <span *ngIf="isValidField('type')" class="form-text text-danger">
+              {{ getFieldError("type") }}
+            </span>
           </div>
 
-          <!-- Appointment Start Date -->
           <div
             class="ticket-data-item full-row"
+            style="display: flex; justify-content: space-between"
             *ngIf="createTicketForm.get('type')?.value === 'on-site'"
           >
-            <h5>Appointment Start Date</h5>
-            <input
-              matInput
-              [matDatepicker]="picker1"
-              formControlName="appointmentStartTime"
-              class="form-control"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </div>
+            <!-- Appointment Start Date -->
+            <div style="position: relative; flex: 2">
+              <h5>Fecha:</h5>
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                placeholder="DD/MM/YYYY"
+                formControlName="appointmentStartTime"
+                class="form-control"
+                style="padding-right: 40px"
+                mask="00/00/0000"
+                [class.is-invalid]="
+                  createTicketForm.controls['appointmentStartTime'].invalid &&
+                  createTicketForm.controls['appointmentStartTime'].touched
+                "
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker1"
+                style="
+                  position: absolute;
+                  right: 0;
+                  top: 70%;
+                  transform: translateY(-50%);
+                "
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <span
+                *ngIf="isValidField('appointmentStartTime')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("appointmentStartTime") }}
+              </span>
+            </div>
 
-          <!-- Appointment Start Time -->
-          <div
-            class="ticket-data-item full-row"
-            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-          >
-            <h5>Appointment Start Time</h5>
-            <input
-              type="time"
-              formControlName="startTime"
-              class="form-control"
-            />
-          </div>
-
-          <!-- Duration -->
-          <div
-            class="ticket-data-item full-row"
-            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-          >
-            <h5>Duration (hours)</h5>
-            <select formControlName="duration" class="form-select">
-              <option *ngFor="let hour of hours" [value]="hour">
-                {{ hour }}
-              </option>
-            </select>
+            <!-- Appointment Time -->
+            <div style="flex: 1">
+              <h5>Hora</h5>
+              <div
+                class="time-inputs"
+                style="display: flex; align-items: center"
+              >
+                <input
+                  type="number"
+                  formControlName="startHour"
+                  class="form-control"
+                  placeholder="00"
+                  min="0"
+                  max="23"
+                  [class.is-invalid]="
+                    createTicketForm.controls['startHour'].invalid &&
+                    createTicketForm.controls['startHour'].touched
+                  "
+                />
+                <span>:</span>
+                <input
+                  type="number"
+                  formControlName="startMinute"
+                  class="form-control"
+                  placeholder="00"
+                  min="0"
+                  max="59"
+                  [class.is-invalid]="
+                    createTicketForm.controls['startMinute'].invalid &&
+                    createTicketForm.controls['startMinute'].touched
+                  "
+                />
+                <span style="margin: 0 10px"> - </span>
+                <input
+                  type="number"
+                  formControlName="endHour"
+                  class="form-control"
+                  placeholder="00"
+                  min="0"
+                  max="23"
+                  [class.is-invalid]="
+                    createTicketForm.controls['endHour'].invalid &&
+                    createTicketForm.controls['endHour'].touched
+                  "
+                />
+                <span>:</span>
+                <input
+                  type="number"
+                  formControlName="endMinute"
+                  class="form-control"
+                  placeholder="00"
+                  min="0"
+                  max="59"
+                  [class.is-invalid]="
+                    createTicketForm.controls['endMinute'].invalid &&
+                    createTicketForm.controls['endMinute'].touched
+                  "
+                />
+              </div>
+              <span
+                *ngIf="isValidField('startHour')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("startHour") }}
+              </span>
+              <span
+                *ngIf="isValidField('startMinute')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("startMinute") }}
+              </span>
+              <span
+                *ngIf="isValidField('endHour')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("endHour") }}
+              </span>
+              <span
+                *ngIf="isValidField('endMinute')"
+                class="form-text text-danger"
+              >
+                {{ getFieldError("endMinute") }}
+              </span>
+            </div>
           </div>
           <!-- Appointment End Date -->
           <div
             class="ticket-data-item full-row"
             *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+            hidden
           >
             <h5>Appointment End Date</h5>
             <input
@@ -86,6 +189,7 @@
               formControlName="appointmentEndTime"
               class="form-control"
               readonly
+              hidden
             />
           </div>
           <!-- Client Name -->

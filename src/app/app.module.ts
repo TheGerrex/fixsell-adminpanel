@@ -11,6 +11,13 @@ import localEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { provideNgxMask } from 'ngx-mask';
+import { IConfig } from 'ngx-mask';
+
+const maskConfig: Partial<IConfig> = {
+  validation: false,
+};
+
 registerLocaleData(localEs, 'es');
 
 @NgModule({
@@ -19,13 +26,19 @@ registerLocaleData(localEs, 'es');
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule, // Add HttpClientModule to imports
+    HttpClientModule,
     FlexLayoutModule,
     BrowserAnimationsModule,
     SharedModule,
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'es'}],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+    provideNgxMask(maskConfig),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

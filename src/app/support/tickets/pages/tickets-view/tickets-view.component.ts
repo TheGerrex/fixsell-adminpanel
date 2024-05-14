@@ -32,6 +32,7 @@ export class TicketsViewComponent implements OnInit {
   clientEmail = '';
   clientPhone = '';
   ticketPriority = '';
+  clientAdress = '';
   assignedUser: string = ''; // Initialize the 'assignedUser' property
   assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
@@ -142,6 +143,7 @@ export class TicketsViewComponent implements OnInit {
       this.ticketNumber = ticket.id; // Set the ticket number
       this.ticketStatus = ticket.status; // Set the ticket status
       this.clientName = ticket.clientName;
+      this.clientAdress = ticket.clientAddress;
       this.clientEmail = ticket.clientEmail;
       this.clientPhone = ticket.clientPhone;
       this.ticketPriority = ticket.priority;
@@ -175,6 +177,7 @@ export class TicketsViewComponent implements OnInit {
             this.clientName = ticket.clientName;
             this.clientEmail = ticket.clientEmail;
             this.clientPhone = ticket.clientPhone;
+            this.clientAdress = ticket.clientAddress;
             this.ticketPriority = ticket.priority;
             this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
             this.assignee = ticket.assignee ? ticket.assignee.name : '';

@@ -97,11 +97,7 @@ export class TicketsCreateComponent implements OnInit {
       assignee: ['', Validators.required],
       issue: ['', Validators.required],
       priority: ['', Validators.required],
-      appointmentStartTime: [
-        '',
-        Validators.required,
-        Validators.pattern(/^\d{2}\/\d{2}\/\d{4}$/),
-      ],
+      appointmentStartTime: ['', Validators.required],
       startHour: [
         '',
         [Validators.required, Validators.min(0), Validators.max(23)],
@@ -125,14 +121,16 @@ export class TicketsCreateComponent implements OnInit {
       .get('appointmentStartTime')
       ?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
       .subscribe((value: string) => {
-        // Check if the value matches the date format
-        if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-          // Parse the string into a Date object
-          const date = new Date(value);
-          if (!isNaN(date.getTime())) {
-            // If the date is valid, use it to calculate the end date
-            this.calculateEndDate(date);
-          }
+        // Try to parse the string into a Date object
+        const date = new Date(value);
+        if (!isNaN(date.getTime())) {
+          // If the date is valid, use it to calculate the end date
+          this.calculateEndDate(date);
+        } else {
+          // If the date is not valid, set a validation error on the form control
+          this.createTicketForm
+            .get('appointmentStartTime')
+            ?.setErrors({ incorrect: true });
         }
       });
 
@@ -197,6 +195,12 @@ export class TicketsCreateComponent implements OnInit {
     }
   }
   submitForm() {
+    if (this.createTicketForm.invalid) {
+      console.log('Invalid form');
+      console.log(this.createTicketForm);
+      this.createTicketForm.markAllAsTouched();
+      return;
+    }
     this.isSubmitting = true;
     console.log('submitting form', this.createTicketForm.value);
     if (this.createTicketForm.valid) {

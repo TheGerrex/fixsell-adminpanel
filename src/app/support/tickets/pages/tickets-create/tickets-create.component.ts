@@ -260,6 +260,7 @@ export class TicketsCreateComponent implements OnInit {
       }
     }
   }
+
   submitForm() {
     if (this.createTicketForm.invalid) {
       console.log('Invalid form');

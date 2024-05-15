@@ -10,7 +10,7 @@ import { TicketsViewComponent } from './pages/tickets-view/tickets-view.componen
 import { TicketsCreateComponent } from './pages/tickets-create/tickets-create.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -28,6 +28,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    BsDatepickerModule.forRoot(),
   ],
 
   // imports: [CommonModule, SharedModule, UsersModule, UserRoutingModule],

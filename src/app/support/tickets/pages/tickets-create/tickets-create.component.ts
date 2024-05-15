@@ -24,7 +24,7 @@ import { User } from '../../../../auth/interfaces/user.interface';
 import { UsersService } from 'src/app/users/services/users.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 @Component({
   selector: 'app-tickets-create',
   templateUrl: './tickets-create.component.html',
@@ -71,7 +71,6 @@ export class TicketsCreateComponent implements OnInit {
     this.initializeForm();
     if (this.token) {
       this.usersService.getUsers(this.token).subscribe((users) => {
-        ``;
         this.users = users;
       });
     }
@@ -83,6 +82,14 @@ export class TicketsCreateComponent implements OnInit {
     if (currentUser && currentUser.id) {
       this.createTicketForm.get('assignee')?.setValue(currentUser.id);
     }
+
+    // Update validators based on type
+    this.createTicketForm.get('type')?.valueChanges.subscribe((type) => {
+      this.updateValidators(type);
+    });
+
+    // Initial call to set validators based on the default type
+    this.updateValidators(this.createTicketForm.get('type')?.value);
   }
 
   initializeForm() {
@@ -119,7 +126,7 @@ export class TicketsCreateComponent implements OnInit {
     });
     this.createTicketForm
       .get('appointmentStartTime')
-      ?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
+      ?.valueChanges.pipe(debounceTime(10000)) // delay of 1 second
       .subscribe((value: string) => {
         // Try to parse the string into a Date object
         const date = new Date(value);
@@ -149,6 +156,65 @@ export class TicketsCreateComponent implements OnInit {
     this.createTicketForm.get('endMinute')?.valueChanges.subscribe(() => {
       this.calculateEndDate();
     });
+  }
+
+  updateValidators(type: string) {
+    const controlsToUpdate = [
+      'appointmentStartTime',
+      'startHour',
+      'startMinute',
+      'endHour',
+      'endMinute',
+      'appointmentEndTime',
+    ];
+
+    if (type === 'remote') {
+      controlsToUpdate.forEach((controlName) => {
+        const control = this.createTicketForm.get(controlName);
+        control?.clearValidators();
+        control?.setValue(null); // Set the value to null
+        control?.updateValueAndValidity();
+      });
+    } else {
+      this.createTicketForm
+        .get('appointmentStartTime')
+        ?.setValidators(Validators.required);
+      this.createTicketForm
+        .get('startHour')
+        ?.setValidators([
+          Validators.required,
+          Validators.min(0),
+          Validators.max(23),
+        ]);
+      this.createTicketForm
+        .get('startMinute')
+        ?.setValidators([
+          Validators.required,
+          Validators.min(0),
+          Validators.max(59),
+        ]);
+      this.createTicketForm
+        .get('endHour')
+        ?.setValidators([
+          Validators.required,
+          Validators.min(0),
+          Validators.max(23),
+        ]);
+      this.createTicketForm
+        .get('endMinute')
+        ?.setValidators([
+          Validators.required,
+          Validators.min(0),
+          Validators.max(59),
+        ]);
+      this.createTicketForm
+        .get('appointmentEndTime')
+        ?.setValidators(Validators.required);
+
+      controlsToUpdate.forEach((controlName) => {
+        this.createTicketForm.get(controlName)?.updateValueAndValidity();
+      });
+    }
   }
 
   calculateEndDate(startDate?: Date) {
@@ -214,6 +280,16 @@ export class TicketsCreateComponent implements OnInit {
       // Remove startTime and endTime from ticket
       delete ticket.startTime;
       delete ticket.endTime;
+      delete ticket.startHour;
+      delete ticket.startMinute;
+      delete ticket.endHour;
+      delete ticket.endMinute;
+
+      // if type is remote sent appointmentEndTime to null and appointmentStartTime to null
+      if (ticket.type === 'remote') {
+        ticket.appointmentStartTime = null;
+        ticket.appointmentEndTime = null;
+      }
 
       this.ticketService.createTicket(ticket).subscribe(
         (response) => {

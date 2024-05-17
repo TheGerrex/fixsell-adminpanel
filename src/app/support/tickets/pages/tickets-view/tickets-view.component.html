@@ -2,6 +2,34 @@
 <div class="ticket-container" *ngIf="!isLoadingData">
   <div class="ticket-header">
     <h2>Ticket {{ ticketNumber }}</h2>
+
+    <!-- Estado section moved here -->
+    <div class="ticket-data-item">
+      <h3>Estado</h3>
+      <select
+        [(ngModel)]="ticketStatus"
+        class="form-select"
+        (change)="changeStatus()"
+      >
+        <option *ngFor="let option of statusOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="ticket-data-item">
+      <h3>Transferir ticket:</h3>
+      <select
+        [(ngModel)]="assignedUser"
+        class="form-select"
+        (change)="transferTicket()"
+      >
+        <option *ngFor="let user of users" [value]="user.id">
+          {{ user.name }}
+        </option>
+      </select>
+    </div>
+
     <div>
       <div
         style="
@@ -26,77 +54,80 @@
   <div class="ticket-info-container">
     <div class="ticket-data-container">
       <div class="ticket-data">
-        <div class="ticket-data-row">
-          <div class="ticket-data-item">
-            <h3>Client Name</h3>
-            <p>{{ clientName }}</p>
+        <div class="client-info">
+          <h2>Información del Cliente</h2>
+          <div class="ticket-data-row">
+            <div class="ticket-data-item">
+              <h3>Nombre del Cliente</h3>
+              <p>{{ clientName }}</p>
+            </div>
+
+            <div class="ticket-data-item">
+              <h3>Email del Cliente</h3>
+              <p>{{ clientEmail }}</p>
+            </div>
+
+            <div class="ticket-data-item">
+              <h3>Teléfono del Cliente</h3>
+              <p>{{ clientPhone }}</p>
+            </div>
+
+            <!-- address -->
+            <div class="ticket-data-item">
+              <h3>Dirección del Cliente</h3>
+              <p>{{ clientAdress }}</p>
+            </div>
           </div>
+          <div class="info-container">
+            <div class="date-info">
+              <div class="ticket-data-item">
+                <h3>Creado el</h3>
+                <p>{{ ticket.createdDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+              </div>
 
-          <div class="ticket-data-item">
-            <h3>Client Email</h3>
-            <p>{{ clientEmail }}</p>
+              <div class="ticket-data-item">
+                <h3>Última actualización</h3>
+                <p>{{ ticket.updatedDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+              </div>
+            </div>
+
+            <div class="user-info">
+              <div class="ticket-data-item">
+                <h3>Usuario Asignado</h3>
+                <p>{{ assignedUser }}</p>
+              </div>
+
+              <div class="ticket-data-item">
+                <h3>Asignado a</h3>
+                <p>{{ assignee }}</p>
+              </div>
+            </div>
           </div>
-
-          <div class="ticket-data-item">
-            <h3>Client Phone</h3>
-            <p>{{ clientPhone }}</p>
-          </div>
-        </div>
-
-        <div class="ticket-data-item">
-          <h3>Creado el</h3>
-          <p>{{ ticket.createdDate | date : "dd/MM/yyyy, h:mm a" }}</p>
-        </div>
-
-        <div class="ticket-data-item">
-          <h3>Última actualización</h3>
-          <p>{{ ticket.updatedDate | date : "dd/MM/yyyy, h:mm a" }}</p>
-        </div>
-        <div class="ticket-data-item">
-          <h3>Estado</h3>
-          <select
-            [(ngModel)]="ticketStatus"
-            class="form-select"
-            (change)="changeStatus()"
-          >
-            <option *ngFor="let option of statusOptions" [value]="option.value">
-              {{ option.label }}
-            </option>
-          </select>
         </div>
 
         <div class="ticket-data-item">
           <h3>Problema</h3>
-
           <quill-editor
             *ngIf="!issueReadOnly"
             [(ngModel)]="ticketIssue"
+            class="quill-editor"
           ></quill-editor>
-          <p *ngIf="issueReadOnly" [innerHTML]="ticketIssue"></p>
-
+          <p
+            *ngIf="issueReadOnly"
+            [innerHTML]="ticketIssue"
+            class="quill-editor"
+          ></p>
           <button
             class="button button-primary button-raised button-icon-text"
             (click)="issueReadOnly ? toggleIssueEdit() : submitIssue()"
           >
             <mat-icon>edit</mat-icon
             ><span class="button-label">{{
-              issueReadOnly ? "Edit" : "Submit"
+              issueReadOnly ? "Editar" : "Enviar"
             }}</span>
           </button>
         </div>
-      </div>
-
-      <div class="ticket-data-item">
-        <h3>Transferir ticket:</h3>
-        <select
-          [(ngModel)]="assignedUser"
-          class="form-select"
-          (change)="transferTicket()"
-        >
-          <option *ngFor="let user of users" [value]="user.id">
-            {{ user.name }}
-          </option>
-        </select>
+        <hr />
       </div>
     </div>
   </div>
@@ -104,22 +135,27 @@
   <div class="ticket-info-container">
     <div class="ticket-data-container">
       <div class="ticket-data">
-        <div>
-          <h3>
-            Actividad
-            <!-- Add button next to the title -->
-          </h3>
+        <div style="display: flex; align-items: baseline">
+          <h3 style="margin-right: 10px">Actualizaciones</h3>
+          <!-- Add margin-right here -->
+          <!-- Button is now next to the title -->
           <button
             class="button button-primary button-raised button-icon-text"
             (click)="addActivity()"
+            style="display: flex; align-items: center"
           >
             <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
           </button>
         </div>
-
+        <hr />
         <div
           class="ticket-data-item"
           *ngFor="let activity of activities; let i = index"
+          style="
+            border: 1px solid #38383854;
+            padding: 10px;
+            margin-bottom: 10px;
+          "
         >
           <quill-editor
             [(ngModel)]="activity.activity"
@@ -127,25 +163,39 @@
           ></quill-editor>
           <p *ngIf="activity.readOnly" [innerHTML]="activity.activity"></p>
 
-          <button
-            class="button button-primary button-raised button-icon-text"
-            (click)="
-              activity.readOnly ? toggleActivityEdit(i) : submitActivity(i)
+          <hr />
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
             "
           >
-            <mat-icon>edit</mat-icon
-            ><span class="button-label">{{
-              activity.readOnly ? "Edit" : "Submit"
-            }}</span>
-          </button>
+            <div>
+              <button
+                class="button button-primary button-raised button-icon-text"
+                (click)="
+                  activity.readOnly ? toggleActivityEdit(i) : submitActivity(i)
+                "
+              >
+                <mat-icon>edit</mat-icon
+                ><span class="button-label">{{
+                  activity.readOnly ? "Editar" : "Enviar"
+                }}</span>
+              </button>
 
-          <!-- Delete button -->
-          <button
-            class="button button-danger button-raised button-icon-text"
-            (click)="deleteActivity(i)"
-          >
-            <mat-icon>delete</mat-icon><span class="button-label">Delete</span>
-          </button>
+              <!-- Delete button -->
+              <button
+                class="button button-danger button-raised button-icon-text"
+                (click)="deleteActivity(i)"
+              >
+                <mat-icon>delete</mat-icon
+                ><span class="button-label">Eliminar</span>
+              </button>
+            </div>
+
+            <p style="text-align: right">{{ i + 1 }}</p>
+          </div>
         </div>
       </div>
     </div>

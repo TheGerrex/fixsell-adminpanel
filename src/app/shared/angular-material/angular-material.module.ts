@@ -18,6 +18,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 @NgModule({
   declarations: [],
   imports: [CommonModule],
@@ -40,6 +43,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSelectModule,
     MatMenuModule,
     MatTabsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
 })
 export class AngularMaterialModule {}

@@ -1,0 +1,106 @@
+@import "_variables.scss";
+.ticket-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+}
+
+.ticket-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  border-radius: $border-radius $border-radius 0 0;
+  background-color: $gray-50;
+  padding: 1em;
+  h2 {
+    margin: 0;
+  }
+  button {
+    flex-shrink: 0;
+  }
+}
+
+.currency-select {
+  border: none;
+  background-color: transparent;
+}
+
+.ticket-info {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 3em 1em;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+  .ticket-images {
+    width: 100%;
+    max-width: 500px;
+    align-self: flex-start;
+    @media (max-width: 1024px) {
+      max-width: 100%;
+    }
+  }
+  .ticket-form-container {
+    width: 100%;
+    max-width: 768px;
+    align-self: flex-start;
+    .ticket-data {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(250px, 1fr));
+      row-gap: 1em;
+      column-gap: 1em;
+      .ticket-data-item {
+        min-height: 50px;
+        p {
+          margin-bottom: 0;
+        }
+        textarea {
+          min-height: 8em !important;
+        }
+        @media (max-width: 600px) {
+          grid-column: 1 / -1;
+          gap: 1em;
+          // row-gap: 1em;
+        }
+      }
+      .full-row {
+        grid-column: 1 / -1; // This will make the description item span the entire row
+      }
+      .half-row {
+        grid-column: span 2; // This will make the description item span half row
+      }
+      .quarter-row {
+        grid-column: span 1; // This will make the description item span half row
+      }
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        row-gap: 1em;
+        column-gap: 0em;
+      }
+    }
+  }
+}
+
+/* Hide the default number input arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none; /* Add the standard appearance property */
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield; /* Add the standard appearance property */
+}

@@ -5,6 +5,7 @@ import { RoleGuard } from 'src/app/auth/guards/role.guard';
 import { TicketsDashboardComponent } from './pages/tickets-dashboard/tickets-dashboard.component';
 import { TicketsListComponent } from './pages/tickets-list/tickets-list.component';
 import { TicketsViewComponent } from './pages/tickets-view/tickets-view.component';
+import { TicketsCreateComponent } from './pages/tickets-create/tickets-create.component';
 
 const routes: Routes = [
   {
@@ -24,12 +25,12 @@ const routes: Routes = [
         canActivate: [RoleGuard],
         data: { allowedRoles: ['admin', 'user'], breadcrumb: 'mi-tickets' },
       },
-      //   {
-      //     path: ':id/edit',
-      //     component: UserEditComponent,
-      //     canActivate: [RoleGuard],
-      //     data: { allowedRoles: ['admin'], breadcrumb: 'editar' },
-      //   },
+      {
+        path: 'create',
+        component: TicketsCreateComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['admin'], breadcrumb: 'editar' },
+      },
       {
         path: ':id',
         component: TicketsViewComponent,

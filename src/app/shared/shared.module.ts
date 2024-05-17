@@ -19,6 +19,7 @@ import { AddUserRoleDialogComponent } from './components/add-user-role-dialog/ad
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { QuillModule } from 'ngx-quill';
 import { FormsModule } from '@angular/forms';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -43,6 +44,7 @@ import { FormsModule } from '@angular/forms';
     DragDropModule,
     QuillModule,
     FormsModule,
+    TimepickerModule.forRoot(),
   ],
   exports: [
     SidenavComponent,
@@ -56,6 +58,7 @@ import { FormsModule } from '@angular/forms';
     LoadingSpinnerComponent,
     QuillModule,
     FormsModule,
+    TimepickerModule,
   ],
 })
 export class SharedModule {}

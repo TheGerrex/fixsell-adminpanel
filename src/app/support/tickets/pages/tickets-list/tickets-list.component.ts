@@ -152,10 +152,12 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     let ticketsObservable: Observable<Ticket[]>;
     if (this.isAdmin) {
       ticketsObservable = this.ticketsService.getAllTickets();
+      console.log('loadData Admin:', ticketsObservable);
     } else {
       const user = this.authService.getCurrentUser();
       if (user) {
         ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
+        console.log('loadData User:', ticketsObservable);
       } else {
         // Handle the case where there is no current user
         console.error('No current user');
@@ -164,6 +166,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     }
     ticketsObservable.subscribe(
       (tickets) => {
+        console.log('Received tickets list:', tickets);
         if (statuses !== undefined) {
           const statusArray = statuses.split(','); // Split the statuses string into an array
           tickets = tickets.filter((ticket) =>

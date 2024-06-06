@@ -171,6 +171,7 @@ export class TicketsViewComponent implements OnInit {
       if (ticketId !== null) {
         this.ticketsService.getTicketById(ticketId).subscribe(
           (ticket: Ticket) => {
+            console.log('loadTicketData:', ticket);
             this.ticket = ticket; // Update the ticket property
             this.ticketIssue = ticket.issue;
             this.ticketNumber = ticket.id;

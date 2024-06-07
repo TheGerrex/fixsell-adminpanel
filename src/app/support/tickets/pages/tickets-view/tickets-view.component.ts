@@ -206,6 +206,7 @@ export class TicketsViewComponent implements OnInit {
   }
 
   transferTicket(): void {
+    console.log('transfer ticket function called');
     const selectedUser = this.users.find(
       (user) => user.name === this.ticket.assigned.name
     );
@@ -251,6 +252,7 @@ export class TicketsViewComponent implements OnInit {
   }
 
   deleteActivity(index: number) {
+    console.log('delete activity in ticket view function called');
     // Remove the activity from the local array
     this.activities.splice(index, 1);
 
@@ -306,7 +308,7 @@ export class TicketsViewComponent implements OnInit {
   }
 
   submitIssue() {
-    console.log('Submit issue');
+    console.log('Submit issue called ticket view');
     // Call the updateTicket method with the ticket id and the updated issue
     this.ticketsService
       .updateTicket(this.ticket.id, { issue: this.ticketIssue })
@@ -324,7 +326,7 @@ export class TicketsViewComponent implements OnInit {
   }
 
   changeStatus() {
-    console.log('Change status');
+    console.log('Change status called ticket view');
     // Call the updateTicket method with the ticket id and the updated status
     this.ticketsService
       .updateTicket(this.ticket.id, { status: this.ticketStatus })

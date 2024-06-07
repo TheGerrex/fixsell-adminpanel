@@ -20,11 +20,11 @@
     <div class="ticket-data-item">
       <h3>Transferir ticket:</h3>
       <select
-        [(ngModel)]="assignedUser"
+        [(ngModel)]="ticket.assigned.name"
         class="form-select"
         (change)="transferTicket()"
       >
-        <option *ngFor="let user of users" [value]="user.id">
+        <option *ngFor="let user of users" [value]="user.name">
           {{ user.name }}
         </option>
       </select>

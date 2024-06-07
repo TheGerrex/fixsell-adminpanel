@@ -206,20 +206,27 @@ export class TicketsViewComponent implements OnInit {
   }
 
   transferTicket(): void {
-    const assignedUser = this.users.find(
-      (user) => user.id === this.assignedUser
+    const selectedUser = this.users.find(
+      (user) => user.name === this.ticket.assigned.name
     );
-    if (!assignedUser) {
-      console.error('Assigned user not found');
+    if (!selectedUser) {
+      console.error('Selected user not found');
       return;
     }
-    const assignedUserId = assignedUser.id;
+    const selectedUserId = selectedUser.id;
+
+    // Check if the selected user is different from the current assigned user
+    if (this.ticket.assigned && this.ticket.assigned.id === selectedUserId) {
+      console.log('The selected user is already the assigned user');
+      return;
+    }
+
     this.ticketsService
-      .updateTicket(this.ticket.id, { assigned: assignedUserId }) // Pass the assigned user ID
+      .updateTicket(this.ticket.id, { assigned: selectedUserId }) // Pass the selected user ID
       .subscribe(
         (response) => {
           console.log('Ticket transferred successfully:', response);
-          this.assignedUser = assignedUser.name; // Update the assignedUser property with the username
+          this.ticket.assigned.name = selectedUser.name; // Update the assignedUser property with the username
           this.toastService.showSuccess(
             'Ticket transferred successfully',
             'OK'

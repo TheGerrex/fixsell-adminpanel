@@ -222,9 +222,9 @@ export class TicketsViewComponent implements OnInit {
     }
 
     this.ticketsService
-      .updateTicket(this.ticket.id, { assigned: selectedUserId }) // Pass the selected user ID
-      .subscribe(
-        (response) => {
+      .updateTicket(this.ticket.id, { assigned: selectedUser }) // Pass the selected user object
+      .subscribe({
+        next: (response) => {
           console.log('Ticket transferred successfully:', response);
           this.ticket.assigned.name = selectedUser.name; // Update the assignedUser property with the username
           this.toastService.showSuccess(
@@ -232,14 +232,14 @@ export class TicketsViewComponent implements OnInit {
             'OK'
           );
         },
-        (error) => {
+        error: (error) => {
           console.error('Error:', error);
           this.toastService.showError(
             'Error transferring ticket',
             error.message
           );
-        }
-      );
+        },
+      });
   }
 
   toggleIssueEdit() {

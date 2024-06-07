@@ -41,7 +41,9 @@ export class TicketsService {
 
   updateTicket(
     id: number,
-    ticket: Partial<Omit<Ticket, 'assigned'>> & { assigned?: string }
+    ticket: Partial<Omit<Ticket, 'assigned'>> & {
+      assigned?: { id: string; email: string; name: string };
+    }
   ): Observable<Ticket> {
     console.log('submitting ticket with id:', id);
     return this.http

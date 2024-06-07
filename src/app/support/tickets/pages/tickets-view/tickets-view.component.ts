@@ -206,7 +206,6 @@ export class TicketsViewComponent implements OnInit {
   }
 
   transferTicket(): void {
-    console.log('transfer ticket function called');
     const selectedUser = this.users.find(
       (user) => user.name === this.ticket.assigned.name
     );
@@ -223,9 +222,9 @@ export class TicketsViewComponent implements OnInit {
     }
 
     this.ticketsService
-      .updateTicket(this.ticket.id, { assigned: selectedUser }) // Pass the selected user object
-      .subscribe({
-        next: (response) => {
+      .updateTicket(this.ticket.id, { assigned: selectedUserId }) // Pass the selected user ID
+      .subscribe(
+        (response) => {
           console.log('Ticket transferred successfully:', response);
           this.ticket.assigned.name = selectedUser.name; // Update the assignedUser property with the username
           this.toastService.showSuccess(
@@ -233,14 +232,14 @@ export class TicketsViewComponent implements OnInit {
             'OK'
           );
         },
-        error: (error) => {
+        (error) => {
           console.error('Error:', error);
           this.toastService.showError(
             'Error transferring ticket',
             error.message
           );
-        },
-      });
+        }
+      );
   }
 
   toggleIssueEdit() {
@@ -252,7 +251,6 @@ export class TicketsViewComponent implements OnInit {
   }
 
   deleteActivity(index: number) {
-    console.log('delete activity in ticket view function called');
     // Remove the activity from the local array
     this.activities.splice(index, 1);
 
@@ -308,7 +306,7 @@ export class TicketsViewComponent implements OnInit {
   }
 
   submitIssue() {
-    console.log('Submit issue called ticket view');
+    console.log('Submit issue');
     // Call the updateTicket method with the ticket id and the updated issue
     this.ticketsService
       .updateTicket(this.ticket.id, { issue: this.ticketIssue })
@@ -326,7 +324,7 @@ export class TicketsViewComponent implements OnInit {
   }
 
   changeStatus() {
-    console.log('Change status called ticket view');
+    console.log('Change status');
     // Call the updateTicket method with the ticket id and the updated status
     this.ticketsService
       .updateTicket(this.ticket.id, { status: this.ticketStatus })

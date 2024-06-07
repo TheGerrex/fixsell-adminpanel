@@ -41,10 +41,11 @@ export class TicketsService {
 
   updateTicket(
     id: number,
-    ticket: Partial<Omit<Ticket, 'assigned'>> & {
-      assigned?: { id: string; email: string; name: string };
-    }
+    ticket: Partial<Omit<Ticket, 'assigned'>> & { assigned?: string }
   ): Observable<Ticket> {
+    console.log('update ticket function called');
+    console.trace(); // This will output a stack trace
+    console.log('updating ticket:', ticket);
     console.log('submitting ticket with id:', id);
     return this.http
       .patch<Ticket>(`${environment.baseUrl}/tickets/${id}`, ticket)

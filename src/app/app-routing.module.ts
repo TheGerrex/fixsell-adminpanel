@@ -40,6 +40,11 @@ const routes: Routes = [
       import('./users/users.module').then((m) => m.UsersModule),
   },
   {
+    path: 'chat',
+    canActivate: [NavigationGuard, isAuthenticatedGuard],
+    loadChildren: () => import('./chat/chat.module').then((m) => m.ChatModule),
+  },
+  {
     path: '**',
     redirectTo: 'auth',
   },

@@ -3,17 +3,67 @@
 <h1>websocket - client test</h1>
 
 <span id="server-status">Offline</span>
-
-<ul id="clients-ul"></ul>
-
-<!-- chat -->
-<div>
-  <form id="message-form">
-    <input type="text" id="message-input" placeholder="message" />
-    <button id="send">send</button>
-  </form>
+<!-- Connect Button
+<div class="connect-container">
+  <button
+    (click)="connectToServerOnClick()"
+    id="connect-btn"
+    class="connect-button button-primary button-raised"
+  >
+    Connect
+  </button>
+</div> -->
+<!-- Connect Buttons -->
+<div class="connect-container">
+  <div class="employee-connect">
+    <input
+      type="text"
+      id="room-input"
+      placeholder="Enter Room ID"
+      class="room-input"
+      #roomInput
+    />
+    <button
+      (click)="connectAsEmployee(roomInput.value)"
+      id="connect-employee-btn"
+      class="connect-button button-primary button-raised"
+    >
+      Connect as Employee
+    </button>
+  </div>
+  <button
+    (click)="connectAsClient()"
+    id="connect-client-btn"
+    class="connect-button button-secondary button-raised"
+  >
+    Connect as Client
+  </button>
 </div>
+<!-- client list  -->
+<p>Client List</p>
+<ul id="clients-ul"></ul>
+<!-- employee list  -->
+<p>Employee List</p>
+<ul id="employees-ul"></ul>
 
-<!-- messages -->
-<h3>Messages</h3>
-<ul id="messages-ul"></ul>
+<!-- Chat Container -->
+<div class="chat-container">
+  <!-- Messages Section -->
+  <div class="messages-container">
+    <h3>Messages</h3>
+    <ul id="messages-ul" class="messages-list"></ul>
+  </div>
+
+  <!-- Chat Input Section -->
+  <div class="chat-input-container">
+    <form id="message-form" class="message-form">
+      <input
+        type="text"
+        id="message-input"
+        class="message-input"
+        placeholder="Type a message..."
+      />
+      <button type="submit" id="send" class="send-button">Send</button>
+    </form>
+  </div>
+</div>

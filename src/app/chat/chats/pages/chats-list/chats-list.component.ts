@@ -12,16 +12,19 @@ import { add } from 'date-fns';
 })
 export class ChatsListComponent implements OnInit, OnDestroy {
   private socket: Socket | undefined;
+  currentRoomName: string = ''; // Add this line
 
   constructor() {}
 
   ngOnInit(): void {
     this.socket = connectToServer();
     if (this.socket) {
-      addListeners(this.socket);
+      addListeners(this.socket, this.updateRoomName.bind(this)); // Modify this line
     }
   }
-
+  private updateRoomName(roomName: string): void {
+    this.currentRoomName = roomName;
+  }
   ngOnDestroy(): void {
     this.socket?.close();
   }

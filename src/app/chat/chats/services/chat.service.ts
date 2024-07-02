@@ -19,14 +19,17 @@ export const connectToServer = () => {
   return socket;
 };
 
-export const addListeners = (socket: Socket) => {
+export const addListeners = (
+  socket: Socket,
+  onRoomJoined: (roomName: string) => void
+) => {
   const serverStatusLabel = document.querySelector('#server-status')!;
   const messageForm = document.querySelector<HTMLFormElement>('#message-form')!;
   const messageInput =
     document.querySelector<HTMLInputElement>('#message-input')!;
   const messagesUl = document.querySelector<HTMLUListElement>('#messages-ul')!;
+  let currentRoomName = ''; // Variable to store the current room name
 
-  // TODO: #clients-ul
   socket.on('connect', () => {
     serverStatusLabel.textContent = 'En Linea';
   });
@@ -45,8 +48,6 @@ export const addListeners = (socket: Socket) => {
     });
   });
 
-  // messages-ul
-
   socket.on(
     'message-from-server',
     (payload: { FullName: string; Message: string }) => {
@@ -57,14 +58,23 @@ export const addListeners = (socket: Socket) => {
     }
   );
 
+  // Listen for the room-joined event to store the room name
+  socket.on('room-joined', (roomName: string) => {
+    console.log(`Joined room: ${roomName}`);
+    currentRoomName = roomName; // Store the room name
+    onRoomJoined(roomName); // Call the callback with the new room name
+  });
+
   messageForm.addEventListener('submit', (event) => {
     event.preventDefault();
     if (messageInput.value.trim().length <= 0) return;
 
+    // Include the room name when emitting the message
     socket.emit('message-from-client', {
       id: socket.id,
       message: messageInput.value,
       timestamp: new Date(),
+      roomName: currentRoomName, // Include the current room name
     });
     console.log('Sending message:', messageInput.value);
     messageInput.value = '';

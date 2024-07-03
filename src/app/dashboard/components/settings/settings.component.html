@@ -1,16 +1,22 @@
-<h1>Settings</h1>
+<h1>Ajustes</h1>
 
-<div class="card">
-  <div class="card-head">My Info</div>
-
-  <div class="card-body">
-    <div class="username">Name: {{ user()?.name }}</div>
-    <div class="mail">Mail: {{ user()?.email }}</div>
-    <div class="status" *ngIf="user()?.isActive; else notActive">
-      Status: Active User
+<div class="card-settings">
+  <div class="card-settings-body">
+    <div class="avatar-icon"><img src="../../../../assets/icons/avatar/avatar-1.svg" alt="avatar"></div>
+    <div class="user-info">
+      <div class="username"><h3>{{ user()?.name }}</h3></div>
+      <div class="info-row">
+        <div class="email-container"><p>Email</p><span>{{ user()?.email }}</span></div>
+        <div class="role-container"><p>Roles</p><div class="roles"><span class="role" *ngFor="let role of user()?.roles">{{ role.name }}</span></div></div>
+        <div class="status-container" *ngIf="user()?.isActive; else notActive">
+          <p>Estado</p> <span class="status">Activo</span>
+        </div>
+        <ng-template #notActive><p>Estado</p> <span class="status-noactive">Inactivo</span></ng-template>
+      </div>
     </div>
-    <ng-template #notActive>Status: Not Active User</ng-template>
+  </div>
+  <div class="card-settings-actions">
+    <button class="button button-danger button-raised" (click)="onLogout()"><span class="button-label">Cerrar Sesión</span></button>
   </div>
 </div>
 
-<button mat-raised-button color="warn" (click)="onLogout()">Log Out</button>

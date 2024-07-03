@@ -31,7 +31,7 @@
                     </div>
                     <div class="printer-data-item">
                         <h5>Precio</h5>
-                        <p>${{ printer.price }} {{ printer.currency }}</p>
+                        <p>{{ printer.price | currency:'$' : 'symbol' : '1.2-2' }} {{ printer.currency }}</p>
                     </div>
                     <div class="printer-data-item full-row">
                         <h5>Descripcion</h5>

@@ -2,6 +2,33 @@
 
 <h1>websocket - client test</h1>
 
+<!-- connect button -->
+<div>
+  <p>Connect to the server as user</p>
+  <button
+    id="connect"
+    class="button button-primary button-raised button-icon-text"
+    (click)="connectAsUser()"
+  >
+    connect
+  </button>
+</div>
+
+<!-- Admin Connect Form -->
+<div>
+  <form #connectForm="ngForm" (ngSubmit)="connectAsAdmin(connectForm.value)">
+    <p>Connect to the server as admin in a room</p>
+    <input
+      type="text"
+      name="roomName"
+      ngModel
+      placeholder="Room name"
+      required
+    />
+    <button type="submit">Connect</button>
+  </form>
+</div>
+
 <!-- Add this line to display the current room name -->
 <h2>Current Room: {{ currentRoomName }}</h2>
 

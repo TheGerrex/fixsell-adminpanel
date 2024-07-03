@@ -20,14 +20,29 @@
     }
 }
 
+.avatar-icon {
+    min-width: 100px;
+    min-height: 100px;
+    border-radius: 50%;
+    display: block;
+    background-color: #f5f5f5;
+    color: #333;   
+}
+
 .card-settings-actions {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     gap: 1em;
     padding: 1em;
     border-top: 1px solid $gray-200;
+    width: 100%;
+    button {
+        @media (max-width: 500px) {
+            width: 100%;
+        }
+    }
 }
 
 .user-info {
@@ -37,19 +52,6 @@
     align-items: flex-start;
     gap: 1em;
     width: 100%;
-    .username {
-        width: 100%;
-        // border-bottom: 1px solid $gray-200;
-        h3 {
-            font-size: 1.5em;
-            font-weight: 600 !important;
-            color: $text;
-            margin: 0 !important;
-        }
-        @media(max-width: 768px) {
-            align-self: center;
-        }
-    }
 
     .email-container {
         display: flex;
@@ -130,29 +132,32 @@
     }
 }
 
+.username {
+    // border-bottom: 1px solid $gray-200;
+    h3 {
+        font-size: 1.5em;
+        font-weight: 600 !important;
+        color: $text;
+        margin: 0 !important;
+    }
+    @media(max-width: 768px) {
+        align-self: center;
+    }
+}
+
 .info-row { // Container for the 3 columns
     display: flex;
     justify-content: space-between;
     width: 100%;
-    @media(max-width: 768px) {
-        flex-direction: column;
-    }
+    flex-wrap: wrap;
+    gap: 1em;
 
     > div { // Direct children divs inside .info-row will behave as columns
-        flex: 1;
-        &:not(:last-child) {
-            margin-right: 1em; // Adds spacing between columns, adjust as needed
+        flex: 0;
+
+
+        &:not(:nth-child(1)) {
+            flex: 0;
         }
     }
-}
-
-
-
-.avatar-icon {
-    min-width: 100px;
-    min-height: 100px;
-    border-radius: 50%;
-    display: block;
-    background-color: #f5f5f5;
-    color: #333;   
 }

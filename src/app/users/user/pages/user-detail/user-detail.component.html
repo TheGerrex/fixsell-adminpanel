@@ -11,28 +11,18 @@
   </div>
 
   <div class="user-info">
-    <div class="user-info-container">
-      <div class="user-data-container">
-        <div class="user-data-card">
-          <div class="user-card-header">
-            <div class="user-card-title">
-              <h4>{{ user.name }}</h4>
+    <div class="card-settings">
+      <div class="card-settings-body">
+        <div class="avatar-icon"><img src="../../../../assets/icons/avatar/avatar-1.svg" alt="avatar"></div>
+        <div class="user-info">
+          <div class="username"><h3>{{ user.name }}</h3></div>
+          <div class="info-row">
+            <div class="status-container" *ngIf="user.isActive; else notActive">
+              <p>Estado</p> <span class="status">Activo</span>
             </div>
-
-            <div class="user-data-item">
-              <h5>Correo:</h5>
-              <p>{{ user.email }}</p>
-            </div>
-
-            <div class="user-data-item">
-              <h5>Roles</h5>
-              <p *ngFor="let role of user.roles">{{ role.name }}</p>
-            </div>
-
-            <div class="user-data-item">
-              <h5>Estado</h5>
-              <p>{{ user.isActive }}</p>
-            </div>
+            <ng-template #notActive><p>Estado</p> <span class="status-noactive">Inactivo</span></ng-template>
+            <div class="email-container"><p>Email</p><span>{{ user.email }}</span></div>
+            <div class="role-container"><p>Roles</p><div class="roles"><span class="role" *ngFor="let role of user.roles">{{ role.name }}</span></div></div>
           </div>
         </div>
       </div>

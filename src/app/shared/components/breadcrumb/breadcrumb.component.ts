@@ -83,6 +83,7 @@ export class BreadcrumbComponent implements OnInit {
       deals: 'Promociones',
       edit: 'Editar',
       create: 'Crear',
+      user: 'Usuarios',
       // Add more mappings here if needed
     };
 

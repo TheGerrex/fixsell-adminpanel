@@ -52,6 +52,6 @@ export class UserDetailComponent implements OnInit {
   }
 
   navigateToEditUser(user: User) {
-    this.router.navigate(['/users', user.id, 'edit']);
+    this.router.navigate(['/users/user', user.id, 'edit']);
   }
 }

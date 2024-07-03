@@ -552,6 +552,7 @@ button {
 .button-label {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   font-weight: 500;
   flex: 1 1 auto;
   transition-duration: 0.2s;

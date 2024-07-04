@@ -61,7 +61,7 @@
         grid-column: 1 / -1; // This will make the description item span the entire row
       }
       .half-row {
-        grid-column: span 2; // This will make the description item span half row
+        grid-column: span 1; // This will make the description item span half row
       }
       @media (max-width: 600px) {
         grid-template-columns: 1fr;

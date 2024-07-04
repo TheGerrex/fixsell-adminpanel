@@ -7,8 +7,10 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Role, User } from 'src/app/users/interfaces/users.interface';
 import { environment } from 'src/environments/environment';
-import { DialogService } from '../../../../shared/services/dialog.service';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { UsersService } from 'src/app/users/services/users.service';
 
 @Component({
   selector: 'app-user-list',
@@ -21,6 +23,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   filterValue = '';
   isAdmin = false;
   userData: User[] = [];
+  token: string = '';
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -28,41 +31,15 @@ export class UserListComponent implements OnInit, AfterViewInit {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private dialog: MatDialog,
     private authService: AuthService,
-    private dialogService: DialogService,
+    private userService: UsersService,
     private toastService: ToastService
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<User[]>(`${environment.baseUrl}/auth`, {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token') || '',
-        },
-      })
-      .subscribe((data) => {
-        console.log(data);
-
-        // save to userData
-        this.userData = data;
-
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-
-        this.dataSource.filterPredicate = (data: User, filter: string) => {
-          const dataStr =
-            (data.name ?? '') +
-            data.email +
-            (data.isActive ? 'activo' : 'inactive') +
-            (data.roles?.map((role) => role.name).join(' ') ?? '');
-          return dataStr.toLowerCase().includes(filter);
-        };
-
-        // Apply the filter
-        this.dataSource.filter = this.filterValue.trim().toLowerCase();
-      });
-
+    this.token = this.userService.getToken();
+    this.getAllUsersData()
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -84,46 +61,70 @@ export class UserListComponent implements OnInit, AfterViewInit {
     return roles.map((role) => role.name).join(', ');
   }
 
-  deleteUser(user: User) {
-    this.dialogService
-      .openConfirmDialog(
-        `Are you sure you want to delete the user: ${user.name}?`,
-        'Yes',
-        'delete-dialog'
-      )
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.http
-            .delete(`${environment.baseUrl}/auth/${user.id}`, {
-              headers: {
-                Authorization:
-                  'Bearer ' + (localStorage.getItem('token') || ''),
-              },
-            })
-            .subscribe(
-              (response) => {
-                console.log(response);
-                this.toastService.showSuccess(
-                  'User deleted successfully',
-                  'OK'
-                );
+  getAllUsersData() {
+    this.userService.getUsers(this.token).subscribe((data) => {
+      console.log(data);
+      // save to userData
+      this.userData = data;
 
-                // Remove the deleted user from the dataSource
-                const data = this.dataSource.data;
-                this.dataSource.data = data.filter((u) => u.id !== user.id);
-              },
-              (error) => {
-                console.error('Error:', error);
-                this.dialogService.openErrorDialog(
-                  'Error deleting user',
-                  'OK',
-                  'delete-dialog'
-                );
-              }
-            );
+      this.dataSource = new MatTableDataSource(data);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+
+      this.dataSource.filterPredicate = (data: User, filter: string) => {
+        const dataStr =
+          (data.name ?? '') +
+          data.email +
+          (data.isActive ? 'activo' : 'inactive') +
+          (data.roles?.map((role) => role.name).join(' ') ?? '');
+        return dataStr.toLowerCase().includes(filter);
+      };
+
+      // Apply the filter
+      this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    });
+  }
+
+  openConfirmDialog(user: User): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar este usuario?',
+      message: 'El usuario será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (user.id){
+            this.deleteUser(user);
         }
-      });
+      }
+    });
+  }
+
+  deleteUser(user: User) {
+  if (user.id){
+    this.userService.deleteUser(user, this.token).subscribe(
+      (response) => {
+        // Remove the deleted user from the dataSource
+        const data = this.dataSource.data;
+        this.dataSource.data = data.filter((u) => u.id !== user.id);
+
+        this.toastService.showSuccess('Usuario eliminado con exito', 'Aceptar');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 
   editUser(id: string) {

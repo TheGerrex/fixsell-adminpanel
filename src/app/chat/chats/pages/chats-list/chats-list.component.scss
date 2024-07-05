@@ -1,0 +1,157 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: auto; // Changed from 100vh to auto to fit the content
+  max-width: 800px;
+  margin: 20px auto; // Center the chat box on the page with some margin
+  padding: 20px;
+  background-color: #f4f7f6;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Enhanced shadow for depth
+  border: 1px solid #ccc; // Added a border for definition
+}
+
+.chat-section {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  background-color: #ffffff; // Added a background color for contrast
+  padding: 15px; // Padding inside the chat section
+  border-radius: 4px; // Rounded corners inside the chat container
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); // Inner shadow for depth
+
+  .messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+
+    .messages-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .message-form {
+    display: flex;
+    margin-top: auto; // Ensures form stays at the bottom
+
+    input,
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    input {
+      flex-grow: 1;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(#007bff, 5%);
+      }
+    }
+  }
+}
+
+.connection-section {
+  display: flex;
+  flex-direction: row; /* Align items in a row */
+  gap: 20px; /* Space between columns */
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 800px; /* Adjusted for wider layout */
+}
+
+.connect-user,
+.connect-admin {
+  flex: 1; /* Each section takes equal space */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.connect-user,
+.connect-admin {
+  display: flex;
+  flex-direction: column; /* Set direction to column */
+  flex: 1; /* Each section takes equal space */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  gap: 10px; /* Add space between content and button */
+}
+
+.content {
+  flex-grow: 1; /* Make content take up available space */
+}
+
+/* Ensure buttons are at the bottom */
+.connect-user button,
+.connect-admin button {
+  align-self: center; /* Center-align the button */
+  margin-top: auto; /* Push the button to the bottom */
+}
+
+.connect-user p,
+.connect-admin p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+button,
+input {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken(#007bff, 10%);
+  }
+}
+
+input {
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Enhance the look of the form */
+form {
+  display: flex;
+  flex-direction: column;
+}

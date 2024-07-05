@@ -222,43 +222,14 @@
         <!-- roles -->
         <div class="user-data-item">
           <h5>Roles</h5>
-          <select
-            #selectElem
-            formControlName="roles"
-            class="form-select"
-            (change)="
-              roleSelected($event);
-              selectElem.value === 'addNew' && openAddUserRoleDialog()
-            "
-            [class.is-invalid]="
-              editUserForm.controls['roles'].invalid &&
-              editUserForm.controls['roles'].touched
-            "
-          >
-            <option value="null" disabled [selected]="!user?.roles"></option>
-            <option
-              *ngFor="let role of roles"
-              [value]="role"
-              [selected]="isRoleSelected(role)"
-            >
-              {{ role }}
-            </option>
-            <option value="addNew" style="color: grey; font-style: italic">
-              - Agregar Rol -
-            </option>
-          </select>
+          <user-dropdown-roles [items]="roles" formControlName="roles" 
+              (change)="roleSelected($event);" 
+              [isInvalid]="editUserForm.controls['roles'].invalid && editUserForm.controls['roles'].touched"
+              (itemsChange)="handleItemsChange($event)"
+          ></user-dropdown-roles>
           <span *ngIf="isValidField('roles')" class="form-text text-danger">
             {{ getFieldError("roles") }}
           </span>
-        </div>
-        
-        <!-- selected roles -->
-        <div class="user-data-item">
-          <h5>Roles Seleccionado</h5>
-          <website-input-chips
-            [tagsControls]="selectedRoles"
-            (tagsUpdated)="handleTagsUpdated($event)"
-          ></website-input-chips>
         </div>
       </div>
     </div>

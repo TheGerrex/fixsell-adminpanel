@@ -78,27 +78,6 @@
                     <!-- roles -->
                     <div class="user-data-item">
                         <h5>Roles</h5>
-                        <!-- <div class="selected-roles-list" *ngIf="selectedRoles.length > 0">
-                            <div *ngFor="let rol of selectedRoles" class="selected-role-chip">
-                                <span>{{rol}}</span>
-                                <div class="close-button" (click)="removeRole(rol)">
-                                    <mat-icon data-mat-icon-type="font">close</mat-icon>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- <select #selectElem formControlName="roles" class="form-select"
-                            (change)="roleSelected($event); selectElem.value === 'addNew' && openAddUserRoleDialog()" 
-                            [class.is-invalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched">
-                            <option value="null" disabled>Selecciona un rol</option>
-                            <option
-                            *ngFor="let role of roles"
-                            [value]="role">
-                            {{ role }}
-                            </option>
-                            <option value="addNew" style="color: #1f2937; font-weight: 600; padding: 1em;">
-                                Agregar Nuevo Rol
-                            </option>
-                        </select> -->
                         <user-dropdown-roles [items]="roles" formControlName="roles" 
                             (change)="roleSelected($event);" 
                             [isInvalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched"
@@ -117,8 +96,8 @@
                             <label class="form-check-label" for="isActiveYes">{{createUserForm.get("isActive")?.value ? "Activo" : "Inactivo"}}</label>
                         </div>
                         <span *ngIf="isValidField('isActive')" class="form-text text-danger">
-                {{ getFieldError("isActive") }}
-              </span>
+                            {{ getFieldError("isActive") }}
+                        </span>
                     </div>
                 </div>
             </div>

@@ -99,7 +99,7 @@ export class UserEditComponent implements OnInit {
       password: '',
       repeatPassword: '',
       isActive: this.user?.isActive || false,
-      roles: [] as unknown[],
+      roles: this.user?.roles?.map((role) => role.name) ?? null,
     });
     this.selectedRoles = (
       this.user?.roles?.map((role) => role.name) || []
@@ -224,6 +224,12 @@ export class UserEditComponent implements OnInit {
   isSubset(subset: string[], set: string[]): boolean {
     return subset.every((val) => set.includes(val));
   }
+
+  handleItemsChange(selectedItems: string[]) {
+    // this.selectedRoles = selectedItems;
+    this.editUserForm.controls['roles'].setValue(selectedItems);
+  }
+
 
   openAddUserRoleDialog() {
     const dialogRef = this.dialog.open(AddUserRoleDialogComponent);

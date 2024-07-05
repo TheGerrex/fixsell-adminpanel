@@ -1,0 +1,12 @@
+<div>
+    <select #selectRol class="form-select" [(ngModel)]="selectedItem">
+        <option
+            *ngFor="let item of allItems"
+            [value]="item">
+            {{ item }}
+        </option>
+        <option value="addNew" style="color: grey; font-style: italic">
+            - Agregar Rol -
+        </option>
+    </select>
+</div>

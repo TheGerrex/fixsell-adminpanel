@@ -15,6 +15,7 @@ import { ExportComponent } from './components/export/export.component';
 import { AddPrinterBrandDialogComponent } from './components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 import { AddPrinterCategoryDialogComponent } from './components/add-printer-category-dialog/add-printer-category-dialog.component';
 import { InputChipsComponent } from './components/input-chips/input-chips.component';
+import { SelectChipsComponent } from './components/select-chips/select-chips.component';
 import { AddUserRoleDialogComponent } from './components/add-user-role-dialog/add-user-role-dialog.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { QuillModule } from 'ngx-quill';
@@ -33,6 +34,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     AddPrinterBrandDialogComponent,
     AddPrinterCategoryDialogComponent,
     InputChipsComponent,
+    SelectChipsComponent,
     AddUserRoleDialogComponent,
     LoadingSpinnerComponent,
   ],
@@ -55,6 +57,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     PdfUploadComponent,
     ExportComponent,
     InputChipsComponent,
+    SelectChipsComponent,
     LoadingSpinnerComponent,
     QuillModule,
     FormsModule,

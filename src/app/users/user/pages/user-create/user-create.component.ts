@@ -1,22 +1,16 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SharedService } from 'src/app/shared/services/shared.service';
+import { Router } from '@angular/router';
 import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { repeat } from 'rxjs';
-import { R } from '@angular/cdk/keycodes';
 import {
-  InputChipsComponent,
   Chip,
 } from '../../../../shared/components/input-chips/input-chips.component';
 import { environment } from 'src/environments/environment';
@@ -37,11 +31,8 @@ export class UserCreateComponent implements OnInit {
   passwordFieldFocused = false;
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private sharedService: SharedService,
     private usersService: UsersService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private http: HttpClient,
@@ -67,6 +58,7 @@ export class UserCreateComponent implements OnInit {
 
   isRoleSelected(roleName: string): boolean {
     return this.user?.roles?.some((role) => role.name === roleName) || false;
+    this.createUserForm.controls['roles'].setValue(null);
   }
   initializeForm() {
     this.createUserForm = this.fb.group(
@@ -199,6 +191,14 @@ export class UserCreateComponent implements OnInit {
 
   isSubset(subset: string[], set: string[]): boolean {
     return subset.every((val) => set.includes(val));
+  }
+
+  removeRole(role: string): void {
+    const index = this.selectedRoles.indexOf(role);
+
+    if (index >= 0) {
+      this.selectedRoles.splice(index, 1);
+    }
   }
 
   openAddUserRoleDialog() {

@@ -1,225 +1,125 @@
 <div>
-  <form
-    [formGroup]="createUserForm"
-    (ngSubmit)="submitForm()"
-    class="user-container"
-  >
-    <div class="user-header">
-      <h2>Nuevo Usuario</h2>
-      <button type="submit" class="button button-primary button-raised">
-        <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
-      </button>
-    </div>
+    <form [formGroup]="createUserForm" (ngSubmit)="submitForm()" class="user-container">
+        <div class="user-header">
+            <h2>Nuevo Usuario</h2>
+            <button type="submit" class="button button-primary button-raised">
+      <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
+    </button>
+        </div>
 
-    <div class="loading-container" *ngIf="isLoadingForm">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
+        <div class="loading-container" *ngIf="isLoadingForm">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
 
-    <div class="user-info">
-      <div class="user-data-container">
-        <div class="user-data">
-          <!-- name -->
-          <div class="user-data-item">
-            <h5>Nombre</h5>
-            <input
-              type="text"
-              placeholder=""
-              aria-label="Name"
-              class="form-control"
-              id="name"
-              formControlName="name"
-              [class.is-invalid]="
-                createUserForm.controls['name'].invalid &&
-                createUserForm.controls['name'].touched
-              "
-            />
-            <span
-              *ngIf="
-                createUserForm.controls['name'].invalid &&
-                createUserForm.controls['name'].touched
-              "
-              class="invalid-feedback"
-              >El nombre es requerido</span
-            >
-          </div>
+        <div class="user-info">
+            <div class="user-data-container">
+                <div class="user-data">
+                    <!-- name -->
+                    <div class="user-data-item">
+                        <h5>Nombre</h5>
+                        <input type="text" placeholder="Nombre del usuario" aria-label="Name" class="form-control" id="name" formControlName="name" [class.is-invalid]="createUserForm.controls['name'].invalid && createUserForm.controls['name'].touched" />
+                        <span *ngIf="createUserForm.controls['name'].invalid && createUserForm.controls['name'].touched" class="invalid-feedback">El nombre es requerido</span>
+                    </div>
 
-          <!-- email -->
-          <div class="user-data-item">
-            <h5>Email</h5>
-            <input
-              type="text"
-              placeholder="ejemplo@email.com"
-              aria-label="Email"
-              class="form-control"
-              id="email"
-              formControlName="email"
-              [class.is-invalid]="
-                createUserForm.controls['email'].invalid &&
-                createUserForm.controls['email'].touched
-              "
-            />
-            <span
-              *ngIf="
-                createUserForm.controls['email'].invalid &&
-                createUserForm.controls['email'].touched
-              "
-              class="invalid-feedback"
-              >El correo es requerido, en formato: ejemplo&#64;email.com</span
-            >
-          </div>
+                    <!-- email -->
+                    <div class="user-data-item">
+                        <h5>Email</h5>
+                        <input type="text" placeholder="ejemplo@email.com" aria-label="Email" class="form-control" id="email" formControlName="email" [class.is-invalid]=" createUserForm.controls['email'].invalid && createUserForm.controls['email'].touched" />
+                        <span *ngIf="createUserForm.controls['email'].invalid && createUserForm.controls['email'].touched" class="invalid-feedback">El correo es requerido, en formato: ejemplo&#64;email.com</span>
+                    </div>
 
-          <!-- password -->
-          <div class="user-data-item">
-            <h5>Contraseña</h5>
-            <input
-              type="password"
-              placeholder=""
-              aria-label="Password"
-              class="form-control"
-              id="password"
-              formControlName="password"
-              [class.is-invalid]="
+                    <!-- password -->
+                    <div class="user-data-item">
+                        <h5>Contraseña</h5>
+                        <input type="password" placeholder="" aria-label="Password" class="form-control" id="password" formControlName="password" [class.is-invalid]="
                 createUserForm.controls['password'].invalid &&
                 createUserForm.controls['password'].touched
-              "
-              (keyup)="updateValidationStatus()"
-              (focus)="passwordFieldFocused = true"
-              (blur)="passwordFieldFocused = false"
-            />
-            <div
-              class="password-suggestions"
-              *ngIf="
-                passwordFieldFocused ||
-                createUserForm.controls['password'].touched
-              "
-            >
-              <span class="password-feedback">La contraseña debe contener:</span>
-              <ul class="password-suggestions-list">
-                <li class="suggestion" [class.valid]="createUserForm.controls['password'].value.length >= 8">
-                  <mat-icon *ngIf="createUserForm.controls['password'].value.length >= 8" [inline]="true" class="green-check">check_circle</mat-icon>
-                  Al menos 8 caracteres
-                </li>
-                <li class="suggestion" [class.valid]="hasUpperCase(createUserForm.controls['password'].value)">
-                  <mat-icon *ngIf="hasUpperCase(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                  Al menos una letra mayúscula
-                </li>
-                <li class="suggestion" [class.valid]="hasLowerCase(createUserForm.controls['password'].value)">
-                  <mat-icon *ngIf="hasLowerCase(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                  Al menos una letra minúscula
-                </li>
-                <li class="suggestion" [class.valid]="hasNumeric(createUserForm.controls['password'].value)">
-                  <mat-icon *ngIf="hasNumeric(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                  Al menos un número
-                </li>
-                <li class="suggestion" [class.valid]="hasSpecialChar(createUserForm.controls['password'].value)">
-                  <mat-icon *ngIf="hasSpecialChar(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                  Al menos un carácter especial
-                </li>
-              </ul>
+              " (keyup)="updateValidationStatus()" (focus)="passwordFieldFocused = true" (blur)="passwordFieldFocused = false" />
+                        <div class="password-suggestions" *ngIf="passwordFieldFocused ||createUserForm.controls['password'].touched">
+                            <span class="password-feedback">La contraseña debe contener:</span>
+                            <ul class="password-suggestions-list">
+                                <li class="suggestion" [class.valid]="createUserForm.controls['password'].value.length >= 8">
+                                    <mat-icon *ngIf="createUserForm.controls['password'].value.length >= 8" [inline]="true" class="green-check">check_circle</mat-icon>
+                                    Al menos 8 caracteres
+                                </li>
+                                <li class="suggestion" [class.valid]="hasUpperCase(createUserForm.controls['password'].value)">
+                                    <mat-icon *ngIf="hasUpperCase(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
+                                    Al menos una letra mayúscula
+                                </li>
+                                <li class="suggestion" [class.valid]="hasLowerCase(createUserForm.controls['password'].value)">
+                                    <mat-icon *ngIf="hasLowerCase(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
+                                    Al menos una letra minúscula
+                                </li>
+                                <li class="suggestion" [class.valid]="hasNumeric(createUserForm.controls['password'].value)">
+                                    <mat-icon *ngIf="hasNumeric(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
+                                    Al menos un número
+                                </li>
+                                <li class="suggestion" [class.valid]="hasSpecialChar(createUserForm.controls['password'].value)">
+                                    <mat-icon *ngIf="hasSpecialChar(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
+                                    Al menos un carácter especial
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- repeat password -->
+                    <div class="user-data-item">
+                        <h5>Repetir Contraseña</h5>
+                        <input type="password" placeholder="" aria-label="Repeat Password" class="form-control" id="repeatPassword" formControlName="repeatPassword" [class.is-invalid]="createUserForm.controls['repeatPassword'].invalid && createUserForm.controls['repeatPassword'].touched"
+                        />
+                        <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['required'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
+                La contraseña es requerida
+              </span>
+                        <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
+                Las contraseñas no coinciden
+              </span>
+                    </div>
+
+                    <!-- roles -->
+                    <div class="user-data-item">
+                        <h5>Roles</h5>
+                        <div class="selected-roles-list" *ngIf="selectedRoles.length > 0">
+                            <div *ngFor="let rol of selectedRoles" class="selected-role-chip">
+                                <span>{{rol}}</span>
+                                <div class="close-button" (click)="removeRole(rol)">
+                                    <mat-icon data-mat-icon-type="font">close</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <select #selectElem formControlName="roles" class="form-select" (change)="
+                  roleSelected($event);
+                  selectElem.value === 'addNew' && openAddUserRoleDialog()" [class.is-invalid]="
+                  createUserForm.controls['roles'].invalid &&
+                  createUserForm.controls['roles'].touched">
+                <option value="null" disabled>Selecciona un rol</option>
+                <option
+                  *ngFor="let role of roles"
+                  [value]="role"
+                  [selected]="isRoleSelected(role)">
+                  {{ role }}
+                </option>
+                <option value="addNew" style="color: grey; font-style: italic">
+                  - Agregar Rol -
+                </option>
+              </select>
+                        <span *ngIf="isValidField('roles')" class="form-text text-danger">
+                          {{ getFieldError("roles") }}
+                        </span>
+                    </div>
+
+                    <!-- is active -->
+                    <div class="user-data-item half-row">
+                        <h5>Estado de Usuario</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isActiveYes" formControlName="isActive" [checked]="createUserForm.get('isActive')?.value || false" (change)="onIsActiveChange($event)" />
+                            <label class="form-check-label" for="isActiveYes">{{createUserForm.get("isActive")?.value ? "Activo" : "Inactivo"}}</label>
+                        </div>
+                        <span *ngIf="isValidField('isActive')" class="form-text text-danger">
+                {{ getFieldError("isActive") }}
+              </span>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <!-- repeat password -->
-          <div class="user-data-item">
-            <h5>Repetir Contraseña</h5>
-            <input
-              type="password"
-              placeholder=""
-              aria-label="Repeat Password"
-              class="form-control"
-              id="repeatPassword"
-              formControlName="repeatPassword"
-              [class.is-invalid]="
-                createUserForm.controls['repeatPassword'].invalid &&
-                createUserForm.controls['repeatPassword'].touched
-              "
-            />
-            <span
-              *ngIf="
-                createUserForm.controls['repeatPassword'].errors?.['required'] &&
-                createUserForm.controls['repeatPassword'].touched
-              "
-              class="invalid-feedback"
-            >
-              La contraseña es requerida
-            </span>
-            <span
-              *ngIf="
-                createUserForm.controls['repeatPassword'].errors?.['notMatch'] &&
-                createUserForm.controls['repeatPassword'].touched
-              "
-              class="invalid-feedback"
-            >
-              Las contraseñas no coinciden
-            </span>
-          </div>
-
-          <!-- roles -->
-          <div class="user-data-item">
-            <h5>Roles</h5>
-            <select
-              #selectElem
-              formControlName="roles"
-              class="form-select"
-              (change)="
-                roleSelected($event);
-                selectElem.value === 'addNew' && openAddUserRoleDialog()
-              "
-              [class.is-invalid]="
-                createUserForm.controls['roles'].invalid &&
-                createUserForm.controls['roles'].touched
-              "
-            >
-              <option value="null" disabled [selected]="!user?.roles"></option>
-              <option
-                *ngFor="let role of roles"
-                [value]="role"
-                [selected]="isRoleSelected(role)"
-              >
-                {{ role }}
-              </option>
-              <option value="addNew" style="color: grey; font-style: italic">
-                - Agregar Rol -
-              </option>
-            </select>
-            <span *ngIf="isValidField('roles')" class="form-text text-danger">
-              {{ getFieldError("roles") }}
-            </span>
-          </div>
-
-          <!-- selected roles -->
-          <div class="user-data-item">
-            <h5>Roles Seleccionados</h5>
-            <website-input-chips
-              [tagsControls]="selectedRoles"
-              [placeholder]="'Lista de roles'"
-              (tagsUpdated)="handleTagsUpdated($event)"
-            ></website-input-chips>
-          </div>
-
-          <!-- is active -->
-          <div class="user-data-item full-row">
-            <h5>Estado de Usuario</h5>
-            <div class="form-check form-switch">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="isActiveYes"
-                formControlName="isActive"
-                [checked]="createUserForm.get('isActive')?.value || false"
-                (change)="onIsActiveChange($event)"
-              />
-              <label class="form-check-label" for="isActiveYes">{{
-                createUserForm.get("isActive")?.value ? "Activo" : "Inactivo"
-              }}</label>
-            </div>
-            <span *ngIf="isValidField('isActive')" class="form-text text-danger">
-              {{ getFieldError("isActive") }}
-            </span>
-          </div>
-
         </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

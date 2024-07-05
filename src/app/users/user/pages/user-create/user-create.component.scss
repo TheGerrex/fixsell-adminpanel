@@ -1,96 +1,142 @@
 @import "_variables.scss";
 .user-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-radius: $border-radius;
-  border: 1px solid $gray-300;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: $border-radius;
+    border: 1px solid $gray-300;
 }
 
 .user-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid $gray-300;
-  background-color: $gray-50;
-  padding: 1em;
-  border-radius: $border-radius $border-radius 0 0;
-  h2 {
-    margin: 0;
-  }
-  button {
-    flex-shrink: 0;
-  }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid $gray-300;
+    background-color: $gray-50;
+    padding: 1em;
+    border-radius: $border-radius $border-radius 0 0;
+    width: 100%;
+    h2 {
+        margin: 0;
+    }
+    button {
+        flex-shrink: 0;
+    }
 }
 
-
 .user-info {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 1em;
-  width: 100%;
-  padding: 2em;
-  max-width: 1920px;
-  .user-data-container {
-    width: 100%;
-    max-width: 768px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     gap: 1em;
-    .user-data {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(250px, 1fr));
-      row-gap: 1em;
-      column-gap: 1em;
-      .user-data-item {
-        min-height: 50px;
-        p {
-          margin-bottom: 0;
+    padding: 2em;
+    width: 100%;
+    max-width: 1920px;
+    .user-data-container {
+        width: 100%;
+        max-width: 768px;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        .user-data {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(250px, 1fr));
+            row-gap: 1em;
+            column-gap: 1em;
+            .user-data-item {
+                min-height: 50px;
+                p {
+                    margin-bottom: 0;
+                }
+                @media (max-width: 600px) {
+                    grid-column: 1 / -1;
+                    gap: 1em;
+                    // row-gap: 1em;
+                }
+            }
+            .full-row {
+                grid-column: 1 / -1; // This will make the description item span the entire row
+            }
+            .half-row {
+                grid-column: span 1; // This will make the description item span half row
+            }
+            @media (max-width: 600px) {
+                grid-template-columns: 1fr;
+                row-gap: 1em;
+                column-gap: 0em;
+            }
         }
-        @media (max-width: 600px) {
-          grid-column: 1 / -1;
-          gap: 1em;
-          // row-gap: 1em;
-        }
-      }
-      .full-row {
-        grid-column: 1 / -1; // This will make the description item span the entire row
-      }
-      .half-row {
-        grid-column: span 1; // This will make the description item span half row
-      }
-      @media (max-width: 600px) {
-        grid-template-columns: 1fr;
-        row-gap: 1em;
-        column-gap: 0em;
-      }
     }
-  }
 }
 
 .suggestion {
-  display: flex;
-  align-items: center;
-  gap: .5em;
-  margin-top: .25rem;
-  font-size: .875rem;
-  .green-check {
-    color: $success-color;
-  }
+    display: flex;
+    align-items: center;
+    gap: .5em;
+    margin-top: .25rem;
+    font-size: .875rem;
+    .green-check {
+        color: $success-color;
+    }
 }
 
 .password-feedback {
-  margin-top: .25rem;
-  font-size: .875rem;
+    margin-top: .25rem;
+    font-size: .875rem;
 }
 
 .valid {
-  color: $green-600;
+    color: $green-600;
 }
 
+.selected-roles-list {
+    display: flex;
+    gap: .5em;
+    flex-wrap: wrap;
+    margin-bottom: .5em;
+}
 
-
+.selected-role-chip {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.4em .75em .4em .75em;
+    border-radius: 20px;
+    background-color: $gray-200;
+    color: $text;
+    transition: background-color 0.2s;
+    &:hover {
+        background-color: $gray-300;
+    }
+    span {
+        margin-right: .75em;
+        font-size: 14px;
+        line-height: 14px; // add this line
+        display: flex; // add this line
+        align-items: center;
+    }
+    .close-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background-color: $gray-600;
+        width: 16px;
+        height: 16px;
+    }
+    mat-icon {
+        color: $gray-200;
+        width: inherit;
+        height: inherit;
+        font-size: inherit;
+        box-sizing: content-box;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

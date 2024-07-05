@@ -92,6 +92,10 @@
     color: $green-600;
 }
 
+.is-invalid {
+    border: 1px solid $red-600;
+}
+
 .selected-roles-list {
     display: flex;
     gap: .5em;

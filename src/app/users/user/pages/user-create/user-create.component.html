@@ -32,9 +32,9 @@
                     <div class="user-data-item">
                         <h5>Contraseña</h5>
                         <input type="password" placeholder="" aria-label="Password" class="form-control" id="password" formControlName="password" [class.is-invalid]="
-                createUserForm.controls['password'].invalid &&
-                createUserForm.controls['password'].touched
-              " (keyup)="updateValidationStatus()" (focus)="passwordFieldFocused = true" (blur)="passwordFieldFocused = false" />
+                        createUserForm.controls['password'].invalid &&
+                        createUserForm.controls['password'].touched" 
+                        (keyup)="updateValidationStatus()" (focus)="passwordFieldFocused = true" (blur)="passwordFieldFocused = false" />
                         <div class="password-suggestions" *ngIf="passwordFieldFocused ||createUserForm.controls['password'].touched">
                             <span class="password-feedback">La contraseña debe contener:</span>
                             <ul class="password-suggestions-list">
@@ -68,25 +68,25 @@
                         <input type="password" placeholder="" aria-label="Repeat Password" class="form-control" id="repeatPassword" formControlName="repeatPassword" [class.is-invalid]="createUserForm.controls['repeatPassword'].invalid && createUserForm.controls['repeatPassword'].touched"
                         />
                         <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['required'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
-                La contraseña es requerida
-              </span>
-                        <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
-                Las contraseñas no coinciden
-              </span>
+                            La contraseña es requerida
+                        </span>
+                                    <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
+                            Las contraseñas no coinciden
+                        </span>
                     </div>
 
                     <!-- roles -->
                     <div class="user-data-item">
                         <h5>Roles</h5>
-                        <div class="selected-roles-list" *ngIf="selectedRoles.length > 0">
+                        <!-- <div class="selected-roles-list" *ngIf="selectedRoles.length > 0">
                             <div *ngFor="let rol of selectedRoles" class="selected-role-chip">
                                 <span>{{rol}}</span>
                                 <div class="close-button" (click)="removeRole(rol)">
                                     <mat-icon data-mat-icon-type="font">close</mat-icon>
                                 </div>
                             </div>
-                        </div>
-                        <select #selectElem formControlName="roles" class="form-select"
+                        </div> -->
+                        <!-- <select #selectElem formControlName="roles" class="form-select"
                             (change)="roleSelected($event); selectElem.value === 'addNew' && openAddUserRoleDialog()" 
                             [class.is-invalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched">
                             <option value="null" disabled>Selecciona un rol</option>
@@ -98,8 +98,12 @@
                             <option value="addNew" style="color: #1f2937; font-weight: 600; padding: 1em;">
                                 Agregar Nuevo Rol
                             </option>
-                        </select>
-                        <user-dropdown-roles [items]="roles"></user-dropdown-roles>
+                        </select> -->
+                        <user-dropdown-roles [items]="roles" formControlName="roles" 
+                            (change)="roleSelected($event);" 
+                            [isInvalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched"
+                            (itemsChange)="handleItemsChange($event)"
+                        ></user-dropdown-roles>
                         <span *ngIf="isValidField('roles')" class="form-text text-danger">
                           {{ getFieldError("roles") }}
                         </span>

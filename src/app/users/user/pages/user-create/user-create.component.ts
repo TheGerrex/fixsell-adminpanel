@@ -27,7 +27,7 @@ export class UserCreateComponent implements OnInit {
   user: User | null = null;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
-  selectedRoles: string[] = ['user'];
+  selectedRoles: string[] = [];
   passwordFieldFocused = false;
   constructor(
     private router: Router,
@@ -68,7 +68,7 @@ export class UserCreateComponent implements OnInit {
         ],
         repeatPassword: ['', Validators.required],
         isActive: [true],
-        roles: ['null'],
+        roles: [['user'], Validators.required],
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -171,24 +171,9 @@ export class UserCreateComponent implements OnInit {
     }
   }
 
-  handleTagsUpdated(chips: Chip[]) {
-    const newRoles = chips.map((chip) => chip.name);
-
-    // Filter out any roles not in the original set
-    const validRoles = newRoles.filter((role) =>
-      this.selectedRoles.includes(role)
-    );
-
-    // Update the selected roles and form control value
-    this.selectedRoles = validRoles;
-    this.createUserForm.get('roles')?.setValue(this.selectedRoles);
-
-    console.log('selectedRoles:', this.selectedRoles);
-    console.log('chips:', chips);
-  }
-
-  isSubset(subset: string[], set: string[]): boolean {
-    return subset.every((val) => set.includes(val));
+  handleItemsChange(selectedItems: string[]) {
+    // this.selectedRoles = selectedItems;
+    this.createUserForm.controls['roles'].setValue(selectedItems);
   }
 
   removeRole(role: string): void {

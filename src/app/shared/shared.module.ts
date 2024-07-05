@@ -21,6 +21,7 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
 import { QuillModule } from 'ngx-quill';
 import { FormsModule } from '@angular/forms';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -37,6 +38,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     SelectChipsComponent,
     AddUserRoleDialogComponent,
     LoadingSpinnerComponent,
+    DropdownComponent,
   ],
   imports: [
     CommonModule,
@@ -62,6 +64,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     QuillModule,
     FormsModule,
     TimepickerModule,
+    DropdownComponent,
   ],
 })
 export class SharedModule {}

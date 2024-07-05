@@ -1,0 +1,27 @@
+<div class="custom-select-wrapper" (click)="toggleCustomSelect()">
+  <div class="custom-select" [class.open]="isOpen">
+    <div class="custom-select__trigger">
+        <!-- Display selected items as chips -->
+        <div class="selected-roles-list">
+            <div *ngFor="let item of selectedItems" class="selected-role-chip">
+                <span>{{item}}</span>
+                <div class="close-button" (click)="removeItem(item, $event)">
+                    <mat-icon data-mat-icon-type="font">close</mat-icon>
+                </div>
+            </div>
+        </div>
+        <!-- default text when 0 selected items -->
+        <span *ngIf="selectedItems.length === 0">Selecciona un rol</span>
+        <div class="arrow"><img src="../../../../assets/icons/arrows/chevron-down.svg" alt="chevron-down"></div>
+    </div>
+    <div class="custom-options">
+        <div class="custom-options-wrapper">
+            <span class="custom-option" *ngFor="let item of items" 
+                [ngClass]="{'selected': selectedItems.includes(item)}" 
+                (click)="selectItem(item, $event)" 
+                data-value="item">{{item}}</span>
+            <button type="button" class="button button-primary button-raised"><span class="button-label"><mat-icon>add</mat-icon>Agregar Nuevo Rol</span></button>
+        </div>
+    </div>
+  </div>
+</div>

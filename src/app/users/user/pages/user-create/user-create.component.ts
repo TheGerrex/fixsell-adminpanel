@@ -27,7 +27,7 @@ export class UserCreateComponent implements OnInit {
   user: User | null = null;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
-  selectedRoles: string[] = [];
+  selectedRoles: string[] = ['user'];
   passwordFieldFocused = false;
   constructor(
     private router: Router,
@@ -56,10 +56,7 @@ export class UserCreateComponent implements OnInit {
     );
   }
 
-  isRoleSelected(roleName: string): boolean {
-    return this.user?.roles?.some((role) => role.name === roleName) || false;
-    this.createUserForm.controls['roles'].setValue(null);
-  }
+
   initializeForm() {
     this.createUserForm = this.fb.group(
       {
@@ -71,7 +68,7 @@ export class UserCreateComponent implements OnInit {
         ],
         repeatPassword: ['', Validators.required],
         isActive: [true],
-        roles: [this.fb.array([])],
+        roles: ['null'],
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -163,13 +160,14 @@ export class UserCreateComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedOption = selectElement.value;
 
-    if (
-      selectedOption !== 'addNew' &&
-      !this.selectedRoles.includes(selectedOption)
-    ) {
+    if (selectedOption !== 'addNew' && !this.selectedRoles.includes(selectedOption)) 
+    {
       this.selectedRoles = [...this.selectedRoles, selectedOption];
-      this.createUserForm.get('roles')?.setValue(this.selectedRoles);
       console.log('selectedRoles:', this.selectedRoles);
+      this.createUserForm.get('roles')?.setValue(null);
+    } else if (selectedOption === 'addNew') {
+      this.openAddUserRoleDialog();
+      this.createUserForm.get('roles')?.setValue(null);
     }
   }
 
@@ -217,6 +215,10 @@ export class UserCreateComponent implements OnInit {
       return;
     }
     this.isLoadingForm = true;
+
+    // Add the selectedRoles to Roles Form Control
+    this.createUserForm.get('roles')?.setValue(this.selectedRoles);
+
     const user = this.createUserForm.value;
     delete user.repeatPassword; // Delete the repeat field
     console.log('user:', user);

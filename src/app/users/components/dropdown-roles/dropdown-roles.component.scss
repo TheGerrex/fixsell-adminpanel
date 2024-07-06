@@ -80,6 +80,18 @@
     transition: opacity 0.5s, max-height 0.5s ease; // Ensure visibility transitions instantly
 }
 
+.custom-select.dropup .custom-options {
+    top: -588%;
+    left: 0;
+    right: 0;
+    max-height: 236px; // Adjust based on content
+    opacity: 1; // Fully visible
+    visibility: visible; // Make interactable
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
+    transition: opacity 0.5s, max-height 0.5s ease; // Ensure visibility transitions instantly
+}
+
 .custom-options-wrapper {
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 <div class="custom-select-wrapper" (click)="toggleCustomSelect()">
-  <div class="custom-select" [class.open]="isOpen"  [class.is-invalid]="isInvalid">
+  <div class="custom-select" [class.open]="isOpen"  [class.is-invalid]="isInvalid" [class.dropup]="isDropup">
     <div class="custom-select__trigger">
         <!-- Display selected items as chips -->
         <div class="selected-roles-list" *ngIf="selectedItems.length">
@@ -16,7 +16,7 @@
         <span *ngIf="selectedItems.length === 0">Selecciona un rol</span>
         <div class="select-icons"><img id="chevron-down" src="../../../../assets/icons/arrows/chevron-down.svg" alt="chevron-down"><img *ngIf="isInvalid" src="../../../../assets/icons/interface/alert-circle.svg" alt="alert-circle"></div>
     </div>
-    <div class="custom-options">
+    <div class="custom-options" #customOptions>
         <div class="custom-options-wrapper">
             <span class="custom-option" *ngFor="let item of items" 
                 [ngClass]="{'selected': selectedItems.includes(item)}" 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, HostListener, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddUserRoleDialogComponent } from 'src/app/shared/components/add-user-role-dialog/add-user-role-dialog.component';
@@ -17,14 +17,19 @@ import { UsersService } from '../../services/users.service';
   ]
 })
 export class DropdownRolesComponent {
+
   constructor(
     private dialog: MatDialog,
     private usersService: UsersService,
+    private elRef: ElementRef
   ) {}
   
   isOpen = false;
   touched = false;
   disabled = false;
+
+  public isDropup: boolean = false;
+  @ViewChild('customOptions') customSelectWrapper!: ElementRef;
   @Input() isInvalid: boolean = false; // This will hold the validation state
   @Input() items: any[] = [];
   selectedItems: string[] = []; // Holds the selected item
@@ -113,10 +118,28 @@ export class DropdownRolesComponent {
     });
   }
 
+  adjustDropdownPosition() {
+    const selectWrapper = this.customSelectWrapper.nativeElement;
+    const triggerBottom = selectWrapper.getBoundingClientRect().bottom;
+    const viewportHeight = window.innerHeight;
+
+    // Check if there's enough space below the trigger for the dropdown
+    const spaceBelow = viewportHeight - triggerBottom;
+    const neededSpace = 236; // Adjust based on your dropdown's height
+
+    this.isDropup = spaceBelow < neededSpace;
+  }
+
   @HostListener('document:click', ['$event'])
   clickOutside(event: any) {
     if (!event.target.closest('.custom-select-wrapper')) {
       this.isOpen = false;
+      this.isDropup = false;
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.adjustDropdownPosition();
   }
 }

@@ -53,7 +53,7 @@ body {
 
 a {
   font-size: 16px;
-  // line-height: 20px;
+  color: $primary-color;
   margin: 0px;
   transition: all 0.4s;
   -webkit-transition: all 0.4s;
@@ -67,7 +67,7 @@ a:focus {
 
 a:hover {
   text-decoration: none;
-  color: #a64bf4;
+  color: $primary-color-active;
 }
 
 /*---------------------------------------------*/
@@ -792,39 +792,46 @@ button:hover {
 }
 
 // Snackbar //
+
+
 .success-toast {
-  --mdc-snackbar-container-color: #f0fdf4 !important;
-  --mdc-snackbar-supporting-text-color: #22c55e !important;
-  border: 1px solid $success-color;
+  --mdc-snackbar-container-color: $white !important;
+  --mdc-snackbar-supporting-text-color: $text !important;
+  border: 1px solid $gray-200;
   border-radius: $border-radius;
+  background-color: $white;
 }
 
 .error-toast {
-  --mdc-snackbar-container-color: #fef2f2 !important;
-  --mdc-snackbar-supporting-text-color: #ef4444 !important;
-  border: 1px solid $danger-color;
+  --mdc-snackbar-container-color: $white !important;
+  --mdc-snackbar-supporting-text-color: $text !important;
+  border: 1px solid $gray-200;
   border-radius: $border-radius;
+  background-color: $white;
 }
 
 .warning-toast {
-  --mdc-snackbar-container-color: #fefce8 !important;
-  --mdc-snackbar-supporting-text-color: #eab308 !important;
-  border: 1px solid $warning-color;
+  --mdc-snackbar-container-color: $white !important;
+  --mdc-snackbar-supporting-text-color: $text !important;
+  border: 1px solid $gray-200;
   border-radius: $border-radius;
+  background-color: $white;
 }
 
 .info-toast {
-  --mdc-snackbar-container-color: #eef2ff !important;
-  --mdc-snackbar-supporting-text-color: #6366f1 !important;
-  border: 1px solid $info-color;
+  --mdc-snackbar-container-color: $white !important;
+  --mdc-snackbar-supporting-text-color: $text !important;
+  border: 1px solid $gray-200;
   border-radius: $border-radius;
+  background-color: $white;
 }
 
 .help-toast {
-  --mdc-snackbar-container-color: #faf5ff !important;
-  --mdc-snackbar-supporting-text-color: #a855f7 !important;
-  border: 1px solid $help-color;
+  --mdc-snackbar-container-color: $white !important;
+  --mdc-snackbar-supporting-text-color: $text !important;
+  border: 1px solid $gray-200;
   border-radius: $border-radius;
+  background-color: $white;
 }
 
 /*[ Dialog ]

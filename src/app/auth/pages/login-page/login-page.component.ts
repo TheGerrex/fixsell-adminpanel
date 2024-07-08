@@ -37,7 +37,7 @@ export class LoginPageComponent {
       next: () => {
         console.log('login successful rerouting to dashboard');
         this.router.navigateByUrl('/dashboard').then(() => {
-          this.toastService.showSuccess('Login successful', 'success');
+          this.toastService.showSuccess('Sesión iniciada con éxito.', 'success');
           this.isLoading = false;
         });
       },

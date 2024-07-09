@@ -1,7 +1,7 @@
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
 
-@import "~quill/dist/quill.snow.css";
+@import "quill/dist/quill.snow.css";
 
 @import "_variables.scss";
 @font-face {
@@ -25,7 +25,7 @@
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
-@import "~@angular/cdk/overlay-prebuilt.css";
+@import "@angular/cdk/overlay-prebuilt.css";
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/

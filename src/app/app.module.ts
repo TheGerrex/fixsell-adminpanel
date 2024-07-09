@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from './shared/shared.module';
 import localeEs from '@angular/common/locales/es-MX';
@@ -20,25 +20,19 @@ const maskConfig: Partial<IConfig> = {
 
 registerLocaleData(localeEs, 'es');
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    FlexLayoutModule,
-    BrowserAnimationsModule,
-    SharedModule,
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'es' },
-    provideNgxMask(maskConfig),
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        FlexLayoutModule,
+        BrowserAnimationsModule,
+        SharedModule,
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory,
+        })], providers: [
+        { provide: LOCALE_ID, useValue: 'es' },
+        provideNgxMask(maskConfig),
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}

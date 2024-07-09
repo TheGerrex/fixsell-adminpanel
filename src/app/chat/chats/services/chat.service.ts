@@ -53,7 +53,8 @@ export const connectToServerAsAdmin = (roomName: string) => {
 };
 export const addListeners = (
   socket: Socket,
-  onRoomJoined: (roomName: string) => void
+  onRoomJoined: (roomName: string) => void,
+  onChatHistoryReceived: (chatHistory: any[]) => void
 ) => {
   // Element selectors
   const serverStatusLabel = document.querySelector('#server-status')!;
@@ -78,6 +79,21 @@ export const addListeners = (
 
   // Form submission listener
   setupFormListener(messageForm, messageInput, socket, roomState);
+
+  // Handle chat history event
+  socket.on('chatHistory', (chatHistory) => {
+    console.log('Received chat history:', chatHistory);
+    onChatHistoryReceived(chatHistory); // Call the callback with the chat history
+    // Clear existing messages
+    messagesUl.innerHTML = '';
+    // Iterate over chat history and display each message
+    chatHistory.forEach((chatHistoryItem: { senderId: any; message: any }) => {
+      const messageLi = document.createElement('li');
+      // Format the message as "senderId: Message"
+      messageLi.textContent = `${chatHistoryItem.senderId}: ${chatHistoryItem.message}`;
+      messagesUl.appendChild(messageLi);
+    });
+  });
 };
 
 function setupSocketListeners(

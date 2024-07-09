@@ -17,25 +17,29 @@ import { add } from 'date-fns';
 export class ChatsListComponent implements OnInit, OnDestroy {
   private socket: Socket | undefined;
   currentRoomName: string = ''; // Add this line
-
+  chatHistory: any[] = [];
   constructor() {}
-  private handleBeforeUnload = () => {
-    console.log('Disconnecting socket before leaving the page...');
-    this.socket?.disconnect();
-  };
+
   ngOnInit(): void {
     // this.socket = connectToServer();
     // if (this.socket) {
     //   addListeners(this.socket, this.updateRoomName.bind(this)); // Modify this line
     // }
-    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  private handleChatHistory(chatHistory: any[]): void {
+    this.chatHistory = chatHistory;
   }
 
   connectAsUser(): void {
     if (!this.socket) {
       this.socket = connectToServerAsUser();
       if (this.socket) {
-        addListeners(this.socket, this.updateRoomName.bind(this));
+        addListeners(
+          this.socket,
+          this.updateRoomName.bind(this),
+          this.handleChatHistory.bind(this)
+        );
       }
     }
   }
@@ -44,7 +48,11 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     if (!this.socket) {
       this.socket = connectToServerAsAdmin(formValue.roomName); // Pass roomName here
       if (this.socket) {
-        addListeners(this.socket, this.updateRoomName.bind(this));
+        addListeners(
+          this.socket,
+          this.updateRoomName.bind(this),
+          this.handleChatHistory.bind(this) // Added the missing handler for chat history
+        );
       }
     }
   }
@@ -54,7 +62,5 @@ export class ChatsListComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.socket?.close();
-
-    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 }

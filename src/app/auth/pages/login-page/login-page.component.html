@@ -44,16 +44,8 @@
         <div class="form-action">
           <button type="submit" class="button button-primary button-raised">
             <span class="button-label" *ngIf="!isLoading">Iniciar Sesión</span>
-            <!-- material spinner -->
-            <!-- <mat-spinner
-              *ngIf="!isLoading"
-              class="spinner"
-              diameter="20"
-              strokeWidth="2"
-            ></mat-spinner> -->
             <div *ngIf="isLoading" class="spinner-grow text-light" style="width: 1rem; height: 1rem;" role="status"></div>
           </button>
-
         </div>
       </form>
       <div class="login-form-footer">

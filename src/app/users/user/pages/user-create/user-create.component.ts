@@ -10,9 +10,6 @@ import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import {
-  Chip,
-} from '../../../../shared/components/input-chips/input-chips.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';

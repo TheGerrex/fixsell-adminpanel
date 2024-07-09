@@ -3,8 +3,8 @@
         <div class="user-header">
             <h2>Nuevo Usuario</h2>
             <button type="submit" class="button button-primary button-raised">
-      <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
-    </button>
+                <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
+            </button>
         </div>
 
         <div class="loading-container" *ngIf="isLoadingForm">
@@ -103,4 +103,29 @@
             </div>
         </div>
     </form>
+    <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Repetir Contraseña</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field  appearance="outline">
+        <mat-label>Roles</mat-label>
+        <mat-select multiple>
+            <mat-option value="one">First option</mat-option>
+            <mat-option value="two">Second option</mat-option>
+        </mat-select>
+    </mat-form-field>
+        <mat-label>Estado de Usuario</mat-label>
+        <mat-slide-toggle>Activo</mat-slide-toggle>
 </div>

@@ -8,6 +8,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserCreateComponent } from './pages/user-create/user-create.component';
 import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { UserDetailComponent } from './pages/user-detail/user-detail.component';
+import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,6 @@ import { UserDetailComponent } from './pages/user-detail/user-detail.component';
     UserEditComponent,
     UserDetailComponent,
   ],
-  imports: [CommonModule, SharedModule, UsersModule, UserRoutingModule],
+  imports: [CommonModule, SharedModule, UsersModule, UserRoutingModule, AngularMaterialModule],
 })
 export class UserModule {}

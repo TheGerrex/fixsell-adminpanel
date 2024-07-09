@@ -19,12 +19,16 @@ export class ChatsListComponent implements OnInit, OnDestroy {
   currentRoomName: string = ''; // Add this line
 
   constructor() {}
-
+  private handleBeforeUnload = () => {
+    console.log('Disconnecting socket before leaving the page...');
+    this.socket?.disconnect();
+  };
   ngOnInit(): void {
     // this.socket = connectToServer();
     // if (this.socket) {
     //   addListeners(this.socket, this.updateRoomName.bind(this)); // Modify this line
     // }
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   connectAsUser(): void {
@@ -50,5 +54,7 @@ export class ChatsListComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.socket?.close();
+
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 }

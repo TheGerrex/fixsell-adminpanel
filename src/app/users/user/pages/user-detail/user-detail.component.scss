@@ -1,46 +1,42 @@
 @import "_variables.scss";
 .user-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-radius: $border-radius;
-  border: 1px solid $gray-300;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: $border-radius;
+    border: 1px solid $gray-300;
+    justify-content: center;
 }
 
 .user-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid $gray-300;
-  background-color: $gray-50;
-  padding: 1em;
-  border-radius: $border-radius $border-radius 0 0;
-  h2 {
-    margin: 0;
-  }
-  button {
-    flex-shrink: 0;
-  }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid $gray-300;
+    background-color: $gray-50;
+    padding: 1em;
+    border-radius: $border-radius $border-radius 0 0;
+    h2 {
+        margin: 0;
+    }
+    button {
+        flex-shrink: 0;
+    }
 }
-
-
-
 
 .user-info {
-  display: flex;
-  gap: 1em;
-  width: 100%;
-  max-width: 1920px;
-  justify-content: flex-start;
-  padding: 1em;
-  @media (max-width: 1024px) {
-    flex-direction: column;
-  }
+    display: flex;
+    gap: 1em;
+    width: 100%;
+    max-width: 1920px;
+    justify-content: flex-start;
+    padding: 1em;
+    @media (max-width: 1024px) {
+        flex-direction: column;
+    }
 }
-
 
 .card-settings {
     // background-color: $white;
@@ -69,7 +65,7 @@
     border-radius: 50%;
     display: block;
     background-color: #f5f5f5;
-    color: #333;   
+    color: #333;
 }
 
 .card-settings-actions {
@@ -95,7 +91,6 @@
     align-items: flex-start;
     gap: 1em;
     width: 100%;
-
     .email-container {
         display: flex;
         flex-direction: column;
@@ -115,7 +110,6 @@
             margin: 0 !important;
         }
     }
-
     .role-container {
         display: flex;
         flex-direction: column;
@@ -133,7 +127,7 @@
             gap: 0.5em;
             .role {
                 font-size: 1em;
-                font-weight: 600;
+                font-weight: 500;
                 color: $text-secondary;
                 margin: 0 !important;
                 background-color: $gray-100;
@@ -142,7 +136,6 @@
             }
         }
     }
-
     .status-container {
         display: flex;
         flex-direction: column;
@@ -156,10 +149,9 @@
             margin: 0 !important;
         }
     }
-
     .status {
         font-size: 1em;
-        font-weight: 600;
+        font-weight: 500;
         color: $success-color;
         background-color: $message-success-color;
         padding: 0em 0.5em;
@@ -188,17 +180,16 @@
     }
 }
 
-.info-row { // Container for the 3 columns
+.info-row {
+    // Container for the 3 columns
     display: flex;
     justify-content: space-between;
     width: 100%;
     flex-wrap: wrap;
     gap: 1em;
-
-    > div { // Direct children divs inside .info-row will behave as columns
+    >div {
+        // Direct children divs inside .info-row will behave as columns
         flex: 0;
-
-
         &:not(:nth-child(1)) {
             flex: 0;
         }

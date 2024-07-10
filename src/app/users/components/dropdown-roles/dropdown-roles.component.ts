@@ -29,6 +29,7 @@ export class DropdownRolesComponent {
   disabled = false;
 
   public isDropup: boolean = false;
+  dropdownPosition: 'top' | 'bottom' = 'bottom';
   @ViewChild('customOptions') customSelectWrapper!: ElementRef;
   @Input() isInvalid: boolean = false; // This will hold the validation state
   @Input() items: any[] = [];
@@ -125,9 +126,14 @@ export class DropdownRolesComponent {
 
     // Check if there's enough space below the trigger for the dropdown
     const spaceBelow = viewportHeight - triggerBottom;
-    const neededSpace = 236; // Adjust based on your dropdown's height
+    const neededSpace = 196; // Adjust based on your dropdown's height
 
     this.isDropup = spaceBelow < neededSpace;
+    if (spaceBelow < neededSpace) {
+      this.dropdownPosition = 'top';
+    } else {
+      this.dropdownPosition = 'bottom';
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -138,8 +144,10 @@ export class DropdownRolesComponent {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.adjustDropdownPosition();
-  }
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event: any) {
+  //   if (this.isOpen) {
+  //     this.adjustDropdownPosition();
+  //   }
+  // }
 }

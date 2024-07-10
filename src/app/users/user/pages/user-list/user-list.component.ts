@@ -18,7 +18,7 @@ import { UsersService } from 'src/app/users/services/users.service';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['name', 'email', 'isActive', 'roles', 'action'];
+  displayedColumns: string[] = ['name', 'email', 'roles', 'isActive', 'action'];
   dataSource = new MatTableDataSource<User>();
   filterValue = '';
   isAdmin = false;

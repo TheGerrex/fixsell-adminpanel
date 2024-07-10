@@ -1,51 +1,58 @@
 @import "_variables.scss";
 .table-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  background-color: $gray-50;
-  border: 1px solid #e0e0e0;
-  border-bottom: none;
-  padding: 16px;
-  border-radius: $border-radius $border-radius 0 0;
-  width: 100%;
-  h2 {
-    margin: 0;
-  }
-  .table-action-buttons {
     display: flex;
-    align-items: center;
-    gap: 0.5em;
     flex-wrap: wrap;
-    @media (max-width: 576px) {
-      .search-box {
-        width: 100%;
-      }
+    justify-content: space-between;
+    align-items: center;
+    background-color: $gray-50;
+    border: 1px solid #e0e0e0;
+    border-bottom: none;
+    padding: 1rem;
+    gap: .5rem;
+    border-radius: $border-radius $border-radius 0 0;
+    width: 100%;
+    h2 {
+        margin: 0;
     }
-  }
+    .table-action {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        flex-wrap: wrap-reverse;
+        @media (max-width: 576px) {
+            .search-box {
+                width: 100%;
+            }
+        }
+        .table-action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5em;
+            flex-grow: 1;
+        }
+    }
 }
 
 .responsive-table {
-  border-radius: $border-radius;
+    display: flex;
+    flex-direction: column;
 }
 
 .table-container {
-  overflow-x: auto;
-  width: 100%;
-  display: block;
-  border: 1px solid #e0e0e0;
+    overflow-y: scroll;
+    width: 100%;
+    border: 1px solid $gray-200;
 }
 
 .responsive-table tr {
-  &:hover {
-    background-color: #f5f5f5 !important; // replace with your preferred color
-  }
+    &:hover {
+        background-color: #f5f5f5 !important; // replace with your preferred color
+    }
 }
 
 .user-list-table {
-  width: max-content;
-  table-layout: fixed;
+    width: max-content;
+    table-layout: fixed;
 }
 
 // .printer-list-table th,
@@ -53,12 +60,29 @@
 //     min-width: 150px; // adjust this value as needed
 // }
 .table-paginator {
-  border: 1px solid #e0e0e0;
-  border-top: none;
+    border: 1px solid $gray-200;
+    border-radius: 0 0 $border-radius $border-radius;
+    border-top: none;
 }
 
 .search-box {
-  input {
-    padding: 8px 8px;
-  }
+    input {
+        padding: 8px 8px;
+    }
+}
+
+.active-user {
+    background-color: $success-color;
+    color: $white;
+    border-radius: $border-radius;
+    padding: .25rem .5rem;
+    font-weight: 500;
+}
+
+.inactive-user {
+    background-color: $danger-color;
+    color: $white;
+    border-radius: $border-radius;
+    padding: .25rem .5rem;
+    font-weight: 500;
 }

@@ -16,25 +16,24 @@
                 <div class="user-data">
                     <!-- name -->
                     <div class="user-data-item">
-                        <h5>Nombre</h5>
+                        <p>Nombre</p>
                         <input type="text" placeholder="Nombre del usuario" aria-label="Name" class="form-control" id="name" formControlName="name" [class.is-invalid]="createUserForm.controls['name'].invalid && createUserForm.controls['name'].touched" />
                         <span *ngIf="createUserForm.controls['name'].invalid && createUserForm.controls['name'].touched" class="invalid-feedback">El nombre es requerido</span>
                     </div>
 
                     <!-- email -->
                     <div class="user-data-item">
-                        <h5>Email</h5>
+                        <p>Email</p>
                         <input type="text" placeholder="ejemplo@email.com" aria-label="Email" class="form-control" id="email" formControlName="email" [class.is-invalid]=" createUserForm.controls['email'].invalid && createUserForm.controls['email'].touched" />
                         <span *ngIf="createUserForm.controls['email'].invalid && createUserForm.controls['email'].touched" class="invalid-feedback">El correo es requerido, en formato: ejemplo&#64;email.com</span>
                     </div>
 
                     <!-- password -->
                     <div class="user-data-item">
-                        <h5>Contraseña</h5>
+                        <p>Contraseña</p>
                         <input type="password" placeholder="" aria-label="Password" class="form-control" id="password" formControlName="password" [class.is-invalid]="
                         createUserForm.controls['password'].invalid &&
-                        createUserForm.controls['password'].touched" 
-                        (keyup)="updateValidationStatus()" (focus)="passwordFieldFocused = true" (blur)="passwordFieldFocused = false" />
+                        createUserForm.controls['password'].touched" (keyup)="updateValidationStatus()" (focus)="passwordFieldFocused = true" (blur)="passwordFieldFocused = false" />
                         <div class="password-suggestions" *ngIf="passwordFieldFocused ||createUserForm.controls['password'].touched">
                             <span class="password-feedback">La contraseña debe contener:</span>
                             <ul class="password-suggestions-list">
@@ -64,36 +63,32 @@
 
                     <!-- repeat password -->
                     <div class="user-data-item">
-                        <h5>Repetir Contraseña</h5>
+                        <p>Confirmar Contraseña</p>
                         <input type="password" placeholder="" aria-label="Repeat Password" class="form-control" id="repeatPassword" formControlName="repeatPassword" [class.is-invalid]="createUserForm.controls['repeatPassword'].invalid && createUserForm.controls['repeatPassword'].touched"
                         />
                         <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['required'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
                             La contraseña es requerida
                         </span>
-                                    <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
+                        <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
                             Las contraseñas no coinciden
                         </span>
                     </div>
 
                     <!-- roles -->
-                    <div class="user-data-item">
-                        <h5>Roles</h5>
-                        <user-dropdown-roles [items]="roles" formControlName="roles" 
-                            (change)="roleSelected($event);" 
-                            [isInvalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched"
-                            (itemsChange)="handleItemsChange($event)"
-                        ></user-dropdown-roles>
+                    <div class="user-data-item full-row">
+                        <p>Roles</p>
+                        <user-dropdown-roles [items]="roles" formControlName="roles" (change)="roleSelected($event);" [isInvalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched" (itemsChange)="handleItemsChange($event)"></user-dropdown-roles>
                         <span *ngIf="isValidField('roles')" class="form-text text-danger">
                           {{ getFieldError("roles") }}
                         </span>
                     </div>
 
                     <!-- is active -->
-                    <div class="user-data-item half-row">
-                        <h5>Estado de Usuario</h5>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="isActiveYes" formControlName="isActive" [checked]="createUserForm.get('isActive')?.value || false" (change)="onIsActiveChange($event)" />
+                    <div class="user-data-item full-row">
+                        <p>Estado de Usuario</p>
+                        <div class="form-check form-switch form-box">
                             <label class="form-check-label" for="isActiveYes">{{createUserForm.get("isActive")?.value ? "Activo" : "Inactivo"}}</label>
+                            <input class="form-check-input" type="checkbox" id="isActiveYes" formControlName="isActive" [checked]="createUserForm.get('isActive')?.value || false" (change)="onIsActiveChange($event)" style="margin-bottom: .25rem;" />
                         </div>
                         <span *ngIf="isValidField('isActive')" class="form-text text-danger">
                             {{ getFieldError("isActive") }}
@@ -103,29 +98,4 @@
             </div>
         </div>
     </form>
-    <mat-form-field appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Contraseña</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Repetir Contraseña</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field  appearance="outline">
-        <mat-label>Roles</mat-label>
-        <mat-select multiple>
-            <mat-option value="one">First option</mat-option>
-            <mat-option value="two">Second option</mat-option>
-        </mat-select>
-    </mat-form-field>
-        <mat-label>Estado de Usuario</mat-label>
-        <mat-slide-toggle>Activo</mat-slide-toggle>
 </div>

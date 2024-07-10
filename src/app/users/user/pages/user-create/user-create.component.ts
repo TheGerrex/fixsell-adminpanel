@@ -59,10 +59,7 @@ export class UserCreateComponent implements OnInit {
       {
         email: ['', [Validators.required, Validators.email]],
         name: ['', Validators.required],
-        password: [
-          '',
-          [Validators.required, this.validatorsService.isStrongPassword()],
-        ],
+        password: ['', [Validators.required, this.validatorsService.isStrongPassword()]],
         repeatPassword: ['', Validators.required],
         isActive: [true],
         roles: [['user'], Validators.required],

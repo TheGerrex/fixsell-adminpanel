@@ -1,9 +1,9 @@
 @import '_variables.scss';
-
 .custom-select-wrapper {
-  position: relative;
-  user-select: none;
+    position: relative;
+    user-select: none;
 }
+
 .custom-select {
     position: relative;
     display: flex;
@@ -16,14 +16,15 @@
     color: var(--bs-body-color);
     appearance: none;
     background-color: var(--bs-body-bg);
-    background-image: var(--bs-form-select-bg-img),var(--bs-form-select-bg-icon,none);
+    background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
     background-repeat: no-repeat;
     background-position: right .75rem center;
     background-size: 16px 12px;
     border: var(--bs-border-width) solid var(--bs-border-color);
     border-radius: var(--bs-border-radius);
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+
 .custom-select__trigger {
     position: relative;
     display: flex;
@@ -31,6 +32,7 @@
     justify-content: space-between;
     width: 100%;
 }
+
 .custom-options {
     position: absolute;
     display: block;
@@ -50,7 +52,6 @@
     border-bottom: none;
     border-color: transparent;
     border-bottom-color: transparent;
-
     // Custom scrollbar styles for Webkit browsers
     &::-webkit-scrollbar {
         width: 5px; // Smaller width for the scrollbar
@@ -58,21 +59,18 @@
     &::-webkit-scrollbar-track {
         background: $gray-100;
     }
-
     &::-webkit-scrollbar-thumb {
         background: $gray-500;
         border-radius: 2px;
         overflow: hidden;
     }
-
     &::-webkit-scrollbar-thumb:hover {
         background: $gray-600;
     }
 }
 
-
 .custom-select.open .custom-options {
-    max-height: 236px; // Adjust based on content
+    max-height: 192px; // Adjust based on content
     opacity: 1; // Fully visible
     visibility: visible; // Make interactable
     border: 1px solid $gray-200;
@@ -80,11 +78,11 @@
     transition: opacity 0.5s, max-height 0.5s ease; // Ensure visibility transitions instantly
 }
 
-.custom-select.dropup .custom-options {
+.custom-select.open.top .custom-options {
     top: -588%;
     left: 0;
     right: 0;
-    max-height: 236px; // Adjust based on content
+    max-height: 192px; // Adjust based on content
     opacity: 1; // Fully visible
     visibility: visible; // Make interactable
     border: 1px solid $gray-200;
@@ -92,6 +90,29 @@
     transition: opacity 0.5s, max-height 0.5s ease; // Ensure visibility transitions instantly
 }
 
+.custom-select.open.bottom .custom-options {
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 192px; // Adjust based on content
+    opacity: 1; // Fully visible
+    visibility: visible; // Make interactable
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
+    transition: opacity 0.5s, max-height 0.5s ease; // Ensure visibility transitions instantly
+}
+
+// .custom-select.dropup .custom-options {
+//     top: -588%;
+//     left: 0;
+//     right: 0;
+//     max-height: 236px; // Adjust based on content
+//     opacity: 1; // Fully visible
+//     visibility: visible; // Make interactable
+//     border: 1px solid $gray-200;
+//     border-radius: $border-radius;
+//     transition: opacity 0.5s, max-height 0.5s ease; // Ensure visibility transitions instantly
+// }
 .custom-options-wrapper {
     display: flex;
     flex-direction: column;
@@ -172,13 +193,16 @@
     justify-content: center;
     align-items: center;
 }
+
 #chevron-down {
     transition: transform 0.3s ease-in-out;
 }
+
 .custom-select.open .select-icons #chevron-down {
-  left: -5px;
-  transform: rotate(-180deg);
+    left: -5px;
+    transform: rotate(-180deg);
 }
+
 .selected-roles-list {
     display: flex;
     gap: .5em;
@@ -228,5 +252,5 @@
 }
 
 .is-invalid {
-  border: 1px solid $red-600;
+    border: 1px solid $red-600;
 }

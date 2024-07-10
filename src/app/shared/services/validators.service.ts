@@ -49,6 +49,11 @@ export class ValidatorsService {
     return (control: AbstractControl) => {
       const value = control.value;
 
+      // If the password field is empty or untouched, pass the validation
+      if (!value || !control.touched) {
+        return null;
+      }
+
       const hasUpperCase = /[A-Z]/.test(value);
       const hasLowerCase = /[a-z]/.test(value);
       const hasNumeric = /[0-9]/.test(value);
@@ -64,6 +69,7 @@ export class ValidatorsService {
         value.length >= 8;
 
       if (!passwordValid) {
+        control.setErrors({ strongPassword: true });
         return { strongPassword: true };
       }
 

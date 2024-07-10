@@ -27,11 +27,21 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     // }
   }
 
+  private getRoomNameFromCookies(): string | null {
+    const cookies = document.cookie.split('; ');
+    const roomNameCookie = cookies.find((row) => row.startsWith('roomName='));
+    console.log('roomNameCookie', roomNameCookie);
+    return roomNameCookie
+      ? decodeURIComponent(roomNameCookie.split('=')[1])
+      : null;
+  }
+
   private handleChatHistory(chatHistory: any[]): void {
     this.chatHistory = chatHistory;
   }
 
   connectAsUser(): void {
+    const roomName = this.getRoomNameFromCookies();
     if (!this.socket) {
       this.socket = connectToServerAsUser();
       if (this.socket) {
@@ -59,6 +69,9 @@ export class ChatsListComponent implements OnInit, OnDestroy {
 
   private updateRoomName(roomName: string): void {
     this.currentRoomName = roomName;
+    document.cookie = `roomName=${roomName};path=/;max-age=${
+      30 * 24 * 60 * 60
+    }`;
   }
   ngOnDestroy(): void {
     this.socket?.close();

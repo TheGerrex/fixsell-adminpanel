@@ -7,6 +7,10 @@ import {
 } from '../../services/chat.service';
 import { FormsModule } from '@angular/forms';
 import { add } from 'date-fns';
+
+import { ClientService } from '../../services/client.service';
+import { interval, Subscription } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-chats-list',
   standalone: true,
@@ -18,13 +22,27 @@ export class ChatsListComponent implements OnInit, OnDestroy {
   private socket: Socket | undefined;
   currentRoomName: string = ''; // Add this line
   chatHistory: any[] = [];
-  constructor() {}
+  clients: { id: string; roomName: string }[] = [];
+  private clientsSubscription: Subscription | undefined;
+  constructor(private clientService: ClientService) {}
 
   ngOnInit(): void {
-    // this.socket = connectToServer();
-    // if (this.socket) {
-    //   addListeners(this.socket, this.updateRoomName.bind(this)); // Modify this line
-    // }
+    this.fetchConnectedClients();
+  }
+
+  private fetchConnectedClients(): void {
+    this.clientsSubscription = interval(5000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.clientService.getConnectedClients())
+      )
+      .subscribe(
+        (clients) => {
+          console.log('Updating clients:', clients);
+          this.clients = clients;
+        },
+        (error) => console.error('Error fetching connected clients:', error)
+      );
   }
 
   private getRoomNameFromCookies(): string | null {
@@ -54,14 +72,14 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  connectAsAdmin(formValue: { roomName: string }): void {
+  connectAsAdmin(roomName: string): void {
     if (!this.socket) {
-      this.socket = connectToServerAsAdmin(formValue.roomName); // Pass roomName here
+      this.socket = connectToServerAsAdmin(roomName);
       if (this.socket) {
         addListeners(
           this.socket,
           this.updateRoomName.bind(this),
-          this.handleChatHistory.bind(this) // Added the missing handler for chat history
+          this.handleChatHistory.bind(this)
         );
       }
     }
@@ -75,5 +93,6 @@ export class ChatsListComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.socket?.close();
+    this.clientsSubscription?.unsubscribe();
   }
 }

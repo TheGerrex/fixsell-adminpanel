@@ -110,14 +110,17 @@ function setupSocketListeners(
     () => (serverStatusLabel.textContent = 'Desconectado')
   );
 
-  socket.on('clients-updated', (clients: string[]) => {
-    clientsUl.innerHTML = '';
-    clients.forEach((client) => {
-      const li = document.createElement('li');
-      li.textContent = client;
-      clientsUl.appendChild(li);
-    });
-  });
+  socket.on(
+    'clients-updated',
+    (clients: { id: string; roomName: string }[]) => {
+      clientsUl.innerHTML = '';
+      clients.forEach((client) => {
+        const li = document.createElement('li');
+        li.textContent = `${client.id} - Room: ${client.roomName}`;
+        clientsUl.appendChild(li);
+      });
+    }
+  );
 
   socket.on(
     'message-from-server',

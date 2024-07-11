@@ -1,6 +1,21 @@
 <div class="chat-container">
   <h1>WebSocket - Client Test</h1>
 
+  <!-- Connected Clients List -->
+  <h3>Clients Connected</h3>
+  <ul id="clients-ul">
+    @for (client of clients; track client.id) {
+    <li>
+      {{ client.id }} - Room:
+      <a href="#" (click)="connectAsAdmin(client.roomName)">{{
+        client.roomName
+      }}</a>
+    </li>
+    } @empty {
+    <li>No clients connected</li>
+    }
+  </ul>
+
   <div class="connection-section">
     <!-- User Connect Button -->
     <div class="connect-user">
@@ -16,15 +31,12 @@
 
     <!-- Admin Connect Form -->
     <div class="connect-admin">
-      <form
-        #connectForm="ngForm"
-        (ngSubmit)="connectAsAdmin(connectForm.value)"
-      >
+      <form (ngSubmit)="connectAsAdmin(roomNameInput.value)">
         <p>Connect to the server as admin in a room</p>
         <input
+          #roomNameInput
           type="text"
           name="roomName"
-          ngModel
           placeholder="Room name"
           required
         />
@@ -37,7 +49,6 @@
       </form>
     </div>
   </div>
-
   <!-- Current Room and Server Status -->
   <div class="status-section">
     <h4>Current Room: {{ currentRoomName }}</h4>

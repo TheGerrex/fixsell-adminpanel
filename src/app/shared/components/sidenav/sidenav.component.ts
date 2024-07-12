@@ -8,9 +8,9 @@ import {
   inject,
 } from '@angular/core';
 import { navbarData } from './nav-data';
-import { animate, style, transition, trigger } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
 interface SideNavToggle {
@@ -33,15 +33,31 @@ interface SideNavToggle {
         animate('350ms ease-in', style({ opacity: 0 })),
       ]),
     ]),
+    trigger('expandCollapse', [
+      transition(':enter', [
+        style({ height: '0px', minHeight: '0' }),
+        animate('350ms ease-in'),
+      ]),
+      transition(':leave', [
+        style({ height: '*' }),
+        animate('350ms ease-in'),
+      ]),
+    ])
   ],
 })
 export class SidenavComponent implements OnInit {
   @Output() onToggleSideNav = new EventEmitter<SideNavToggle>();
   collapsed = true;
+  sidenavOpen = false;
   screenWidth = 0;
   navData = navbarData;
+  user = this.authService.currentUser();
 
-  constructor(private router: Router) {}
+  constructor(
+  private router: Router, 
+  private route: ActivatedRoute,
+  private authService: AuthService,
+  ) {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
@@ -84,8 +100,20 @@ export class SidenavComponent implements OnInit {
     });
   }
 
-  private authService = inject(AuthService);
-  public user = computed(() => this.authService.currentUser());
+  toggleDesktopSidenav(): void {
+    this.sidenavOpen = !this.sidenavOpen;
+    // Set isExpanded to false for all items
+    this.navData.forEach(item => item.isExpanded = false);
+  }
+
+  openDesktopSidenav(): void {
+    this.sidenavOpen = true;
+  
+  }
+
+  isSubrouteActive(subRoutes: { routeLink: string }[]): boolean {
+    return subRoutes.some(subRoute => this.route.snapshot.firstChild && this.router.isActive(this.route.snapshot.firstChild.url.join('/'), false));
+  }
 
   isAllowed(allowedRoles: string[]): boolean {
     const userRole = this.authService.getCurrentUserRoles();

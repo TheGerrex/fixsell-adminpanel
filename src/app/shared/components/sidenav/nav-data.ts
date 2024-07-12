@@ -118,10 +118,10 @@ export const navbarData = [
   //   label: 'Chat',
   //   allowedRoles: ['admin', 'user', 'vendor'],
   // },
-  {
-    label: 'Ajustes',
-    routeLink: 'dashboard/settings',
-    icon: 'fal fa-cog',
-    allowedRoles: ['admin', 'user', 'vendor'],
-  },
+  // {
+  //   label: 'Ajustes',
+  //   routeLink: 'dashboard/settings',
+  //   icon: 'fal fa-cog',
+  //   allowedRoles: ['admin', 'user', 'vendor'],
+  // },
 ];

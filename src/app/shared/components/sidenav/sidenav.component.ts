@@ -48,7 +48,7 @@ interface SideNavToggle {
 export class SidenavComponent implements OnInit {
   @Output() onToggleSideNav = new EventEmitter<SideNavToggle>();
   collapsed = true;
-  sidenavOpen = false;
+  sidenavOpen = true;
   screenWidth = 0;
   navData = navbarData;
   user = this.authService.currentUser();

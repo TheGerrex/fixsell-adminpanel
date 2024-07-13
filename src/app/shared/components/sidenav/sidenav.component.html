@@ -1,26 +1,36 @@
 <!-- Desktop layout -->
 <div class="sidenav" *ngIf="screenWidth > 768" [ngClass]="{'sidenav-close': !sidenavOpen}">
     <div class="sidenav-header">
-        <div class="logo-container"><img src="../../../../assets/logo/fixsell-logo-small.svg" alt="logo-fixsell" (click)="toggleDesktopSidenav()"></div>
+        <div class="logo-container"  *ngIf="!sidenavOpen">
+            <div class="icon-sidenav">
+                <span class="material-symbols-outlined" (click)="toggleDesktopSidenav()">
+                    side_navigation
+                </span>
+            </div>
+        </div>
+        <div class="logo-container" *ngIf="sidenavOpen"><img src="../../../../assets/logo/fixsell-logo-small.svg" alt="logo-fixsell" (click)="toggleDesktopSidenav()"></div>
         <div class="sidenav-header-container" *ngIf="sidenavOpen">
             <div class="sidenav-company">
                 <span class="sidenav-company-name" @fadeInOut>Fixsell del Norte</span>
                 <span class="sidenav-company-software" @fadeInOut>Software ERP</span>
             </div>
-            <!-- <mat-icon (click)="toggleDesktopSidenav()">chevron_right</mat-icon> -->
-            <!-- <img src="../../../../assets/icons/layout/layout-5.svg" alt="layout-icon" (click)="toggleDesktopSidenav()"> -->
+            <div class="icon-sidenav"  @fadeInOut>
+                <span class="material-symbols-outlined" (click)="toggleDesktopSidenav()">
+                    side_navigation
+                </span>
+            </div>
         </div>
     </div>
     <div class="sidenav-nav">
         <div class="sidenav-nav-item" *ngFor="let data of navData">
             <div class="sidenav-nav-link" [routerLink]="data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null" *ngIf="isAllowed(data.allowedRoles); " (click)="data.isExpanded = !data.isExpanded; openDesktopSidenav()">
                 <div class="sidenav-link-icon-container" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-                    <i class="sidenav-link-icon" [class]="data.icon"></i>
+                    <span class="material-symbols-outlined sidenav-link-icon">{{data.icon}}</span>
                 </div>
                 <div class="sidenav-link-items-container" *ngIf="sidenavOpen">
                     <div class="sidenav-link-item-header">
                         <span class="sidenav-link-text" @fadeInOut>{{data.label}}</span>
-                        <mat-icon *ngIf="data.subRoutes" [ngClass]="{'rotate': data.isExpanded && data.subRoutes}">chevron_right</mat-icon>
+                        <mat-icon *ngIf="data.subRoutes" [ngClass]="{'rotate': data.isExpanded && data.subRoutes}"  @fadeInOut>chevron_right</mat-icon>
                     </div>
                 </div>
             </div>
@@ -32,7 +42,7 @@
         </div>
         <div class="sidenav-item-user" routerLink="/dashboard/settings">
             <div class="sidenav-user-icon-container">
-                <div class="avatar"><img src="../../../../assets/icons/avatar/avatar-1.svg" alt=""></div>
+                <div class="avatar"><img src="../../../../assets/icons/avatar/avatar-1.svg" alt="avatar"></div>
             </div>
             <div class="sidenav-user-items-container" *ngIf="sidenavOpen">
                 <div class="sidenav-user-item-header">

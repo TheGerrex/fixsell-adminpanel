@@ -92,6 +92,14 @@ export class SidenavComponent implements OnInit {
     });
   }
 
+  collapseMobileNav(): void {
+    this.collapsed = true;
+    this.onToggleSideNav.emit({
+      collapsed: this.collapsed,
+      screenWidth: this.screenWidth,
+    });
+  }
+
   closeSidenav(): void {
     this.collapsed = false;
     this.onToggleSideNav.emit({

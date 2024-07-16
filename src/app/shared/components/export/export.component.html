@@ -3,27 +3,24 @@
 </button>
 <button class="btn btn-success" (click)="exportToCSV()">Export to CSV</button> -->
 
-<button class="button button-outline-primary" [matMenuTriggerFor]="menu">
+<button ButtonResize class="button button-icon-text button-outline-primary" [matMenuTriggerFor]="menu">
   <mat-icon>ios_share</mat-icon>
-  <span class="button-label"
-    >Exportar<mat-icon>keyboard_arrow_down</mat-icon></span
-  >
+  <span class="button-label">
+    Exportar<mat-icon>keyboard_arrow_down</mat-icon>
+  </span>
 </button>
 <mat-menu #menu="matMenu" class="export-menu">
     <button mat-menu-item (click)="exportToExcel()">
-    <!-- <mat-icon>ios_share</mat-icon> -->
     <div class="export-button-item w-100">
       Excel<span class="icon-filetype">.xlsx</span>
     </div>
   </button>
     <button mat-menu-item (click)="exportToExcel()">
-    <!-- <mat-icon>ios_share</mat-icon> -->
     <div class="export-button-item w-100">
       CSV<span class="icon-filetype">.csv</span>
     </div>
   </button>
     <button mat-menu-item (click)="exportToJSON()">
-    <!-- <mat-icon>ios_share</mat-icon> -->
     <div class="export-button-item w-100">
       JSON<span class="icon-filetype">.json</span>
     </div>

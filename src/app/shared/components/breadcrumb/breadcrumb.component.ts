@@ -36,7 +36,7 @@ type Breadcrumb = { label: string; url: string };
         background-color: #fff;
         padding: 8px 16px;
         border-radius: 4px;
-        border: 1px solid #e5e7eb;
+        border: 1px solid #d1d5db;
       }
       @media (max-width: 768px) {
         nav {

@@ -24,6 +24,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   isAdmin = false;
   userData: User[] = [];
   token: string = '';
+  searchTerm = '';
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

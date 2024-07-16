@@ -22,6 +22,7 @@ import { QuillModule } from 'ngx-quill';
 import { FormsModule } from '@angular/forms';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { ButtonResizeDirective } from './directives/button-resize.directive';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -39,6 +40,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     AddUserRoleDialogComponent,
     LoadingSpinnerComponent,
     DropdownComponent,
+    ButtonResizeDirective,
   ],
   imports: [
     CommonModule,
@@ -65,6 +67,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     FormsModule,
     TimepickerModule,
     DropdownComponent,
+    ButtonResizeDirective,
   ],
 })
 export class SharedModule {}

@@ -1,14 +1,15 @@
 @import "_variables.scss";
+
+
 .table-header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    flex-grow: 1;
     background-color: $white;
     border: 1px solid $gray-300;
     border-bottom: none;
-    padding: 1rem;
+    padding: .5rem;
     gap: .5rem;
     border-radius: $border-radius $border-radius 0 0;
     width: 100%;
@@ -19,7 +20,7 @@
         width: 100%;
         gap: 1rem;
         .table-title {
-            font-family: "Roboto Condensed", sans-serif;
+            // font-family: "Roboto Condensed", sans-serif;
             font-optical-sizing: auto;
             font-weight: 600;
             font-style: normal;
@@ -58,20 +59,21 @@
     }
 }
 
-.responsive-table {
-    display: flex;
-    flex-direction: column;
-}
 
 .table-container {
     overflow-y: scroll;
     width: 100%;
-    border: 1px solid $gray-300;
+    border-top: 1px solid $gray-200;
+    border-bottom: 1px solid $gray-200;
+    border-left: 1px solid $gray-300;
+    border-right: 1px solid $gray-300;
 }
 
 .responsive-table {
+    display: flex;
+    flex-direction: column;
     th {
-        background-color: $gray-50;
+        background-color: $gray-100;
     }
     tr {
         &:hover {

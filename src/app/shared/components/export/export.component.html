@@ -10,18 +10,18 @@
   </span>
 </button>
 <mat-menu #menu="matMenu" class="export-menu">
-    <button mat-menu-item (click)="exportToExcel()">
-    <div class="export-button-item w-100">
+  <button mat-menu-item (click)="exportToExcel()" class="export-button-item">
+    <div class="export-button-item-container">
       Excel<span class="icon-filetype">.xlsx</span>
     </div>
   </button>
-    <button mat-menu-item (click)="exportToExcel()">
-    <div class="export-button-item w-100">
+  <button mat-menu-item (click)="exportToExcel()" class="export-button-item">
+    <div class="export-button-item-container">
       CSV<span class="icon-filetype">.csv</span>
     </div>
   </button>
-    <button mat-menu-item (click)="exportToJSON()">
-    <div class="export-button-item w-100">
+  <button mat-menu-item (click)="exportToJSON()" class="export-button-item">
+    <div class="export-button-item-container">
       JSON<span class="icon-filetype">.json</span>
     </div>
   </button>

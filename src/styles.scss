@@ -131,7 +131,27 @@ input:focus {
 }
 
 
-/*--------------------Button------------------------*/
+/*----------------------[ Structure ]-------------------------------*/
+
+.container-grid {
+    display: flex !important;
+    height: 100%;
+    .container-grid-content {
+        width: 100%;
+        padding: .5rem;
+        overflow-x: hidden;
+    }
+    @media (max-width: 768px) {
+        flex-direction: column !important;
+        .container-grid-content {
+            padding: .5rem;
+        }
+    }
+}
+
+
+
+/*----------------------[ Button ]-------------------------------*/
 
 .button {
     margin: 0;
@@ -562,26 +582,6 @@ button {
 }
 
 
-/*----------[ Structure ]----------*/
-
-.container-grid {
-    display: flex !important;
-    height: 100%;
-    .container-grid-content {
-        width: 100%;
-        padding: 16px;
-        overflow-x: hidden;
-    }
-    @media (max-width: 768px) {
-        flex-direction: column !important;
-        .container-grid-content {
-            padding: 8px;
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------*/
 
 
 /*----------[ Icons ]----------*/

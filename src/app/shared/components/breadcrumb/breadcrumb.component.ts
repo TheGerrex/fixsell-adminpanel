@@ -30,11 +30,11 @@ type Breadcrumb = { label: string; url: string };
       nav {
         display: flex;
         flex-wrap: wrap;
-        margin-bottom: 16px;
+        margin-bottom: 0.5rem;
         align-items: center;
         height: auto;
         background-color: #fff;
-        padding: 8px 16px;
+        padding: 0.4rem 1rem;
         border-radius: 4px;
         border: 1px solid #d1d5db;
       }
@@ -49,6 +49,10 @@ type Breadcrumb = { label: string; url: string };
       a {
         color: #1f2937;
         text-decoration: none;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        color: #4b5563;
       }
       a:hover {
         // color: #3b82f6;

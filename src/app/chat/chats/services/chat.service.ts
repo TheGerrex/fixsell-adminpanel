@@ -2,12 +2,15 @@ import { Manager, Socket } from 'socket.io-client';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
 // For User Connection
-export const connectToServerAsUser = () => {
+export const connectToServerAsUser = (
+  roomName?: string,
+  savedState?: string
+) => {
   console.log('connecting as user...');
   const token = localStorage.getItem('token');
   if (!token) {
     console.error('No token found. Please login.');
-    return;
+    throw new Error('No token found');
   }
 
   const manager = new Manager('http://localhost:3000/socket.io/socket.io.js', {
@@ -19,12 +22,39 @@ export const connectToServerAsUser = () => {
   const socket = manager.socket('/', {
     auth: {
       token,
-      role: 'user', // Identify role
+      role: 'user',
+      roomName,
+      savedState,
     },
+  });
+
+  // Handle chat state updates
+  socket.on('chatState', (state: string) => {
+    setCookie('chatState', state); // Update the chatState cookie whenever a new state is received
   });
 
   return socket;
 };
+
+// Utility functions for cookie handling
+function getCookie(name: string): string | null {
+  const nameLenPlus = name.length + 1;
+  return (
+    document.cookie
+      .split(';')
+      .map((c) => c.trim())
+      .filter((cookie) => cookie.substring(0, nameLenPlus) === `${name}=`)
+      .map((cookie) => decodeURIComponent(cookie.substring(nameLenPlus)))[0] ||
+    null
+  );
+}
+
+function setCookie(name: string, value: string, days = 30): void {
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${value};${expires};path=/`;
+}
 
 // For Admin Connection
 export const connectToServerAsAdmin = (roomName: string) => {
@@ -144,6 +174,11 @@ function setupSocketListeners(
     console.log(`Joined room: ${roomName}`);
     roomState.currentRoomName = roomName; // Update the current room name
     onRoomJoined(roomName);
+    setCookie('roomName', roomName);
+  });
+
+  socket.on('chatState', (state: string) => {
+    setCookie('chatState', state);
   });
 }
 

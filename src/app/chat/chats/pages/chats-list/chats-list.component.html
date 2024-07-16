@@ -2,12 +2,13 @@
   <h1>WebSocket - Client Test</h1>
 
   <!-- Connected Clients List -->
+  <!-- Connected Clients List -->
   <h3>Clients Connected</h3>
   <ul id="clients-ul">
     @for (client of clients; track client.id) {
     <li>
       {{ client.id }} - Room:
-      <a href="#" (click)="connectAsAdmin(client.roomName)">{{
+      <a href="#" (click)="connectAsAdmin(client.roomName, $event)">{{
         client.roomName
       }}</a>
     </li>

@@ -30,7 +30,6 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     this.currentRoomName = this.getRoomNameFromCookies() || '';
     this.currentState = this.getCurrentStateFromCookies() || '';
     this.fetchConnectedClients();
-    // this.connectAsUser(); // Attempt to connect on initialization
   }
 
   private fetchConnectedClients(): void {
@@ -48,40 +47,40 @@ export class ChatsListComponent implements OnInit, OnDestroy {
       );
   }
 
-  private getRoomNameFromCookies(): string | null {
-    const cookies = document.cookie.split('; ');
-    const roomNameCookie = cookies.find((row) => row.startsWith('roomName='));
-    console.log('roomNameCookie', roomNameCookie);
-    return roomNameCookie
-      ? decodeURIComponent(roomNameCookie.split('=')[1])
-      : null;
-  }
-
-  private getCurrentStateFromCookies(): string | null {
-    const cookies = document.cookie.split('; ');
-    const currentStateCookie = cookies.find((row) =>
-      row.startsWith('chatState=')
-    );
-    console.log('currentStateCookie', currentStateCookie);
-    return currentStateCookie
-      ? decodeURIComponent(currentStateCookie.split('=')[1])
-      : null;
-  }
-
   private handleChatHistory(chatHistory: any[]): void {
     console.log('Received chat history:', chatHistory);
     this.chatHistory = chatHistory;
     // Update your UI here
   }
 
+  private getRoomNameFromCookies(): string | null {
+    return this.getCookie('roomName');
+  }
+
+  private getCurrentStateFromCookies(): string | null {
+    return this.getCookie('chatState');
+  }
+
+  private getCookie(name: string): string | null {
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
+    return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+  }
+
+  private setCookie(name: string, value: string, days: number = 30): void {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value};${expires};path=/`;
+  }
+
   connectAsUser(): void {
     if (!this.socket) {
-      console.log('Connecting as user with room name:', this.currentRoomName);
-      console.log('Connecting as user with state:', this.currentState);
-      this.socket = connectToServerAsUser(
-        this.currentRoomName,
-        this.currentState
-      );
+      const roomName = this.currentRoomName || localStorage.getItem('roomName');
+      const savedState = this.currentState || localStorage.getItem('chatState');
+      console.log('Connecting as user with room name:', roomName);
+      console.log('Connecting as user with state:', savedState);
+      this.socket = connectToServerAsUser(roomName || '', savedState || '');
       if (this.socket) {
         addListeners(
           this.socket,
@@ -89,16 +88,20 @@ export class ChatsListComponent implements OnInit, OnDestroy {
           this.handleChatHistory.bind(this)
         );
 
-        // Listen for messages from the server
         this.socket.on('message-from-server', (message: any) => {
           console.log('Received message from server:', message);
           this.chatHistory.push(message);
-          // Update your UI here
         });
 
-        // Request chat history if we have a room name
-        if (this.currentRoomName) {
-          this.socket.emit('getChatHistory', this.currentRoomName);
+        this.socket.on('chatState', (state: string) => {
+          console.log('Received chat state:', state);
+          this.currentState = state;
+          this.setCookie('chatState', state);
+          localStorage.setItem('chatState', state);
+        });
+
+        if (roomName) {
+          this.socket.emit('getChatHistory', roomName);
         }
       }
     }
@@ -122,23 +125,9 @@ export class ChatsListComponent implements OnInit, OnDestroy {
   }
 
   private updateRoomName(roomName: string): void {
-    // Parse cookies into an object
-    // Define the accumulator's type to allow string indexing
-    const cookies = document.cookie
-      .split('; ')
-      .reduce((acc: { [key: string]: string }, current) => {
-        const [key, value] = current.split('=');
-        acc[key] = value;
-        return acc;
-      }, {});
-
-    // Check if the roomName cookie exists and has the same value
-    if (cookies['roomName'] !== roomName) {
-      this.currentRoomName = roomName;
-      document.cookie = `roomName=${roomName};path=/;max-age=${
-        30 * 24 * 60 * 60
-      }`;
-    }
+    this.currentRoomName = roomName;
+    this.setCookie('roomName', roomName);
+    localStorage.setItem('roomName', roomName);
   }
 
   ngOnDestroy(): void {

@@ -25,6 +25,7 @@ export class RolesCrudComponent implements OnInit {
   filterValue = '';
   isAdmin = false;
   roleData: Role[] = [];
+  searchTerm = '';
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -63,9 +64,9 @@ export class RolesCrudComponent implements OnInit {
     // open confirm-dialog
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Delete role',
-        message: `Seguro que quieres elimnar la marca ${role}?`,
-        buttonText: { cancel: 'Cancelar', ok: 'Si' },
+        title: 'Eliminar Rol',
+        message: `Seguro que quieres eliminar el rol: ${role}?`,
+        buttonText: { cancel: 'Cancelar', ok: 'Eliminar' },
       },
     });
 

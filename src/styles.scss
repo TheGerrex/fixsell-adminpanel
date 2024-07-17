@@ -150,7 +150,6 @@ input:focus {
 }
 
 
-
 /*----------------------[ Button ]-------------------------------*/
 
 .button {
@@ -163,8 +162,8 @@ input:focus {
     position: relative;
     gap: 8px;
     color: $text;
-    font-size: 1em;
-    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    padding: 0.5rem .75rem;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     border-radius: $border-radius;
     // min-height: 42px;
@@ -521,6 +520,9 @@ input:focus {
     }
     &-icon-text {
         padding: 0.5em 20px 0.5em 16px;
+        mat-icon {
+            font-size: 1.4rem;
+        }
     }
 }
 
@@ -537,7 +539,7 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
+    font-weight: 400;
     flex: 1 1 auto;
     transition-duration: 0.2s;
 }
@@ -580,8 +582,6 @@ button {
         box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $gray-200, 0 1px 2px 0 black;
     }
 }
-
-
 
 
 /*----------[ Icons ]----------*/

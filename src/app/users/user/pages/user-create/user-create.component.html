@@ -1,10 +1,14 @@
 <div>
     <form [formGroup]="createUserForm" (ngSubmit)="submitForm()" class="user-container">
         <div class="user-header">
-            <h2>Nuevo Usuario</h2>
-            <button ButtonResize type="submit" class="button button-primary button-raised">
-                <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
-            </button>
+            <h3 class="table-title">Nuevo Usuario</h3>
+            <div class="table-actions">
+                <div class="action-buttons">
+                    <button ButtonResize type="submit" class="button button-primary button-raised">
+                        <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="loading-container" *ngIf="isLoadingForm">

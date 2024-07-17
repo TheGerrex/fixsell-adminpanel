@@ -166,7 +166,7 @@ export class UserCreateComponent implements OnInit {
   }
 
   handleItemsChange(selectedItems: string[]) {
-    // this.selectedRoles = selectedItems;
+    this.selectedRoles = selectedItems;
     this.createUserForm.controls['roles'].setValue(selectedItems);
   }
 
@@ -197,6 +197,7 @@ export class UserCreateComponent implements OnInit {
 
     // Add the selectedRoles to Roles Form Control
     this.createUserForm.get('roles')?.setValue(this.selectedRoles);
+    console.log('selectedRoles:', this.selectedRoles);
 
     const user = this.createUserForm.value;
     delete user.repeatPassword; // Delete the repeat field
@@ -204,7 +205,7 @@ export class UserCreateComponent implements OnInit {
     this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
       next: (response) => {
         this.isLoadingForm = false;
-        this.toastService.showSuccess('Userio creado con exito', 'Close');
+        this.toastService.showSuccess('Usuario creado con exito', 'Close');
         // Navigate to the user detail page
         this.router.navigate(['/users/user']);
         // Reset the form
@@ -213,10 +214,10 @@ export class UserCreateComponent implements OnInit {
       error: (error) => {
         this.isLoadingForm = false;
         this.toastService.showError(
-          `Error creando userio: ${error.error.message}`,
+          `Error creando usuario: ${error.error.message}`,
           'Close'
         );
-        console.error('Error creando userio:', error.error.message);
+        console.error('Error creando usuario:', error.error.message);
       },
     });
   }

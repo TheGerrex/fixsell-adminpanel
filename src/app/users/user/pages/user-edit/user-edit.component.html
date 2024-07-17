@@ -1,10 +1,14 @@
 <div>
     <form [formGroup]="editUserForm" (ngSubmit)="submitForm()" class="user-container">
         <div class="user-header">
-            <h2>Editar Usuario</h2>
-            <button type="submit" class="button button-primary button-raised">
-        <span class="button-label">Guardar Cambios</span>
-      </button>
+            <h3 class="table-title">Editar Usuario</h3>
+            <div class="table-actions">
+                <div class="action-buttons">
+                    <button ButtonResize type="submit" class="button button-primary button-raised">
+                        <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="loading-container" *ngIf="isLoadingForm">

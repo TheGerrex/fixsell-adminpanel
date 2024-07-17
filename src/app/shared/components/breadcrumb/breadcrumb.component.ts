@@ -34,8 +34,8 @@ type Breadcrumb = { label: string; url: string };
         align-items: center;
         height: auto;
         background-color: #fff;
-        padding: 0.4rem 1rem;
-        border-radius: 4px;
+        padding: 0.5rem;
+        border-radius: 6px;
         border: 1px solid #d1d5db;
       }
       @media (max-width: 768px) {
@@ -88,6 +88,11 @@ export class BreadcrumbComponent implements OnInit {
       edit: 'Editar',
       create: 'Crear',
       user: 'Usuarios',
+      website: 'Página Web',
+      printer: 'Multifuncional',
+      config: 'Configuración',
+      tickets: 'Tickets',
+      leads: 'Clientes Potenciales',
       // Add more mappings here if needed
     };
 

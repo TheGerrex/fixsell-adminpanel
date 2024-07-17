@@ -1,9 +1,9 @@
 @import "_variables.scss";
 ::ng-deep .container {
-  box-sizing: border-box; // Add this line
-  background-color: #fff;
-  border-radius: $border-radius;
-  border: 1px solid $gray-300;
-  padding: 1em;
-  max-width: 100%;
+    box-sizing: border-box; // Add this line
+    background-color: #fff;
+    border-radius: $border-radius;
+    border: 1px solid $gray-300;
+    // padding: .5rem;
+    max-width: 100%;
 }

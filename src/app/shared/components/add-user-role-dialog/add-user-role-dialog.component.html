@@ -1,15 +1,17 @@
 <div class="dialog">
-  <div class="title">Nuevo Rol de Usuario</div>
-  <div class="content">
-    <h5 class="input-label">Nombre del Rol</h5>
-    <input class="form-control" [formControl]="roleName" />
-  </div>
-  <div class="button-actions">
-    <button class="button button-danger button-raised" (click)="onNoClick()">
+    <div class="title">Nuevo Rol de Usuario</div>
+    <div class="content">
+        <h5 class="input-label">Nombre del Rol</h5>
+        <input class="form-control" [formControl]="roleName" />
+        <span *ngIf="roleName.invalid && roleName.touched" class="invalid-feedback">El nombre del rol es requerido</span>
+    </div>
+    <div class="button-actions">
+        <button class="button button-secondary button-raised" (click)="onNoClick()">
       <span class="button-label">Cancelar</span>
     </button>
-    <button class="button button-primary button-raised" [disabled]="roleName.invalid" (click)="onSubmit()">
-      <span class="button-label"><mat-icon>add</mat-icon>Agregar Rol</span>
+        <button class="button button-primary button-icon-text button-raised" [disabled]="roleName.invalid" (click)="onSubmit()">
+      <mat-icon>add</mat-icon>
+      <span class="button-label">Agregar Rol</span>
     </button>
-  </div>
+    </div>
 </div>

@@ -1,21 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { startWith, map, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { SharedService } from 'src/app/shared/services/shared.service';
-import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-detail',
@@ -25,19 +15,18 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 export class UserDetailComponent implements OnInit {
   user: User | null = null;
   isLoadingForm = false;
+  token = localStorage.getItem('token') || '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private sharedService: SharedService,
     private userService: UsersService,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private dialog: MatDialog,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
+    
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -53,5 +42,44 @@ export class UserDetailComponent implements OnInit {
 
   navigateToEditUser(user: User) {
     this.router.navigate(['/users/user', user.id, 'edit']);
+  }
+
+  openConfirmDialog(user: User): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar este usuario?',
+      message: 'El usuario será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (user.id){
+            this.deleteUser(user);
+        }
+      }
+    });
+  }
+
+  deleteUser(user: User) {
+  if (user.id){
+    this.userService.deleteUser(user, this.token).subscribe(
+      (response) => {
+        this.router.navigate(['/users/user']);
+        this.toastService.showSuccess('Usuario eliminado con exito', 'Aceptar');
+      },
+      (error) => {
+        this.toastService.showError(error.error.message, 'Cerrar');
+      }
+      ); 
+    }
   }
 }

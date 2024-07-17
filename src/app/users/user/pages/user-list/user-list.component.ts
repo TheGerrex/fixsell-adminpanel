@@ -59,7 +59,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   getRoleNames(roles: Role[]): string {
-    return roles.map((role) => role.name).join(', ');
+    return roles
+      .map((role) => role.name!.toLowerCase())
+      .sort()
+      .join(', ');
   }
 
   getAllUsersData() {

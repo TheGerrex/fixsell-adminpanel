@@ -8,27 +8,33 @@
     align-items: center;
     background-color: $white;
     gap: 1rem;
-    .toast-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+     border-left: 3px solid;
 
-    .toast-message-container {
+    .toast-body {
         display: flex;
-        gap: 1em;
-        align-items: center;
         justify-content: flex-start;
-        .toast-message {
-            color: $text;
-            margin-bottom: 0;
-            width: 100%;
-            max-width: 300px;
-            word-wrap: break-word; // Ensures words break to prevent overflow
-            white-space: normal; // Allows text to wrap to the next line
-            overflow-wrap: break-word; // Breaks words that are too long to fit
+        align-items: center;
+        flex-grow: 1;
+        gap: .5rem;
+
+        .toast-message-container {
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            justify-content: flex-start;
+            .toast-message {
+                color: $text;
+                margin-bottom: 0;
+                width: 100%;
+                font-size: 16px;
+                line-height: 24px;
+                word-wrap: break-word; // Ensures words break to prevent overflow
+                white-space: normal; // Allows text to wrap to the next line
+                overflow-wrap: break-word; // Breaks words that are too long to fit
+            }
         }
     }
+    
 
     .close-button {
         color: $gray-500;

@@ -1,8 +1,9 @@
-<div class="toast-component">
-    <div class="toast-icon"><mat-icon ngClass={{data.buttonColor}}>{{data.icon}}</mat-icon></div>
-    <!-- <p style="margin-bottom: 0; margin-left: .5em; margin-right: 1em; flex-grow: 1;"></p> -->
-    <div class="toast-message-container">
-        <p class="toast-message">{{data.message}}</p>
+<div class="toast-component" ngClass={{data.borderColor}}>
+    <div class="toast-body">
+        <div class="toast-icon"></div>
+        <div class="toast-message-container">
+            <p class="toast-message">{{data.message}}</p>
+        </div>
     </div>
     <button class="button button-icon close-button" (click)="snackBarRef.dismiss()">
         <mat-icon>close</mat-icon>

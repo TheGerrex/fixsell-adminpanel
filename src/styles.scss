@@ -144,7 +144,7 @@ input:focus {
     @media (max-width: 768px) {
         flex-direction: column !important;
         .container-grid-content {
-            padding: .5rem;
+            height: 100%;
         }
     }
 }
@@ -180,6 +180,8 @@ input:focus {
         opacity: 0.6;
     }
     &-outline {
+        background: transparent;
+        box-shadow: none;
         &-primary {
             color: $primary-color;
             border: 1px $primary-color solid;
@@ -541,7 +543,6 @@ button {
     align-items: center;
     justify-content: center;
     font-weight: 400;
-    flex: 1 1 auto;
     transition-duration: 0.2s;
 }
 
@@ -596,33 +597,42 @@ button {
 .success-icon {
     color: $success-color;
 }
+
 .error-icon {
     color: $danger-color;
 }
+
 .warning-icon {
     color: $warning-color;
 }
+
 .info-icon {
     color: $info-color;
 }
+
 .help-icon {
     color: $help-color;
 }
+
 
 /*----------[ Border ]----------*/
 
 .success-border {
     color: $success-color;
 }
+
 .error-border {
     color: $danger-color;
 }
+
 .warning-border {
     color: $warning-color;
 }
+
 .info-border {
     color: $info-color;
 }
+
 .help-border {
     color: $help-color;
 }

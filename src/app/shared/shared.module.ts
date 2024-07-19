@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { ButtonResizeDirective } from './directives/button-resize.directive';
+import { EditUserRoleDialogComponent } from './components/edit-user-role-dialog/edit-user-role-dialog.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -41,6 +42,7 @@ import { ButtonResizeDirective } from './directives/button-resize.directive';
     LoadingSpinnerComponent,
     DropdownComponent,
     ButtonResizeDirective,
+    EditUserRoleDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -68,6 +70,7 @@ import { ButtonResizeDirective } from './directives/button-resize.directive';
     TimepickerModule,
     DropdownComponent,
     ButtonResizeDirective,
+    EditUserRoleDialogComponent,
   ],
 })
 export class SharedModule {}

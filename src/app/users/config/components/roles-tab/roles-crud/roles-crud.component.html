@@ -29,21 +29,22 @@
         <table mat-table matSort [dataSource]="rolesDataSource" class="role-list-table">
             <h2>Marcas</h2>
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
                 <td mat-cell *matCellDef="let role" data-column="name">
-                    {{ role.name }}
+                    <div *ngIf="!role.isEditing">{{ role.name }}</div>
+                    <input *ngIf="role.isEditing" [(ngModel)]="role.name" value="role.name" (blur)="saveRole(role)" (keyup.enter)="saveRole(role)">
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
                 <td mat-cell *matCellDef="let role" data-column="actions">
-                    <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editRole(role)">
-          <mat-icon>edit</mat-icon>
-        </button>
-                    <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="deleteRole(role.id, role.name)">
-          <mat-icon>delete</mat-icon>
-        </button>
+                    <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editRole(role.id, role.name)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="deleteRole(role)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </td>
             </ng-container>
 

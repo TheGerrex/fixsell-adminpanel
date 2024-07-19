@@ -1,9 +1,19 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { ToastService } from './toast.service';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Role } from 'src/app/auth/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoleService {
+
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService
+  ) {}
   private roles: { [key: string]: string[] } = {
     '/website/printers': ['admin', 'user'],
     '/website/printers/create': ['admin', 'user', 'vendor'],
@@ -63,7 +73,42 @@ export class RoleService {
     );
     return route ? this.roles[route] : [];
   }
-  // getAllowedRoles(path: string): string[] {
-  //   return this.roles[path];
-  // }
+
+  // create role
+  createRole(role: string | null): Observable<any> {
+    return this.http.post(`${environment.baseUrl}/roles`, {name: role?.toLocaleLowerCase()}).pipe(
+      catchError((error) => {
+        console.error('Error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  editRole(roleId: string, roleName: string | null): Observable<any> {
+    return this.http.patch(`${environment.baseUrl}/roles/${roleId}`, {name: roleName?.toLocaleLowerCase()}).pipe(
+      catchError((error) => {
+        console.error('Error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  // get roles
+  getRoles(): Observable<any> {
+    return this.http
+      .get<any>(`${environment.baseUrl}/roles`)
+      .pipe(map((roles: any) => roles));
+  }
+
+
+  // update role
+  updateRole(role: Role, id: string): Observable<any> {
+    return this.http.patch(`${environment.baseUrl}/roles/${id}`, role);
+  }
+
+  // delete role
+  deleteRole(roleId: string): Observable<any> {
+    return this.http.delete(`${environment.baseUrl}/roles/${roleId}`);
+  }
+
 }

@@ -6,7 +6,7 @@
     width: 100%;
     padding: 1rem;
     @media(min-width: 768px) {
-        min-width: 400px;
+        max-width: 400px;
     }
 }
 
@@ -24,6 +24,10 @@
 
 .content {
     margin: .5rem 0;
+    span {
+        color: $text;
+        font-weight: 500;
+    }
 }
 
 .button-actions {

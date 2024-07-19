@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Role } from 'src/app/users/interfaces/users.interface';
 //src\app\website\config\services\brand.service.ts
@@ -13,15 +13,16 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { AddPrinterBrandDialogComponent } from 'src/app/shared/components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { AddUserRoleDialogComponent } from 'src/app/shared/components/add-user-role-dialog/add-user-role-dialog.component';
+import { EditUserRoleDialogComponent } from 'src/app/shared/components/edit-user-role-dialog/edit-user-role-dialog.component';
+import { DeleteUserRoleDialogComponent } from 'src/app/shared/components/delete-user-role-dialog/delete-user-role-dialog.component';
 @Component({
   selector: 'app-roles-crud',
   templateUrl: './roles-crud.component.html',
   styleUrls: ['./roles-crud.component.scss'],
 })
-export class RolesCrudComponent implements OnInit {
+export class RolesCrudComponent implements OnInit, AfterViewInit {
   rolesDataSource = new MatTableDataSource<Role>();
   rolesDisplayedColumns: string[] = ['name', 'action'];
-  dataSource = new MatTableDataSource<Role>();
   filterValue = '';
   isAdmin = false;
   roleData: Role[] = [];
@@ -31,11 +32,8 @@ export class RolesCrudComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
     private authService: AuthService,
     private configService: ConfigService,
-    private toastService: ToastService,
     private dialog: MatDialog
   ) {}
 
@@ -49,6 +47,10 @@ export class RolesCrudComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    this.rolesDataSource.sort = this.sort;
+  }
+
   getRoles() {
     this.configService.getRoles().subscribe((roles: Role[]) => {
       this.rolesDataSource.data = roles;
@@ -60,33 +62,38 @@ export class RolesCrudComponent implements OnInit {
     this.rolesDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  deleteRole(id: number, role: Role) {
-    // open confirm-dialog
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  deleteRole(role: Role) {
+    // open delete-dialog
+    const dialogRef = this.dialog.open(DeleteUserRoleDialogComponent, {
       data: {
-        title: 'Eliminar Rol',
-        message: `Seguro que quieres eliminar el rol: ${role}?`,
-        buttonText: { cancel: 'Cancelar', ok: 'Eliminar' },
+        id: role.id,
+        name: role.name,
       },
     });
 
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.configService.deleteRole(id).subscribe(() => {
-          this.getRoles();
-        });
-      }
+    dialogRef.afterClosed().subscribe((result) => {
+      this.getRoles();
     });
   }
 
-  editRole(role: Role) {}
+  editRole(id: number, role: Role) {
+    // Open dialog and pass role name
+    const dialogRef = this.dialog.open(EditUserRoleDialogComponent, {
+      data: { roleId: id, roleName: role }
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      this.getRoles();
+    });
+  }
+  
+  saveRole(role: Role) {}
 
   addRole() {
     //open dialog
     const dialogRef = this.dialog.open(AddUserRoleDialogComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
       this.getRoles();
     });
   }

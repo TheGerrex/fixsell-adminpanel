@@ -11,13 +11,17 @@ import { TicketsCreateComponent } from './pages/tickets-create/tickets-create.co
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TicketStatusPipe } from './pipes/ticket-status.pipe';
+import { TicketTypePipe } from './pipes/ticket-type.pipe';
 @NgModule({
   declarations: [
     LayoutPageComponent,
     TicketsDashboardComponent,
     TicketsListComponent,
     TicketsViewComponent,
-    TicketsCreateComponent, // Ensure TicketsCreateComponent is declared here
+    TicketsCreateComponent,
+    TicketStatusPipe,
+    TicketTypePipe,
   ],
   imports: [
     CommonModule,

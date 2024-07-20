@@ -1,155 +1,262 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <!-- header -->
 <div [hidden]="isLoadingData">
-  <div class="table-header">
-    <h2>Mis Tickets</h2>
-    <div class="table-action-buttons">
-      <button
-        class="button button-primary button-raised button-icon-text"
-        (click)="addTicket()"
-      >
-        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-      </button>
-    </div>
-  </div>
-  <!-- open tickets and closed tickets -->
-  <div class="card-container">
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title">
-          <mat-icon>folder_open</mat-icon> Mis Tickets Abiertos
+    <div class="main-header">
+        <h3 class="main-title">Mis Tickets</h3>
+        <div class="main-action-buttons">
+            <button class="button button-primary button-raised button-icon-text" (click)="addTicket()">
+              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+            </button>
         </div>
-        <div class="card-count">{{ openTicketsCount }}</div>
-      </div>
-      <div class="card-body">
-        <!-- Add content for open tickets card here -->
-        <button
-          class="button button-primary button-raised button-icon-text"
-          (click)="openTickets()"
-        >
-          <mat-icon>visibility</mat-icon><span class="button-label">Ver</span>
-        </button>
-      </div>
     </div>
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title">
-          <mat-icon>done</mat-icon> Mis Tickets Cerrados
-        </div>
-        <div class="card-count">{{ closedTicketsCount }}</div>
-      </div>
-      <div class="card-body">
-        <!-- Add content for closed tickets card here -->
-        <button
-          class="button button-primary button-raised button-icon-text"
-          (click)="closedTickets()"
-        >
-          <mat-icon>visibility</mat-icon><span class="button-label">Ver</span>
-        </button>
-      </div>
-    </div>
-  </div>
+    <!-- open tickets and closed tickets -->
+    <div class="tickets-container">
+        <div class="ticket-card">
+            <div class="ticket-card-header">
+                <div class="header-content">
+                    <div class="ticket-count">{{ openTicketsCount }}</div>
+                    <h4 class="card-title">
+                        Tickets Abiertos
+                    </h4>
+                </div>
+                <div class="header-actions">
+                    <button class="button button-outline-primary" (click)="openTickets()">
+                    <span class="button-label">Ver Todos</span>
+                  </button>
+                </div>
+            </div>
+            <div class="ticket-card-body">
+                <!-- Add content for open tickets card here -->
+                <div class="ticket-list-card">
+                    <div class="ticket-list-card-header">
+                        <div class="header-content">
+                            <div class="ticket-count high-priority">{{ highPriorityTicketsCount }}</div>
+                            <h5 class="card-title">
+                                Prioridad Alta
+                            </h5>
+                        </div>
+                        <div class="header-actions">
+                            <div class="button-icon-option">
+                                <mat-icon>arrow_drop_down</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ticket-list-card-body">
+                        <div class="ticket" *ngFor="let ticket of highPriorityTickets" (click)="seeTicket(ticket)">
+                            <div class="ticket-container">
+                                <div class="ticket-header">
+                                    <div class="ticket-header-chips">
+                                        <div class="ticket-status">{{ ticket.status | ticketStatus }}</div>
+                                        <div class="ticket-type">{{ ticket.type | ticketType }}</div>
+                                        <div class="ticket-client">
+                                            <mat-icon>person</mat-icon>{{ ticket.clientName }}
+                                        </div>
+                                        <div class="ticket-date">
+                                            <mat-icon>event</mat-icon>
+                                            {{ ticket.updatedDate | date : "MMMM d, y - h:mm a" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ticket-body">
+                                    <div class="ticket-info">
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">PROBLEMA</span>
+                                            <span class="ticket-info-item-content">{{ ticket.title }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ticket-list-card">
+                    <div class="ticket-list-card-header">
+                        <div class="header-content">
+                            <div class="ticket-count medium-priority">{{ mediumPriorityTicketsCount }}</div>
+                            <h5 class="card-title">
+                                Prioridad Media
+                            </h5>
+                        </div>
+                        <div class="header-actions">
+                            <div class="button-icon-option">
+                                <mat-icon>arrow_drop_down</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ticket-list-card-body">
+                        <div class="ticket" *ngFor="let ticket of mediumPriorityTickets">
+                            <div class="ticket-container">
+                                <div class="ticket-header">
+                                    <mat-icon class="ticket-icon">confirmation_number</mat-icon>
+                                    <div class="ticket-header-chips">
+                                        <div class="ticket-date">
+                                            {{ ticket.updatedDate | date : "MMMM d, y - h:mm a" }}
+                                        </div>
+                                        <div class="ticket-status">{{ticket.status | ticketStatus }}</div>
+                                    </div>
+                                </div>
+                                <div class="ticket-body">
+                                    <div class="ticket-info">
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">Cliente</span>
+                                            <span class="ticket-info-item-content">{{ ticket.clientName }}</span>
+                                        </div>
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">Tema</span>
+                                            <span class="ticket-info-item-content">{{ ticket.title }}</span>
+                                        </div>
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">Tipo</span>
+                                            <span class="ticket-info-item-content">{{ ticket.type | ticketType }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ticket-list-card">
+                    <div class="ticket-list-card-header">
+                        <div class="header-content">
+                            <div class="ticket-count low-priority">{{ lowPriorityTicketsCount }}</div>
+                            <h5 class="card-title">
+                                Prioridad Baja
+                            </h5>
+                        </div>
+                        <div class="header-actions">
+                            <div class="button-icon-option">
+                                <mat-icon>arrow_drop_down</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ticket-list-card-body">
+                        <div class="ticket" *ngFor="let ticket of lowPriorityTickets">
+                            <div class="ticket-container">
+                                <div class="ticket-header">
+                                    <mat-icon class="ticket-icon">confirmation_number</mat-icon>
+                                    <div class="ticket-header-chips">
+                                        <div class="ticket-date">
+                                            {{ ticket.updatedDate | date : "MMMM d, y - h:mm a" }}
+                                        </div>
+                                        <div class="ticket-status">{{ticket.status | ticketStatus }}</div>
+                                    </div>
+                                </div>
+                                <div class="ticket-body">
+                                    <div class="ticket-info">
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">Cliente</span>
+                                            <span class="ticket-info-item-content">{{ ticket.clientName }}</span>
+                                        </div>
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">Tema</span>
+                                            <span class="ticket-info-item-content">{{ ticket.title }}</span>
+                                        </div>
+                                        <div class="ticket-info-item">
+                                            <span class="ticket-info-item-title">Tipo</span>
+                                            <span class="ticket-info-item-content">{{ ticket.type | ticketType }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-  <select
-    [(ngModel)]="view"
-    (change)="setView()"
-    class="form-select"
-    style="width: 10%"
-  >
+            </div>
+        </div>
+        <div class="ticket-card">
+            <div class="ticket-card-header">
+                <div class="header-content">
+                    <div class="ticket-count">{{ closedTicketsCount }}</div>
+                    <h4 class="card-title">
+                        Tickets Cerrados
+                    </h4>
+                </div>
+                <div class="header-actions">
+                    <button class="button button-outline-primary" (click)="closedTickets()">
+                    <span class="button-label">Ver Todos</span>
+                  </button>
+                </div>
+            </div>
+            <div class="ticket-card-body">
+                <!-- Add content for closed tickets card here -->
+            </div>
+        </div>
+    </div>
+
+    <select [(ngModel)]="view" (change)="setView()" class="form-select" style="width: 10%">
     <option value="day">Dia</option>
     <option value="week">Semana</option>
     <option value="month">Mes</option>
   </select>
 
-  <div [ngSwitch]="view">
-    <!-- Day View -->
-    <div *ngSwitchCase="'day'" class="view-header day-view-header">
-      <button class="nav-button" (click)="previousDay()">
+    <div [ngSwitch]="view">
+        <!-- Day View -->
+        <div *ngSwitchCase="'day'" class="view-header day-view-header">
+            <button class="nav-button" (click)="previousDay()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 class="date-title">{{ viewDate | date : "fullDate" }}</h2>
-      <button class="nav-button" (click)="nextDay()">
+            <h2 class="date-title">{{ viewDate | date : "fullDate" }}</h2>
+            <button class="nav-button" (click)="nextDay()">
         <mat-icon>arrow_forward</mat-icon>
       </button>
-    </div>
+        </div>
 
-    <!-- Week View -->
-    <div *ngSwitchCase="'week'" class="view-header week-view-header">
-      <button class="nav-button" (click)="previousWeek()">
+        <!-- Week View -->
+        <div *ngSwitchCase="'week'" class="view-header week-view-header">
+            <button class="nav-button" (click)="previousWeek()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 class="date-title">Semana {{ viewDate | date : "w" }}</h2>
-      <button class="nav-button" (click)="nextWeek()">
+            <h2 class="date-title">Semana {{ viewDate | date : "w" }}</h2>
+            <button class="nav-button" (click)="nextWeek()">
         <mat-icon>arrow_forward</mat-icon>
       </button>
-    </div>
+        </div>
 
-    <!-- Month View -->
-    <div *ngSwitchCase="'month'" class="view-header month-view-header">
-      <button class="nav-button" (click)="previousMonth()">
+        <!-- Month View -->
+        <div *ngSwitchCase="'month'" class="view-header month-view-header">
+            <button class="nav-button" (click)="previousMonth()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 class="date-title">{{ viewDate | date : "MMMM yyyy" }}</h2>
-      <button class="nav-button" (click)="nextMonth()">
+            <h2 class="date-title">{{ viewDate | date : "MMMM yyyy" }}</h2>
+            <button class="nav-button" (click)="nextMonth()">
         <mat-icon>arrow_forward</mat-icon>
       </button>
+        </div>
     </div>
-  </div>
 
-  <!-- Calendar Views -->
-  <mwl-calendar-day-view
-    *ngIf="view === 'day'"
-    [viewDate]="viewDate"
-    [events]="events"
-    [dayStartHour]="7"
-    [dayEndHour]="20"
-    [eventTitleTemplate]="customEventTitleTemplate"
-    (eventClicked)="eventClicked($event)"
-  >
-  </mwl-calendar-day-view>
+    <!-- Calendar Views -->
+    <mwl-calendar-day-view *ngIf="view === 'day'" [viewDate]="viewDate" [events]="events" [dayStartHour]="7" [dayEndHour]="20" [eventTitleTemplate]="customEventTitleTemplate" (eventClicked)="eventClicked($event)">
+    </mwl-calendar-day-view>
 
-  <ng-template #customEventTitleTemplate let-event="event">
-    <div
-      style="
+    <ng-template #customEventTitleTemplate let-event="event">
+        <div style="
         padding: 0.5em;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
         flex-wrap: wrap;
-      "
-    >
-      <div>
-        <div style="font-weight: bold">{{ event.clientName }}</div>
-        <div>
-          {{ event.start | date : "shortTime" }} -
-          {{ event.end | date : "shortTime" }}
+      ">
+            <div>
+                <div style="font-weight: bold">{{ event.clientName }}</div>
+                <div>
+                    {{ event.start | date : "shortTime" }} - {{ event.end | date : "shortTime" }}
+                </div>
+                <div>{{ event.title }}</div>
+            </div>
+            <div style="display: flex; align-items: center">
+                <mat-icon>person</mat-icon>
+                <span style="margin-left: 0.5em">{{ event.assigned }}</span>
+            </div>
         </div>
-        <div>{{ event.title }}</div>
-      </div>
-      <div style="display: flex; align-items: center">
-        <mat-icon>person</mat-icon>
-        <span style="margin-left: 0.5em">{{ event.assigned }}</span>
-      </div>
-    </div>
-  </ng-template>
+    </ng-template>
 
-  <mwl-calendar-week-view
-    *ngIf="view === 'week'"
-    [viewDate]="viewDate"
-    [events]="events"
-    (eventClicked)="eventClicked($event)"
-  >
-  </mwl-calendar-week-view>
+    <mwl-calendar-week-view *ngIf="view === 'week'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event)">
+    </mwl-calendar-week-view>
 
-  <mwl-calendar-month-view
-    *ngIf="view === 'month'"
-    [viewDate]="viewDate"
-    [events]="events"
-    (dayClicked)="dayClicked($event.day.date)"
-    (eventClicked)="eventClicked($event)"
-  >
-  </mwl-calendar-month-view>
+    <mwl-calendar-month-view *ngIf="view === 'month'" [viewDate]="viewDate" [events]="events" (dayClicked)="dayClicked($event.day.date)" (eventClicked)="eventClicked($event)">
+    </mwl-calendar-month-view>
 </div>
 
 <div class="priority-low" hidden></div>

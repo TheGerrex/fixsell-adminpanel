@@ -30,6 +30,13 @@ export class TicketsDashboardComponent implements OnInit {
   events: CalendarEvent[] = [];
   openTicketsCount: number = 0;
   closedTicketsCount: number = 0;
+  highPriorityTicketsCount: number = 0;
+  mediumPriorityTicketsCount: number = 0;
+  lowPriorityTicketsCount: number = 0;
+  allTickets: Ticket[] = [];
+  highPriorityTickets: Ticket[] = [];
+  mediumPriorityTickets: Ticket[] = [];
+  lowPriorityTickets: Ticket[] = [];
 
   ngOnInit() {
     this.loadUserTickets();
@@ -48,6 +55,14 @@ export class TicketsDashboardComponent implements OnInit {
       }
       ticketsObservable.subscribe(
         (tickets) => {
+          this.allTickets = tickets.filter(ticket => ticket.status !== Status.COMPLETED);
+          console.log('Tickets:', this.allTickets); // Log tickets data to inspect it
+          this.highPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.HIGH);
+          this.mediumPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.MEDIUM);
+          this.lowPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.LOW);
+          this.highPriorityTicketsCount = this.highPriorityTickets.length;
+          this.mediumPriorityTicketsCount = this.mediumPriorityTickets.length;
+          this.lowPriorityTicketsCount = this.lowPriorityTickets.length;
           this.populateCalendarWithTickets(tickets);
           this.openTicketsCount = tickets.filter((ticket) =>
             [
@@ -186,5 +201,9 @@ export class TicketsDashboardComponent implements OnInit {
       queryParams: { status: 'completed' },
     });
     this.loadTicketsEvent.emit(Status.COMPLETED);
+  }
+
+  seeTicket(ticket: Ticket) {
+    this.router.navigate(['/support/tickets/' + ticket.id]);
   }
 }

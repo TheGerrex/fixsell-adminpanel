@@ -1,11 +1,18 @@
 @import "_variables.scss";
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
 .main-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     background-color: $white;
-    border: 1px solid #e0e0e0;
+    border: 1px solid $gray-300;
     padding: 16px;
     border-radius: $border-radius;
     width: 100%;
@@ -26,12 +33,25 @@
     }
 }
 
+.main-body {
+    display: flex;
+    gap: .5rem;
+    @media(max-width: 768px) {
+        flex-direction: column;
+    }
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
 .tickets-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     gap: .5rem;
-    margin-top: 1rem;
     @media(max-width: 768px) {
         flex-direction: column;
     }
@@ -74,6 +94,7 @@
             line-height: 1;
         }
     }
+    
 }
 
 .ticket-card-body {
@@ -85,8 +106,6 @@
 .ticket-list-card {
     display: flex;
     flex-direction: column;
-    padding: .5rem;
-    gap: .5rem;
     border: 1px solid $gray-300;
     border-radius: $border-radius;
 }
@@ -95,6 +114,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: .5rem;
+    cursor: pointer;
     .header-content {
         display: flex;
         gap: 0.5em;
@@ -116,14 +137,43 @@
             line-height: 1;
         }
     }
+    .header-actions {
+        .arrow-down-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: .5rem;
+            transition: all 0.3s ease;
+        }
+    }
+}
+
+.rotate {
+    transform: rotate(180deg);
 }
 
 .ticket-list-card-body {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
+.ticket-list-card-body.visible {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  max-height: 500px; /* Adjust as needed */
+ overflow-y: auto;
+  opacity: 1;
+}
+
+.ticket-list-card-body-content {
+  padding: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
 .high-priority {
     background-color: $red-500 !important;
 }
@@ -139,7 +189,7 @@
 .ticket {
     background-color: $gray-50;
     border-radius: $border-radius;
-    border: 1px solid $gray-100;
+    border: 1px solid $gray-200;
     &:hover {
         background-color: $gray-100;
     }
@@ -164,7 +214,7 @@
                 .ticket-type {
                     display: flex;
                     align-items: center;
-                    gap: .5rem;
+                    gap: .25rem;
                     background-color: $gray-600;
                     border-radius: $border-radius;
                     color: $white;
@@ -177,7 +227,7 @@
                 .ticket-status {
                     display: flex;
                     align-items: center;
-                    gap: .5rem;
+                    gap: .25rem;
                     background-color: $indigo-500;
                     border-radius: $border-radius;
                     color: $white;
@@ -190,7 +240,7 @@
                 .ticket-client {
                     display: flex;
                     align-items: center;
-                    gap: .5rem;
+                    gap: .25rem;
                     border: 1px solid $text;
                     background-color: transparent;
                     border-radius: $border-radius;
@@ -199,11 +249,14 @@
                     font-family: 'Roboto Mono', monospace;
                     font-size: 14px;
                     line-height: 1;
+                    mat-icon {
+                        color: $gray-600;
+                    }
                 }
                 .ticket-date {
                     display: flex;
                     align-items: center;
-                    gap: .5rem;
+                    gap: .25rem;
                     background-color: transparent;
                     border: 1px solid $gray-600;
                     border-radius: $border-radius;
@@ -212,11 +265,9 @@
                     font-family: 'Roboto Mono', monospace;
                     font-size: 14px;
                     line-height: 1;
-                    // mat-icon {
-                    //     height: 14px;
-                    //     width: 14px;
-                    //     font-size: 14px;
-                    // }
+                    mat-icon {
+                        color: $gray-600;
+                    }
                 }
             }
         }
@@ -226,19 +277,20 @@
 
 .ticket-info {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    margin-top: .5rem;
-    // padding: .5rem 0rem;
-    // border-radius: $border-radius;
+    border-radius: $border-radius;
+    // border: 1px solid $gray-300;
+    // padding: .5rem;
     // background-color: $gray-100;
-    // border-top: 1px solid $gray-100;
     .ticket-info-item {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: .25rem;
         flex-wrap: wrap;
+
         mat-icon {
             color: $red-500;
         }
@@ -251,6 +303,25 @@
             font-weight: 400;
         }
     }
+}
+
+.ticket-info .button {
+  display: none;
+}
+
+
+.ticket:hover .ticket-info .button {
+  display: flex; /* or 'block', depending on your layout */
+}
+
+// .ticket-info:hover .button {
+//   display: flex; /* or 'block', depending on your layout */
+// }
+
+@media (max-width: 768px) {
+  .ticket-info .button {
+    display: flex; /* or 'block', depending on your layout */
+  }
 }
 
 @media (max-width: 600px) {

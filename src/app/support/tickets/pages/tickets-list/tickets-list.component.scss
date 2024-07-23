@@ -1,94 +1,108 @@
 @import "_variables.scss";
 .table-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  background-color: $gray-50;
-  border: 1px solid #e0e0e0;
-  border-bottom: none;
-  padding: 16px;
-  border-radius: $border-radius $border-radius 0 0;
-  width: 100%;
-  gap: 1em;
-  h2 {
-    margin: 0;
-  }
-  .table-action-buttons {
     display: flex;
-    align-items: center;
-    gap: 0.5em;
     flex-wrap: wrap;
-    @media (max-width: 576px) {
-      .search-box {
-        width: 100%;
-      }
+    justify-content: space-between;
+    align-items: center;
+    background-color: $gray-50;
+    border: 1px solid #e0e0e0;
+    border-bottom: none;
+    padding: 16px;
+    border-radius: $border-radius $border-radius 0 0;
+    width: 100%;
+    gap: 1em;
+    h2 {
+        margin: 0;
     }
-  }
+    .table-action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        flex-wrap: wrap;
+        @media (max-width: 576px) {
+            .search-box {
+                width: 100%;
+            }
+        }
+    }
 }
 
 .responsive-table {
-  border-radius: $border-radius;
+    border-radius: $border-radius;
 }
 
 .table-container {
-  overflow-x: auto;
-  width: 100%;
-  display: block;
-  border: 1px solid #e0e0e0;
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+    border: 1px solid #e0e0e0;
 }
 
 .responsive-table tr {
-  &:hover {
-    background-color: #f5f5f5 !important; // replace with your preferred color
-  }
+    &:hover {
+        background-color: #f5f5f5 !important; // replace with your preferred color
+    }
 }
 
 .printer-list-table {
-  width: max-content;
-  table-layout: fixed;
+    width: max-content;
+    table-layout: fixed;
 }
 
 .table-paginator {
-  border: 1px solid #e0e0e0;
-  border-top: none;
+    border: 1px solid #e0e0e0;
+    border-top: none;
 }
 
 .search-box {
-  input {
-    padding: 8px 8px;
-  }
+    input {
+        padding: 8px 8px;
+    }
 }
 
 .wrap-text {
-  white-space: normal;
-  word-wrap: break-word;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.ticket-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .25rem;
+    border-radius: $border-radius;
+    color: $white;
+    padding: .25rem .5rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    line-height: 1;
+    min-height: 34px;
 }
 
 .status-open {
-  background-color: $green-400;
+    background-color: $indigo-500 !important;
 }
 
 .status-in-progress {
-  background-color: $yellow-300;
+    background-color: $yellow-500;
 }
 
 .status-without-resolution {
-  background-color: $orange-400;
+    background-color: $orange-500;
 }
 
 .status-completed {
-  background-color: $blue-400;
+    background-color: $green-500;
 }
 
 .priority-low {
-  background-color: $green-200;
+    color: $yellow-500;
 }
 
 .priority-medium {
-  background-color: $yellow-300;
+    color: $orange-500;
 }
 
 .priority-high {
-  background-color: $red-400;
+    color: $red-500;
 }

@@ -117,6 +117,11 @@ export class TicketsDashboardComponent implements OnInit {
     this.view = CalendarView.Month;
   }
 
+  today(): void {
+    this.viewDate = new Date();
+    this.view = CalendarView.Day;
+  }
+
   previousDay() {
     const date = new Date(this.viewDate);
     date.setDate(date.getDate() - 1);

@@ -21,7 +21,7 @@
                         </h4>
                     </div>
                     <div class="header-actions">
-                        <button class="button button-primary" (click)="openTickets()">
+                        <button class="button button-outline-primary" (click)="openTickets()">
                         <span class="button-label">Ver Todos</span>
                     </button>
                     </div>
@@ -32,7 +32,7 @@
                         <div class="ticket-list-card-header" (click)="isHighPriorityTicketListVisible = !isHighPriorityTicketListVisible">
                             <div class="header-content">
                                 <div class="ticket-count high-priority">{{ highPriorityTicketsCount }}</div>
-                                <h5 class="card-title">
+                                <h5 class="header-title">
                                     Prioridad Alta
                                 </h5>
                             </div>
@@ -68,7 +68,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                         <div class="ticket-list-card-header" (click)="isMediumPriorityTicketListVisible = !isMediumPriorityTicketListVisible">
                             <div class="header-content">
                                 <div class="ticket-count medium-priority">{{ mediumPriorityTicketsCount }}</div>
-                                <h5 class="card-title">
+                                <h5 class="header-title">
                                     Prioridad Media
                                 </h5>
                             </div>
@@ -123,7 +123,7 @@
                         <div class="ticket-list-card-header" (click)="isLowPriorityTicketListVisible = !isLowPriorityTicketListVisible">
                             <div class="header-content">
                                 <div class="ticket-count low-priority">{{ lowPriorityTicketsCount }}</div>
-                                <h5 class="card-title">
+                                <h5 class="header-title">
                                     Prioridad Baja
                                 </h5>
                             </div>
@@ -182,51 +182,66 @@
                 </div>
                 <div class="ticket-card-body">
                     <!-- Add content for closed tickets card here -->
+                    <div class="no-tickets">
+                        <mat-icon>error</mat-icon>
+                        <p>No hay tickets por el momento.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="calendar-container">
-            <select [(ngModel)]="view" (change)="setView()" class="form-select">
-                <option value="day">Dia</option>
-                <option value="week">Semana</option>
-                <option value="month">Mes</option>
-            </select>
+            <div class="calendar-header">
+                <button class="button button-outline-secondary" (click)="today()"><span class="button-label">Hoy</span></button>
+                <div class="calendar-date-container" [ngSwitch]="view">
+                    <!-- Day View -->
+                    <div *ngSwitchCase="'day'" class="view-header day-view-header">
+                        <div class="navigation-buttons">
+                            <button class="nav-button" (click)="previousDay()">
+                                <mat-icon>chevron_left</mat-icon>
+                            </button>
+                            <button class="nav-button" (click)="nextDay()">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </div>
+                        <h2 class="date-title">{{ viewDate | date : "fullDate" }}</h2>
+                    </div>
 
-            <div [ngSwitch]="view">
-                <!-- Day View -->
-                <div *ngSwitchCase="'day'" class="view-header day-view-header">
-                    <button class="nav-button" (click)="previousDay()">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-                    <h2 class="date-title">{{ viewDate | date : "fullDate" }}</h2>
-                    <button class="nav-button" (click)="nextDay()">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
+                    <!-- Week View -->
+                    <div *ngSwitchCase="'week'" class="view-header week-view-header">
+                        <div class="navigation-buttons">
+                            <button class="nav-button" (click)="previousWeek()">
+                                <mat-icon>chevron_left</mat-icon>
+                            </button>
+                            <button class="nav-button" (click)="nextWeek()">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </div>
+                        <h2 class="date-title">Semana {{ viewDate | date : "w" }}</h2>
+                    </div>
+
+                    <!-- Month View -->
+                    <div *ngSwitchCase="'month'" class="view-header month-view-header">
+                        <div class="navigation-buttons">
+                            <button class="nav-button" (click)="previousMonth()">
+                                <mat-icon>chevron_left</mat-icon>
+                            </button>
+                            <button class="nav-button" (click)="nextMonth()">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </div>
+                        <h2 class="date-title">{{ viewDate | date : "MMMM yyyy" }}</h2>
+                    </div>
                 </div>
-
-                <!-- Week View -->
-                <div *ngSwitchCase="'week'" class="view-header week-view-header">
-                    <button class="nav-button" (click)="previousWeek()">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-                    <h2 class="date-title">Semana {{ viewDate | date : "w" }}</h2>
-                    <button class="nav-button" (click)="nextWeek()">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
-                </div>
-
-                <!-- Month View -->
-                <div *ngSwitchCase="'month'" class="view-header month-view-header">
-                    <button class="nav-button" (click)="previousMonth()">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-                    <h2 class="date-title">{{ viewDate | date : "MMMM yyyy" }}</h2>
-                    <button class="nav-button" (click)="nextMonth()">
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
+                <div class="calendar-date-selector">
+                    <select [(ngModel)]="view" (change)="setView()" class="form-select">
+                      <option value="day">Dia</option>
+                      <option value="week">Semana</option>
+                      <option value="month">Mes</option>
+                    </select>
                 </div>
             </div>
+
 
             <!-- Calendar Views -->
             <mwl-calendar-day-view *ngIf="view === 'day'" [viewDate]="viewDate" [events]="events" [dayStartHour]="7" [dayEndHour]="20" [eventTitleTemplate]="customEventTitleTemplate" (eventClicked)="eventClicked($event)">

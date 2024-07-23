@@ -14,14 +14,14 @@
         <div class="tickets-container">
             <div class="ticket-card">
                 <div class="ticket-card-header">
-                    <div class="header-content">
+                    <div class="ticket-card-header-content">
                         <div class="ticket-count">{{ openTicketsCount }}</div>
                         <h4 class="card-title">
                             Tickets Abiertos
                         </h4>
                     </div>
-                    <div class="header-actions">
-                        <button class="button button-outline-primary" (click)="openTickets()">
+                    <div class="ticket-card-header-actions">
+                        <button class="button button-outline-primary button-full" (click)="openTickets()">
                         <span class="button-label">Ver Todos</span>
                     </button>
                     </div>
@@ -30,13 +30,13 @@
                     <!-- Add content for open tickets card here -->
                     <div class="ticket-list-card">
                         <div class="ticket-list-card-header" (click)="isHighPriorityTicketListVisible = !isHighPriorityTicketListVisible">
-                            <div class="header-content">
+                            <div class="ticket-list-card-header-content">
                                 <div class="ticket-count high-priority">{{ highPriorityTicketsCount }}</div>
                                 <h5 class="header-title">
                                     Prioridad Alta
                                 </h5>
                             </div>
-                            <div class="header-actions">
+                            <div class="ticket-list-card-header-actions">
                                 <div class="arrow-down-icon" [class.rotate]="isHighPriorityTicketListVisible">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </div>
@@ -76,13 +76,13 @@
                     </div>
                     <div class="ticket-list-card">
                         <div class="ticket-list-card-header" (click)="isMediumPriorityTicketListVisible = !isMediumPriorityTicketListVisible">
-                            <div class="header-content">
+                            <div class="ticket-list-card-header-content">
                                 <div class="ticket-count medium-priority">{{ mediumPriorityTicketsCount }}</div>
                                 <h5 class="header-title">
                                     Prioridad Media
                                 </h5>
                             </div>
-                            <div class="header-actions">
+                            <div class="ticket-list-card-header-actions">
                                 <div class="arrow-down-icon" [class.rotate]="isMediumPriorityTicketListVisible">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </div>
@@ -121,13 +121,13 @@
                     </div>
                     <div class="ticket-list-card">
                         <div class="ticket-list-card-header" (click)="isLowPriorityTicketListVisible = !isLowPriorityTicketListVisible">
-                            <div class="header-content">
+                            <div class="ticket-list-card-header-content">
                                 <div class="ticket-count low-priority">{{ lowPriorityTicketsCount }}</div>
                                 <h5 class="header-title">
                                     Prioridad Baja
                                 </h5>
                             </div>
-                            <div class="header-actions">
+                            <div class="ticket-list-card-header-actions">
                                 <div class="arrow-down-icon" [class.rotate]="isLowPriorityTicketListVisible">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </div>
@@ -168,13 +168,13 @@
             </div>
             <div class="ticket-card">
                 <div class="ticket-card-header">
-                    <div class="header-content">
+                    <div class="ticket-card-header-content">
                         <div class="ticket-count">{{ closedTicketsCount }}</div>
                         <h4 class="card-title">
                             Tickets Cerrados
                         </h4>
                     </div>
-                    <div class="header-actions">
+                    <div class="ticket-card-header-actions">
                         <button class="button button-outline-primary" (click)="closedTickets()">
                         <span class="button-label">Ver Todos</span>
                     </button>

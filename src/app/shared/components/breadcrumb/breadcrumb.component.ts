@@ -93,6 +93,7 @@ export class BreadcrumbComponent implements OnInit {
       config: 'Configuración',
       tickets: 'Tickets',
       leads: 'Clientes Potenciales',
+      list: 'Listado',
       // Add more mappings here if needed
     };
 
@@ -140,7 +141,7 @@ export class BreadcrumbComponent implements OnInit {
           (event): event is NavigationEnd => event instanceof NavigationEnd
         ),
         switchMap((event: NavigationEnd) =>
-          createBreadcrumbs(event.urlAfterRedirects)
+          createBreadcrumbs(event.urlAfterRedirects.split('?')[0])
         )
       )
       .subscribe((breadcrumbs) => {

@@ -22,9 +22,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TicketsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   dataSource = new MatTableDataSource<Ticket>();
   filterValue = '';
+  searchTerm = '';
   isAdmin = false;
   TicketData: Ticket[] = [];
   isLoadingData = false;
@@ -35,9 +36,16 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     'status',
     'priority',
     'updatedDate', //time since last update
-    'createdDate', //time since created
+    // 'createdDate', //time since created
     'action',
   ];
+
+  priorityMapping: { [key: string]: number } = {
+    'high': 3,
+    'medium': 2,
+    'low': 1
+  };
+
   statusTranslations: { [key in Status]: string } = {
     [Status.OPEN]: 'ABIERTO',
     [Status.IN_PROGRESS]: 'EN PROGRESO',
@@ -108,6 +116,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     }
   }
 
+
   constructor(
     private router: Router,
     private ticketsService: TicketsService,
@@ -136,10 +145,19 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         'createdDate',
       ];
     }
+    this.dataSource.sort = this.sort;
   }
 
   ngAfterViewInit() {
-    // this.loadData();
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      console.log(`Sorting by ${sortHeaderId}`);
+      if (sortHeaderId === 'priority') {
+        return this.priorityMapping[data.priority];
+      } else {
+        return data[sortHeaderId  as keyof Ticket];
+      }
+    };
   }
 
   loadData(statuses?: string) {
@@ -173,6 +191,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.isLoadingData = false;
+
       },
       (error) => {
         console.error('Error:', error);

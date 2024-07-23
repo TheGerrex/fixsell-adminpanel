@@ -64,7 +64,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .header-content {
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    .ticket-card-header-content {
         display: flex;
         gap: 0.5em;
         align-items: center;
@@ -107,11 +109,13 @@
     align-items: center;
     padding: .5rem;
     cursor: pointer;
-    .header-content {
+    .ticket-list-card-header-content {
         display: flex;
         gap: 0.5em;
         align-items: center;
         .header-title {
+            font-size: 18px;
+            line-height: 1;
             font-weight: 400 !important;
             margin: 0;
         }
@@ -129,7 +133,7 @@
             line-height: 1;
         }
     }
-    .header-actions {
+    .ticket-list-card-header-actions {
         .arrow-down-icon {
             display: flex;
             justify-content: center;
@@ -329,7 +333,7 @@
 .calendar-header {
     display: flex;
     gap: .5rem;
-    padding: .5rem;
+    padding: 1rem;
     background-color: $white;
     border: 1px solid $gray-300;
     border-bottom: 0;

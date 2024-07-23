@@ -1,136 +1,161 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div class="ticket-container" *ngIf="!isLoadingData">
   <div class="ticket-header">
-    <h2>Ticket {{ ticketNumber }}</h2>
-
-    <!-- Estado section moved here -->
-    <div class="ticket-data-item">
-      <h3>Estado</h3>
-      <select
-        [(ngModel)]="ticketStatus"
-        class="form-select"
-        (change)="changeStatus()"
-      >
-        <option *ngFor="let option of statusOptions" [value]="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-    </div>
-
-    <div class="ticket-data-item">
-      <h3>Transferir ticket:</h3>
-      <select
-        [(ngModel)]="ticket.assigned.name"
-        class="form-select"
-        (change)="transferTicket()"
-      >
-        <option *ngFor="let user of users" [value]="user.name">
-          {{ user.name }}
-        </option>
-      </select>
-    </div>
-
-    <div>
-      <div
-        style="
-          display: inline-block;
-          padding: 5px;
-          border-radius: 5px;
-          margin-right: 10px;
-        "
-        [class]="getPriorityClass(ticket)"
-      >
-        {{ getPriorityTranslation(ticket.priority) }}
+    <h3 class="ticket-header-title">Ticket #{{ ticketNumber }}</h3>
+    <div class="ticket-header-container">
+      <!-- Estado section moved here -->
+      <div class="ticket-data-item">
+        <p class="ticket-data-item-name">Estado</p>
+        <select
+          [(ngModel)]="ticketStatus"
+          class="form-select"
+          (change)="changeStatus()"
+        >
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
       </div>
-      <div
-        style="display: inline-block; padding: 5px; border-radius: 5px"
-        [class]="getStatusClass(ticket)"
-      >
-        {{ getStatusTranslation(ticket.status) }}
+
+      <div class="ticket-data-item">
+        <p class="ticket-data-item-name">Transferir Ticket</p>
+        <select
+          [(ngModel)]="ticket.assigned.name"
+          class="form-select"
+          (change)="transferTicket()"
+        >
+          <option *ngFor="let user of users" [value]="user.name">
+            {{ user.name }}
+          </option>
+        </select>
       </div>
     </div>
   </div>
-
-  <div class="ticket-info-container">
-    <div class="ticket-data-container">
-      <div class="ticket-data">
-        <div class="client-info">
-          <h2>Información del Cliente</h2>
-          <div class="ticket-data-row">
-            <div class="ticket-data-item">
-              <h3>Nombre del Cliente</h3>
-              <p>{{ clientName }}</p>
+  <div class="ticket-body">
+      <div class="ticket-content">
+          <div class="ticket-card">
+            <div class="ticket-card-header">
+              <h4 class="ticket-card-header-title">Cliente</h4>
+              <button class="button button-icon-text button-primary button-raised"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
             </div>
-
-            <div class="ticket-data-item">
-              <h3>Email del Cliente</h3>
-              <p>{{ clientEmail }}</p>
-            </div>
-
-            <div class="ticket-data-item">
-              <h3>Teléfono del Cliente</h3>
-              <p>{{ clientPhone }}</p>
-            </div>
-
-            <!-- address -->
-            <div class="ticket-data-item">
-              <h3>Dirección del Cliente</h3>
-              <p>{{ clientAdress }}</p>
-            </div>
-          </div>
-          <div class="info-container">
-            <div class="date-info">
+            <div class="ticket-card-body">
               <div class="ticket-data-item">
-                <h3>Creado el</h3>
-                <p>{{ ticket.createdDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+                <p class="ticket-data-item-label">Nombre</p>
+                <p class="ticket-data-item-value">{{ clientName }}</p>
               </div>
-
               <div class="ticket-data-item">
-                <h3>Última actualización</h3>
-                <p>{{ ticket.updatedDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+                <p class="ticket-data-item-label">Email</p>
+                <p class="ticket-data-item-value">{{ clientEmail }}</p>
               </div>
-            </div>
-
-            <div class="user-info">
               <div class="ticket-data-item">
-                <h3>assigned user</h3>
-                <p>{{ assignedUser }}</p>
+                <p class="ticket-data-item-label">Teléfono</p>
+                <p class="ticket-data-item-value">{{ clientPhone }}</p>
               </div>
-
               <div class="ticket-data-item">
-                <h3>assignee</h3>
-                <p>{{ assignee }}</p>
+                <p class="ticket-data-item-label">Dirección</p>
+                <p class="ticket-data-item-value">{{ clientAdress }}</p>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="ticket-data-item">
-          <h3>Problema</h3>
-          <quill-editor
-            *ngIf="!issueReadOnly"
-            [(ngModel)]="ticketIssue"
-            class="quill-editor"
-          ></quill-editor>
-          <p
-            *ngIf="issueReadOnly"
-            [innerHTML]="ticketIssue"
-            class="quill-editor"
-          ></p>
-          <button
-            class="button button-primary button-raised button-icon-text"
-            (click)="issueReadOnly ? toggleIssueEdit() : submitIssue()"
-          >
-            <mat-icon>edit</mat-icon
-            ><span class="button-label">{{
-              issueReadOnly ? "Editar" : "Enviar"
-            }}</span>
-          </button>
-        </div>
-        <hr />
+          <div class="ticket-card">
+            <div class="ticket-card-header">
+              <h4 class="ticket-card-header-title">Problema</h4>
+              <button class="button button-icon-text button-primary button-raised" (click)="issueReadOnly ? toggleIssueEdit() : submitIssue()"><mat-icon>edit</mat-icon><span class="button-label">{{issueReadOnly ? "Editar" : "Enviar"}}</span></button>
+            </div>
+            <div class="ticket-card-body">
+              <quill-editor [(ngModel)]="ticketIssue" placeholder="placeholder"></quill-editor>
+              <!-- <quill-editor [(ngModel)]="ticketIssue" class="quill-editor">
+                <div above-quill-editor-toolbar>
+                  above
+                </div>
+                <div quill-editor-toolbar>
+                  <span class="ql-formats">
+                    <button class="ql-bold" [title]="'Bold'"></button>
+                  </span>
+                  <span class="ql-formats">
+                    <select class="ql-align" [title]="'Aligment'">
+                      <option selected></option>
+                      <option value="center"></option>
+                      <option value="right"></option>
+                      <option value="justify"></option>
+                    </select>
+                    <select class="ql-align" [title]="'Aligment2'">
+                      <option selected></option>
+                      <option value="center"></option>
+                      <option value="right"></option>
+                      <option value="justify"></option>
+                    </select>
+                  </span>
+                </div>
+                <div below-quill-editor-toolbar>
+                  below
+                </div>
+              </quill-editor> -->
+              <!-- <p
+                *ngIf="issueReadOnly"
+                [innerHTML]="ticketIssue"
+                class="quill-editor"
+              ></p> -->
+            </div>
+          </div>
+          <div class="ticket-card">
+            <div class="ticket-card-header">
+              <h4 class="ticket-card-header-title">Actualizaciones</h4>
+              <button class="button button-icon-text button-primary button-raised" (click)="addActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
+            </div>
+            <div class="ticket-card-body">
+              
+            </div>
+          </div>
       </div>
-    </div>
+      <div class="ticket-info">
+          <div class="ticket-info-card">
+              <div class="ticket-info-card-header">
+                  <h4 class="ticket-info-card-header-title">Información del Ticket</h4>
+              </div>
+              <div class="ticket-info-card-body">
+                  <div class="ticket-info-icons">
+                    <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ticket.status | ticketStatus}}</div>
+                    <div class="ticket-priority" [ngSwitch]="ticket.priority">
+                            <div class="priority-flags-container high-priority" *ngSwitchCase="'high'">
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                            </div>
+                            <div class="priority-flags-container medium-priority" *ngSwitchCase="'medium'">
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                            </div>
+                            <div class="priority-flags-container low-priority" *ngSwitchCase="'low'">
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                                <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                            </div>
+                        </div>
+                  </div>
+                  <div class="ticket-data-item">
+                      <p class="ticket-data-item-label">Creado</p>
+                      <p class="ticket-data-item-value">{{ticket.createdDate | date: 'd MMM yyyy hh:mm a'}}</p>
+                  </div>
+                  <div class="ticket-data-item">
+                      <p class="ticket-data-item-label">Ultima Actualización</p>
+                      <p class="ticket-data-item-value">{{ticket.updatedDate | date: 'd MMM yyyy hh:mm a'}}</p>
+                  </div>
+                  <div class="ticket-data-item">
+                      <p class="ticket-data-item-label">Asignado</p>
+                      <p class="ticket-data-item-value">{{ticket.assigned.name}}</p>
+                  </div>
+                  <div class="ticket-data-item">
+                      <p class="ticket-data-item-label">Asignador</p>
+                      <p class="ticket-data-item-value">{{ticket.assignee.name}}</p>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
+</div>
+
 
   <div class="ticket-info-container">
     <div class="ticket-data-container">
@@ -200,4 +225,3 @@
       </div>
     </div>
   </div>
-</div>

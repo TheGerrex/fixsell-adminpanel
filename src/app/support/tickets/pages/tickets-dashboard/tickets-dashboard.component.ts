@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class TicketsDashboardComponent implements OnInit {
   public loadTicketsEvent = new EventEmitter<Status>();
-  view: CalendarView = CalendarView.Month;
+  view: CalendarView = CalendarView.Week;
   constructor(
     private router: Router,
     private authService: AuthService,

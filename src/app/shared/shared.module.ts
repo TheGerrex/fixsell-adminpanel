@@ -24,6 +24,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { ButtonResizeDirective } from './directives/button-resize.directive';
 import { EditUserRoleDialogComponent } from './components/edit-user-role-dialog/edit-user-role-dialog.component';
+import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -43,6 +44,7 @@ import { EditUserRoleDialogComponent } from './components/edit-user-role-dialog/
     DropdownComponent,
     ButtonResizeDirective,
     EditUserRoleDialogComponent,
+    RichTextEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +73,7 @@ import { EditUserRoleDialogComponent } from './components/edit-user-role-dialog/
     DropdownComponent,
     ButtonResizeDirective,
     EditUserRoleDialogComponent,
+    RichTextEditorComponent,
   ],
 })
 export class SharedModule {}

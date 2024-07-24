@@ -1,0 +1,11 @@
+<quill-editor
+    [formControl]="control"
+    [formControlName]="controlName"
+    [(ngModel)]="control.value"
+    [readOnly]="control.disabled"
+    [placeholder]="placeholder"
+    [modules]="quillConfig"
+    [styles]="{'min-height': '120px', 'max-width': '768px', 'width': '100%'}"
+    class="content-editor"
+>
+</quill-editor>

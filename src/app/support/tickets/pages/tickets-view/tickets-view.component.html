@@ -63,7 +63,22 @@
               <button class="button button-icon-text button-primary button-raised" (click)="issueReadOnly ? toggleIssueEdit() : submitIssue()"><mat-icon>edit</mat-icon><span class="button-label">{{issueReadOnly ? "Editar" : "Enviar"}}</span></button>
             </div>
             <div class="ticket-card-body">
-              <quill-editor [(ngModel)]="ticketIssue" placeholder="placeholder"></quill-editor>
+              <!-- <quill-editor [(ngModel)]="ticketIssue" placeholder="placeholder"></quill-editor> -->
+              <shared-rich-text-editor ></shared-rich-text-editor>
+              <!-- <div *ngIf="issueReadOnly">
+                <quill-editor [(ngModel)] = "ticketIssue"
+                              [readOnly]  = "true"
+                              class       = "quill-ticket"
+                              [style]     = "{ border: '1px solid transparent' }"
+                              [modules]   = "{ toolbar: false }">
+                </quill-editor>
+              </div>
+              <div *ngIf="!issueReadOnly">
+                <quill-editor [(ngModel)] = "ticketIssue"
+                              [style]     = "{ height: '350px', minWidth: '500px' }"
+                              [modules]   = "{ toolbar: true }">
+                </quill-editor>
+              </div> -->
               <!-- <quill-editor [(ngModel)]="ticketIssue" class="quill-editor">
                 <div above-quill-editor-toolbar>
                   above

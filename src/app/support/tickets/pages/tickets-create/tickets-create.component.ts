@@ -1,19 +1,13 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { startWith, map, switchMap, debounceTime } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { SharedService } from 'src/app/shared/services/shared.service';
+import { debounceTime } from 'rxjs/operators';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import {
   Ticket,
   Priority,
@@ -22,9 +16,7 @@ import {
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { User } from '../../../../auth/interfaces/user.interface';
 import { UsersService } from 'src/app/users/services/users.service';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { MatDatepicker } from '@angular/material/datepicker';
 @Component({
   selector: 'app-tickets-create',
   templateUrl: './tickets-create.component.html',
@@ -41,17 +33,16 @@ export class TicketsCreateComponent implements OnInit {
   types = ['remote', 'on-site'];
   hours = Array.from({ length: 24 }, (_, i) => i);
 
+  @ViewChild('ticketDatepicker') datepicker!: MatDatepicker<Date>;
+
+
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private sharedService: SharedService,
     private ticketService: TicketsService,
     private usersService: UsersService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-    private matDatepickerModule: MatDatepickerModule
   ) {}
 
   translatePriority(priority: Priority): string {
@@ -346,5 +337,9 @@ export class TicketsCreateComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  openDatepicker() {
+    this.datepicker.open();
   }
 }

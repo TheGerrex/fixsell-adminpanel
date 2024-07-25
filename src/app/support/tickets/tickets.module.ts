@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SupportModule } from '../support.module';
 import { TicketRoutingModule } from './tickets-routing.module';
@@ -14,6 +14,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TicketStatusPipe } from './pipes/ticket-status.pipe';
 import { TicketTypePipe } from './pipes/ticket-type.pipe';
 @NgModule({
+  providers: [DatePipe],
   declarations: [
     LayoutPageComponent,
     TicketsDashboardComponent,

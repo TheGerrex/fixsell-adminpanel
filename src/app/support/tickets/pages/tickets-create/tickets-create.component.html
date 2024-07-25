@@ -1,356 +1,180 @@
 <div>
-  <form [formGroup]="createTicketForm" class="ticket-container">
-    <div class="ticket-header">
-      <h2>Nuevo Ticket</h2>
-      <button
-        class="button button-primary button-raised button-icon-text"
-        (click)="submitForm()"
-      >
+    <form [formGroup]="createTicketForm" class="ticket-container">
+        <div class="ticket-header">
+            <h2>Nuevo Ticket</h2>
+            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
         <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
       </button>
-    </div>
-
-    <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
-
-    <div class="ticket-info">
-      <div class="ticket-form-container">
-        <div class="ticket-data">
-          <!-- Title -->
-          <div class="ticket-data-item three-quarter-row">
-            <p>Titulo</p>
-            <input
-              type="text"
-              formControlName="title"
-              placeholder="Descripción simple del problema"
-              class="form-control"
-              [class.is-invalid]="
-                createTicketForm.controls['title'].invalid &&
-                createTicketForm.controls['title'].touched
-              "
-            />
-            <span *ngIf="isValidField('title')" class="form-text text-danger">
-              {{ getFieldError("title") }}
-            </span>
-          </div>
-
-          <!-- type -->
-          <div class="ticket-data-item quarter-row">
-            <p>Tipo</p>
-            <select
-              formControlName="type"
-              class="form-select"
-              [class.is-invalid]="
-                createTicketForm.controls['type'].invalid &&
-                createTicketForm.controls['type'].touched
-              "
-            >
-              <option *ngFor="let type of types" [value]="type">
-                {{ type }}
-              </option>
-            </select>
-            <span *ngIf="isValidField('type')" class="form-text text-danger">
-              {{ getFieldError("type") }}
-            </span>
-          </div>
-
-          <div class="ticket-data full-row" *ngIf="createTicketForm.get('type')?.value === 'on-site'">
-            <!-- Appointment Start Date -->
-            <div class="ticket-data-item half-row">
-              <p>Fecha</p>
-              <input
-                matInput
-                [matDatepicker]="ticketDatepicker"
-                placeholder="DD/MM/YYYY"
-                formControlName="appointmentStartTime"
-                class="form-control"
-                [class.is-invalid]="
-                  createTicketForm.controls['appointmentStartTime'].invalid &&
-                  createTicketForm.controls['appointmentStartTime'].touched
-                "
-                (focus)="openDatepicker()"
-              />
-              <!-- <mat-datepicker-toggle
-                matSuffix
-                [for]="ticketDatepicker"
-                style="
-                  position: absolute;
-                  right: 0;
-                  top: 70%;
-                  transform: translateY(-50%);
-                "
-              ></mat-datepicker-toggle> -->
-              <mat-datepicker #ticketDatepicker></mat-datepicker>
-              <span
-                *ngIf="isValidField('appointmentStartTime')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("appointmentStartTime") }}
-              </span>
-            </div>
-
-            <!-- Appointment Time -->
-            <div class="ticket-data-item half-row">
-              <p>Hora</p>
-              <div
-                class="time-inputs"
-                style="display: flex; align-items: center"
-              >
-                <input
-                  type="number"
-                  formControlName="startHour"
-                  class="form-control"
-                  placeholder="00"
-                  min="0"
-                  max="23"
-                  [class.is-invalid]="
-                    createTicketForm.controls['startHour'].invalid &&
-                    createTicketForm.controls['startHour'].touched
-                  "
-                />
-                <span>:</span>
-                <input
-                  type="number"
-                  formControlName="startMinute"
-                  class="form-control"
-                  placeholder="00"
-                  min="0"
-                  max="59"
-                  [class.is-invalid]="
-                    createTicketForm.controls['startMinute'].invalid &&
-                    createTicketForm.controls['startMinute'].touched
-                  "
-                />
-                <span style="margin: 0 10px"> - </span>
-                <input
-                  type="number"
-                  formControlName="endHour"
-                  class="form-control"
-                  placeholder="00"
-                  min="0"
-                  max="23"
-                  [class.is-invalid]="
-                    createTicketForm.controls['endHour'].invalid &&
-                    createTicketForm.controls['endHour'].touched
-                  "
-                />
-                <span>:</span>
-                <input
-                  type="number"
-                  formControlName="endMinute"
-                  class="form-control"
-                  placeholder="00"
-                  min="0"
-                  max="59"
-                  [class.is-invalid]="
-                    createTicketForm.controls['endMinute'].invalid &&
-                    createTicketForm.controls['endMinute'].touched
-                  "
-                />
-              </div>
-              <span
-                *ngIf="isValidField('startHour')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("startHour") }}
-              </span>
-              <span
-                *ngIf="isValidField('startMinute')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("startMinute") }}
-              </span>
-              <span
-                *ngIf="isValidField('endHour')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("endHour") }}
-              </span>
-              <span
-                *ngIf="isValidField('endMinute')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("endMinute") }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Appointment End Date -->
-          <div
-            class="ticket-data-item full-row"
-            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-            hidden
-          >
-            <p>Appointment End Date</p>
-            <input
-              matInput
-              formControlName="appointmentEndTime"
-              class="form-control"
-              readonly
-              hidden
-            />
-          </div>
-          <div class="ticket-data full-row">
-            <h5 class="section-form-header full-row">Datos del Cliente</h5>
-            <!-- Client Name -->
-            <div class="ticket-data-item half-row">
-              <p>Nombre</p>
-              <input
-                type="text"
-                placeholder="John Doe"
-                formControlName="clientName"
-                class="form-control"
-                [class.is-invalid]="
-                  createTicketForm.controls['clientName'].invalid &&
-                  createTicketForm.controls['clientName'].touched
-                "
-              />
-              <span
-                *ngIf="isValidField('clientName')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("clientName") }}
-              </span>
-            </div>
-
-            <!-- clientPhone -->
-            <div class="ticket-data-item half-row">
-              <p>Teléfono</p>
-              <input
-                type="text"
-                placeholder="811-111-1111"
-                formControlName="clientPhone"
-                class="form-control"
-                [class.is-invalid]="
-                  createTicketForm.controls['clientPhone'].invalid &&
-                  createTicketForm.controls['clientPhone'].touched
-                "
-              />
-              <span
-                *ngIf="isValidField('clientPhone')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("clientPhone") }}
-              </span>
-            </div>
-
-            <!-- Client Address -->
-            <div
-              class="ticket-data-item half-row"
-              *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-            >
-              <p>Dirección</p>
-              <input
-                type="text"
-                placeholder="Dirección del cliente"
-                formControlName="clientAddress"
-                class="form-control"
-                [class.is-invalid]="
-                  createTicketForm.controls['clientAddress'].invalid &&
-                  createTicketForm.controls['clientAddress'].touched
-                "
-              />
-              <span
-                *ngIf="isValidField('clientAddress')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("clientAddress") }}
-              </span>
-            </div>
-
-            <!-- clientEmail -->
-            <div class="ticket-data-item half-row">
-              <p>Email</p>
-              <input
-                type="text"
-                placeholder="cliente@email.com"
-                formControlName="clientEmail"
-                class="form-control"
-                [class.is-invalid]="
-                  createTicketForm.controls['clientEmail'].invalid &&
-                  createTicketForm.controls['clientEmail'].touched
-                "
-              />
-              <span
-                *ngIf="isValidField('clientEmail')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("clientEmail") }}
-              </span>
-            </div>
-
-          </div>
-
-          <!-- Issue -->
-          <div class="ticket-data-item full-row">
-            <p>Cual es el problema?</p>
-            <quill-editor
-              formControlName="issue"
-              [placeholder]="'Descripción detallada del problema'"
-              [class.is-invalid]="
-                createTicketForm.controls['issue'].invalid &&
-                createTicketForm.controls['issue'].touched
-              "
-            ></quill-editor>
-            <!-- <shared-rich-text-editor 
-              [placeholder]="'Descripción detallada del problema'" 
-              [controlName]="'issue'"
-              [class.is-invalid]="
-                createTicketForm.controls['issue'].invalid &&
-                createTicketForm.controls['issue'].touched
-              "
-            ></shared-rich-text-editor> -->
-            <span *ngIf="isValidField('issue')" class="form-text text-danger">
-              {{ getFieldError("issue") }}
-            </span>
-          </div>
-
-          <!-- Priority -->
-          <div class="ticket-data-item half-row">
-            <p>Prioridad</p>
-            <select
-              formControlName="priority"
-              class="form-select"
-              [class.is-invalid]="
-                createTicketForm.controls['priority'].invalid &&
-                createTicketForm.controls['priority'].touched
-              "
-            >
-              <option *ngFor="let priority of priorities" [value]="priority">
-                {{ translatePriority(priority) }}
-              </option>
-            </select>
-            <span
-              *ngIf="isValidField('priority')"
-              class="form-text text-danger"
-            >
-              {{ getFieldError("priority") }}
-            </span>
-          </div>
-          <!-- Assigned -->
-          <div class="ticket-data-item half-row">
-            <p>Asignar</p>
-            <select
-              formControlName="assigned"
-              class="form-select"
-              [class.is-invalid]="
-                createTicketForm.controls['assigned'].invalid &&
-                createTicketForm.controls['assigned'].touched
-              "
-            >
-              <option *ngFor="let user of users" [value]="user.id">
-                {{ user.name }}
-              </option>
-            </select>
-            <span
-              *ngIf="isValidField('assigned')"
-              class="form-text text-danger"
-            >
-              {{ getFieldError("assigned") }}
-            </span>
-          </div>
-
         </div>
-      </div>
-    </div>
-  </form>
+
+        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+
+        <div class="ticket-info">
+            <div class="ticket-form-container">
+                <div class="ticket-data">
+                    <!-- Title -->
+                    <div class="ticket-data-item three-quarter-row">
+                        <p>Titulo</p>
+                        <input type="text" formControlName="title" placeholder="Descripción simple del problema" class="form-control" [class.is-invalid]="
+                          createTicketForm.controls['title'].invalid &&
+                          createTicketForm.controls['title'].touched
+                        " />
+                        <span *ngIf="isValidField('title')" class="form-text text-danger">
+                          {{ getFieldError("title") }}
+                        </span>
+                    </div>
+
+                    <!-- type -->
+                    <div class="ticket-data-item quarter-row">
+                        <p>Tipo</p>
+                        <select formControlName="type" class="form-select" [class.is-invalid]="
+                          createTicketForm.controls['type'].invalid &&
+                          createTicketForm.controls['type'].touched
+                        ">
+                          <option *ngFor="let type of types" [value]="type.value">
+                            {{ type.viewValue }}
+                          </option>
+                        </select>
+                        <span *ngIf="isValidField('type')" class="form-text text-danger">
+                          {{ getFieldError("type") }}
+                        </span>
+                    </div>
+
+                    <div class="ticket-data full-row" *ngIf="createTicketForm.get('type')?.value === 'on-site'">
+                        <!-- Appointment Start Date -->
+                        <div class="ticket-data-item half-row">
+                            <p>Fecha</p>
+                            <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="appointmentStartTime" class="form-control" [class.is-invalid]="
+                              createTicketForm.controls['appointmentStartTime'].invalid &&
+                              createTicketForm.controls['appointmentStartTime'].touched
+                            " (focus)="openDatepicker()" />
+                            <mat-datepicker #ticketDatepicker></mat-datepicker>
+                            <span *ngIf="isValidField('appointmentStartTime')" class="form-text text-danger">
+                              {{ getFieldError("appointmentStartTime") }}
+                            </span>
+                        </div>
+
+                        <!-- Appointment Time -->
+                        <div class="ticket-data-item half-row">
+                            <p>Hora</p>
+                            <div class="time-inputs" style="display: flex; align-items: center">
+                                <input type="time" formControlName="startTime" class="form-control" [class.is-invalid]="
+                                  createTicketForm.controls['startTime'].invalid &&
+                                  createTicketForm.controls['startTime'].touched
+                                " />
+                                <span style="margin: 0 10px"> - </span>
+                                <input type="time" formControlName="endTime" class="form-control" [class.is-invalid]="
+                                  createTicketForm.controls['endTime'].invalid &&
+                                  createTicketForm.controls['endTime'].touched
+                                " />
+                            </div>
+                            <span *ngIf="isValidField('startTime')" class="form-text text-danger">
+                              {{ getFieldError("startTime") }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Appointment End Date -->
+                    <div class="ticket-data-item full-row" *ngIf="createTicketForm.get('type')?.value === 'on-site'" hidden>
+                        <p>Appointment End Date</p>
+                        <input matInput formControlName="appointmentEndTime" class="form-control" readonly hidden />
+                    </div>
+                    <div class="ticket-data full-row">
+                        <h5 class="section-form-header full-row">Datos del Cliente</h5>
+                        <!-- Client Name -->
+                        <div class="ticket-data-item half-row">
+                            <p>Nombre</p>
+                            <input type="text" placeholder="John Doe" formControlName="clientName" class="form-control" [class.is-invalid]="
+                              createTicketForm.controls['clientName'].invalid &&
+                              createTicketForm.controls['clientName'].touched
+                            " />
+                            <span *ngIf="isValidField('clientName')" class="form-text text-danger">
+                            {{ getFieldError("clientName") }}
+                          </span>
+                        </div>
+
+                        <!-- clientPhone -->
+                        <div class="ticket-data-item half-row">
+                            <p>Teléfono</p>
+                            <input type="text" placeholder="811-111-1111" formControlName="clientPhone" class="form-control" [class.is-invalid]="
+                              createTicketForm.controls['clientPhone'].invalid &&
+                              createTicketForm.controls['clientPhone'].touched
+                            " />
+                            <span *ngIf="isValidField('clientPhone')" class="form-text text-danger">
+                            {{ getFieldError("clientPhone") }}
+                          </span>
+                        </div>
+
+                        <!-- Client Address -->
+                        <div class="ticket-data-item half-row" *ngIf="createTicketForm.get('type')?.value === 'on-site'">
+                            <p>Dirección</p>
+                            <input type="text" placeholder="Dirección del cliente" formControlName="clientAddress" class="form-control" [class.is-invalid]="
+                              createTicketForm.controls['clientAddress'].invalid &&
+                              createTicketForm.controls['clientAddress'].touched
+                            " />
+                            <span *ngIf="isValidField('clientAddress')" class="form-text text-danger">
+                              {{ getFieldError("clientAddress") }}
+                            </span>
+                        </div>
+
+                        <!-- clientEmail -->
+                        <div class="ticket-data-item half-row">
+                            <p>Email</p>
+                            <input type="text" placeholder="cliente@email.com" formControlName="clientEmail" class="form-control" [class.is-invalid]="
+                              createTicketForm.controls['clientEmail'].invalid &&
+                              createTicketForm.controls['clientEmail'].touched
+                            " />
+                            <span *ngIf="isValidField('clientEmail')" class="form-text text-danger">
+                              {{ getFieldError("clientEmail") }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Issue -->
+                    <div class="ticket-data-item full-row">
+                        <p>Cual es el problema?</p>
+                        <quill-editor formControlName="issue" [placeholder]="'Descripción detallada del problema'" [class.is-invalid]="
+                          createTicketForm.controls['issue'].invalid &&
+                          createTicketForm.controls['issue'].touched
+                        "></quill-editor>
+                        <span *ngIf="isValidField('issue')" class="form-text text-danger">
+                          {{ getFieldError("issue") }}
+                        </span>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="ticket-data-item half-row">
+                        <p>Prioridad</p>
+                        <select formControlName="priority" class="form-select" [class.is-invalid]="
+                          createTicketForm.controls['priority'].invalid &&
+                          createTicketForm.controls['priority'].touched
+                          ">
+                          <option *ngFor="let priority of priorities" [value]="priority">
+                            {{ translatePriority(priority) }}
+                          </option>
+                        </select>
+                        <span *ngIf="isValidField('priority')" class="form-text text-danger">
+                          {{ getFieldError("priority") }}
+                        </span>
+                    </div>
+                    <!-- Assigned -->
+                    <div class="ticket-data-item half-row">
+                        <p>Asignar</p>
+                        <select formControlName="assigned" class="form-select" [class.is-invalid]="
+                            createTicketForm.controls['assigned'].invalid &&
+                            createTicketForm.controls['assigned'].touched
+                          ">
+                          <option *ngFor="let user of users" [value]="user.id">
+                            {{ user.name }}
+                          </option>
+                        </select>
+                        <span *ngIf="isValidField('assigned')" class="form-text text-danger">
+                          {{ getFieldError("assigned") }}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
 </div>

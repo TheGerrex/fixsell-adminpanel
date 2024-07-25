@@ -30,8 +30,20 @@ export class TicketsCreateComponent implements OnInit {
   isSubmitting = false;
   priorities = Object.values(Priority);
   token = localStorage.getItem('token');
-  types = ['remote', 'on-site'];
-  hours = Array.from({ length: 24 }, (_, i) => i);
+  types = [
+  { value: 'remote', viewValue: 'Remoto' },
+  { value: 'on-site', viewValue: 'Sitio' }
+];
+  // hours = Array.from({ length: 24 }, (_, i) => i);
+
+  currentDate = new Date();
+  nextDay = new Date(this.currentDate.setDate(this.currentDate.getDate() + 1)); // add one day to the current date
+  oneHourLaterDate = new Date(this.currentDate.getTime() + 60 * 60 * 1000);
+  mexicanStartDateString = this.currentDate.toLocaleDateString('fr-CA', { timeZone: 'America/Mexico_City' });
+  mexicanEndDateString = this.oneHourLaterDate.toLocaleDateString('fr-CA', { timeZone: 'America/Mexico_City' });
+
+  defaultStartTime!: string;
+  defaultEndTime!: string;
 
   @ViewChild('ticketDatepicker') datepicker!: MatDatepicker<Date>;
 
@@ -59,7 +71,29 @@ export class TicketsCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    const currentDate = new Date();
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes();
+    
+    // round up to the next 30-minute interval
+    minutes = Math.ceil(minutes / 30) * 30;
+    
+    // if minutes is 60, set it to 0 and increment the hour
+    if (minutes === 60) {
+      minutes = 0;
+      hours++;
+    }
+    
+    // format hours and minutes as 'HH:mm'
+    this.defaultStartTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    this.defaultEndTime = `${(hours+1).toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+
     this.initializeForm();
+
+    console.log("appointmentStartTime",this.createTicketForm.get('appointmentStartTime')?.value)
+    console.log("appointmentEndTime",this.createTicketForm.get('appointmentEndTime')?.value)
     if (this.token) {
       this.usersService.getUsers(this.token).subscribe((users) => {
         this.users = users;
@@ -89,30 +123,16 @@ export class TicketsCreateComponent implements OnInit {
       type: ['', Validators.required],
       clientName: ['', Validators.required],
       clientAddress: [''],
-      clientEmail: ['', [Validators.required, Validators.email]],
-      clientPhone: ['', Validators.required],
+      clientEmail: ['', [Validators.required, Validators.pattern(this.validatorsService.emailPattern)]],
+      clientPhone: ['', [Validators.required, Validators.pattern(this.validatorsService.numberPattern)]],
       assigned: ['', Validators.required],
       assignee: ['', Validators.required],
       issue: ['', Validators.required],
       priority: ['', Validators.required],
-      appointmentStartTime: ['', Validators.required],
-      startHour: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(23)],
-      ],
-      startMinute: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(59)],
-      ],
-      endHour: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(23)],
-      ],
-      endMinute: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(59)],
-      ],
-      appointmentEndTime: [{ value: '', disabled: true }],
+      appointmentStartTime: [this.mexicanStartDateString],
+      startTime: [this.defaultStartTime],
+      endTime: [this.defaultEndTime],
+      appointmentEndTime: [{ value: this.mexicanEndDateString, disabled: true }],
       status: ['open'],
     });
     this.createTicketForm
@@ -121,6 +141,7 @@ export class TicketsCreateComponent implements OnInit {
       .subscribe((value: string) => {
         // Try to parse the string into a Date object
         const date = new Date(value);
+        console.log("Entro a valueChanges", date);
         if (!isNaN(date.getTime())) {
           // If the date is valid, use it to calculate the end date
           this.calculateEndDate(date);
@@ -131,32 +152,11 @@ export class TicketsCreateComponent implements OnInit {
             ?.setErrors({ incorrect: true });
         }
       });
-
-    this.createTicketForm.get('startHour')?.valueChanges.subscribe(() => {
-      this.calculateEndDate();
-    });
-
-    this.createTicketForm.get('startMinute')?.valueChanges.subscribe(() => {
-      this.calculateEndDate();
-    });
-
-    this.createTicketForm.get('endHour')?.valueChanges.subscribe(() => {
-      this.calculateEndDate();
-    });
-
-    this.createTicketForm.get('endMinute')?.valueChanges.subscribe(() => {
-      this.calculateEndDate();
-    });
   }
 
   updateValidators(type: string) {
     const controlsToUpdate = [
-      'appointmentStartTime',
-      'startHour',
-      'startMinute',
-      'endHour',
-      'endMinute',
-      'appointmentEndTime',
+      'clientAddress',
     ];
 
     if (type === 'remote') {
@@ -171,35 +171,20 @@ export class TicketsCreateComponent implements OnInit {
         .get('appointmentStartTime')
         ?.setValidators(Validators.required);
       this.createTicketForm
-        .get('startHour')
-        ?.setValidators([
-          Validators.required,
-          Validators.min(0),
-          Validators.max(23),
-        ]);
-      this.createTicketForm
-        .get('startMinute')
-        ?.setValidators([
-          Validators.required,
-          Validators.min(0),
-          Validators.max(59),
-        ]);
-      this.createTicketForm
-        .get('endHour')
-        ?.setValidators([
-          Validators.required,
-          Validators.min(0),
-          Validators.max(23),
-        ]);
-      this.createTicketForm
-        .get('endMinute')
-        ?.setValidators([
-          Validators.required,
-          Validators.min(0),
-          Validators.max(59),
-        ]);
-      this.createTicketForm
         .get('appointmentEndTime')
+        ?.setValidators(Validators.required);
+      this.createTicketForm
+        .get('startTime')
+        ?.setValidators([
+          Validators.required,
+        ]);
+      this.createTicketForm
+        .get('endTime')
+        ?.setValidators([
+          Validators.required,
+        ]);
+      this.createTicketForm
+        .get('clientAddress')
         ?.setValidators(Validators.required);
 
       controlsToUpdate.forEach((controlName) => {
@@ -214,40 +199,40 @@ export class TicketsCreateComponent implements OnInit {
       const value = this.createTicketForm.get('appointmentStartTime')?.value;
       startDate = new Date(value);
     }
+    console.log("Entro a calculateEndDate", startDate);
 
-    const startHourControl = this.createTicketForm.get('startHour');
-    const startMinuteControl = this.createTicketForm.get('startMinute');
-    const endHourControl = this.createTicketForm.get('endHour');
-    const endMinuteControl = this.createTicketForm.get('endMinute');
+    const startTimeControl = this.createTicketForm.get('startTime');
+    const endTimeControl = this.createTicketForm.get('endTime');
 
-    if (
-      startDate &&
-      startHourControl &&
-      startMinuteControl &&
-      endHourControl &&
-      endMinuteControl
-    ) {
-      const startHour = startHourControl.value;
-      const startMinute = startMinuteControl.value;
-      const endHour = endHourControl.value;
-      const endMinute = endMinuteControl.value;
+    if (startDate && startTimeControl && endTimeControl) {
+      const startTime = startTimeControl.value;
+      const endTime = endTimeControl.value;
 
-      if (
-        startHour !== null &&
-        startMinute !== null &&
-        endHour !== null &&
-        endMinute !== null
-      ) {
+      if ( startTime !== null && endTime !== null) {
+        const [startHour, startMinute] = startTime.split(':').map(Number);
+        const [endHour, endMinute] = endTime.split(':').map(Number);
+
+        // const now = new Date();
+        // this.createTicketForm.controls['appointmentStartTime'].setValue(now);
+
+        // const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+        // this.createTicketForm.controls['appointmentEndTime'].setValue(oneHourLater);
+
+        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+        console.log("Fecha de inicio", startDate);
+        console.log("Fecha de terminacion", endDate);
+
         startDate.setHours(startHour, startMinute);
+        const startDateTime = new Date(startDate.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
         this.createTicketForm
           .get('appointmentStartTime')
-          ?.setValue(startDate, { emitEvent: false });
-
-        const endDate = new Date(startDate.getTime());
+          ?.setValue(startDateTime, { emitEvent: false });
+    
         endDate.setHours(endHour, endMinute);
+        const endDateTime = new Date(endDate.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
         this.createTicketForm
           .get('appointmentEndTime')
-          ?.setValue(endDate, { emitEvent: false });
+          ?.setValue(endDateTime, { emitEvent: false });
       }
     }
   }
@@ -260,32 +245,26 @@ export class TicketsCreateComponent implements OnInit {
       return;
     }
     this.isSubmitting = true;
-    console.log('submitting form', this.createTicketForm.value);
     if (this.createTicketForm.valid) {
       const formData = this.createTicketForm.getRawValue(); // getRawValue includes disabled controls
       let ticket = {
-        ...formData,
-        startTime: formData.startTime, // use correct form control name
-        appointmentEndTime: formData.appointmentEndTime, // use correct form control name
+        ...formData // use correct form control name
       };
-
+      
       // Remove startTime and endTime from ticket
       delete ticket.startTime;
       delete ticket.endTime;
-      delete ticket.startHour;
-      delete ticket.startMinute;
-      delete ticket.endHour;
-      delete ticket.endMinute;
-
+      
       // if type is remote sent appointmentEndTime to null and appointmentStartTime to null
-      if (ticket.type === 'remote') {
-        ticket.appointmentStartTime = null;
-        ticket.appointmentEndTime = null;
-      }
-
+      // if (ticket.type === 'remote') {
+      //   ticket.appointmentStartTime = null;
+      //   ticket.appointmentEndTime = null;
+      // }
+      
       this.ticketService.createTicket(ticket).subscribe(
         (response) => {
           // handle successful response
+          console.log('submitting form', ticket);
           this.toastService.showSuccess(
             'Ticket created successfully',
             'Success'
@@ -311,7 +290,6 @@ export class TicketsCreateComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.createTicketForm, field))
     return this.validatorsService.isValidField(this.createTicketForm, field);
   }
 

@@ -124,12 +124,17 @@ quill-editor.content-editor {
     width: 100% !important;
     border-color: $gray-300 !important;
     border-radius: 0 0 $border-radius $border-radius !important;
-
 }
 
 .ql-snow.ql-toolbar {
-    border-radius: $border-radius $border-radius 0 0  !important;
+    border-radius: $border-radius $border-radius 0 0 !important;
     border: 1px solid $gray-300 !important;
+}
+
+quill-editor.is-invalid {
+    .ql-editor {
+        border: 1px solid $danger-color !important;
+    }
 }
 
 .ql-editor {
@@ -137,10 +142,12 @@ quill-editor.content-editor {
     border-radius: 0 0 $border-radius $border-radius !important;
     min-height: 120px;
 }
+
 .ql-editor:focus {
     border: 1px solid $primary-color-focus !important;
     border-radius: 0 0 $border-radius $border-radius !important;
 }
+
 
 /*---------------------------------------------*/
 

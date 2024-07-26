@@ -13,8 +13,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TicketStatusPipe } from './pipes/ticket-status.pipe';
 import { TicketTypePipe } from './pipes/ticket-type.pipe';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 @NgModule({
-  providers: [DatePipe],
   declarations: [
     LayoutPageComponent,
     TicketsDashboardComponent,
@@ -29,13 +29,13 @@ import { TicketTypePipe } from './pipes/ticket-type.pipe';
     SharedModule,
     SupportModule,
     TicketRoutingModule,
+    NgxMaskDirective,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
     BsDatepickerModule.forRoot(),
   ],
-
-  // imports: [CommonModule, SharedModule, UsersModule, UserRoutingModule],
+  providers: [DatePipe, provideNgxMask()],
 })
 export class TicketsModule {}

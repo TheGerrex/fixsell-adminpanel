@@ -96,7 +96,7 @@
                         <!-- clientPhone -->
                         <div class="ticket-data-item half-row">
                             <p>Teléfono</p>
-                            <input type="text" placeholder="811-111-1111" formControlName="clientPhone" class="form-control" [class.is-invalid]="
+                            <input type="text" mask="000-000-0000" placeholder="811-111-1111" formControlName="clientPhone" class="form-control" [class.is-invalid]="
                               createTicketForm.controls['clientPhone'].invalid &&
                               createTicketForm.controls['clientPhone'].touched
                             " />

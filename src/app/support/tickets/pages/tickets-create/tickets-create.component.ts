@@ -145,42 +145,15 @@ export class TicketsCreateComponent implements OnInit {
     });
     this.createTicketForm.get('appointmentStartTime')?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
       .subscribe((value: string) => {
-        // Try to parse the string into a Date object
-        const date = this.zonedDate;
-        if (!isNaN(date.getTime())) {
-          // If the date is valid, use it to calculate the end date
-          this.calculateEndDate(date);
-        } else {
-          // If the date is not valid, set a validation error on the form control
-          this.createTicketForm.get('appointmentStartTime')
-            ?.setErrors({ incorrect: true });
-        }
+        this.calculateEndDate();
       });
     this.createTicketForm.get('startTime')?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
       .subscribe((value: string) => {
-        // Try to parse the string into a Date object
-        const date = this.zonedDate;
-        if (!isNaN(date.getTime())) {
-          // If the date is valid, use it to calculate the end date
-          this.calculateEndDate(date);
-        } else {
-          // If the date is not valid, set a validation error on the form control
-          this.createTicketForm.get('startTime')
-            ?.setErrors({ incorrect: true });
-        }
+         this.calculateEndDate();
       });
     this.createTicketForm.get('endTime')?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
       .subscribe((value: string) => {
-        // Try to parse the string into a Date object
-        const date = this.zonedDate;
-        if (!isNaN(date.getTime())) {
-          // If the date is valid, use it to calculate the end date
-          this.calculateEndDate(date);
-        } else {
-          // If the date is not valid, set a validation error on the form control
-          this.createTicketForm.get('endTime')
-            ?.setErrors({ incorrect: true });
-        }
+        this.calculateEndDate();
       });
   }
 
@@ -223,17 +196,14 @@ export class TicketsCreateComponent implements OnInit {
     }
   }
 
-  calculateEndDate(startDate?: Date) {
-    // If no startDate is provided, use the current form value
-    if (!startDate) {
-      const value = this.createTicketForm.get('appointmentStartTime')?.value;
-      startDate = new Date(value);
-    }
+  calculateEndDate() {
 
+    const startDateControl = this.createTicketForm.get('appointmentStartTime');
     const startTimeControl = this.createTicketForm.get('startTime');
     const endTimeControl = this.createTicketForm.get('endTime');
 
-    if (startDate && startTimeControl && endTimeControl) {
+    if (startDateControl && startTimeControl && endTimeControl) {
+      const startDate = startDateControl.value;
       const startTime = startTimeControl.value;
       const endTime = endTimeControl.value;
 

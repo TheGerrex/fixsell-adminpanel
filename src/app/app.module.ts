@@ -11,8 +11,9 @@ import localeEs from '@angular/common/locales/es-MX';
 import { registerLocaleData } from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { IConfig } from 'ngx-mask';
+import { TicketsModule } from './support/tickets/tickets.module';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -21,18 +22,26 @@ const maskConfig: Partial<IConfig> = {
 registerLocaleData(localeEs, 'es');
 
 @NgModule({ declarations: [AppComponent],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    imports: [
+        BrowserModule,
         AppRoutingModule,
         FormsModule,
         FlexLayoutModule,
         BrowserAnimationsModule,
         SharedModule,
+        NgxMaskDirective,
+        NgxMaskPipe,
+        TicketsModule,
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory,
-        })], providers: [
+        })
+    ], 
+    providers: [
         { provide: LOCALE_ID, useValue: 'es' },
         provideNgxMask(maskConfig),
         provideHttpClient(withInterceptorsFromDi()),
-    ] })
+    ],
+    bootstrap: [AppComponent]
+})
 export class AppModule {}

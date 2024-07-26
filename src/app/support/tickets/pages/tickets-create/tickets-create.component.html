@@ -1,10 +1,10 @@
 <div>
     <form [formGroup]="createTicketForm" class="ticket-container">
         <div class="ticket-header">
-            <h2>Nuevo Ticket</h2>
-            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
-        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-      </button>
+            <h3 class="header-title">Nuevo Ticket de Soporte</h3>
+            <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+              <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
+            </button>
         </div>
 
         <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
@@ -135,8 +135,8 @@
                         <p>Cual es el problema?</p>
                         <quill-editor formControlName="issue" [placeholder]="'Descripción detallada del problema'" [class.is-invalid]="
                           createTicketForm.controls['issue'].invalid &&
-                          createTicketForm.controls['issue'].touched
-                        "></quill-editor>
+                          createTicketForm.controls['issue'].touched"
+                        ></quill-editor>
                         <span *ngIf="isValidField('issue')" class="form-text text-danger">
                           {{ getFieldError("issue") }}
                         </span>

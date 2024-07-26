@@ -14,6 +14,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { IConfig } from 'ngx-mask';
 import { TicketsModule } from './support/tickets/tickets.module';
+import { QuillModule } from 'ngx-quill';
+import { QuillConfiguration } from './shared/components/rich-text-editor/rich-text-editor.component';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -32,6 +34,9 @@ registerLocaleData(localeEs, 'es');
         NgxMaskDirective,
         NgxMaskPipe,
         TicketsModule,
+        QuillModule.forRoot({
+            modules: QuillConfiguration,
+        }),
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory,

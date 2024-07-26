@@ -16,9 +16,9 @@
   padding-bottom: 0.5em;
   border-bottom: 1px solid $gray-300;
   border-radius: $border-radius $border-radius 0 0;
-  background-color: $gray-50;
+  background-color: $white;
   padding: 1em;
-  h2 {
+  .header-title {
     margin: 0;
   }
   button {
@@ -40,7 +40,7 @@
   justify-content: center;
   align-items: center;
   padding: 1em;
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     flex-direction: column;
   }
   .ticket-images {

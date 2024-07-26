@@ -5,7 +5,7 @@
         <h3 class="main-title">Mis Tickets</h3>
         <div class="main-action-buttons">
             <button class="button button-primary button-raised button-icon-text" (click)="addTicket()">
-              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+              <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
             </button>
         </div>
     </div>
@@ -270,7 +270,7 @@
                 </div>
             </ng-template>
 
-            <mwl-calendar-week-view *ngIf="view === 'week'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event)">
+            <mwl-calendar-week-view *ngIf="view === 'week'" [dayStartHour]="7" [dayEndHour]="20" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event)">
             </mwl-calendar-week-view>
 
             <mwl-calendar-month-view *ngIf="view === 'month'" [viewDate]="viewDate" [events]="events" (dayClicked)="dayClicked($event.day.date)" (eventClicked)="eventClicked($event)">

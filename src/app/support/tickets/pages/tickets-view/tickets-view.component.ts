@@ -60,10 +60,16 @@ export class TicketsViewComponent implements OnInit {
     [Status.COMPLETED]: 'green',
   };
 
+  priorityOptions = [
+    { value: Priority.LOW, label: 'Bajo' },
+    { value: Priority.MEDIUM, label: 'Medio' },
+    { value: Priority.HIGH, label: 'Alto' },
+  ];
+
   priorityTranslations: { [key in Priority]: string } = {
-    [Priority.LOW]: 'bajo',
-    [Priority.MEDIUM]: 'medio',
-    [Priority.HIGH]: 'alto',
+    [Priority.LOW]: 'Bajo',
+    [Priority.MEDIUM]: 'Medio',
+    [Priority.HIGH]: 'Alto',
   };
 
   priorityColors: { [key in Priority]: string } = {
@@ -250,6 +256,10 @@ export class TicketsViewComponent implements OnInit {
     this.activities[index].readOnly = !this.activities[index].readOnly;
   }
 
+  addActivity() {
+      this.activities.push({ activity: '', readOnly: false });
+  }
+
   deleteActivity(index: number) {
     // Remove the activity from the local array
     this.activities.splice(index, 1);
@@ -344,9 +354,5 @@ export class TicketsViewComponent implements OnInit {
           );
         }
       );
-  }
-
-  addActivity() {
-    this.activities.push({ activity: '', readOnly: false });
   }
 }

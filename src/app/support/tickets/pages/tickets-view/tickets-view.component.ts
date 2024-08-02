@@ -6,7 +6,6 @@ import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-tickets-view',
@@ -19,19 +18,22 @@ export class TicketsViewComponent implements OnInit {
     private route: ActivatedRoute,
     private usersService: UsersService,
     private toastService: ToastService,
-    private authService: AuthService
   ) {
-    this.ticket = {} as Ticket;
+    this.ticket = {} as Ticket;    
+    // this.clientPhoneMask = this.maskPipe.transform(this.clientPhone, '(000) 000-0000');
+
   }
   ticket: Ticket;
   ticketIssue = '';
   activities: { activity: string; readOnly: boolean }[] = [];
   issueReadOnly = true;
+  clientReadOnly = true;
   isLoadingData = true;
   ticketNumber = 0;
   clientName = '';
   clientEmail = '';
   clientPhone = '';
+  clientPhoneMask = '';
   ticketPriority = '';
   clientAdress = '';
   assignedUser: string = ''; // Initialize the 'assignedUser' property
@@ -130,6 +132,7 @@ export class TicketsViewComponent implements OnInit {
       }
     });
     this.getUsers();
+    console.log("Activites:", this.activities);
   }
 
   getUsers() {
@@ -250,6 +253,10 @@ export class TicketsViewComponent implements OnInit {
 
   toggleIssueEdit() {
     this.issueReadOnly = !this.issueReadOnly;
+  }
+
+  toggleClientEdit() {
+    this.clientReadOnly = !this.clientReadOnly;
   }
 
   toggleActivityEdit(index: number) {

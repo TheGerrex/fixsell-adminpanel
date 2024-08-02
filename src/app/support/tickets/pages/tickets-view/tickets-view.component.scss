@@ -45,9 +45,17 @@
 
 .ticket-body {
     display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.ticket-wrapper {
+    display: flex;
     flex-direction: row;
     gap: 1rem;
     padding: 1em;
+    max-width: 1024px;
 }
 
 .ticket-content {
@@ -290,4 +298,64 @@
     display: flex;
     align-items: center;
     // gap: .25rem;
+}
+
+.default-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    p {
+        margin: 0;
+    }
+    mat-icon {
+        color: $help-color;
+    }
+}
+
+.button-actions {
+    display: flex;
+    gap: 0.5em;
+    button {
+        flex-shrink: 0;
+    }
+}
+
+.activity-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $gray-300;
+    border-radius: $border-radius;
+    background-color: $white;
+    min-width: 467px;
+    .ticket-activity-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: .5rem 1rem;
+        gap: 1rem;
+        border-bottom: 1px solid $gray-300;
+        .ticket-activity-header-title {
+            margin: 0;
+        }
+    }
+    .ticket-activity-body {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+}
+
+.activity-card-content {
+    background-color: $gray-100;
+    padding: 1rem;
+    border-radius: $border-radius;
+}
+
+.activity-card {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
 }

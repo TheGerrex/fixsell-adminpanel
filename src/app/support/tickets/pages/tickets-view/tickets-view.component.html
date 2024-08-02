@@ -32,192 +32,126 @@
         </div>
     </div>
     <div class="ticket-body">
-        <div class="ticket-content">
-            <div class="ticket-info-card">
-                <div class="ticket-info-card-header">
-                    <h4 class="ticket-info-card-header-title">Información del Ticket</h4>
-                    <div class="ticket-info-icons">
-                        <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ticket.status | ticketStatus}}</div>
-                        <div class="ticket-priority" [ngSwitch]="ticket.priority">
-                            <div class="priority-flags-container high-priority" *ngSwitchCase="'high'">
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+        <div class="ticket-wrapper">
+            <div class="ticket-content">
+                <div class="ticket-info-card">
+                    <div class="ticket-info-card-header">
+                        <h4 class="ticket-info-card-header-title">Información del Ticket</h4>
+                        <div class="ticket-info-icons">
+                            <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ticket.status | ticketStatus}}</div>
+                            <div class="ticket-priority" [ngSwitch]="ticket.priority">
+                                <div class="priority-flags-container high-priority" *ngSwitchCase="'high'">
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                </div>
+                                <div class="priority-flags-container medium-priority" *ngSwitchCase="'medium'">
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                                </div>
+                                <div class="priority-flags-container low-priority" *ngSwitchCase="'low'">
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                                    <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                                </div>
                             </div>
-                            <div class="priority-flags-container medium-priority" *ngSwitchCase="'medium'">
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
-                            </div>
-                            <div class="priority-flags-container low-priority" *ngSwitchCase="'low'">
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
-                                <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
+                        </div>
+                    </div>
+                    <div class="ticket-info-card-body">
+                        <div class="ticket-data-item">
+                            <p class="ticket-data-item-label">Creado</p>
+                            <p class="ticket-data-item-value">{{ticket.createdDate | date: 'd MMM yyyy hh:mm a'}}</p>
+                        </div>
+                        <div class="ticket-data-item">
+                            <p class="ticket-data-item-label">Ultima Actualización</p>
+                            <p class="ticket-data-item-value">{{ticket.updatedDate | date: 'd MMM yyyy hh:mm a'}}</p>
+                        </div>
+                        <div class="ticket-data-item">
+                            <p class="ticket-data-item-label">Asignado</p>
+                            <p class="ticket-data-item-value">{{ticket.assigned.name}}</p>
+                        </div>
+                        <div class="ticket-data-item">
+                            <p class="ticket-data-item-label">Asignador</p>
+                            <p class="ticket-data-item-value">{{ticket.assignee.name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ticket-card">
+                    <div class="ticket-card-header">
+                        <h4 class="ticket-card-header-title">Cliente</h4>
+                        <button class="button button-icon-text button-primary button-raised" (click)="toggleClientEdit()"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
+                    </div>
+                    <div class="ticket-card-body">
+                        <div class="ticket-data-item" *ngIf="clientName">
+                            <p class="ticket-data-item-label">Nombre</p>
+                            <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientName }}</p>
+                            <input type="text" class="form-control" [(ngModel)]="clientName" *ngIf="!clientReadOnly">
+                        </div>
+                        <div class="ticket-data-item" *ngIf="clientEmail">
+                            <p class="ticket-data-item-label">Email</p>
+                            <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientEmail }}</p>
+                            <input type="text" class="form-control" [(ngModel)]="clientEmail" *ngIf="!clientReadOnly">
+                        </div>
+                        <div class="ticket-data-item" *ngIf="clientPhone">
+                            <p class="ticket-data-item-label">Teléfono</p>
+                            <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientPhone | mask: '(000) 000-0000' }}</p>
+                            <input type="text" mask="000-000-0000" class="form-control" [(ngModel)]="clientPhone" *ngIf="!clientReadOnly">
+                        </div>
+                        <div class="ticket-data-item" *ngIf="clientAdress">
+                            <p class="ticket-data-item-label">Dirección</p>
+                            <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientAdress }}</p>
+                            <input type="text" class="form-control" [(ngModel)]="clientAdress" *ngIf="!clientReadOnly">
+                        </div>
+                    </div>
+                </div>
+                <div class="ticket-card">
+                    <div class="ticket-card-header">
+                        <h4 class="ticket-card-header-title">Problema</h4>
+                        <button *ngIf="issueReadOnly" class="button button-icon-text button-primary button-raised" (click)="toggleIssueEdit()"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
+                    </div>
+                    <div class="ticket-card-body">
+                        <p style="margin: 0;" *ngIf="issueReadOnly" [innerHTML]="ticketIssue"></p>
+                        <div class="quill-container" *ngIf="!issueReadOnly">
+                            <quill-editor [(ngModel)]="ticketIssue" placeholder="Descripción detallada del problema"></quill-editor>
+                            <div class="button-actions">
+                                <button class="button button-primary button-raised" (click)="submitIssue()"><mat-icon>save</mat-icon><span class="button-label">Guardar</span></button>
+                                <button class="button button-secondary button-raised" (click)="toggleIssueEdit()"><span class="button-label">Cancelar</span></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="ticket-info-card-body">
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Creado</p>
-                        <p class="ticket-data-item-value">{{ticket.createdDate | date: 'd MMM yyyy hh:mm a'}}</p>
-                    </div>
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Ultima Actualización</p>
-                        <p class="ticket-data-item-value">{{ticket.updatedDate | date: 'd MMM yyyy hh:mm a'}}</p>
-                    </div>
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Asignado</p>
-                        <p class="ticket-data-item-value">{{ticket.assigned.name}}</p>
-                    </div>
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Asignador</p>
-                        <p class="ticket-data-item-value">{{ticket.assignee.name}}</p>
-                    </div>
-                </div>
             </div>
-            <div class="ticket-card">
-                <div class="ticket-card-header">
-                    <h4 class="ticket-card-header-title">Cliente</h4>
-                    <button class="button button-icon-text button-primary button-raised"><mat-icon>edit</mat-icon><span class="button-label">Editar</span></button>
-                </div>
-                <div class="ticket-card-body">
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Nombre</p>
-                        <p class="ticket-data-item-value">{{ clientName }}</p>
+            <div class="ticket-activity">
+                <div class="activity-container">
+                    <div class="ticket-activity-header">
+                        <h4 class="ticket-activity-header-title">Actividades</h4>
+                        <button class="button button-icon-text button-primary button-raised" (click)="addActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
                     </div>
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Email</p>
-                        <p class="ticket-data-item-value">{{ clientEmail }}</p>
+                    <div class="ticket-activity-body">
+                        <div class="default-message" *ngIf="this.activities.length === 0">
+                            <mat-icon>help</mat-icon>
+                            <p>Alguna nueva actividad en el servicio de tu ticket?</p>
+                        </div>
+                        <div class="activity-card-container" *ngFor="let activity of activities; let i = index">
+                            <div class="activity-card">
+                                <quill-editor [(ngModel)]="activity.activity" *ngIf="!activity.readOnly"></quill-editor>
+                                <div class="activity-card-content" *ngIf="activity.readOnly" [innerHTML]="activity.activity"></div>
+                                <div class="button-actions">
+                                    <button class="button button-primary button-raised button-icon-text" (click)="activity.readOnly ? toggleActivityEdit(i) : submitActivity(i)">
+                                  <mat-icon>edit</mat-icon>
+                                  <span class="button-label">
+                                    {{activity.readOnly ? "Editar" : "Guardar"}}
+                                  </span>
+                                </button>
+                                    <button class="button button-danger button-raised button-icon-text" (click)="deleteActivity(i)">
+                                  <mat-icon>delete</mat-icon>
+                                  <span class="button-label">Eliminar</span>
+                                </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Teléfono</p>
-                        <p class="ticket-data-item-value">{{ clientPhone }}</p>
-                    </div>
-                    <div class="ticket-data-item">
-                        <p class="ticket-data-item-label">Dirección</p>
-                        <p class="ticket-data-item-value">{{ clientAdress }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="ticket-card">
-                <div class="ticket-card-header">
-                    <h4 class="ticket-card-header-title">Problema</h4>
-                    <button class="button button-icon-text button-primary button-raised" (click)="issueReadOnly ? toggleIssueEdit() : submitIssue()"><mat-icon>edit</mat-icon><span class="button-label">{{issueReadOnly ? "Editar" : "Enviar"}}</span></button>
-                </div>
-                <div class="ticket-card-body">
-                    <quill-editor [(ngModel)]="ticketIssue" placeholder="placeholder"></quill-editor>
-                    <!-- <shared-rich-text-editor ></shared-rich-text-editor> -->
-                    <!-- <div *ngIf="issueReadOnly">
-                <quill-editor [(ngModel)] = "ticketIssue"
-                              [readOnly]  = "true"
-                              class       = "quill-ticket"
-                              [style]     = "{ border: '1px solid transparent' }"
-                              [modules]   = "{ toolbar: false }">
-                </quill-editor>
-              </div>
-              <div *ngIf="!issueReadOnly">
-                <quill-editor [(ngModel)] = "ticketIssue"
-                              [style]     = "{ height: '350px', minWidth: '500px' }"
-                              [modules]   = "{ toolbar: true }">
-                </quill-editor>
-              </div> -->
-                    <!-- <quill-editor [(ngModel)]="ticketIssue" class="quill-editor">
-                <div above-quill-editor-toolbar>
-                  above
-                </div>
-                <div quill-editor-toolbar>
-                  <span class="ql-formats">
-                    <button class="ql-bold" [title]="'Bold'"></button>
-                  </span>
-                  <span class="ql-formats">
-                    <select class="ql-align" [title]="'Aligment'">
-                      <option selected></option>
-                      <option value="center"></option>
-                      <option value="right"></option>
-                      <option value="justify"></option>
-                    </select>
-                    <select class="ql-align" [title]="'Aligment2'">
-                      <option selected></option>
-                      <option value="center"></option>
-                      <option value="right"></option>
-                      <option value="justify"></option>
-                    </select>
-                  </span>
-                </div>
-                <div below-quill-editor-toolbar>
-                  below
-                </div>
-              </quill-editor> -->
-                    <!-- <p
-                *ngIf="issueReadOnly"
-                [innerHTML]="ticketIssue"
-                class="quill-editor"
-              ></p> -->
-                </div>
-            </div>
-        </div>
-        <div class="ticket-info">
-            <div class="ticket-card">
-                <div class="ticket-card-header">
-                    <h4 class="ticket-card-header-title">Actualizaciones</h4>
-                    <button class="button button-icon-text button-primary button-raised" (click)="addActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
-                </div>
-                <div class="ticket-card-body">
-                    <div class="default-message" *ngIf="!this.activities">
-                        <p>Alguna nueva actividad en el servicio de tu ticket?</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="ticket-info-container">
-    <div class="ticket-data-container">
-        <div class="ticket-data">
-            <div style="display: flex; align-items: baseline">
-                <h3 style="margin-right: 10px">Actualizaciones</h3>
-                <!-- Add margin-right here -->
-                <!-- Button is now next to the title -->
-                <button class="button button-primary button-raised button-icon-text" (click)="addActivity()" style="display: flex; align-items: center">
-            <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-          </button>
-            </div>
-            <hr />
-            <div class="ticket-data-item" *ngFor="let activity of activities; let i = index" style="
-            border: 1px solid #38383854;
-            padding: 10px;
-            margin-bottom: 10px;
-          ">
-                <quill-editor [(ngModel)]="activity.activity" *ngIf="!activity.readOnly"></quill-editor>
-                <p *ngIf="activity.readOnly" [innerHTML]="activity.activity"></p>
-
-                <hr />
-                <div style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-            ">
-                    <div>
-                        <button class="button button-primary button-raised button-icon-text" (click)="
-                  activity.readOnly ? toggleActivityEdit(i) : submitActivity(i)
-                ">
-                <mat-icon>edit</mat-icon
-                ><span class="button-label">{{
-                  activity.readOnly ? "Editar" : "Enviar"
-                }}</span>
-              </button>
-
-                        <!-- Delete button -->
-                        <button class="button button-danger button-raised button-icon-text" (click)="deleteActivity(i)">
-                <mat-icon>delete</mat-icon
-                ><span class="button-label">Eliminar</span>
-              </button>
-                    </div>
-
-                    <p style="text-align: right">{{ i + 1 }}</p>
                 </div>
             </div>
         </div>

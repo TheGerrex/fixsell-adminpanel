@@ -23,7 +23,10 @@ const maskConfig: Partial<IConfig> = {
 
 registerLocaleData(localeEs, 'es');
 
-@NgModule({ declarations: [AppComponent],
+@NgModule({ 
+    declarations: [
+        AppComponent,
+    ],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -40,7 +43,7 @@ registerLocaleData(localeEs, 'es');
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory,
-        })
+        }),
     ], 
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },

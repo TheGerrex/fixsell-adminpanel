@@ -13,7 +13,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TicketStatusPipe } from './pipes/ticket-status.pipe';
 import { TicketTypePipe } from './pipes/ticket-type.pipe';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -30,6 +30,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
     SupportModule,
     TicketRoutingModule,
     NgxMaskDirective,
+    NgxMaskPipe,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

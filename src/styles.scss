@@ -28,6 +28,7 @@ body {
     background-color: $gray-100 !important;
 }
 
+
 /*----------------------[ Links ]-------------------------------*/
 
 a {
@@ -112,11 +113,13 @@ li {
     font-size: 1em;
 }
 
+
 /*----------------------[ Quill Editor ]-------------------------------*/
 
 quill-editor.content-editor {
     width: 100%;
 }
+
 quill-editor {
     width: 100%;
     height: fit-content;
@@ -565,6 +568,106 @@ input:focus {
         padding: 0.5em 20px 0.5em 16px;
         mat-icon {
             font-size: 1.4rem;
+        }
+    }
+    &-text {
+        &-primary {
+            color: $primary-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $primary-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $primary-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus;
+            }
+        }
+        &-secondary {
+            color: $secondary-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $secondary-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $secondary-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus;
+            }
+        }
+        &-success {
+            color: $success-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $success-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $success-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus;
+            }
+        }
+        &-info {
+            color: $info-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $info-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $info-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus;
+            }
+        }
+        &-warning {
+            color: $warning-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $warning-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $warning-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus;
+            }
+        }
+        &-help {
+            color: $help-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $help-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $help-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus;
+            }
+        }
+        &-danger {
+            color: $danger-color;
+            background-color: transparent;
+            border: none;
+            &:hover {
+                background: rgba($color: $danger-color, $alpha: 0.1);
+            }
+            &:active {
+                background: rgba($color: $danger-color-active, $alpha: 0.1);
+            }
+            &:focus {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus;
+            }
         }
     }
 }

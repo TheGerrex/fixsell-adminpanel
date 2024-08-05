@@ -168,7 +168,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
       console.log('loadData Admin:', ticketsObservable);
     } else {
       const user = this.authService.getCurrentUser();
-      if (user) {
+      if (user && user.id) {
         ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
         console.log('loadData User:', ticketsObservable);
       } else {

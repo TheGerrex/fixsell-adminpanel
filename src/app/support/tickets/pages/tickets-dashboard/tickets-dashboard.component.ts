@@ -55,7 +55,7 @@ export class TicketsDashboardComponent implements OnInit {
 
   loadUserTickets() {
     const user = this.authService.getCurrentUser();
-    if (user) {
+    if (user && user.id) {
       const userRoles = this.authService.getCurrentUserRoles();
       const isAdmin = userRoles.includes('admin');
       let ticketsObservable: Observable<Ticket[]>;

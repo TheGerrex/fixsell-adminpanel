@@ -8,7 +8,7 @@ export interface Ticket {
   clientPhone: string;
   clientAddress: string;
   issue: string;
-  activity: any[];
+  activities: Activity[];
   priority: Priority;
   status: Status;
   assigned: User;
@@ -19,6 +19,12 @@ export interface Ticket {
   id: number;
   appointmentStartTime: Date;
   appointmentEndTime: Date;
+}
+
+export interface Activity {
+  text?: string;
+  addedBy?: string;
+  addedAt?: Date;
 }
 
 export enum Status {

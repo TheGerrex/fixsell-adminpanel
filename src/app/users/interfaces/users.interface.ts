@@ -1,3 +1,5 @@
+import { Lead } from "src/app/sales/interfaces/leads.interface";
+
 export interface User {
   id?: string;
   name?: string;
@@ -5,6 +7,7 @@ export interface User {
   password?: string;
   isActive?: boolean;
   roles?: Role[];
+  leads?: Lead[];
 }
 
 export interface Role {

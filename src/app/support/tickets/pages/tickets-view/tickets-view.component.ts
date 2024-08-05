@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Ticket, Status } from 'src/app/support/interfaces/tickets.interface';
+import { Ticket, Status, Activity } from 'src/app/support/interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { ActivityService } from 'src/app/support/services/activity.service';
 
 @Component({
   selector: 'app-tickets-view',
@@ -18,14 +19,13 @@ export class TicketsViewComponent implements OnInit {
     private route: ActivatedRoute,
     private usersService: UsersService,
     private toastService: ToastService,
+    private activityService: ActivityService,
   ) {
     this.ticket = {} as Ticket;    
-    // this.clientPhoneMask = this.maskPipe.transform(this.clientPhone, '(000) 000-0000');
-
   }
   ticket: Ticket;
   ticketIssue = '';
-  activities: { activity: string; readOnly: boolean }[] = [];
+  activities: Activity[] = [];
   issueReadOnly = true;
   clientReadOnly = true;
   isLoadingData = true;
@@ -39,6 +39,8 @@ export class TicketsViewComponent implements OnInit {
   assignedUser: string = ''; // Initialize the 'assignedUser' property
   assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
+  currentUser: User | null = null;
+  newActivityText: string = '';
   // Add statusOptions and ticketStatus
   statusOptions = [
     { value: Status.OPEN, label: 'Abierto' },
@@ -132,23 +134,24 @@ export class TicketsViewComponent implements OnInit {
       }
     });
     this.getUsers();
+    this.getCurrentUser();
    
     console.log("Activites:", this.activities);
   }
 
-convertToLocalDate(dateString: string): string {
-  console.log('Date string:', dateString);
-  const date = new Date(dateString);
-  console.log('Date:', date);
-  if (isNaN(date.getTime())) {
-    // The date string is not valid
-    console.log('Invalid date string');
-    return dateString;
-  } else {
-    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    return localDate.toISOString();
+  convertToLocalDate(dateString: string): string {
+    console.log('Date string:', dateString);
+    const date = new Date(dateString);
+    console.log('Date:', date);
+    if (isNaN(date.getTime())) {
+      // The date string is not valid
+      console.log('Invalid date string');
+      return dateString;
+    } else {
+      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return localDate.toISOString();
+    }
   }
-}
 
   getUsers() {
     const token = localStorage.getItem('token');
@@ -157,6 +160,11 @@ convertToLocalDate(dateString: string): string {
         this.users = users;
       });
     }
+  }
+
+  getCurrentUser() {
+    this.currentUser = this.usersService.getCurrentUser();
+    console.log('Current user:', this.currentUser);
   }
 
   getTicketIssue(ticketId: string) {
@@ -172,63 +180,12 @@ convertToLocalDate(dateString: string): string {
       this.clientEmail = ticket.clientEmail;
       this.clientPhone = ticket.clientPhone;
       this.ticketPriority = ticket.priority;
-      this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
-      this.assignee = ticket.assignee ? ticket.assignee.name : '';
+      this.assignedUser = ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
+      this.assignee = ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
       this.ticket.createdDate = this.convertToLocalDate(this.ticket.createdDate);
       this.ticket.updatedDate = this.convertToLocalDate(this.ticket.updatedDate);
-      this.activities =
-        ticket.activity && ticket.activity.length > 0
-          ? ticket.activity.flatMap((activityGroup) =>
-              activityGroup
-                ? activityGroup.map((activity: string) => ({
-                    activity,
-                    readOnly: true,
-                  }))
-                : []
-            )
-          : [{ activity: '', readOnly: false }];
+      this.activities = this.ticket.activities
       console.log('Activities:', this.activities);
-    });
-  }
-
-  loadTicketData() {
-    this.isLoadingData = true;
-    this.route.paramMap.subscribe((params) => {
-      const ticketId = params.get('id');
-      if (ticketId !== null) {
-        this.ticketsService.getTicketById(ticketId).subscribe(
-          (ticket: Ticket) => {
-            console.log('loadTicketData:', ticket);
-            this.ticket = ticket; // Update the ticket property
-            this.ticketIssue = ticket.issue;
-            this.ticketNumber = ticket.id;
-            this.ticketStatus = ticket.status;
-            this.clientName = ticket.clientName;
-            this.clientEmail = ticket.clientEmail;
-            this.clientPhone = ticket.clientPhone;
-            this.clientAddress = ticket.clientAddress;
-            this.ticketPriority = ticket.priority;
-            this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
-            this.assignee = ticket.assignee ? ticket.assignee.name : '';
-            this.activities =
-              ticket.activity && ticket.activity.length > 0
-                ? ticket.activity.flatMap((activityGroup) =>
-                    activityGroup
-                      ? activityGroup.map((activity: string) => ({
-                          activity,
-                          readOnly: true,
-                        }))
-                      : []
-                  )
-                : [{ activity: '', readOnly: false }];
-            this.isLoadingData = false;
-          },
-          (error) => {
-            console.error('Error:', error);
-            this.isLoadingData = false;
-          }
-        );
-      }
     });
   }
 
@@ -277,68 +234,90 @@ convertToLocalDate(dateString: string): string {
     this.clientReadOnly = !this.clientReadOnly;
   }
 
-  toggleActivityEdit(index: number) {
-    this.activities[index].readOnly = !this.activities[index].readOnly;
-  }
+  // toggleActivityEdit(index: number) {
+  //   this.activities[index].readOnly = !this.activities[index].readOnly;
+  // }
 
   addActivity() {
-      this.activities.push({ activity: '', readOnly: false });
-  }
-
-  deleteActivity(index: number) {
-    // Remove the activity from the local array
-    this.activities.splice(index, 1);
-
-    // Prepare the updated activities for the updateTicket call
-    const updatedActivities = this.activities.map(
-      (activity) => activity.activity
-    );
-
-    // Call the updateTicket method with the ticket id and the updated activities
-    this.ticketsService
-      .updateTicket(this.ticket.id, { activity: updatedActivities })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess(
-            'Activity deleted and ticket updated successfully',
-            'OK'
-          );
+    console.log("Current User:", this.currentUser);
+    const newActivity: Omit<Activity, 'id'> = { text: this.newActivityText, addedBy: this.currentUser ? this.currentUser.id : undefined };
+    console.log('New activity:', newActivity);
+    this.activityService.createActivity(newActivity).subscribe(
+      (activity) => {
+        console.log('Activity created successfully:', activity);
+        this.activities.push(activity);
+        // this.ticket.activities.push(activity);
+        this.ticketsService.updateTicket(this.ticket.id, {activities: this.activities}).subscribe(
+        (updatedTicket) => {
+          console.log('Ticket updated successfully:', updatedTicket);
+          this.ticket = updatedTicket;
         },
         (error) => {
-          console.error('Error:', error);
-          this.toastService.showError(
-            'Error updating ticket after deleting activity',
-            error.message
-          );
+          console.error('Error updating ticket:', error);
         }
       );
-  }
 
-  submitActivity(index: number) {
-    console.log('Submit activity:', index);
-    const updatedActivity = this.activities[index].activity;
-    this.activities[index].readOnly = true;
-
-    // Update the activity in the current ticket
-    const updatedActivities = this.activities.map((activity, i) =>
-      i === index ? updatedActivity : activity.activity
+      },
+      (error) => {
+        console.error('Error creando actividad:', error);
+      }
     );
-
-    // Call the updateTicket method with the ticket id and the updated activity
-    this.ticketsService
-      .updateTicket(this.ticket.id, { activity: updatedActivities })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess('Ticket updated successfully', 'OK');
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError('Error updating ticket', error.message);
-        }
-      );
   }
+
+  // deleteActivity(index: number) {
+  //   // Remove the activity from the local array
+  //   this.activities.splice(index, 1);
+
+  //   // Prepare the updated activities for the updateTicket call
+  //   const updatedActivities = this.activities.map(
+  //     (activity) => activity.activity
+  //   );
+
+  //   // Call the updateTicket method with the ticket id and the updated activities
+  //   this.ticketsService
+  //     .updateTicket(this.ticket.id, { activity: updatedActivities })
+  //     .subscribe(
+  //       (response) => {
+  //         console.log('Ticket updated successfully:', response);
+  //         this.toastService.showSuccess(
+  //           'Activity deleted and ticket updated successfully',
+  //           'OK'
+  //         );
+  //       },
+  //       (error) => {
+  //         console.error('Error:', error);
+  //         this.toastService.showError(
+  //           'Error updating ticket after deleting activity',
+  //           error.message
+  //         );
+  //       }
+  //     );
+  // }
+
+  // submitActivity(index: number) {
+  //   console.log('Submit activity:', index);
+  //   const updatedActivity = this.activities[index].activity;
+  //   this.activities[index].readOnly = true;
+
+  //   // Update the activity in the current ticket
+  //   const updatedActivities = this.activities.map((activity, i) =>
+  //     i === index ? updatedActivity : activity.activity
+  //   );
+
+  //   // Call the updateTicket method with the ticket id and the updated activity
+  //   this.ticketsService
+  //     .updateTicket(this.ticket.id, { activity: updatedActivities })
+  //     .subscribe(
+  //       (response) => {
+  //         console.log('Ticket updated successfully:', response);
+  //         this.toastService.showSuccess('Ticket updated successfully', 'OK');
+  //       },
+  //       (error) => {
+  //         console.error('Error:', error);
+  //         this.toastService.showError('Error updating ticket', error.message);
+  //       }
+  //     );
+  // }
 
   submitIssue() {
     console.log('Submit issue');

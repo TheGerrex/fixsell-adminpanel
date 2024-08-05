@@ -7,6 +7,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./chats/chats.module').then((m) => m.ChatsModule),
   },
+  {
+    path: 'live-chat',
+    loadChildren: () =>
+      import('./live-chat/live-chat.module').then((m) => m.LivechatsModule),
+  },
 ];
 
 @NgModule({

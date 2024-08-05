@@ -37,9 +37,17 @@ export class TicketsDashboardComponent implements OnInit {
   mediumPriorityTicketsCount: number = 0;
   lowPriorityTicketsCount: number = 0;
   allTickets: Ticket[] = [];
+  closedTickets: Ticket[] = [];
   highPriorityTickets: Ticket[] = [];
   mediumPriorityTickets: Ticket[] = [];
   lowPriorityTickets: Ticket[] = [];
+
+  statusTranslations: { [key in Status]: string } = {
+    [Status.OPEN]: 'ABIERTO',
+    [Status.IN_PROGRESS]: 'EN PROGRESO',
+    [Status.WITHOUT_RESOLUTION]: 'SIN RESOLUCIÓN',
+    [Status.COMPLETED]: 'COMPLETADO',
+  };
 
   ngOnInit() {
     this.loadUserTickets();
@@ -59,6 +67,7 @@ export class TicketsDashboardComponent implements OnInit {
       ticketsObservable.subscribe(
         (tickets) => {
           this.allTickets = tickets.filter(ticket => ticket.status !== Status.COMPLETED);
+          this.closedTickets = tickets.filter(ticket => ticket.status === Status.COMPLETED);
           console.log('Tickets:', this.allTickets); // Log tickets data to inspect it
           this.highPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.HIGH);
           this.mediumPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.MEDIUM);
@@ -187,7 +196,7 @@ export class TicketsDashboardComponent implements OnInit {
     this.router.navigate(['/support/tickets/create']);
   }
 
-  openTickets() {
+  navigateOpenTickets() {
     console.log('Open tickets');
     console.log('routing to: /support/tickets/list');
     this.router.navigate(['/support/tickets/list'], {
@@ -202,7 +211,7 @@ export class TicketsDashboardComponent implements OnInit {
     this.loadTicketsEvent.emit(Status.OPEN);
   }
 
-  closedTickets() {
+  navigateClosedTickets() {
     console.log('Closed tickets');
     console.log('routing to: /support/tickets/list');
     this.router.navigate(['/support/tickets/list'], {
@@ -213,5 +222,24 @@ export class TicketsDashboardComponent implements OnInit {
 
   seeTicket(ticket: Ticket) {
     this.router.navigate(['/support/tickets/' + ticket.id]);
+  }
+
+  getStatusClass(ticket: Ticket): string {
+    switch (this.getStatusTranslation(ticket.status)) {
+      case 'ABIERTO':
+        return 'status-open';
+      case 'EN PROGRESO':
+        return 'status-in-progress';
+      case 'SIN RESOLUCIÓN':
+        return 'status-without-resolution';
+      case 'COMPLETADO':
+        return 'status-completed';
+      default:
+        return '';
+    }
+  }
+
+  getStatusTranslation(status: Status): string {
+    return this.statusTranslations[status];
   }
 }

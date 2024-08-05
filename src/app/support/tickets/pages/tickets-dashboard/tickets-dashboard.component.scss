@@ -165,21 +165,24 @@
     opacity: 1;
     /* WebKit browsers */
     &::-webkit-scrollbar {
-        width: 8px; /* Adjust the width as needed */
+        width: 8px;
+        /* Adjust the width as needed */
     }
-
     &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.2); /* Adjust the color as needed */
-        border-radius: 10px; /* Adjust the border radius as needed */
+        background-color: rgba(0, 0, 0, 0.2);
+        /* Adjust the color as needed */
+        border-radius: 10px;
+        /* Adjust the border radius as needed */
     }
-
     &::-webkit-scrollbar-track {
-        background: transparent; /* Adjust the track background as needed */
+        background: transparent;
+        /* Adjust the track background as needed */
     }
-
     /* Firefox */
-    scrollbar-width: thin; /* "auto" or "thin" */
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* thumb and track color */
+    scrollbar-width: thin;
+    /* "auto" or "thin" */
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    /* thumb and track color */
 }
 
 .ticket-list-card-body-content {
@@ -243,7 +246,7 @@
                     display: flex;
                     align-items: center;
                     gap: .25rem;
-                    background-color: $indigo-500;
+                    background-color: transparent;
                     border-radius: $border-radius;
                     color: $white;
                     padding: .25rem .5rem;
@@ -426,19 +429,19 @@
 }
 
 .status-open {
-    background-color: $green-400;
+    background-color: $indigo-500 !important;
 }
 
 .status-in-progress {
-    background-color: $yellow-300;
+    background-color: $yellow-500 !important;
 }
 
 .status-without-resolution {
-    background-color: $orange-400;
+    background-color: $orange-500 !important;
 }
 
 .status-completed {
-    background-color: $blue-400;
+    background-color: $green-500 !important;
 }
 
 .priority-low {
@@ -451,6 +454,10 @@
 
 .priority-high {
     background-color: $red-400;
+}
+
+.opacity-7 {
+    opacity: 0.8;
 }
 
 .no-tickets {

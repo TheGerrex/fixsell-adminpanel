@@ -187,6 +187,7 @@ convertToLocalDate(dateString: string): string {
                 : []
             )
           : [{ activity: '', readOnly: false }];
+      console.log('Activities:', this.activities);
     });
   }
 

@@ -141,12 +141,12 @@
                         <button class="button button-icon-text button-text-primary" (click)="addActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
                     </div>
                     <div class="ticket-activity-body">
-                        <div class="default-message" *ngIf="this.activities.length === 0">
+                        <div class="default-message" *ngIf="activities.length === 0 || activities[0].activity === ''">
                             <mat-icon>help</mat-icon>
                             <p>Alguna nueva actividad en el servicio de tu ticket?</p>
                         </div>
-                        <div class="activity-card-container" *ngFor="let activity of activities; let i = index">
-                            <div class="activity-card">
+                        <div class="activity-card-container" *ngIf="activities.length > 0 && activities[0].activity !== ''">
+                            <div class="activity-card" *ngFor="let activity of activities; let i = index">
                                 <quill-editor [(ngModel)]="activity.activity" *ngIf="!activity.readOnly"></quill-editor>
                                 <div class="activity-card-content" *ngIf="activity.readOnly" [innerHTML]="activity.activity"></div>
                                 <div class="button-actions" *ngIf="activity.readOnly">

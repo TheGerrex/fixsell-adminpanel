@@ -83,9 +83,9 @@ export const navbarData = [
     ],
   },
   {
-    label: 'chat',
+    label: 'Chat',
     routeLink: 'chat/chat',
-    icon: 'fal fa-comments',
+    icon: 'chat',
     allowedRoles: ['admin', 'user', 'vendor'],
     isExpanded: false,
     subRoutes: [

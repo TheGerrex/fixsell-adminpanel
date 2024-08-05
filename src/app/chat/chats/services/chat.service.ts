@@ -1,5 +1,6 @@
 import { Manager, Socket } from 'socket.io-client';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 // For User Connection
 export const connectToServerAsUser = (
@@ -13,7 +14,7 @@ export const connectToServerAsUser = (
     throw new Error('No token found');
   }
 
-  const manager = new Manager('http://localhost:3000/socket.io/socket.io.js', {
+  const manager = new Manager(`${environment.baseUrl}/socket.io/socket.io.js`, {
     extraHeaders: {
       authentication: token,
     },
@@ -65,7 +66,7 @@ export const connectToServerAsAdmin = (roomName: string) => {
     return;
   }
 
-  const manager = new Manager('http://localhost:3000/socket.io/socket.io.js', {
+  const manager = new Manager(`${environment.baseUrl}/socket.io/socket.io.js`, {
     extraHeaders: {
       authentication: token,
     },

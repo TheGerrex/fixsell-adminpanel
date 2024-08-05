@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Ticket, Status, Activity } from 'src/app/support/interfaces/tickets.interface';
+import {
+  Ticket,
+  Status,
+  Activity,
+} from 'src/app/support/interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
@@ -19,9 +23,9 @@ export class TicketsViewComponent implements OnInit {
     private route: ActivatedRoute,
     private usersService: UsersService,
     private toastService: ToastService,
-    private activityService: ActivityService,
+    private activityService: ActivityService
   ) {
-    this.ticket = {} as Ticket;    
+    this.ticket = {} as Ticket;
   }
   ticket: Ticket;
   ticketIssue = '';
@@ -135,8 +139,8 @@ export class TicketsViewComponent implements OnInit {
     });
     this.getUsers();
     this.getCurrentUser();
-   
-    console.log("Activites:", this.activities);
+
+    console.log('Activites:', this.activities);
   }
 
   convertToLocalDate(dateString: string): string {
@@ -148,7 +152,9 @@ export class TicketsViewComponent implements OnInit {
       console.log('Invalid date string');
       return dateString;
     } else {
-      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
       return localDate.toISOString();
     }
   }
@@ -180,11 +186,17 @@ export class TicketsViewComponent implements OnInit {
       this.clientEmail = ticket.clientEmail;
       this.clientPhone = ticket.clientPhone;
       this.ticketPriority = ticket.priority;
-      this.assignedUser = ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
-      this.assignee = ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
-      this.ticket.createdDate = this.convertToLocalDate(this.ticket.createdDate);
-      this.ticket.updatedDate = this.convertToLocalDate(this.ticket.updatedDate);
-      this.activities = this.ticket.activities
+      this.assignedUser =
+        ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
+      this.assignee =
+        ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
+      this.ticket.createdDate = this.convertToLocalDate(
+        this.ticket.createdDate
+      );
+      this.ticket.updatedDate = this.convertToLocalDate(
+        this.ticket.updatedDate
+      );
+      this.activities = this.ticket.activities;
       console.log('Activities:', this.activities);
     });
   }
@@ -239,29 +251,48 @@ export class TicketsViewComponent implements OnInit {
   // }
 
   addActivity() {
-    console.log("Current User:", this.currentUser);
-    const newActivity: Omit<Activity, 'id'> = { text: this.newActivityText, addedBy: this.currentUser ? this.currentUser.id : undefined };
+    console.log('Current User:', this.currentUser);
+    const newActivity: Omit<Activity, 'id'> = {
+      text: this.newActivityText,
+      addedBy: this.currentUser ? this.currentUser.id : undefined,
+    };
     console.log('New activity:', newActivity);
-    this.activityService.createActivity(newActivity).subscribe(
-      (activity) => {
+    // Log current activity array:
+    console.log('Activities:', this.activities);
+
+    // Initialize activities as an empty array if it is null or undefined
+    if (!this.activities) {
+      this.activities = [];
+    }
+
+    const createActivityObserver = {
+      next: (activity: Activity) => {
         console.log('Activity created successfully:', activity);
         this.activities.push(activity);
         // this.ticket.activities.push(activity);
-        this.ticketsService.updateTicket(this.ticket.id, {activities: this.activities}).subscribe(
-        (updatedTicket) => {
-          console.log('Ticket updated successfully:', updatedTicket);
-          this.ticket = updatedTicket;
-        },
-        (error) => {
-          console.error('Error updating ticket:', error);
-        }
-      );
 
+        const updateTicketObserver = {
+          next: (updatedTicket: Ticket) => {
+            console.log('Ticket updated successfully:', updatedTicket);
+            this.ticket = updatedTicket;
+          },
+          error: (error: any) => {
+            console.error('Error updating ticket:', error);
+          },
+        };
+
+        this.ticketsService
+          .updateTicket(this.ticket.id, { activities: this.activities })
+          .subscribe(updateTicketObserver);
       },
-      (error) => {
+      error: (error: any) => {
         console.error('Error creando actividad:', error);
-      }
-    );
+      },
+    };
+
+    this.activityService
+      .createActivity(newActivity)
+      .subscribe(createActivityObserver);
   }
 
   // deleteActivity(index: number) {
@@ -363,7 +394,9 @@ export class TicketsViewComponent implements OnInit {
     console.log('Change priority');
     // Call the updateTicket method with the ticket id and the updated priority
     this.ticketsService
-      .updateTicket(this.ticket.id, { priority: this.ticketPriority as Priority })
+      .updateTicket(this.ticket.id, {
+        priority: this.ticketPriority as Priority,
+      })
       .subscribe(
         (response) => {
           console.log('Ticket updated successfully:', response);
@@ -383,36 +416,36 @@ export class TicketsViewComponent implements OnInit {
   }
 
   changeClientData() {
-  console.log('Change client data');
-  // Call the updateTicket method with the ticket id and the updated client data
-  this.ticketsService
-    .updateTicket(this.ticket.id, {
-      clientName: this.clientName,
-      clientEmail: this.clientEmail,
-      clientPhone: this.clientPhone,
-      clientAddress: this.clientAddress
-    })
-    .subscribe(
-      (response) => {
-        console.log('Ticket client data updated successfully:', response);
-        // Update the ticket object with the response from the server
-        this.ticket.clientName = this.clientName;
-        this.ticket.clientEmail = this.clientEmail;
-        this.ticket.clientPhone = this.clientPhone;
-        this.ticket.clientAddress = this.clientAddress;
-        this.clientReadOnly = true; // Switch back to read-only mode
-        this.toastService.showSuccess(
-          'Datos del cliente actualizados correctamente',
-          'OK'
-        );
-      },
-      (error) => {
-        console.error('Error:', error);
-        this.toastService.showError(
-          'Error al actualizar los datos del cliente',
-          error.message
-        );
-      }
-    );
-}
+    console.log('Change client data');
+    // Call the updateTicket method with the ticket id and the updated client data
+    this.ticketsService
+      .updateTicket(this.ticket.id, {
+        clientName: this.clientName,
+        clientEmail: this.clientEmail,
+        clientPhone: this.clientPhone,
+        clientAddress: this.clientAddress,
+      })
+      .subscribe(
+        (response) => {
+          console.log('Ticket client data updated successfully:', response);
+          // Update the ticket object with the response from the server
+          this.ticket.clientName = this.clientName;
+          this.ticket.clientEmail = this.clientEmail;
+          this.ticket.clientPhone = this.clientPhone;
+          this.ticket.clientAddress = this.clientAddress;
+          this.clientReadOnly = true; // Switch back to read-only mode
+          this.toastService.showSuccess(
+            'Datos del cliente actualizados correctamente',
+            'OK'
+          );
+        },
+        (error) => {
+          console.error('Error:', error);
+          this.toastService.showError(
+            'Error al actualizar los datos del cliente',
+            error.message
+          );
+        }
+      );
+  }
 }

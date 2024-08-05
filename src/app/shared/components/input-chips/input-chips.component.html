@@ -6,6 +6,6 @@
         <mat-icon>cancel</mat-icon>
       </button>
         </mat-chip-row>
-        <input placeholder="Nueva etiqueta..." [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
+        <input [placeholder]="placeholder" [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
     </mat-chip-grid>
 </div>

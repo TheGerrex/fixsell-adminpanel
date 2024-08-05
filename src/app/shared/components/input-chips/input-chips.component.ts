@@ -13,14 +13,12 @@ export interface Chip {
   styleUrls: ['./input-chips.component.scss']
 })
 export class InputChipsComponent implements OnChanges {
-
-  
-
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   items: Chip[] = []
 
   @Input() tagsControls!: any[];
+  @Input() placeholder: string = "Nueva etiqueta...";
   @Output() tagsUpdated = new EventEmitter<Chip[]>();
 
   announcer = inject(LiveAnnouncer);

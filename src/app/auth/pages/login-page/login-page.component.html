@@ -1,69 +1,62 @@
-<form
-  class="login-form"
-  autocomplete="off"
-  [formGroup]="myForm"
-  (ngSubmit)="login()"
->
-  <!-- add fixell logo -->
-  <div class="login-logo">
-    <img src="../../../../assets/images/logo300x41.png" alt="Fixell Logo" />
-    <p>Llevando tu productividad al máximo</p>
+
+<div class="login-background">
+  
+  <div class="login-wrapper">
+    <div class="login-header">
+      <img src="../../../../assets/logo/fixsell_logo-400px.svg" alt="Fixsell Logo" />
+      <p class="logo-subheader">Llevando tu productividad al máximo</p>
+    </div>
+    <div class="login-container">
+      <form class="login-form" autocomplete="off" [formGroup]="myForm" (ngSubmit)="login()">
+        <div class="login-form-header">      
+          <h3 class="login-title">Bienvenido de nuevo</h3>
+          <p class="login-subtitle">Ingresa tus credenciales para acceder a tu cuenta.</p>
+        </div>
+
+        <div>
+          <p class="form-label">Usuario</p>
+          <input
+            class="form-control"
+            type="email"
+            formControlName="email"
+            placeholder="Correo electrónico"
+            [class.is-invalid]="myForm.controls['email'].invalid && myForm.controls['email'].touched"
+          />
+          <span *ngIf="isValidField('email')" class="form-text text-danger">
+            {{ getFieldError('email') }}
+          </span>
+        </div>
+
+        <div>
+          <p class="form-label">Contraseña</p>
+          <input
+            class="form-control"
+            type="password"
+            formControlName="password"
+            placeholder="Ingrese su contraseña"
+            [class.is-invalid]="myForm.controls['password'].invalid && myForm.controls['password'].touched"
+          />
+          <span *ngIf="isValidField('password')" class="form-text text-danger">
+            {{ getFieldError('password') }}
+          </span>
+        </div>
+
+        <div class="form-action">
+          <button type="submit" class="button button-primary button-raised">
+            <span class="button-label" *ngIf="!isLoading">Iniciar Sesión</span>
+            <div *ngIf="isLoading" class="spinner-grow text-light" style="width: 1rem; height: 1rem;" role="status"></div>
+          </button>
+        </div>
+      </form>
+      <div class="login-form-footer">
+          <p>¿No tienes cuenta?</p>
+          <a href="mailto:jonas.clausen@fixsell.mx?subject=Cuenta Dashboard&body=Hola me gustaria un cuenta porfavor">Manda un Correo a TI</a>
+      </div>
+    </div>
+    <div class="login-footer">
+      <p>Desarrollado por CUBICO	&#174; - 2024</p>
+    </div>
   </div>
+  <div class="login-image"></div>
+</div>
 
-  <h1 class="login-title">Accede a tu cuenta</h1>
-
-  <div class="mb-3">
-    <p class="form-label mb-2">Usuario</p>
-    <input
-      class="form-control"
-      type="email"
-      formControlName="email"
-      placeholder="Correo electrónico"
-      [class.is-invalid]="myForm.controls['email'].invalid && myForm.controls['email'].touched"
-    />
-    <span *ngIf="isValidField('email')" class="form-text text-danger">
-      {{ getFieldError('email') }}
-    </span>
-  </div>
-
-  <div class="mb-3">
-    <p class="form-label mb-2">Contraseña</p>
-    <input
-      class="form-control"
-      type="password"
-      formControlName="password"
-      placeholder="Ingrese su contraseña"
-      [class.is-invalid]="myForm.controls['password'].invalid && myForm.controls['password'].touched"
-    />
-    <span *ngIf="isValidField('password')" class="form-text text-danger">
-      {{ getFieldError('password') }}
-    </span>
-  </div>
-
-  <div class="mb-3">
-    <button
-      class="button button-primary button-rounded"
-      
-      type="submit"
-    >
-      <span class="button-label" *ngIf="!isLoading">Iniciar Sesión</span>
-      <!-- material spinner -->
-      <mat-spinner
-        *ngIf="isLoading"
-        class="spinner"
-        diameter="20"
-        strokeWidth="4"
-      ></mat-spinner>
-    </button>
-  </div>
-
-  <hr class="login-line" />
-
-  <div class="login-footer">
-    <p>¿No tienes cuenta?</p>
-    <a
-      href="mailto:jonastclausen@gmail.com?subject=Cuenta Dashboard&body=Hola me gustaria un cuenta "
-      >Manda un Correo a TI</a
-    >
-  </div>
-</form>

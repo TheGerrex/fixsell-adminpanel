@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,7 +14,6 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { Observable } from 'rxjs';
-import { TicketsDashboardComponent } from '../tickets-dashboard/tickets-dashboard.component';
 import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-tickets-list',
@@ -24,28 +22,35 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TicketsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
   dataSource = new MatTableDataSource<Ticket>();
   filterValue = '';
+  searchTerm = '';
   isAdmin = false;
   TicketData: Ticket[] = [];
   isLoadingData = false;
   displayedColumns: string[] = [
-    'Title',
     'Client',
-    'clientEmail',
-    'clientPhone',
+    'Title',
+    'Type',
     'status',
     'priority',
     'updatedDate', //time since last update
-    'createdDate', //time since created
+    // 'createdDate', //time since created
     'action',
   ];
+
+  priorityMapping: { [key: string]: number } = {
+    'high': 3,
+    'medium': 2,
+    'low': 1
+  };
+
   statusTranslations: { [key in Status]: string } = {
-    [Status.OPEN]: 'abierto',
-    [Status.IN_PROGRESS]: 'en progreso',
-    [Status.WITHOUT_RESOLUTION]: 'sin resolución',
-    [Status.COMPLETED]: 'completado',
+    [Status.OPEN]: 'ABIERTO',
+    [Status.IN_PROGRESS]: 'EN PROGRESO',
+    [Status.WITHOUT_RESOLUTION]: 'SIN RESOLUCIÓN',
+    [Status.COMPLETED]: 'COMPLETADO',
   };
 
   statusColors: { [key in Status]: string } = {
@@ -85,13 +90,13 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
 
   getStatusClass(ticket: Ticket): string {
     switch (this.getStatusTranslation(ticket.status)) {
-      case 'abierto':
+      case 'ABIERTO':
         return 'status-open';
-      case 'en progreso':
+      case 'EN PROGRESO':
         return 'status-in-progress';
-      case 'sin resolución':
+      case 'SIN RESOLUCIÓN':
         return 'status-without-resolution';
-      case 'completado':
+      case 'COMPLETADO':
         return 'status-completed';
       default:
         return '';
@@ -111,8 +116,8 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     }
   }
 
+
   constructor(
-    private http: HttpClient,
     private router: Router,
     private ticketsService: TicketsService,
     private authService: AuthService,
@@ -131,20 +136,28 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
       this.displayedColumns = [
-        'Title',
         'Client',
-        'clientEmail',
-        'clientPhone',
+        'Title',
+        'Type',
         'status',
         'priority',
         'updatedDate',
         'createdDate',
       ];
     }
+    this.dataSource.sort = this.sort;
   }
 
   ngAfterViewInit() {
-    // this.loadData();
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      console.log(`Sorting by ${sortHeaderId}`);
+      if (sortHeaderId === 'priority') {
+        return this.priorityMapping[data.priority];
+      } else {
+        return data[sortHeaderId  as keyof Ticket];
+      }
+    };
   }
 
   loadData(statuses?: string) {
@@ -178,6 +191,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.isLoadingData = false;
+
       },
       (error) => {
         console.error('Error:', error);

@@ -1,100 +1,83 @@
 <div class="table-header">
-  <h2>Usuarios</h2>
-  <div class="table-action-buttons">
-    <div class="search-box">
-      <div class="input-group">
-        <span class="input-group-text" id="basic-addon1">
-          <mat-icon>search</mat-icon>
-        </span>
-        <input
-          class="form-control"
-          type="text"
-          placeholder="Buscar"
-          (input)="applyFilter($event)"
-        />
-      </div>
+    <div class="header-wrapper">
+        <h3 class="table-title">Usuarios</h3>
+        <div class="table-actions">
+            <div class="search-box">
+                <div class="search-box-container">
+                    <mat-icon *ngIf="!searchTerm">search</mat-icon>
+                    <input class="search-input" type="text" placeholder="Buscar Usuarios" [(ngModel)]="searchTerm" (input)="applyFilter($event)" />
+                </div>
+            </div>
+            <div class="action-buttons">
+                <website-export [data]="userData" [ignoreFields]="['id']"></website-export>
+                <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="addUser()">
+                        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+                    </button>
+            </div>
+        </div>
     </div>
-    <website-export [data]="userData" [ignoreFields]="['id']"></website-export>
-    <button
-      class="button button-primary button-raised button-icon-text"
-      (click)="addUser()"
-    >
-      <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-    </button>
-  </div>
+    <div class="table-search">
+        <div class="search-box">
+            <div class="search-box-container">
+                <mat-icon *ngIf="!searchTerm">search</mat-icon>
+                <input class="search-input" type="text" placeholder="Buscar Usuarios" [(ngModel)]="searchTerm" (input)="applyFilter($event)" />
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="responsive-table">
-  <div class="table-container">
-    <table mat-table matSort [dataSource]="dataSource" class="user-list-table">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let user" data-column="name">
-          {{ user.name }}
-        </td>
-      </ng-container>
+    <div class="table-container">
+        <table mat-table matSort [dataSource]="dataSource" class="user-list-table">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let user" data-column="name">
+                    {{ user.name }}
+                </td>
+            </ng-container>
 
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Correo</th>
-        <td mat-cell *matCellDef="let user" data-column="email">
-          {{ user.email }}
-        </td>
-      </ng-container>
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Correo</th>
+                <td mat-cell *matCellDef="let user" data-column="email">
+                    {{ user.email }}
+                </td>
+            </ng-container>
 
-      <ng-container matColumnDef="roles">
-        <th mat-header-cell *matHeaderCellDef>Rol</th>
-        <td mat-cell *matCellDef="let user" data-column="roles">
-          {{ getRoleNames(user.roles) }}
-        </td>
-      </ng-container>
+            <ng-container matColumnDef="roles">
+                <th mat-header-cell *matHeaderCellDef>Roles</th>
+                <td mat-cell *matCellDef="let user" data-column="roles">
+                    {{ getRoleNames(user.roles) }}
+                </td>
+            </ng-container>
 
-      <ng-container matColumnDef="isActive">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
-        <td mat-cell *matCellDef="let user" data-column="isActive">
-          {{ user.isActive ? "Activo" : "Inactivo" }}
-        </td>
-      </ng-container>
+            <ng-container matColumnDef="isActive">
+                <th mat-header-cell *matHeaderCellDef>Estado</th>
+                <td mat-cell *matCellDef="let user" data-column="isActive">
+                    <!-- {{ user.isActive ? "Activo" : "Inactivo" }} -->
+                    <span *ngIf="user.isActive" class="active-user">ACTIVO</span>
+                    <span *ngIf="!user.isActive" class="inactive-user">INACTIVO</span>
+                </td>
+            </ng-container>
 
-      <!-- Edit Column -->
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let user" data-column="actions">
-          <button
-            mat-icon-button
-            color="basic"
-            *ngIf="isAdmin"
-            (click)="seeUser(user.id)"
-          >
-            <mat-icon>visibility</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="primary"
-            *ngIf="isAdmin"
-            (click)="editUser(user.id)"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="warn"
-            *ngIf="isAdmin"
-            (click)="deleteUser(user)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+            <!-- Edit Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let user" data-column="actions">
+                    <button mat-icon-button color="basic" *ngIf="isAdmin" (click)="seeUser(user.id)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                    <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editUser(user.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="openConfirmDialog(user)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                </td>
+            </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-  </div>
-
-  <mat-paginator
-    [pageSizeOptions]="[5, 10, 25, 100]"
-    [pageSize]="8"
-    showFirstLastButtons
-    class="table-paginator"
-  ></mat-paginator>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="8" showFirstLastButtons class="table-paginator"></mat-paginator>
 </div>

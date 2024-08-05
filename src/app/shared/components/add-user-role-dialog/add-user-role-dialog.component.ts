@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { RoleService } from '../../services/role.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-add-user-role-dialog',
@@ -13,7 +13,9 @@ export class AddUserRoleDialogComponent {
   roleName = new FormControl('', Validators.required);
 
   constructor(
-    private http: HttpClient,
+    private rolService: RoleService,
+    private toastService: ToastService,
+    private cd: ChangeDetectorRef,
     public dialogRef: MatDialogRef<AddUserRoleDialogComponent>
   ) {}
 
@@ -21,15 +23,21 @@ export class AddUserRoleDialogComponent {
     this.dialogRef.close();
   }
 
+  get roleNameError() {
+    return this.roleName.errors?.["serverError"];
+  }
+
   onSubmit(): void {
     if (this.roleName.valid) {
-      this.http
-        .post(`${environment.baseUrl}/roles`, {
-          name: this.roleName.value,
-        })
-        .subscribe(() => {
-          this.dialogRef.close(this.roleName.value);
-        });
+      this.rolService.createRole(this.roleName.value).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Rol creado con éxito', 'Close');
+          this.dialogRef.close();
+        },
+        error: (error) => {
+          this.roleName.setErrors({ serverError: error.error.message });
+        }
+      });
     }
   }
 }

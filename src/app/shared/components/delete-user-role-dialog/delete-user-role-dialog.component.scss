@@ -1,0 +1,42 @@
+@import "_variables.scss";
+.dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    @media(min-width: 768px) {
+        max-width: 400px;
+    }
+}
+
+.title {
+    margin: 0;
+    line-height: 1;
+    color: $text;
+}
+
+.input-label {
+    font-weight: 500;
+    margin-bottom: .25rem;
+    color: $text;
+}
+
+.content {
+    margin: .5rem 0;
+    span {
+        color: $text;
+        font-weight: 500;
+    }
+}
+
+.button-actions {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-evenly;
+    gap: .5rem;
+    align-items: center;
+    @media(min-width: 768px) {
+        flex-wrap: nowrap;
+    }
+}

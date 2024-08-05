@@ -16,10 +16,12 @@ export class ToastService {
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-success',
+        iconColor: 'success-icon',
+        borderColor: 'success-border',
         icon: 'done',
       },
       duration: 8000, 
-      horizontalPosition: 'right', 
+      horizontalPosition: 'center', 
       verticalPosition: 'bottom',
       panelClass: ['success-toast']});
   }
@@ -31,10 +33,12 @@ export class ToastService {
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-danger',
+        iconColor: 'error-icon',
+        borderColor: 'error-border',
         icon: 'error',
       },
       duration: 8000, 
-      horizontalPosition: 'right', 
+      horizontalPosition: 'center', 
       verticalPosition: 'bottom',
       panelClass: ['error-toast']});
   }
@@ -46,10 +50,12 @@ export class ToastService {
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-warning',
+        iconColor: 'warning-icon',
+        borderColor: 'warning-border',
         icon: 'warning',
       },
       duration: 8000, 
-      horizontalPosition: 'right', 
+      horizontalPosition: 'center', 
       verticalPosition: 'bottom',
       panelClass: ['warning-toast']});
   }
@@ -61,10 +67,12 @@ export class ToastService {
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-info',
+        iconColor: 'info-icon',
+        borderColor: 'info-border',
         icon: 'info',
       },
       duration: 8000, 
-      horizontalPosition: 'right', 
+      horizontalPosition: 'center', 
       verticalPosition: 'bottom',
       panelClass: ['info-toast']});
   }
@@ -76,10 +84,12 @@ export class ToastService {
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-help',
+        iconColor: 'help-icon',
+        borderColor: 'help-border',
         icon: 'info',
       },
       duration: 8000, 
-      horizontalPosition: 'right', 
+      horizontalPosition: 'center', 
       verticalPosition: 'bottom',
       panelClass: ['help-toast']});
   }

@@ -50,6 +50,24 @@ export class UsersService {
       .pipe(map((response) => response.name));
   }
 
+  getToken(): string {
+    return localStorage.getItem('token') || '';
+  }
+
+  // delete user
+  deleteUser(user: any, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const userId = user.id;
+    delete user.id; // Remove the id property from the user object
+
+    console.log('userId:', userId); // Log the userId
+    console.log('user:', user); // Log the user object
+
+    return this.http.delete(`${environment.baseUrl}/auth/${userId}`,{
+      headers,
+    });
+  }
+
   // edit user
   editUser(user: any, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

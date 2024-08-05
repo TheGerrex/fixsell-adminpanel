@@ -6,7 +6,6 @@ import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-tickets-view',
@@ -19,21 +18,24 @@ export class TicketsViewComponent implements OnInit {
     private route: ActivatedRoute,
     private usersService: UsersService,
     private toastService: ToastService,
-    private authService: AuthService
   ) {
-    this.ticket = {} as Ticket;
+    this.ticket = {} as Ticket;    
+    // this.clientPhoneMask = this.maskPipe.transform(this.clientPhone, '(000) 000-0000');
+
   }
   ticket: Ticket;
   ticketIssue = '';
   activities: { activity: string; readOnly: boolean }[] = [];
   issueReadOnly = true;
+  clientReadOnly = true;
   isLoadingData = true;
   ticketNumber = 0;
   clientName = '';
   clientEmail = '';
   clientPhone = '';
+  clientPhoneMask = '';
   ticketPriority = '';
-  clientAdress = '';
+  clientAddress = '';
   assignedUser: string = ''; // Initialize the 'assignedUser' property
   assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
@@ -60,10 +62,16 @@ export class TicketsViewComponent implements OnInit {
     [Status.COMPLETED]: 'green',
   };
 
+  priorityOptions = [
+    { value: Priority.LOW, label: 'Bajo' },
+    { value: Priority.MEDIUM, label: 'Medio' },
+    { value: Priority.HIGH, label: 'Alto' },
+  ];
+
   priorityTranslations: { [key in Priority]: string } = {
-    [Priority.LOW]: 'bajo',
-    [Priority.MEDIUM]: 'medio',
-    [Priority.HIGH]: 'alto',
+    [Priority.LOW]: 'Bajo',
+    [Priority.MEDIUM]: 'Medio',
+    [Priority.HIGH]: 'Alto',
   };
 
   priorityColors: { [key in Priority]: string } = {
@@ -105,11 +113,11 @@ export class TicketsViewComponent implements OnInit {
 
   getPriorityClass(ticket: Ticket): string {
     switch (this.getPriorityTranslation(ticket.priority)) {
-      case 'bajo':
+      case 'Bajo':
         return 'priority-low';
-      case 'medio':
+      case 'Medio':
         return 'priority-medium';
-      case 'alto':
+      case 'Alto':
         return 'priority-high';
       default:
         return '';
@@ -124,7 +132,23 @@ export class TicketsViewComponent implements OnInit {
       }
     });
     this.getUsers();
+   
+    console.log("Activites:", this.activities);
   }
+
+convertToLocalDate(dateString: string): string {
+  console.log('Date string:', dateString);
+  const date = new Date(dateString);
+  console.log('Date:', date);
+  if (isNaN(date.getTime())) {
+    // The date string is not valid
+    console.log('Invalid date string');
+    return dateString;
+  } else {
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return localDate.toISOString();
+  }
+}
 
   getUsers() {
     const token = localStorage.getItem('token');
@@ -144,12 +168,14 @@ export class TicketsViewComponent implements OnInit {
       this.ticketNumber = ticket.id; // Set the ticket number
       this.ticketStatus = ticket.status; // Set the ticket status
       this.clientName = ticket.clientName;
-      this.clientAdress = ticket.clientAddress;
+      this.clientAddress = ticket.clientAddress;
       this.clientEmail = ticket.clientEmail;
       this.clientPhone = ticket.clientPhone;
       this.ticketPriority = ticket.priority;
       this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
       this.assignee = ticket.assignee ? ticket.assignee.name : '';
+      this.ticket.createdDate = this.convertToLocalDate(this.ticket.createdDate);
+      this.ticket.updatedDate = this.convertToLocalDate(this.ticket.updatedDate);
       this.activities =
         ticket.activity && ticket.activity.length > 0
           ? ticket.activity.flatMap((activityGroup) =>
@@ -179,7 +205,7 @@ export class TicketsViewComponent implements OnInit {
             this.clientName = ticket.clientName;
             this.clientEmail = ticket.clientEmail;
             this.clientPhone = ticket.clientPhone;
-            this.clientAdress = ticket.clientAddress;
+            this.clientAddress = ticket.clientAddress;
             this.ticketPriority = ticket.priority;
             this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
             this.assignee = ticket.assignee ? ticket.assignee.name : '';
@@ -246,8 +272,16 @@ export class TicketsViewComponent implements OnInit {
     this.issueReadOnly = !this.issueReadOnly;
   }
 
+  toggleClientEdit() {
+    this.clientReadOnly = !this.clientReadOnly;
+  }
+
   toggleActivityEdit(index: number) {
     this.activities[index].readOnly = !this.activities[index].readOnly;
+  }
+
+  addActivity() {
+      this.activities.push({ activity: '', readOnly: false });
   }
 
   deleteActivity(index: number) {
@@ -324,29 +358,81 @@ export class TicketsViewComponent implements OnInit {
   }
 
   changeStatus() {
-    console.log('Change status');
+    console.log('Cambio de Estatus');
     // Call the updateTicket method with the ticket id and the updated status
     this.ticketsService
       .updateTicket(this.ticket.id, { status: this.ticketStatus })
       .subscribe(
         (response) => {
-          console.log('Ticket status updated successfully:', response);
+          this.ticket.status = this.ticketStatus;
           this.toastService.showSuccess(
-            'Ticket status updated successfully',
+            'Estado del ticket actualizado correctamente',
             'OK'
           );
         },
         (error) => {
-          console.error('Error:', error);
           this.toastService.showError(
-            'Error updating ticket status',
+            'Error al actualizar el estado del ticket',
             error.message
           );
         }
       );
   }
 
-  addActivity() {
-    this.activities.push({ activity: '', readOnly: false });
+  changePriority() {
+    console.log('Change priority');
+    // Call the updateTicket method with the ticket id and the updated priority
+    this.ticketsService
+      .updateTicket(this.ticket.id, { priority: this.ticketPriority as Priority })
+      .subscribe(
+        (response) => {
+          console.log('Ticket updated successfully:', response);
+          this.ticket.priority = this.ticketPriority as Priority;
+          this.toastService.showSuccess(
+            'Prioridad del ticket actualizado correctamente',
+            'OK'
+          );
+        },
+        (error) => {
+          this.toastService.showError(
+            'Error al actualizar la prioridad del ticket',
+            error.message
+          );
+        }
+      );
   }
+
+  changeClientData() {
+  console.log('Change client data');
+  // Call the updateTicket method with the ticket id and the updated client data
+  this.ticketsService
+    .updateTicket(this.ticket.id, {
+      clientName: this.clientName,
+      clientEmail: this.clientEmail,
+      clientPhone: this.clientPhone,
+      clientAddress: this.clientAddress
+    })
+    .subscribe(
+      (response) => {
+        console.log('Ticket client data updated successfully:', response);
+        // Update the ticket object with the response from the server
+        this.ticket.clientName = this.clientName;
+        this.ticket.clientEmail = this.clientEmail;
+        this.ticket.clientPhone = this.clientPhone;
+        this.ticket.clientAddress = this.clientAddress;
+        this.clientReadOnly = true; // Switch back to read-only mode
+        this.toastService.showSuccess(
+          'Datos del cliente actualizados correctamente',
+          'OK'
+        );
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.toastService.showError(
+          'Error al actualizar los datos del cliente',
+          error.message
+        );
+      }
+    );
+}
 }

@@ -1,26 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SharedService } from 'src/app/shared/services/shared.service';
 import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { repeat } from 'rxjs';
-import { R } from '@angular/cdk/keycodes';
-import {
-  InputChipsComponent,
-  Chip,
-} from '../../../../shared/components/input-chips/input-chips.component';
-import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AddUserRoleDialogComponent } from '../../../../shared/components/add-user-role-dialog/add-user-role-dialog.component';
 
@@ -36,8 +27,9 @@ export class UserEditComponent implements OnInit {
     password: ['', [this.validatorsService.isStrongPassword()]],
     repeatPassword: [''],
     isActive: [false],
-    roles: [this.fb.array([])],
+    roles: [this.fb.array([]), Validators.required],
   });
+
   user: User | null = null;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
@@ -46,18 +38,16 @@ export class UserEditComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private sharedService: SharedService,
     private usersService: UsersService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-    private http: HttpClient,
     private dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.getUser();
+    this.setupPasswordValidation();
   }
 
   getUser(): void {
@@ -96,14 +86,31 @@ export class UserEditComponent implements OnInit {
     this.editUserForm.setValue({
       email: this.user?.email || '',
       name: this.user?.name || '',
-      password: '',
+      password: this.user?.password || '',
       repeatPassword: '',
       isActive: this.user?.isActive || false,
-      roles: [] as unknown[],
+      roles: this.user?.roles?.map((role) => role.name) ?? null,
     });
     this.selectedRoles = (
       this.user?.roles?.map((role) => role.name) || []
     ).filter((role): role is string => Boolean(role));
+  }
+
+
+  setupPasswordValidation() {
+    const passwordControl = this.editUserForm.get('password');
+    const repeatPasswordControl = this.editUserForm.get('repeatPassword');
+  
+    if (passwordControl && repeatPasswordControl) {
+      passwordControl.valueChanges.subscribe(password => {
+        if (password) {
+          repeatPasswordControl.setValidators([Validators.required]);
+        } else {
+          repeatPasswordControl.clearValidators();
+        }
+        repeatPasswordControl.updateValueAndValidity();
+      });
+    }
   }
 
   onIsActiveChange(event: Event) {
@@ -205,25 +212,10 @@ export class UserEditComponent implements OnInit {
     }
   }
 
-  handleTagsUpdated(chips: Chip[]) {
-    const newRoles = chips.map((chip) => chip.name);
-
-    // Filter out any roles not in the original set
-    const validRoles = newRoles.filter((role) =>
-      this.selectedRoles.includes(role)
-    );
-
-    // Update the selected roles and form control value
-    this.selectedRoles = validRoles;
-    this.editUserForm.get('roles')?.setValue(this.selectedRoles);
-
-    console.log('selectedRoles:', this.selectedRoles);
-    console.log('chips:', chips);
+  handleItemsChange(selectedItems: string[]) {
+    this.editUserForm.controls['roles'].setValue(selectedItems);
   }
 
-  isSubset(subset: string[], set: string[]): boolean {
-    return subset.every((val) => set.includes(val));
-  }
 
   openAddUserRoleDialog() {
     const dialogRef = this.dialog.open(AddUserRoleDialogComponent);
@@ -239,6 +231,9 @@ export class UserEditComponent implements OnInit {
       console.log('Invalid form');
       this.editUserForm.markAllAsTouched();
       return;
+    }
+    if (this.editUserForm.value.password === "" || this.editUserForm.value.password === null) {
+      delete this.editUserForm.value.password;
     }
     this.isLoadingForm = true;
     const user = { ...this.editUserForm.value, id: this.user?.id };
@@ -261,7 +256,7 @@ export class UserEditComponent implements OnInit {
         error: (error) => {
           this.isLoadingForm = false;
           this.toastService.showError(
-            `Error creando userio: ${error.error.message}`,
+            `Error creando usuario: ${error.error.message}`,
             'Close'
           );
           console.error('Error actualizando usuario:', error.error.message);

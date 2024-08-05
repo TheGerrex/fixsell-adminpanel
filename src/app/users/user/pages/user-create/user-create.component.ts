@@ -1,24 +1,15 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SharedService } from 'src/app/shared/services/shared.service';
+import { Router } from '@angular/router';
 import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { repeat } from 'rxjs';
-import { R } from '@angular/cdk/keycodes';
-import {
-  InputChipsComponent,
-  Chip,
-} from '../../../../shared/components/input-chips/input-chips.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,11 +28,8 @@ export class UserCreateComponent implements OnInit {
   passwordFieldFocused = false;
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private sharedService: SharedService,
     private usersService: UsersService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private http: HttpClient,
@@ -65,21 +53,16 @@ export class UserCreateComponent implements OnInit {
     );
   }
 
-  isRoleSelected(roleName: string): boolean {
-    return this.user?.roles?.some((role) => role.name === roleName) || false;
-  }
+
   initializeForm() {
     this.createUserForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
         name: ['', Validators.required],
-        password: [
-          '',
-          [Validators.required, this.validatorsService.isStrongPassword()],
-        ],
+        password: ['', [Validators.required, this.validatorsService.isStrongPassword()]],
         repeatPassword: ['', Validators.required],
         isActive: [true],
-        roles: [this.fb.array([])],
+        roles: [['user'], Validators.required],
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -171,34 +154,28 @@ export class UserCreateComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedOption = selectElement.value;
 
-    if (
-      selectedOption !== 'addNew' &&
-      !this.selectedRoles.includes(selectedOption)
-    ) {
+    if (selectedOption !== 'addNew' && !this.selectedRoles.includes(selectedOption)) 
+    {
       this.selectedRoles = [...this.selectedRoles, selectedOption];
-      this.createUserForm.get('roles')?.setValue(this.selectedRoles);
       console.log('selectedRoles:', this.selectedRoles);
+      this.createUserForm.get('roles')?.setValue(null);
+    } else if (selectedOption === 'addNew') {
+      this.openAddUserRoleDialog();
+      this.createUserForm.get('roles')?.setValue(null);
     }
   }
 
-  handleTagsUpdated(chips: Chip[]) {
-    const newRoles = chips.map((chip) => chip.name);
-
-    // Filter out any roles not in the original set
-    const validRoles = newRoles.filter((role) =>
-      this.selectedRoles.includes(role)
-    );
-
-    // Update the selected roles and form control value
-    this.selectedRoles = validRoles;
-    this.createUserForm.get('roles')?.setValue(this.selectedRoles);
-
-    console.log('selectedRoles:', this.selectedRoles);
-    console.log('chips:', chips);
+  handleItemsChange(selectedItems: string[]) {
+    this.selectedRoles = selectedItems;
+    this.createUserForm.controls['roles'].setValue(selectedItems);
   }
 
-  isSubset(subset: string[], set: string[]): boolean {
-    return subset.every((val) => set.includes(val));
+  removeRole(role: string): void {
+    const index = this.selectedRoles.indexOf(role);
+
+    if (index >= 0) {
+      this.selectedRoles.splice(index, 1);
+    }
   }
 
   openAddUserRoleDialog() {
@@ -217,13 +194,18 @@ export class UserCreateComponent implements OnInit {
       return;
     }
     this.isLoadingForm = true;
+
+    // Add the selectedRoles to Roles Form Control
+    this.createUserForm.get('roles')?.setValue(this.selectedRoles);
+    console.log('selectedRoles:', this.selectedRoles);
+
     const user = this.createUserForm.value;
     delete user.repeatPassword; // Delete the repeat field
     console.log('user:', user);
     this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
       next: (response) => {
         this.isLoadingForm = false;
-        this.toastService.showSuccess('Userio creado con exito', 'Close');
+        this.toastService.showSuccess('Usuario creado con exito', 'Close');
         // Navigate to the user detail page
         this.router.navigate(['/users/user']);
         // Reset the form
@@ -232,10 +214,10 @@ export class UserCreateComponent implements OnInit {
       error: (error) => {
         this.isLoadingForm = false;
         this.toastService.showError(
-          `Error creando userio: ${error.error.message}`,
+          `Error creando usuario: ${error.error.message}`,
           'Close'
         );
-        console.error('Error creando userio:', error.error.message);
+        console.error('Error creando usuario:', error.error.message);
       },
     });
   }

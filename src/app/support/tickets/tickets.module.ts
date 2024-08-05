@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SupportModule } from '../support.module';
 import { TicketRoutingModule } from './tickets-routing.module';
@@ -11,26 +11,32 @@ import { TicketsCreateComponent } from './pages/tickets-create/tickets-create.co
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TicketStatusPipe } from './pipes/ticket-status.pipe';
+import { TicketTypePipe } from './pipes/ticket-type.pipe';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 @NgModule({
   declarations: [
     LayoutPageComponent,
     TicketsDashboardComponent,
     TicketsListComponent,
     TicketsViewComponent,
-    TicketsCreateComponent, // Ensure TicketsCreateComponent is declared here
+    TicketsCreateComponent,
+    TicketStatusPipe,
+    TicketTypePipe,
   ],
   imports: [
     CommonModule,
     SharedModule,
     SupportModule,
     TicketRoutingModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
     BsDatepickerModule.forRoot(),
   ],
-
-  // imports: [CommonModule, SharedModule, UsersModule, UserRoutingModule],
+  providers: [DatePipe, provideNgxMask()],
 })
 export class TicketsModule {}

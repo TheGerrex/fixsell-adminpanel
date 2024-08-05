@@ -30,12 +30,12 @@ type Breadcrumb = { label: string; url: string };
       nav {
         display: flex;
         flex-wrap: wrap;
-        margin-bottom: 16px;
+        margin-bottom: 0.5rem;
         align-items: center;
         height: auto;
         background-color: #fff;
-        padding: 8px 16px;
-        border-radius: 4px;
+        padding: 0.5rem;
+        border-radius: 6px;
         border: 1px solid #d1d5db;
       }
       @media (max-width: 768px) {
@@ -49,6 +49,10 @@ type Breadcrumb = { label: string; url: string };
       a {
         color: #1f2937;
         text-decoration: none;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        color: #4b5563;
       }
       a:hover {
         // color: #3b82f6;
@@ -83,6 +87,13 @@ export class BreadcrumbComponent implements OnInit {
       deals: 'Promociones',
       edit: 'Editar',
       create: 'Crear',
+      user: 'Usuarios',
+      website: 'Página Web',
+      printer: 'Multifuncional',
+      config: 'Configuración',
+      tickets: 'Tickets',
+      leads: 'Clientes Potenciales',
+      list: 'Listado',
       // Add more mappings here if needed
     };
 
@@ -130,7 +141,7 @@ export class BreadcrumbComponent implements OnInit {
           (event): event is NavigationEnd => event instanceof NavigationEnd
         ),
         switchMap((event: NavigationEnd) =>
-          createBreadcrumbs(event.urlAfterRedirects)
+          createBreadcrumbs(event.urlAfterRedirects.split('?')[0])
         )
       )
       .subscribe((breadcrumbs) => {

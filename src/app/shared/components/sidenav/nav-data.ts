@@ -4,14 +4,14 @@ export const navbarData = [
   {
     label: 'Dashboard',
     routeLink: 'dashboard',
-    icon: 'fal fa-home',
+    icon: 'home',
     allowedRoles: ['admin', 'user', 'vendor'],
   },
   {
     label: 'Pagina Web',
     routeLink: 'website/printers',
     allowedRoles: ['admin', 'user', 'vendor'],
-    icon: 'fal fa-globe',
+    icon: 'public',
     isExpanded: false,
     subRoutes: [
       {
@@ -45,7 +45,7 @@ export const navbarData = [
   {
     label: 'Ventas',
     routeLink: 'sales/sales',
-    icon: 'fal fa-shopping-cart',
+    icon: 'storefront',
     allowedRoles: ['admin', 'vendor'],
     isExpanded: false,
     subRoutes: [
@@ -66,7 +66,7 @@ export const navbarData = [
   {
     label: 'Soporte',
     routeLink: 'support/tickets',
-    icon: 'fal fa-headset',
+    icon: 'support_agent',
     allowedRoles: ['admin', 'user', 'vendor'],
     isExpanded: false,
     subRoutes: [
@@ -110,7 +110,7 @@ export const navbarData = [
     label: 'Usuarios',
     routeLink: 'users/user',
     allowedRoles: ['admin', 'user', 'vendor'],
-    icon: 'fal fa-users',
+    icon: 'group',
     isExpanded: false,
     subRoutes: [
       {
@@ -144,10 +144,10 @@ export const navbarData = [
   //   label: 'Chat',
   //   allowedRoles: ['admin', 'user', 'vendor'],
   // },
-  {
-    label: 'Ajustes',
-    routeLink: 'dashboard/settings',
-    icon: 'fal fa-cog',
-    allowedRoles: ['admin', 'user', 'vendor'],
-  },
+  // {
+  //   label: 'Ajustes',
+  //   routeLink: 'dashboard/settings',
+  //   icon: 'fal fa-cog',
+  //   allowedRoles: ['admin', 'user', 'vendor'],
+  // },
 ];

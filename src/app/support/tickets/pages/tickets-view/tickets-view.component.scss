@@ -104,7 +104,7 @@
 .ticket-info-icons {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    // justify-content: space-between;
     gap: 1rem;
     flex-grow: 1;
 }
@@ -343,6 +343,18 @@
     font-size: 14px;
 }
 
+.delete-button {
+    &:hover {
+        color: $red-500;
+    }
+}
+
+.edit-button {
+    &:hover {
+        color: $primary-color;
+    }
+}
+
 .activity-container {
     display: flex;
     flex-direction: column;
@@ -377,6 +389,22 @@
     border-radius: $border-radius;
 }
 
+.activity-card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: .5rem;
+    .activity-card-header-title {
+        color: $primary-color;
+        margin: 0;
+    }
+    .activity-card-header-date {
+        color: $gray-600;
+        font-family: 'Roboto Mono', monospace;
+        margin: 0;
+    }
+}
+
 ::ng-deep .activity-card-content p {
     margin: 0 !important;
 }
@@ -389,4 +417,12 @@
     display: flex;
     flex-direction: column;
     gap: .5rem;
+}
+
+.activity-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    // padding: 1rem;
+    // border-bottom: 1px solid $gray-300;
 }

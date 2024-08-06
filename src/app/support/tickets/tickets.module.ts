@@ -14,6 +14,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TicketStatusPipe } from './pipes/ticket-status.pipe';
 import { TicketTypePipe } from './pipes/ticket-type.pipe';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { LocalDatePipe } from './pipes/local-date.pipe';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -23,6 +24,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     TicketsCreateComponent,
     TicketStatusPipe,
     TicketTypePipe,
+    LocalDatePipe,
   ],
   imports: [
     CommonModule,

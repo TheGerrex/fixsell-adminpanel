@@ -11,6 +11,7 @@ import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivityService } from 'src/app/support/services/activity.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-tickets-view',
@@ -44,7 +45,12 @@ export class TicketsViewComponent implements OnInit {
   assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
   currentUser: User | null = null;
+  // newActivityText = new FormControl('');
   newActivityText: string = '';
+  newActivity: boolean = false;
+  activityReadOnly = true;
+  isEditing: boolean = false;
+  editingIndex: number | null = null;
   // Add statusOptions and ticketStatus
   statusOptions = [
     { value: Status.OPEN, label: 'Abierto' },
@@ -139,8 +145,6 @@ export class TicketsViewComponent implements OnInit {
     });
     this.getUsers();
     this.getCurrentUser();
-
-    console.log('Activites:', this.activities);
   }
 
   convertToLocalDate(dateString: string): string {
@@ -246,15 +250,22 @@ export class TicketsViewComponent implements OnInit {
     this.clientReadOnly = !this.clientReadOnly;
   }
 
-  // toggleActivityEdit(index: number) {
-  //   this.activities[index].readOnly = !this.activities[index].readOnly;
-  // }
+  toggleNewActivity() {
+    this.newActivity = !this.newActivity;
+  }
+  cancelNewActivity() {
+    this.newActivity = false;
+  }
 
   addActivity() {
-    console.log('Current User:', this.currentUser);
+    if (!this.newActivityText) {
+      console.error('Activity text is empty');
+      return;
+    }
     const newActivity: Omit<Activity, 'id'> = {
       text: this.newActivityText,
-      addedBy: this.currentUser ? this.currentUser.id : undefined,
+      addedBy: this.currentUser ? this.currentUser : undefined,
+      ticket: this.ticket.id,
     };
     console.log('New activity:', newActivity);
     // Log current activity array:
@@ -269,21 +280,8 @@ export class TicketsViewComponent implements OnInit {
       next: (activity: Activity) => {
         console.log('Activity created successfully:', activity);
         this.activities.push(activity);
+        this.newActivity = false;
         // this.ticket.activities.push(activity);
-
-        const updateTicketObserver = {
-          next: (updatedTicket: Ticket) => {
-            console.log('Ticket updated successfully:', updatedTicket);
-            this.ticket = updatedTicket;
-          },
-          error: (error: any) => {
-            console.error('Error updating ticket:', error);
-          },
-        };
-
-        this.ticketsService
-          .updateTicket(this.ticket.id, { activities: this.activities })
-          .subscribe(updateTicketObserver);
       },
       error: (error: any) => {
         console.error('Error creando actividad:', error);
@@ -293,6 +291,46 @@ export class TicketsViewComponent implements OnInit {
     this.activityService
       .createActivity(newActivity)
       .subscribe(createActivityObserver);
+  }
+
+  updateActivity(index: number) {
+    const activity = this.activities[index];
+    const { id, ...activityWithoutId } = activity;
+    activityWithoutId.ticket = this.ticket.id;
+    activityWithoutId.addedBy = this.currentUser ? this.currentUser : undefined;
+    if (activity.id !== undefined) {
+      console.log('Updating activity:', activityWithoutId);
+      this.activityService.updateActivity(activity.id, activityWithoutId).subscribe(
+        (updatedActivity) => {
+          console.log('Activity updated successfully:', updatedActivity);
+          this.activities[index] = updatedActivity;
+          this.editingIndex = null;
+        },
+        (error) => {
+          console.error('Error updating activity:', error);
+        }
+      );
+    } else {
+      console.error('Activity id is undefined');
+    }
+  }
+
+  deleteActivity(index: number) {
+    const activity = this.activities[index];
+    if (activity.id !== undefined) {
+      console.log('Deleting activity:', activity.id);
+      this.activityService.deleteActivity(activity.id).subscribe(
+        () => {
+          console.log('Activity deleted successfully');
+          this.activities.splice(index, 1);
+        },
+        (error) => {
+          console.error('Error deleting activity:', error);
+        }
+      );
+    } else {
+      console.error('Activity id is undefined');
+    }
   }
 
   // deleteActivity(index: number) {

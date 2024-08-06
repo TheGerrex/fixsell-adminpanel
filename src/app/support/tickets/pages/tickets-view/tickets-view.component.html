@@ -138,40 +138,43 @@
                 <div class="activity-container">
                     <div class="ticket-activity-header">
                         <h4 class="ticket-activity-header-title">Actividades</h4>
-                        <button class="button button-icon-text button-text-primary"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
+                        <button class="button button-icon-text button-text-primary" (click)="toggleNewActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
                     </div>
                     <div class="ticket-activity-body">
-                        <div class="default-message" *ngIf="activities === null">
+                        <div class="default-message" *ngIf="activities.length === 0">
                             <mat-icon>help</mat-icon>
                             <p>Alguna nueva actividad en el servicio de tu ticket?</p>
                         </div>
-                        <div class="new-activity">
-                            <quill-editor [(ngModel)]="newActivityText"></quill-editor>
+                        <div class="new-activity" *ngIf="newActivity">
+                            <quill-editor [(ngModel)]="newActivityText" placeholder="Cual es tu nueva actividad?"></quill-editor>
                             <div class="button-actions">
                                 <button class="button button-primary" (click)="addActivity()">
                                     <span class="button-label">Guardar</span>
                                 </button>
-                                <button class="button button-text-secondary">
+                                <button class="button button-text-secondary" (click)="cancelNewActivity()">
                                     <span class="button-label">Cancelar</span>
                                 </button>
                             </div>
                         </div>
-                        <div class="activity-card-container" *ngIf="activities !== null">
-
+                        <div class="activity-card-container" *ngIf="activities.length > 0">
                             <div class="activity-card" *ngFor="let activity of activities; let i = index">
-                                <quill-editor [(ngModel)]="activity.text"></quill-editor>
-                                <div class="activity-card-content" [innerHTML]="activity.text"></div>
-                                <div class="button-actions">
-                                    <a class="button-link">Editar</a>
-                                    <a class="button-link">Borrar</a>
+                                <div class="activity-card-header">
+                                    <p class="activity-card-header-title">{{activity.addedBy?.name}}</p>
+                                    <p class="activity-card-header-date">{{ activity.addedAt | date: 'd/MMM/yyyy' }}</p>
                                 </div>
-                                <div class="button-actions">
-                                    <button class="button button-primary">
+                                <quill-editor [(ngModel)]="activity.text" *ngIf="editingIndex === i"></quill-editor>
+                                <div class="activity-card-content" [innerHTML]="activity.text" *ngIf="editingIndex !== i"></div>
+                                <div class="button-actions" *ngIf="editingIndex !== i">
+                                    <a class="button-link edit-button" (click)="editingIndex = i">Editar</a>
+                                    <a class="button-link delete-button" (click)="deleteActivity(i)">Borrar</a>
+                                </div>
+                                <div class="button-actions" *ngIf="editingIndex === i">
+                                    <button class="button button-primary" (click)="updateActivity(i)">
                                       <span class="button-label">
                                         Guardar
                                       </span>
                                     </button>
-                                    <button class="button button-text-secondary">
+                                    <button class="button button-text-secondary" (click)="editingIndex = null">
                                       <span class="button-label">Cancelar</span>
                                     </button>
                                 </div>

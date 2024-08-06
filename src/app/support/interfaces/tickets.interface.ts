@@ -22,9 +22,11 @@ export interface Ticket {
 }
 
 export interface Activity {
+  id?: number;
   text?: string;
-  addedBy?: string;
+  addedBy?: User;
   addedAt?: Date;
+  ticket?: number;
 }
 
 export enum Status {

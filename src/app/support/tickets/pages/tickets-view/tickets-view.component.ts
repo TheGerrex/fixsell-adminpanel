@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   Ticket,
@@ -11,7 +11,10 @@ import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivityService } from 'src/app/support/services/activity.service';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatDatepicker } from '@angular/material/datepicker';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-tickets-view',
@@ -19,22 +22,19 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./tickets-view.component.scss'],
 })
 export class TicketsViewComponent implements OnInit {
-  constructor(
-    private ticketsService: TicketsService,
-    private route: ActivatedRoute,
-    private usersService: UsersService,
-    private toastService: ToastService,
-    private activityService: ActivityService
-  ) {
-    this.ticket = {} as Ticket;
-  }
+
   ticket: Ticket;
   ticketIssue = '';
   activities: Activity[] = [];
   issueReadOnly = true;
   clientReadOnly = true;
+  eventReadOnly = true;
   isLoadingData = true;
   ticketNumber = 0;
+  ticketTitle = '';
+  ticketType = '';
+  ticketAppointmentDateStart!: Date;
+  ticketAppointmentDateEnd!: Date;
   clientName = '';
   clientEmail = '';
   clientPhone = '';
@@ -45,12 +45,14 @@ export class TicketsViewComponent implements OnInit {
   assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
   currentUser: User | null = null;
+
   // newActivityText = new FormControl('');
   newActivityText: string = '';
   newActivity: boolean = false;
   activityReadOnly = true;
   isEditing: boolean = false;
   editingIndex: number | null = null;
+
   // Add statusOptions and ticketStatus
   statusOptions = [
     { value: Status.OPEN, label: 'Abierto' },
@@ -59,6 +61,19 @@ export class TicketsViewComponent implements OnInit {
     { value: Status.COMPLETED, label: 'Completado' },
   ];
   ticketStatus = Status.OPEN; // Default status
+
+  
+  clientForm!: FormGroup;
+  eventForm!: FormGroup;
+  issueForm!: FormGroup;
+
+  types = [
+    { value: 'remote', viewValue: 'Remoto' },
+    { value: 'on-site', viewValue: 'Sitio' }
+  ];
+
+  
+  @ViewChild('ticketDatepicker') datepicker!: MatDatepicker<Date>;
 
   statusTranslations: { [key in Status]: string } = {
     [Status.OPEN]: 'abierto',
@@ -91,6 +106,98 @@ export class TicketsViewComponent implements OnInit {
     [Priority.MEDIUM]: 'orange',
     [Priority.HIGH]: 'red',
   };
+
+  constructor(
+    private ticketsService: TicketsService,
+    private route: ActivatedRoute,
+    private usersService: UsersService,
+    private toastService: ToastService,
+    private activityService: ActivityService,
+    private fb: FormBuilder,
+    private validatorsService: ValidatorsService,
+  ) {
+    this.ticket = {} as Ticket;
+  }
+
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      const ticketId = params.get('id');
+      if (ticketId !== null) {
+        this.getTicketIssue(ticketId);
+      }
+    });
+    this.getUsers();
+    this.getCurrentUser();
+  }
+
+  initializeAllForms() {
+    // this.initializeClientForm();
+    // this.initializeIssueForm();
+    this.initializeEventForm();
+  }
+
+  initializeClientForm() {
+    this.clientForm = this.fb.group({
+      name: [this.clientName],
+      email: [this.clientEmail],
+      phone: [this.clientPhone],
+      address: [this.clientAddress],
+    });
+  }
+
+  initializeIssueForm() {
+    this.issueForm = this.fb.group({
+      issue: [this.ticketIssue],
+    });
+  }
+
+  initializeEventForm() {
+    this.eventForm = this.fb.group({
+      title: [this.ticketTitle || '', Validators.required],
+      type: [this.ticketType || '', Validators.required],
+      dateStart: [format(this.ticketAppointmentDateStart, 'yyyy-MM-dd') || '', Validators.required],
+      dateEnd: [format(this.ticketAppointmentDateEnd, 'yyyy-MM-dd') || '', Validators.required],
+      timeStart: [format(this.ticketAppointmentDateStart, 'HH:mm') || '', Validators.required],
+      timeEnd: [format(this.ticketAppointmentDateEnd, 'HH:mm') || '', Validators.required],
+      
+    });
+    console.log('Event form:', this.eventForm);
+  }
+
+  getTicketIssue(ticketId: string) {
+    this.ticketsService.getTicketById(ticketId).subscribe((ticket: Ticket) => {
+      console.log('Ticket data:', ticket); // Log the ticket data
+      this.isLoadingData = false;
+      this.ticket = ticket; // Update the ticket property
+      this.ticketTitle = ticket.title;
+      this.ticketType = ticket.type;
+      this.ticketAppointmentDateStart = this.ticket.appointmentStartTime;
+      this.ticketAppointmentDateEnd = this.ticket.appointmentEndTime;
+      this.ticketIssue = ticket.issue;
+      this.ticketNumber = ticket.id; // Set the ticket number
+      this.ticketStatus = ticket.status; // Set the ticket status
+      this.clientName = ticket.clientName;
+      this.clientAddress = ticket.clientAddress;
+      this.clientEmail = ticket.clientEmail;
+      this.clientPhone = ticket.clientPhone;
+      this.ticketPriority = ticket.priority;
+      this.assignedUser =
+        ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
+      this.assignee =
+        ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
+      this.ticket.createdDate = this.convertToLocalDate(
+        this.ticket.createdDate
+      );
+      this.ticket.updatedDate = this.convertToLocalDate(
+        this.ticket.updatedDate
+      );
+      this.activities = this.ticket.activities;
+      console.log('Activities:', this.activities);
+      // Reinitialize forms with the fetched ticket data
+      this.initializeAllForms();
+    });
+  }
 
   getStatusColor(status: Status): string {
     return this.statusColors[status];
@@ -136,18 +243,7 @@ export class TicketsViewComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      const ticketId = params.get('id');
-      if (ticketId !== null) {
-        this.getTicketIssue(ticketId);
-      }
-    });
-    this.getUsers();
-    this.getCurrentUser();
-  }
-
-  convertToLocalDate(dateString: string): string {
+  convertToLocalDate(dateString: Date): Date {
     console.log('Date string:', dateString);
     const date = new Date(dateString);
     console.log('Date:', date);
@@ -156,10 +252,8 @@ export class TicketsViewComponent implements OnInit {
       console.log('Invalid date string');
       return dateString;
     } else {
-      const localDate = new Date(
-        date.getTime() - date.getTimezoneOffset() * 60000
-      );
-      return localDate.toISOString();
+      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return localDate;
     }
   }
 
@@ -177,33 +271,7 @@ export class TicketsViewComponent implements OnInit {
     console.log('Current user:', this.currentUser);
   }
 
-  getTicketIssue(ticketId: string) {
-    this.ticketsService.getTicketById(ticketId).subscribe((ticket: Ticket) => {
-      console.log('Ticket data:', ticket); // Log the ticket data
-      this.isLoadingData = false;
-      this.ticket = ticket; // Update the ticket property
-      this.ticketIssue = ticket.issue;
-      this.ticketNumber = ticket.id; // Set the ticket number
-      this.ticketStatus = ticket.status; // Set the ticket status
-      this.clientName = ticket.clientName;
-      this.clientAddress = ticket.clientAddress;
-      this.clientEmail = ticket.clientEmail;
-      this.clientPhone = ticket.clientPhone;
-      this.ticketPriority = ticket.priority;
-      this.assignedUser =
-        ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
-      this.assignee =
-        ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
-      this.ticket.createdDate = this.convertToLocalDate(
-        this.ticket.createdDate
-      );
-      this.ticket.updatedDate = this.convertToLocalDate(
-        this.ticket.updatedDate
-      );
-      this.activities = this.ticket.activities;
-      console.log('Activities:', this.activities);
-    });
-  }
+
 
   transferTicket(): void {
     const selectedUser = this.users.find(
@@ -244,6 +312,10 @@ export class TicketsViewComponent implements OnInit {
 
   toggleIssueEdit() {
     this.issueReadOnly = !this.issueReadOnly;
+  }
+
+  toggleEventEdit() {
+    this.eventReadOnly = !this.eventReadOnly;
   }
 
   toggleClientEdit() {
@@ -333,60 +405,7 @@ export class TicketsViewComponent implements OnInit {
     }
   }
 
-  // deleteActivity(index: number) {
-  //   // Remove the activity from the local array
-  //   this.activities.splice(index, 1);
-
-  //   // Prepare the updated activities for the updateTicket call
-  //   const updatedActivities = this.activities.map(
-  //     (activity) => activity.activity
-  //   );
-
-  //   // Call the updateTicket method with the ticket id and the updated activities
-  //   this.ticketsService
-  //     .updateTicket(this.ticket.id, { activity: updatedActivities })
-  //     .subscribe(
-  //       (response) => {
-  //         console.log('Ticket updated successfully:', response);
-  //         this.toastService.showSuccess(
-  //           'Activity deleted and ticket updated successfully',
-  //           'OK'
-  //         );
-  //       },
-  //       (error) => {
-  //         console.error('Error:', error);
-  //         this.toastService.showError(
-  //           'Error updating ticket after deleting activity',
-  //           error.message
-  //         );
-  //       }
-  //     );
-  // }
-
-  // submitActivity(index: number) {
-  //   console.log('Submit activity:', index);
-  //   const updatedActivity = this.activities[index].activity;
-  //   this.activities[index].readOnly = true;
-
-  //   // Update the activity in the current ticket
-  //   const updatedActivities = this.activities.map((activity, i) =>
-  //     i === index ? updatedActivity : activity.activity
-  //   );
-
-  //   // Call the updateTicket method with the ticket id and the updated activity
-  //   this.ticketsService
-  //     .updateTicket(this.ticket.id, { activity: updatedActivities })
-  //     .subscribe(
-  //       (response) => {
-  //         console.log('Ticket updated successfully:', response);
-  //         this.toastService.showSuccess('Ticket updated successfully', 'OK');
-  //       },
-  //       (error) => {
-  //         console.error('Error:', error);
-  //         this.toastService.showError('Error updating ticket', error.message);
-  //       }
-  //     );
-  // }
+ 
 
   submitIssue() {
     console.log('Submit issue');
@@ -453,7 +472,12 @@ export class TicketsViewComponent implements OnInit {
       );
   }
 
-  changeClientData() {
+  onSaveEvent(): void {
+    console.log('Event Data:', this.eventForm.value);
+    // Save event data logic here
+  }
+
+  onSaveClient() {
     console.log('Change client data');
     // Call the updateTicket method with the ticket id and the updated client data
     this.ticketsService
@@ -485,5 +509,40 @@ export class TicketsViewComponent implements OnInit {
           );
         }
       );
+  }
+
+  isValidFieldEventForm(field: string): boolean | null {
+    if (!this.eventForm || !this.eventForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.eventForm, field);
+  }
+
+  getFieldErrorEventForm(field: string): string | null {
+    if (!this.eventForm || !this.eventForm.controls[field]) return null;
+
+    const errors = this.eventForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  openDatepicker() {
+    this.datepicker.open();
   }
 }

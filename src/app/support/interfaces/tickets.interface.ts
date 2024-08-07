@@ -14,8 +14,8 @@ export interface Ticket {
   assigned: User;
   assignee: User;
   ticketFiles: any;
-  createdDate: string;
-  updatedDate: string;
+  createdDate: Date;
+  updatedDate: Date;
   id: number;
   appointmentStartTime: Date;
   appointmentEndTime: Date;

@@ -226,7 +226,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/support/tickets/' + ticket.id + '/edit']);
   }
 
-  convertToLocalDate(dateString: string): string {
+  convertToLocalDate(dateString: Date): Date {
     console.log('Date string:', dateString);
     const date = new Date(dateString);
     console.log('Date:', date);
@@ -236,7 +236,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
       return dateString;
     } else {
       const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-      return localDate.toISOString();
+      return localDate;
     }
   }
 

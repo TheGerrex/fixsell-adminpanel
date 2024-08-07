@@ -56,6 +56,9 @@
     gap: 1rem;
     padding: 1em;
     max-width: 1024px;
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 .ticket-content {
@@ -71,6 +74,7 @@
 
 .ticket-header-container {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
@@ -87,8 +91,8 @@
         align-items: center;
         flex-direction: row;
         flex-wrap: wrap;
-        flex-grow: 1;
-        gap: .5rem;
+        justify-content: space-between;
+        row-gap: 1rem;
         .ticket-info-card-header-title {
             margin: 0;
         }
@@ -106,7 +110,6 @@
     align-items: center;
     // justify-content: space-between;
     gap: 1rem;
-    flex-grow: 1;
 }
 
 .ticket-status {
@@ -425,4 +428,10 @@
     gap: 1rem;
     // padding: 1rem;
     // border-bottom: 1px solid $gray-300;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }

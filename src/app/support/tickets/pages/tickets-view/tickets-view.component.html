@@ -79,6 +79,111 @@
                 </div>
                 <div class="ticket-card">
                     <div class="ticket-card-header">
+                        <h4 class="ticket-card-header-title">Evento</h4>
+                        <button class="button button-text-primary" *ngIf="eventReadOnly" (click)="toggleEventEdit()"><span class="button-label">Editar</span></button>
+                    </div>
+                    <form [formGroup]="eventForm" (ngSubmit)="onSaveEvent()">
+                        <div class="ticket-card-body">
+                                <div class="ticket-data-item" *ngIf="ticketTitle">
+                                    <p class="ticket-data-item-label">Titulo</p>
+                                    <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketTitle }}</p>
+                                    <!-- <input type="text" class="form-control" [(ngModel)]="ticketTitle" *ngIf="!eventReadOnly"> -->
+                                    <input type="text" formControlName="title" *ngIf="!eventReadOnly" placeholder="Descripción simple del problema" class="form-control" [class.is-invalid]="
+                                    eventForm.controls['title'].invalid &&
+                                    eventForm.controls['title'].touched" />
+                                    <span *ngIf="isValidFieldEventForm('title')" class="form-text text-danger">
+                                        {{ getFieldErrorEventForm("title") }}
+                                    </span>
+                                </div>
+                                <div class="ticket-data-item" *ngIf="ticketType">
+                                    <p class="ticket-data-item-label">Tipo</p>
+                                    <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketType | ticketType }}</p>
+                                    <select formControlName="type" class="form-select" *ngIf="!eventReadOnly">
+                                    <option *ngFor="let type of types" [value]="type.value">
+                                        {{ type.viewValue }}
+                                    </option>
+                                    </select>
+                                </div>
+                                <!-- <div class="ticket-data full-row">
+                                    <div class="ticket-data-item half-row">
+                                        <p>Fecha</p>
+                                        <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="appointmentStartTime" class="form-control" [class.is-invalid]="
+                                        eventForm.controls['appointmentStartTime'].invalid &&
+                                        eventForm.controls['appointmentStartTime'].touched
+                                        " (focus)="openDatepicker()" />
+                                        <mat-datepicker #ticketDatepicker></mat-datepicker>
+                                        <span *ngIf="isValidField('appointmentStartTime')" class="form-text text-danger">
+                                        {{ getFieldError("appointmentStartTime") }}
+                                        </span>
+                                    </div>
+
+                                    <div class="ticket-data-item half-row">
+                                        <p>Hora</p>
+                                        <div class="time-inputs" style="display: flex; align-items: center">
+                                            <input type="time" formControlName="startTime" class="form-control" [class.is-invalid]="
+                                            eventForm.controls['startTime'].invalid &&
+                                            eventForm.controls['startTime'].touched
+                                            " />
+                                            <span style="margin: 0 10px"> - </span>
+                                            <input type="time" formControlName="endTime" class="form-control" [class.is-invalid]="
+                                            eventForm.controls['endTime'].invalid &&
+                                            eventForm.controls['endTime'].touched
+                                            " />
+                                        </div>
+                                        <span *ngIf="isValidField('startTime')" class="form-text text-danger">
+                                        {{ getFieldError("startTime") }}
+                                        </span>
+                                    </div>
+                                </div> -->
+                                <div class="ticket-data-item" *ngIf="ticketType">
+                                    <p class="ticket-data-item-label">Fecha</p>
+                                    <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'd MMM yyyy hh:mm a' }} - {{ ticketAppointmentDateEnd | date: 'hh:mm a' }}</p>
+                                    <!-- <input type="text" class="form-control" *ngIf="!eventReadOnly"> -->
+                                    <div class="date-picker" *ngIf="!eventReadOnly">
+                                        <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="dateStart" class="form-control" [class.is-invalid]="
+                                        eventForm.controls['dateStart'].invalid &&
+                                        eventForm.controls['dateStart'].touched
+                                        " (focus)="openDatepicker()" />
+                                        <mat-datepicker #ticketDatepicker></mat-datepicker>
+                                    </div>
+                                    <span *ngIf="isValidFieldEventForm('dateStart')" class="form-text text-danger">
+                                    {{ getFieldErrorEventForm("dateStart") }}
+                                    </span>
+                                </div>
+                                <div class="ticket-data-item" *ngIf="!eventReadOnly">
+                                    <p class="ticket-data-item-label">Hora</p>
+                                    <div class="time-inputs" style="display: flex; align-items: center">
+                                        <input type="time" formControlName="timeStart" class="form-control" [class.is-invalid]="
+                                        eventForm.controls['timeStart'].invalid &&
+                                        eventForm.controls['timeStart'].touched
+                                        " />
+                                        <span style="margin: 0 10px"> - </span>
+                                        <input type="time" formControlName="timeEnd" class="form-control" [class.is-invalid]="
+                                        eventForm.controls['timeEnd'].invalid &&
+                                        eventForm.controls['timeEnd'].touched
+                                        " />
+                                    </div>
+                                    <span *ngIf="isValidFieldEventForm('timeStart')" class="form-text text-danger">
+                                    {{ getFieldErrorEventForm("startTime") }}
+                                    </span>
+                                </div>
+                        </div>
+                        <div class="ticket-card-footer" *ngIf="!eventReadOnly">
+                            <div class="button-actions">
+                                <button class="button button-primary" (click)="onSaveEvent()"  [disabled]="eventForm.invalid">
+                                <span class="button-label">
+                                    Guardar
+                                </span>
+                                </button>
+                                <button class="button button-text-secondary" (click)="toggleEventEdit()">
+                                <span class="button-label">Cancelar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="ticket-card">
+                    <div class="ticket-card-header">
                         <h4 class="ticket-card-header-title">Cliente</h4>
                         <button class="button button-text-primary" *ngIf="clientReadOnly" (click)="toggleClientEdit()"><span class="button-label">Editar</span></button>
                     </div>
@@ -106,7 +211,7 @@
                     </div>
                     <div class="ticket-card-footer" *ngIf="!clientReadOnly">
                         <div class="button-actions">
-                            <button class="button button-primary" (click)="changeClientData()">
+                            <button class="button button-primary" (click)="onSaveClient()">
                               <span class="button-label">
                                 Guardar
                               </span>
@@ -138,7 +243,7 @@
                 <div class="activity-container">
                     <div class="ticket-activity-header">
                         <h4 class="ticket-activity-header-title">Actividades</h4>
-                        <button class="button button-icon-text button-text-primary" (click)="toggleNewActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
+                        <button class="button button-icon-text button-primary" (click)="toggleNewActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
                     </div>
                     <div class="ticket-activity-body">
                         <div class="default-message" *ngIf="activities.length === 0">

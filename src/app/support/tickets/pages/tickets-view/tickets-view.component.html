@@ -84,14 +84,14 @@
                     </div>
                     <form [formGroup]="eventForm" (ngSubmit)="onSaveEvent()">
                         <div class="ticket-card-body">
-                                <div class="ticket-data-item" *ngIf="ticketTitle">
+                                <div class="ticket-data-item" style="width: 100%;" *ngIf="ticketTitle">
                                     <p class="ticket-data-item-label">Titulo</p>
                                     <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketTitle }}</p>
                                     <!-- <input type="text" class="form-control" [(ngModel)]="ticketTitle" *ngIf="!eventReadOnly"> -->
                                     <input type="text" formControlName="title" *ngIf="!eventReadOnly" placeholder="Descripción simple del problema" class="form-control" [class.is-invalid]="
                                     eventForm.controls['title'].invalid &&
                                     eventForm.controls['title'].touched" />
-                                    <span *ngIf="isValidFieldEventForm('title')" class="form-text text-danger">
+                                    <span *ngIf="isValidFieldEventForm('title') && !eventReadOnly" class="form-text text-danger">
                                         {{ getFieldErrorEventForm("title") }}
                                     </span>
                                 </div>
@@ -104,40 +104,9 @@
                                     </option>
                                     </select>
                                 </div>
-                                <!-- <div class="ticket-data full-row">
-                                    <div class="ticket-data-item half-row">
-                                        <p>Fecha</p>
-                                        <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="appointmentStartTime" class="form-control" [class.is-invalid]="
-                                        eventForm.controls['appointmentStartTime'].invalid &&
-                                        eventForm.controls['appointmentStartTime'].touched
-                                        " (focus)="openDatepicker()" />
-                                        <mat-datepicker #ticketDatepicker></mat-datepicker>
-                                        <span *ngIf="isValidField('appointmentStartTime')" class="form-text text-danger">
-                                        {{ getFieldError("appointmentStartTime") }}
-                                        </span>
-                                    </div>
-
-                                    <div class="ticket-data-item half-row">
-                                        <p>Hora</p>
-                                        <div class="time-inputs" style="display: flex; align-items: center">
-                                            <input type="time" formControlName="startTime" class="form-control" [class.is-invalid]="
-                                            eventForm.controls['startTime'].invalid &&
-                                            eventForm.controls['startTime'].touched
-                                            " />
-                                            <span style="margin: 0 10px"> - </span>
-                                            <input type="time" formControlName="endTime" class="form-control" [class.is-invalid]="
-                                            eventForm.controls['endTime'].invalid &&
-                                            eventForm.controls['endTime'].touched
-                                            " />
-                                        </div>
-                                        <span *ngIf="isValidField('startTime')" class="form-text text-danger">
-                                        {{ getFieldError("startTime") }}
-                                        </span>
-                                    </div>
-                                </div> -->
                                 <div class="ticket-data-item" *ngIf="ticketType">
                                     <p class="ticket-data-item-label">Fecha</p>
-                                    <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'd MMM yyyy hh:mm a' }} - {{ ticketAppointmentDateEnd | date: 'hh:mm a' }}</p>
+                                    <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'EEE d MMM yyyy hh:mm a' }} - {{ ticketAppointmentDateEnd | date: 'hh:mm a' }}</p>
                                     <!-- <input type="text" class="form-control" *ngIf="!eventReadOnly"> -->
                                     <div class="date-picker" *ngIf="!eventReadOnly">
                                         <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="dateStart" class="form-control" [class.is-invalid]="
@@ -203,9 +172,9 @@
                             <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientPhone | mask: '(000) 000-0000' }}</p>
                             <input type="text" mask="000-000-0000" class="form-control" [(ngModel)]="clientPhone" *ngIf="!clientReadOnly">
                         </div>
-                        <div class="ticket-data-item" *ngIf="clientAddress">
+                        <div class="ticket-data-item">
                             <p class="ticket-data-item-label">Dirección</p>
-                            <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientAddress }}</p>
+                            <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientAddress || 'N/A' }}</p>
                             <input type="text" class="form-control" [(ngModel)]="clientAddress" *ngIf="!clientReadOnly">
                         </div>
                     </div>
@@ -222,6 +191,9 @@
                         </div>
                     </div>
                 </div>
+
+            </div>
+            <div class="activity-container">
                 <div class="ticket-card">
                     <div class="ticket-card-header">
                         <h4 class="ticket-card-header-title">Problema</h4>
@@ -232,21 +204,19 @@
                         <div class="quill-container" *ngIf="!issueReadOnly">
                             <quill-editor [(ngModel)]="ticketIssue" placeholder="Descripción detallada del problema"></quill-editor>
                             <div class="button-actions">
-                                <button class="button button-primary" (click)="submitIssue()"><span class="button-label">Guardar</span></button>
+                                <button class="button button-primary" (click)="onSaveIssue()"><span class="button-label">Guardar</span></button>
                                 <button class="button button-text-secondary" (click)="toggleIssueEdit()"><span class="button-label">Cancelar</span></button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="ticket-activity">
-                <div class="activity-container">
+                <div class="ticket-activity">
                     <div class="ticket-activity-header">
                         <h4 class="ticket-activity-header-title">Actividades</h4>
                         <button class="button button-icon-text button-primary" (click)="toggleNewActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
                     </div>
                     <div class="ticket-activity-body">
-                        <div class="default-message" *ngIf="activities.length === 0">
+                        <div class="default-message" *ngIf="activities.length === 0 && !newActivity">
                             <mat-icon>help</mat-icon>
                             <p>Alguna nueva actividad en el servicio de tu ticket?</p>
                         </div>
@@ -265,7 +235,7 @@
                             <div class="activity-card" *ngFor="let activity of activities; let i = index">
                                 <div class="activity-card-header">
                                     <p class="activity-card-header-title">{{activity.addedBy?.name}}</p>
-                                    <p class="activity-card-header-date">{{ activity.addedAt | date: 'd/MMM/yyyy' }}</p>
+                                    <p class="activity-card-header-date">{{ activity.addedAt | relativeTime }}</p>
                                 </div>
                                 <quill-editor [(ngModel)]="activity.text" *ngIf="editingIndex === i"></quill-editor>
                                 <div class="activity-card-content" [innerHTML]="activity.text" *ngIf="editingIndex !== i"></div>

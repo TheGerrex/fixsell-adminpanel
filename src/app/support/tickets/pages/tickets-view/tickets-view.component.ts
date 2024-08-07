@@ -90,9 +90,9 @@ export class TicketsViewComponent implements OnInit {
   };
 
   priorityOptions = [
-    { value: Priority.LOW, label: 'Bajo' },
-    { value: Priority.MEDIUM, label: 'Medio' },
-    { value: Priority.HIGH, label: 'Alto' },
+    { value: Priority.LOW, label: 'Baja' },
+    { value: Priority.MEDIUM, label: 'Media' },
+    { value: Priority.HIGH, label: 'Alta' },
   ];
 
   priorityTranslations: { [key in Priority]: string } = {
@@ -353,7 +353,7 @@ export class TicketsViewComponent implements OnInit {
         console.log('Activity created successfully:', activity);
         this.activities.push(activity);
         this.newActivity = false;
-        // this.ticket.activities.push(activity);
+        this.newActivityText = '';
       },
       error: (error: any) => {
         console.error('Error creando actividad:', error);
@@ -405,25 +405,6 @@ export class TicketsViewComponent implements OnInit {
     }
   }
 
- 
-
-  submitIssue() {
-    console.log('Submit issue');
-    // Call the updateTicket method with the ticket id and the updated issue
-    this.ticketsService
-      .updateTicket(this.ticket.id, { issue: this.ticketIssue })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess('Ticket updated successfully', 'OK');
-          this.toggleIssueEdit(); // Switch back to read-only mode
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError('Error updating ticket', error.message);
-        }
-      );
-  }
 
   changeStatus() {
     console.log('Cambio de Estatus');
@@ -472,9 +453,55 @@ export class TicketsViewComponent implements OnInit {
       );
   }
 
+  onSaveIssue() {
+    console.log('Submit issue');
+    // Call the updateTicket method with the ticket id and the updated issue
+    this.ticketsService
+      .updateTicket(this.ticket.id, { issue: this.ticketIssue })
+      .subscribe(
+        (response) => {
+          console.log('Ticket updated successfully:', response);
+          this.toastService.showSuccess('Ticket updated successfully', 'OK');
+          this.toggleIssueEdit(); // Switch back to read-only mode
+        },
+        (error) => {
+          console.error('Error:', error);
+          this.toastService.showError('Error updating ticket', error.message);
+        }
+      );
+  }
+
   onSaveEvent(): void {
-    console.log('Event Data:', this.eventForm.value);
-    // Save event data logic here
+    if (this.eventForm.invalid) {
+      this.toastService.showError('Invalid form data', 'Please correct the errors in the form.');
+      return;
+    }
+    const eventData = this.eventForm.value;
+    const updatedTicketData = {
+      title: eventData.title,
+      type: eventData.type,
+      appointmentStartTime: this.calculateStartDate(eventData.dateStart, eventData.timeStart),
+      appointmentEndTime: this.calculateEndDate(eventData.dateStart, eventData.timeEnd),
+      // Add other fields as necessary
+    };
+      
+    this.ticketTitle = eventData.title;
+    this.ticketType = eventData.type;
+    this.ticketAppointmentDateStart = this.calculateStartDate(eventData.dateStart, eventData.timeStart)
+    this.ticketAppointmentDateEnd = this.calculateEndDate(eventData.dateStart, eventData.timeEnd);
+
+    console.log('Event Data:', eventData);
+    // Call the updateTicket method with the ticket id and the updated issue
+    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
+      (response) => {
+        this.toastService.showSuccess('Evento del ticket actualizado correctamente', 'OK');
+        this.eventReadOnly = true;
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.toastService.showError('Error al actualizar el evento del ticket', error.message);
+      }
+    );
   }
 
   onSaveClient() {
@@ -510,6 +537,37 @@ export class TicketsViewComponent implements OnInit {
         }
       );
   }
+
+  calculateStartDate(dateStart: Date, timeStart: string): Date {
+    const [hours, minutes] = timeStart.split(':').map(Number);
+  
+    // Create a new Date object based on dateStart and set the hours and minutes
+    const startDate = new Date(dateStart);
+    startDate.setHours(hours, minutes);
+  
+    return startDate;
+  }
+
+  calculateEndDate(dateEnd: Date, timeEnd: string): Date {
+    const [hours, minutes] = timeEnd.split(':').map(Number);
+  
+    // Create a new Date object based on dateStart and set the hours and minutes
+    const endDate = new Date(dateEnd);
+    endDate.setHours(hours, minutes);
+  
+    return endDate;
+  }
+
+  // calculateEndDate(dateEnd: string, timeEnd: string): Date {
+  //   // Assuming dateEnd is in 'YYYY-MM-DD' format and timeEnd is in 'HH:mm' format
+  //   const [year, month, day] = dateEnd.split('-').map(Number);
+  //   const [hours, minutes] = timeEnd.split(':').map(Number);
+  
+  //   // Create a new Date object with the combined date and time
+  //   const endDate = new Date(year, month - 1, day, hours, minutes);
+  
+  //   return endDate;
+  // }
 
   isValidFieldEventForm(field: string): boolean | null {
     if (!this.eventForm || !this.eventForm.controls[field]) {

@@ -68,8 +68,11 @@
     flex: 1;
 }
 
-.ticket-activity {
+.activity-container {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    gap: 1rem;
 }
 
 .ticket-header-container {
@@ -358,7 +361,7 @@
     }
 }
 
-.activity-container {
+.ticket-activity {
     display: flex;
     flex-direction: column;
     border: 1px solid $gray-300;
@@ -395,16 +398,19 @@
 .activity-card-header {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: .5rem;
+    row-gap: 0rem;
     .activity-card-header-title {
-        color: $primary-color;
+        color: $indigo-500;
         margin: 0;
     }
     .activity-card-header-date {
         color: $gray-600;
         font-family: 'Roboto Mono', monospace;
         margin: 0;
+        font-size: 14px;
     }
 }
 

@@ -66,6 +66,7 @@ export class TicketsViewComponent implements OnInit {
   clientForm!: FormGroup;
   eventForm!: FormGroup;
   issueForm!: FormGroup;
+  activityForm!: FormGroup;
 
   types = [
     { value: 'remote', viewValue: 'Remoto' },
@@ -132,23 +133,24 @@ export class TicketsViewComponent implements OnInit {
   }
 
   initializeAllForms() {
-    // this.initializeClientForm();
-    // this.initializeIssueForm();
+    this.initializeClientForm();
+    this.initializeIssueForm();
     this.initializeEventForm();
+    this.initializeActivityForm();
   }
 
   initializeClientForm() {
     this.clientForm = this.fb.group({
-      name: [this.clientName],
-      email: [this.clientEmail],
-      phone: [this.clientPhone],
+      name: [this.clientName, Validators.required],
+      email: [this.clientEmail, [Validators.required, Validators.pattern(this.validatorsService.emailPattern)]],
+      phone: [this.clientPhone, [Validators.required, Validators.pattern(this.validatorsService.numberPattern)]],
       address: [this.clientAddress],
     });
   }
 
   initializeIssueForm() {
     this.issueForm = this.fb.group({
-      issue: [this.ticketIssue],
+      issue: [this.ticketIssue, Validators.required],
     });
   }
 
@@ -161,6 +163,13 @@ export class TicketsViewComponent implements OnInit {
       timeStart: [format(this.ticketAppointmentDateStart, 'HH:mm') || '', Validators.required],
       timeEnd: [format(this.ticketAppointmentDateEnd, 'HH:mm') || '', Validators.required],
       
+    });
+    console.log('Event form:', this.eventForm);
+  }
+
+  initializeActivityForm() {
+    this.activityForm = this.fb.group({
+      text: ['', Validators.required],
     });
     console.log('Event form:', this.eventForm);
   }
@@ -330,36 +339,36 @@ export class TicketsViewComponent implements OnInit {
   }
 
   addActivity() {
-    if (!this.newActivityText) {
-      console.error('Activity text is empty');
+    if (this.activityForm.invalid) {
+      console.error('Invalid form data');
       return;
     }
     const newActivity: Omit<Activity, 'id'> = {
-      text: this.newActivityText,
+      text: this.activityForm.value.text,
       addedBy: this.currentUser ? this.currentUser : undefined,
       ticket: this.ticket.id,
     };
     console.log('New activity:', newActivity);
     // Log current activity array:
     console.log('Activities:', this.activities);
-
+  
     // Initialize activities as an empty array if it is null or undefined
     if (!this.activities) {
       this.activities = [];
     }
-
+  
     const createActivityObserver = {
       next: (activity: Activity) => {
-        console.log('Activity created successfully:', activity);
+        this.toastService.showSuccess('Actividad del ticket agregado correctamente', 'OK');
         this.activities.push(activity);
         this.newActivity = false;
-        this.newActivityText = '';
+        this.activityForm.reset();
       },
       error: (error: any) => {
-        console.error('Error creando actividad:', error);
+        this.toastService.showError('Error creando actividad', error);
       },
     };
-
+  
     this.activityService
       .createActivity(newActivity)
       .subscribe(createActivityObserver);
@@ -374,16 +383,16 @@ export class TicketsViewComponent implements OnInit {
       console.log('Updating activity:', activityWithoutId);
       this.activityService.updateActivity(activity.id, activityWithoutId).subscribe(
         (updatedActivity) => {
-          console.log('Activity updated successfully:', updatedActivity);
+          this.toastService.showSuccess('Actividad del ticket actualizado correctamente', 'OK');
           this.activities[index] = updatedActivity;
           this.editingIndex = null;
         },
         (error) => {
-          console.error('Error updating activity:', error);
+          console.error('Error actualizadando la actividad del ticket:', error);
         }
       );
     } else {
-      console.error('Activity id is undefined');
+      console.error('El ID de la actividad no está definido');
     }
   }
 
@@ -393,15 +402,15 @@ export class TicketsViewComponent implements OnInit {
       console.log('Deleting activity:', activity.id);
       this.activityService.deleteActivity(activity.id).subscribe(
         () => {
-          console.log('Activity deleted successfully');
+          this.toastService.showSuccess('Actividad eliminada correctamente', 'OK');
           this.activities.splice(index, 1);
         },
         (error) => {
-          console.error('Error deleting activity:', error);
+          console.error('Error al borrar actividad:', error);
         }
       );
     } else {
-      console.error('Activity id is undefined');
+      console.error('El ID de la actividad no está definido');
     }
   }
 
@@ -454,26 +463,32 @@ export class TicketsViewComponent implements OnInit {
   }
 
   onSaveIssue() {
-    console.log('Submit issue');
-    // Call the updateTicket method with the ticket id and the updated issue
-    this.ticketsService
-      .updateTicket(this.ticket.id, { issue: this.ticketIssue })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess('Ticket updated successfully', 'OK');
-          this.toggleIssueEdit(); // Switch back to read-only mode
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError('Error updating ticket', error.message);
-        }
-      );
+    if (this.issueForm.invalid) {
+      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      return;
+    }
+    const issueData = this.issueForm.value;
+    const updatedTicketData = {
+      issue: issueData.issue,
+      // Add other fields as necessary
+    };
+    this.ticketIssue = issueData.issue;
+    console.log('Issue Data:', issueData);
+    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
+      (response) => {
+        this.toastService.showSuccess('Problema del ticket actualizado correctamente', 'OK');
+        this.issueReadOnly = true;
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.toastService.showError('Error al actualizar el problema del ticket', error.message);
+      }
+    );
   }
 
   onSaveEvent(): void {
     if (this.eventForm.invalid) {
-      this.toastService.showError('Invalid form data', 'Please correct the errors in the form.');
+      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
       return;
     }
     const eventData = this.eventForm.value;
@@ -505,37 +520,35 @@ export class TicketsViewComponent implements OnInit {
   }
 
   onSaveClient() {
-    console.log('Change client data');
-    // Call the updateTicket method with the ticket id and the updated client data
-    this.ticketsService
-      .updateTicket(this.ticket.id, {
-        clientName: this.clientName,
-        clientEmail: this.clientEmail,
-        clientPhone: this.clientPhone,
-        clientAddress: this.clientAddress,
-      })
-      .subscribe(
-        (response) => {
-          console.log('Ticket client data updated successfully:', response);
-          // Update the ticket object with the response from the server
-          this.ticket.clientName = this.clientName;
-          this.ticket.clientEmail = this.clientEmail;
-          this.ticket.clientPhone = this.clientPhone;
-          this.ticket.clientAddress = this.clientAddress;
-          this.clientReadOnly = true; // Switch back to read-only mode
-          this.toastService.showSuccess(
-            'Datos del cliente actualizados correctamente',
-            'OK'
-          );
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError(
-            'Error al actualizar los datos del cliente',
-            error.message
-          );
-        }
-      );
+    if (this.clientForm.invalid) {
+      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      return;
+    }
+    const clientData = this.clientForm.value;
+    const updatedTicketData = {
+      clientName: clientData.name,
+      clientEmail: clientData.email,
+      clientPhone: clientData.phone,
+      clientAddress: clientData.address,
+      // Add other fields as necessary
+    };
+    console.log('Client Data:', clientData);
+    this.clientName = clientData.name;
+    this.clientEmail = clientData.email;
+    this.clientPhone = clientData.phone;
+    this.clientAddress = clientData.address;
+
+    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
+      (response) => {
+        console.log('Ticket client data updated successfully:', response);
+        this.clientReadOnly = true;
+        this.toastService.showSuccess('Datos del cliente actualizados correctamente', 'OK');
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.toastService.showError('Error al actualizar los datos del cliente', error.message);
+      }
+    );
   }
 
   calculateStartDate(dateStart: Date, timeStart: string): Date {
@@ -558,17 +571,6 @@ export class TicketsViewComponent implements OnInit {
     return endDate;
   }
 
-  // calculateEndDate(dateEnd: string, timeEnd: string): Date {
-  //   // Assuming dateEnd is in 'YYYY-MM-DD' format and timeEnd is in 'HH:mm' format
-  //   const [year, month, day] = dateEnd.split('-').map(Number);
-  //   const [hours, minutes] = timeEnd.split(':').map(Number);
-  
-  //   // Create a new Date object with the combined date and time
-  //   const endDate = new Date(year, month - 1, day, hours, minutes);
-  
-  //   return endDate;
-  // }
-
   isValidFieldEventForm(field: string): boolean | null {
     if (!this.eventForm || !this.eventForm.controls[field]) {
       return null;
@@ -576,10 +578,103 @@ export class TicketsViewComponent implements OnInit {
     return this.validatorsService.isValidField(this.eventForm, field);
   }
 
+  isValidFieldClientForm(field: string): boolean | null {
+    if (!this.clientForm || !this.clientForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.clientForm, field);
+  }
+
+  isValidFieldIssueForm(field: string): boolean | null {
+    if (!this.issueForm || !this.issueForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.issueForm, field);
+  }
+
+  isValidFieldActivityForm(field: string): boolean | null {
+    if (!this.activityForm || !this.activityForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.activityForm, field);
+  }
+
   getFieldErrorEventForm(field: string): string | null {
     if (!this.eventForm || !this.eventForm.controls[field]) return null;
 
     const errors = this.eventForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  getFieldErrorClientForm(field: string): string | null {
+    if (!this.clientForm || !this.clientForm.controls[field]) return null;
+
+    const errors = this.clientForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  getFieldErrorIssueForm(field: string): string | null {
+    if (!this.issueForm || !this.issueForm.controls[field]) return null;
+
+    const errors = this.issueForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  getFieldErrorActivityForm(field: string): string | null {
+    if (!this.activityForm || !this.activityForm.controls[field]) return null;
+
+    const errors = this.activityForm.controls[field].errors || {};
 
     console.log(errors);
 

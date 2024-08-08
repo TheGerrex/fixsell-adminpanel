@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { User } from '../interfaces/users.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +53,11 @@ export class UsersService {
 
   getToken(): string {
     return localStorage.getItem('token') || '';
+  }
+
+  getCurrentUser(): User | null {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
   }
 
   // delete user

@@ -21,7 +21,7 @@
                         </h4>
                     </div>
                     <div class="ticket-card-header-actions">
-                        <button class="button button-outline-primary button-full" (click)="openTickets()">
+                        <button class="button button-outline-primary button-full" (click)="navigateOpenTickets()">
                         <span class="button-label">Ver Todos</span>
                     </button>
                     </div>
@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ticket-list-card-body" [class.visible]="isHighPriorityTicketListVisible">
+                        <div class="ticket-list-card-body" *ngIf="highPriorityTickets.length > 0" [class.visible]="isHighPriorityTicketListVisible">
                             <div class="ticket-list-card-body-content">
                                 <div class="ticket" *ngFor="let ticket of highPriorityTickets">
                                     <div class="ticket-container">
@@ -57,7 +57,7 @@
                                         </div>
                                         <div class="ticket-header">
                                             <div class="ticket-header-chips">
-                                                <div class="ticket-status">{{ ticket.status | ticketStatus }}</div>
+                                                <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
                                                 <div class="ticket-type">{{ ticket.type | ticketType }}</div>
                                                 <div class="ticket-client">
                                                     <mat-icon>person</mat-icon>{{ ticket.clientName }}
@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ticket-list-card-body" [class.visible]="isMediumPriorityTicketListVisible">
+                        <div class="ticket-list-card-body" *ngIf="mediumPriorityTickets.length > 0" [class.visible]="isMediumPriorityTicketListVisible">
                             <div class="ticket-list-card-body-content">
                                 <div class="ticket" *ngFor="let ticket of mediumPriorityTickets">
                                     <div class="ticket-container">
@@ -103,7 +103,7 @@
                                         </div>
                                         <div class="ticket-header">
                                             <div class="ticket-header-chips">
-                                                <div class="ticket-status">{{ ticket.status | ticketStatus }}</div>
+                                                <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
                                                 <div class="ticket-type">{{ ticket.type | ticketType }}</div>
                                                 <div class="ticket-client">
                                                     <mat-icon>person</mat-icon>{{ ticket.clientName }}
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ticket-list-card-body" [class.visible]="isLowPriorityTicketListVisible">
+                        <div class="ticket-list-card-body" *ngIf="lowPriorityTickets.length > 0" [class.visible]="isLowPriorityTicketListVisible">
                             <div class="ticket-list-card-body-content">
                                 <div class="ticket" *ngFor="let ticket of lowPriorityTickets">
                                     <div class="ticket-container">
@@ -148,7 +148,7 @@
                                         </div>
                                         <div class="ticket-header">
                                             <div class="ticket-header-chips">
-                                                <div class="ticket-status">{{ ticket.status | ticketStatus }}</div>
+                                                <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
                                                 <div class="ticket-type">{{ ticket.type | ticketType }}</div>
                                                 <div class="ticket-client">
                                                     <mat-icon>person</mat-icon>{{ ticket.clientName }}
@@ -175,18 +175,43 @@
                         </h4>
                     </div>
                     <div class="ticket-card-header-actions">
-                        <button class="button button-outline-primary" (click)="closedTickets()">
+                        <button class="button button-outline-primary" (click)="navigateClosedTickets()">
                         <span class="button-label">Ver Todos</span>
                     </button>
                     </div>
                 </div>
-                <div class="ticket-card-body">
-                    <!-- Add content for closed tickets card here -->
-                    <div class="no-tickets">
+                <!-- <div class="ticket-card-body">
+                    <div class="no-tickets" *ngIf="closedTickets.length < 0">
                         <mat-icon>error</mat-icon>
                         <p>No hay tickets por el momento.</p>
                     </div>
-                </div>
+                    <div class="ticket opacity-7" *ngFor="let ticket of closedTickets">
+                        <div class="ticket-container">
+                            <div class="ticket-body">
+                                <div class="ticket-info">
+                                    <div class="ticket-info-item">
+                                        <span class="ticket-info-item-title">PROBLEMA</span>
+                                        <span class="ticket-info-item-content">{{ ticket.title }}</span>
+                                    </div>
+                                    <button class="button button-outline-primary" (click)="seeTicket(ticket)"><span class="button-label">Ver Ticket</span></button>
+                                </div>
+                            </div>
+                            <div class="ticket-header">
+                                <div class="ticket-header-chips">
+                                    <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
+                                    <div class="ticket-type">{{ ticket.type | ticketType }}</div>
+                                    <div class="ticket-client">
+                                        <mat-icon>person</mat-icon>{{ ticket.clientName }}
+                                    </div>
+                                    <div class="ticket-date">
+                                        <mat-icon>event</mat-icon>
+                                        {{ ticket.appointmentStartTime | date : "MMMM d, y - h:mm a" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
             </div>
         </div>
 

@@ -75,7 +75,7 @@ export class LeadsListComponent implements OnInit {
         );
       } else if (currentUserRoles.includes('vendor')) {
         const currentUser = this.authService.getCurrentUser();
-        if (currentUser) {
+        if (currentUser && currentUser.id) {
           this.leadsService.getLeadsbyVendor(currentUser.id).subscribe(
             (leads) => {
               this.leadData = leads;

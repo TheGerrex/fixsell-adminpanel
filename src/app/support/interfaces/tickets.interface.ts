@@ -8,17 +8,25 @@ export interface Ticket {
   clientPhone: string;
   clientAddress: string;
   issue: string;
-  activity: any[];
+  activities: Activity[];
   priority: Priority;
   status: Status;
   assigned: User;
   assignee: User;
   ticketFiles: any;
-  createdDate: string;
-  updatedDate: string;
+  createdDate: Date;
+  updatedDate: Date;
   id: number;
   appointmentStartTime: Date;
   appointmentEndTime: Date;
+}
+
+export interface Activity {
+  id?: number;
+  text?: string;
+  addedBy?: User;
+  addedAt?: Date;
+  ticket?: number;
 }
 
 export enum Status {

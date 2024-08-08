@@ -129,6 +129,7 @@ quill-editor {
     // border: none !important;
     // max-width: 768px !important;
     width: 100% !important;
+    height: min-content;
     border-color: $gray-300 !important;
     border-radius: 0 0 $border-radius $border-radius !important;
 }

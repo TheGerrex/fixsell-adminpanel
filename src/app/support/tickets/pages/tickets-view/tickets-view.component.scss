@@ -56,6 +56,9 @@
     gap: 1rem;
     padding: 1em;
     max-width: 1024px;
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 .ticket-content {
@@ -65,12 +68,16 @@
     flex: 1;
 }
 
-.ticket-activity {
+.activity-container {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    gap: 1rem;
 }
 
 .ticket-header-container {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
@@ -87,8 +94,8 @@
         align-items: center;
         flex-direction: row;
         flex-wrap: wrap;
-        flex-grow: 1;
-        gap: .5rem;
+        justify-content: space-between;
+        row-gap: 1rem;
         .ticket-info-card-header-title {
             margin: 0;
         }
@@ -104,9 +111,8 @@
 .ticket-info-icons {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    // justify-content: space-between;
     gap: 1rem;
-    flex-grow: 1;
 }
 
 .ticket-status {
@@ -159,6 +165,7 @@
     .ticket-card-body {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         // padding: 1rem;
         gap: 1rem;
     }
@@ -342,7 +349,19 @@
     font-size: 14px;
 }
 
-.activity-container {
+.delete-button {
+    &:hover {
+        color: $red-500;
+    }
+}
+
+.edit-button {
+    &:hover {
+        color: $primary-color;
+    }
+}
+
+.ticket-activity {
     display: flex;
     flex-direction: column;
     border: 1px solid $gray-300;
@@ -376,6 +395,25 @@
     border-radius: $border-radius;
 }
 
+.activity-card-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .5rem;
+    row-gap: 0rem;
+    .activity-card-header-title {
+        color: $indigo-500;
+        margin: 0;
+    }
+    .activity-card-header-date {
+        color: $gray-600;
+        font-family: 'Roboto Mono', monospace;
+        margin: 0;
+        font-size: 14px;
+    }
+}
+
 ::ng-deep .activity-card-content p {
     margin: 0 !important;
 }
@@ -388,4 +426,18 @@
     display: flex;
     flex-direction: column;
     gap: .5rem;
+}
+
+.activity-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    // padding: 1rem;
+    // border-bottom: 1px solid $gray-300;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }

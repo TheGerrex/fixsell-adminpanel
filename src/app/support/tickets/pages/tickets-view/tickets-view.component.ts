@@ -1,11 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Ticket, Status } from 'src/app/support/interfaces/tickets.interface';
+import {
+  Ticket,
+  Status,
+  Activity,
+} from 'src/app/support/interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { Priority } from 'src/app/support/interfaces/tickets.interface';
 import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { ActivityService } from 'src/app/support/services/activity.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatDatepicker } from '@angular/material/datepicker';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-tickets-view',
@@ -13,23 +22,19 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   styleUrls: ['./tickets-view.component.scss'],
 })
 export class TicketsViewComponent implements OnInit {
-  constructor(
-    private ticketsService: TicketsService,
-    private route: ActivatedRoute,
-    private usersService: UsersService,
-    private toastService: ToastService,
-  ) {
-    this.ticket = {} as Ticket;    
-    // this.clientPhoneMask = this.maskPipe.transform(this.clientPhone, '(000) 000-0000');
 
-  }
   ticket: Ticket;
   ticketIssue = '';
-  activities: { activity: string; readOnly: boolean }[] = [];
+  activities: Activity[] = [];
   issueReadOnly = true;
   clientReadOnly = true;
+  eventReadOnly = true;
   isLoadingData = true;
   ticketNumber = 0;
+  ticketTitle = '';
+  ticketType = '';
+  ticketAppointmentDateStart!: Date;
+  ticketAppointmentDateEnd!: Date;
   clientName = '';
   clientEmail = '';
   clientPhone = '';
@@ -39,6 +44,15 @@ export class TicketsViewComponent implements OnInit {
   assignedUser: string = ''; // Initialize the 'assignedUser' property
   assignee: string = ''; // Initialize the 'assignee' property
   users: User[] = [];
+  currentUser: User | null = null;
+
+  // newActivityText = new FormControl('');
+  newActivityText: string = '';
+  newActivity: boolean = false;
+  activityReadOnly = true;
+  isEditing: boolean = false;
+  editingIndex: number | null = null;
+
   // Add statusOptions and ticketStatus
   statusOptions = [
     { value: Status.OPEN, label: 'Abierto' },
@@ -47,6 +61,20 @@ export class TicketsViewComponent implements OnInit {
     { value: Status.COMPLETED, label: 'Completado' },
   ];
   ticketStatus = Status.OPEN; // Default status
+
+  
+  clientForm!: FormGroup;
+  eventForm!: FormGroup;
+  issueForm!: FormGroup;
+  activityForm!: FormGroup;
+
+  types = [
+    { value: 'remote', viewValue: 'Remoto' },
+    { value: 'on-site', viewValue: 'Sitio' }
+  ];
+
+  
+  @ViewChild('ticketDatepicker') datepicker!: MatDatepicker<Date>;
 
   statusTranslations: { [key in Status]: string } = {
     [Status.OPEN]: 'abierto',
@@ -63,9 +91,9 @@ export class TicketsViewComponent implements OnInit {
   };
 
   priorityOptions = [
-    { value: Priority.LOW, label: 'Bajo' },
-    { value: Priority.MEDIUM, label: 'Medio' },
-    { value: Priority.HIGH, label: 'Alto' },
+    { value: Priority.LOW, label: 'Baja' },
+    { value: Priority.MEDIUM, label: 'Media' },
+    { value: Priority.HIGH, label: 'Alta' },
   ];
 
   priorityTranslations: { [key in Priority]: string } = {
@@ -79,6 +107,106 @@ export class TicketsViewComponent implements OnInit {
     [Priority.MEDIUM]: 'orange',
     [Priority.HIGH]: 'red',
   };
+
+  constructor(
+    private ticketsService: TicketsService,
+    private route: ActivatedRoute,
+    private usersService: UsersService,
+    private toastService: ToastService,
+    private activityService: ActivityService,
+    private fb: FormBuilder,
+    private validatorsService: ValidatorsService,
+  ) {
+    this.ticket = {} as Ticket;
+  }
+
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      const ticketId = params.get('id');
+      if (ticketId !== null) {
+        this.getTicketIssue(ticketId);
+      }
+    });
+    this.getUsers();
+    this.getCurrentUser();
+  }
+
+  initializeAllForms() {
+    this.initializeClientForm();
+    this.initializeIssueForm();
+    this.initializeEventForm();
+    this.initializeActivityForm();
+  }
+
+  initializeClientForm() {
+    this.clientForm = this.fb.group({
+      name: [this.clientName, Validators.required],
+      email: [this.clientEmail, [Validators.required, Validators.pattern(this.validatorsService.emailPattern)]],
+      phone: [this.clientPhone, [Validators.required, Validators.pattern(this.validatorsService.numberPattern)]],
+      address: [this.clientAddress],
+    });
+  }
+
+  initializeIssueForm() {
+    this.issueForm = this.fb.group({
+      issue: [this.ticketIssue, Validators.required],
+    });
+  }
+
+  initializeEventForm() {
+    this.eventForm = this.fb.group({
+      title: [this.ticketTitle || '', Validators.required],
+      type: [this.ticketType || '', Validators.required],
+      dateStart: [format(this.ticketAppointmentDateStart, 'yyyy-MM-dd') || '', Validators.required],
+      dateEnd: [format(this.ticketAppointmentDateEnd, 'yyyy-MM-dd') || '', Validators.required],
+      timeStart: [format(this.ticketAppointmentDateStart, 'HH:mm') || '', Validators.required],
+      timeEnd: [format(this.ticketAppointmentDateEnd, 'HH:mm') || '', Validators.required],
+      
+    });
+    console.log('Event form:', this.eventForm);
+  }
+
+  initializeActivityForm() {
+    this.activityForm = this.fb.group({
+      text: ['', Validators.required],
+    });
+    console.log('Event form:', this.eventForm);
+  }
+
+  getTicketIssue(ticketId: string) {
+    this.ticketsService.getTicketById(ticketId).subscribe((ticket: Ticket) => {
+      console.log('Ticket data:', ticket); // Log the ticket data
+      this.isLoadingData = false;
+      this.ticket = ticket; // Update the ticket property
+      this.ticketTitle = ticket.title;
+      this.ticketType = ticket.type;
+      this.ticketAppointmentDateStart = this.ticket.appointmentStartTime;
+      this.ticketAppointmentDateEnd = this.ticket.appointmentEndTime;
+      this.ticketIssue = ticket.issue;
+      this.ticketNumber = ticket.id; // Set the ticket number
+      this.ticketStatus = ticket.status; // Set the ticket status
+      this.clientName = ticket.clientName;
+      this.clientAddress = ticket.clientAddress;
+      this.clientEmail = ticket.clientEmail;
+      this.clientPhone = ticket.clientPhone;
+      this.ticketPriority = ticket.priority;
+      this.assignedUser =
+        ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
+      this.assignee =
+        ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
+      this.ticket.createdDate = this.convertToLocalDate(
+        this.ticket.createdDate
+      );
+      this.ticket.updatedDate = this.convertToLocalDate(
+        this.ticket.updatedDate
+      );
+      this.activities = this.ticket.activities;
+      console.log('Activities:', this.activities);
+      // Reinitialize forms with the fetched ticket data
+      this.initializeAllForms();
+    });
+  }
 
   getStatusColor(status: Status): string {
     return this.statusColors[status];
@@ -124,31 +252,19 @@ export class TicketsViewComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      const ticketId = params.get('id');
-      if (ticketId !== null) {
-        this.getTicketIssue(ticketId);
-      }
-    });
-    this.getUsers();
-   
-    console.log("Activites:", this.activities);
+  convertToLocalDate(dateString: Date): Date {
+    console.log('Date string:', dateString);
+    const date = new Date(dateString);
+    console.log('Date:', date);
+    if (isNaN(date.getTime())) {
+      // The date string is not valid
+      console.log('Invalid date string');
+      return dateString;
+    } else {
+      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return localDate;
+    }
   }
-
-convertToLocalDate(dateString: string): string {
-  console.log('Date string:', dateString);
-  const date = new Date(dateString);
-  console.log('Date:', date);
-  if (isNaN(date.getTime())) {
-    // The date string is not valid
-    console.log('Invalid date string');
-    return dateString;
-  } else {
-    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    return localDate.toISOString();
-  }
-}
 
   getUsers() {
     const token = localStorage.getItem('token');
@@ -159,77 +275,12 @@ convertToLocalDate(dateString: string): string {
     }
   }
 
-  getTicketIssue(ticketId: string) {
-    this.ticketsService.getTicketById(ticketId).subscribe((ticket: Ticket) => {
-      console.log('Ticket data:', ticket); // Log the ticket data
-      this.isLoadingData = false;
-      this.ticket = ticket; // Update the ticket property
-      this.ticketIssue = ticket.issue;
-      this.ticketNumber = ticket.id; // Set the ticket number
-      this.ticketStatus = ticket.status; // Set the ticket status
-      this.clientName = ticket.clientName;
-      this.clientAddress = ticket.clientAddress;
-      this.clientEmail = ticket.clientEmail;
-      this.clientPhone = ticket.clientPhone;
-      this.ticketPriority = ticket.priority;
-      this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
-      this.assignee = ticket.assignee ? ticket.assignee.name : '';
-      this.ticket.createdDate = this.convertToLocalDate(this.ticket.createdDate);
-      this.ticket.updatedDate = this.convertToLocalDate(this.ticket.updatedDate);
-      this.activities =
-        ticket.activity && ticket.activity.length > 0
-          ? ticket.activity.flatMap((activityGroup) =>
-              activityGroup
-                ? activityGroup.map((activity: string) => ({
-                    activity,
-                    readOnly: true,
-                  }))
-                : []
-            )
-          : [{ activity: '', readOnly: false }];
-    });
+  getCurrentUser() {
+    this.currentUser = this.usersService.getCurrentUser();
+    console.log('Current user:', this.currentUser);
   }
 
-  loadTicketData() {
-    this.isLoadingData = true;
-    this.route.paramMap.subscribe((params) => {
-      const ticketId = params.get('id');
-      if (ticketId !== null) {
-        this.ticketsService.getTicketById(ticketId).subscribe(
-          (ticket: Ticket) => {
-            console.log('loadTicketData:', ticket);
-            this.ticket = ticket; // Update the ticket property
-            this.ticketIssue = ticket.issue;
-            this.ticketNumber = ticket.id;
-            this.ticketStatus = ticket.status;
-            this.clientName = ticket.clientName;
-            this.clientEmail = ticket.clientEmail;
-            this.clientPhone = ticket.clientPhone;
-            this.clientAddress = ticket.clientAddress;
-            this.ticketPriority = ticket.priority;
-            this.assignedUser = ticket.assigned ? ticket.assigned.name : '';
-            this.assignee = ticket.assignee ? ticket.assignee.name : '';
-            this.activities =
-              ticket.activity && ticket.activity.length > 0
-                ? ticket.activity.flatMap((activityGroup) =>
-                    activityGroup
-                      ? activityGroup.map((activity: string) => ({
-                          activity,
-                          readOnly: true,
-                        }))
-                      : []
-                  )
-                : [{ activity: '', readOnly: false }];
-            this.isLoadingData = false;
-          },
-          (error) => {
-            console.error('Error:', error);
-            this.isLoadingData = false;
-          }
-        );
-      }
-    });
-  }
+
 
   transferTicket(): void {
     const selectedUser = this.users.find(
@@ -272,90 +323,97 @@ convertToLocalDate(dateString: string): string {
     this.issueReadOnly = !this.issueReadOnly;
   }
 
+  toggleEventEdit() {
+    this.eventReadOnly = !this.eventReadOnly;
+  }
+
   toggleClientEdit() {
     this.clientReadOnly = !this.clientReadOnly;
   }
 
-  toggleActivityEdit(index: number) {
-    this.activities[index].readOnly = !this.activities[index].readOnly;
+  toggleNewActivity() {
+    this.newActivity = !this.newActivity;
+  }
+  cancelNewActivity() {
+    this.newActivity = false;
   }
 
   addActivity() {
-      this.activities.push({ activity: '', readOnly: false });
+    if (this.activityForm.invalid) {
+      console.error('Invalid form data');
+      return;
+    }
+    const newActivity: Omit<Activity, 'id'> = {
+      text: this.activityForm.value.text,
+      addedBy: this.currentUser ? this.currentUser : undefined,
+      ticket: this.ticket.id,
+    };
+    console.log('New activity:', newActivity);
+    // Log current activity array:
+    console.log('Activities:', this.activities);
+  
+    // Initialize activities as an empty array if it is null or undefined
+    if (!this.activities) {
+      this.activities = [];
+    }
+  
+    const createActivityObserver = {
+      next: (activity: Activity) => {
+        this.toastService.showSuccess('Actividad del ticket agregado correctamente', 'OK');
+        this.activities.push(activity);
+        this.newActivity = false;
+        this.activityForm.reset();
+      },
+      error: (error: any) => {
+        this.toastService.showError('Error creando actividad', error);
+      },
+    };
+  
+    this.activityService
+      .createActivity(newActivity)
+      .subscribe(createActivityObserver);
+  }
+
+  updateActivity(index: number) {
+    const activity = this.activities[index];
+    const { id, ...activityWithoutId } = activity;
+    activityWithoutId.ticket = this.ticket.id;
+    activityWithoutId.addedBy = this.currentUser ? this.currentUser : undefined;
+    if (activity.id !== undefined) {
+      console.log('Updating activity:', activityWithoutId);
+      this.activityService.updateActivity(activity.id, activityWithoutId).subscribe(
+        (updatedActivity) => {
+          this.toastService.showSuccess('Actividad del ticket actualizado correctamente', 'OK');
+          this.activities[index] = updatedActivity;
+          this.editingIndex = null;
+        },
+        (error) => {
+          console.error('Error actualizadando la actividad del ticket:', error);
+        }
+      );
+    } else {
+      console.error('El ID de la actividad no está definido');
+    }
   }
 
   deleteActivity(index: number) {
-    // Remove the activity from the local array
-    this.activities.splice(index, 1);
-
-    // Prepare the updated activities for the updateTicket call
-    const updatedActivities = this.activities.map(
-      (activity) => activity.activity
-    );
-
-    // Call the updateTicket method with the ticket id and the updated activities
-    this.ticketsService
-      .updateTicket(this.ticket.id, { activity: updatedActivities })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess(
-            'Activity deleted and ticket updated successfully',
-            'OK'
-          );
+    const activity = this.activities[index];
+    if (activity.id !== undefined) {
+      console.log('Deleting activity:', activity.id);
+      this.activityService.deleteActivity(activity.id).subscribe(
+        () => {
+          this.toastService.showSuccess('Actividad eliminada correctamente', 'OK');
+          this.activities.splice(index, 1);
         },
         (error) => {
-          console.error('Error:', error);
-          this.toastService.showError(
-            'Error updating ticket after deleting activity',
-            error.message
-          );
+          console.error('Error al borrar actividad:', error);
         }
       );
+    } else {
+      console.error('El ID de la actividad no está definido');
+    }
   }
 
-  submitActivity(index: number) {
-    console.log('Submit activity:', index);
-    const updatedActivity = this.activities[index].activity;
-    this.activities[index].readOnly = true;
-
-    // Update the activity in the current ticket
-    const updatedActivities = this.activities.map((activity, i) =>
-      i === index ? updatedActivity : activity.activity
-    );
-
-    // Call the updateTicket method with the ticket id and the updated activity
-    this.ticketsService
-      .updateTicket(this.ticket.id, { activity: updatedActivities })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess('Ticket updated successfully', 'OK');
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError('Error updating ticket', error.message);
-        }
-      );
-  }
-
-  submitIssue() {
-    console.log('Submit issue');
-    // Call the updateTicket method with the ticket id and the updated issue
-    this.ticketsService
-      .updateTicket(this.ticket.id, { issue: this.ticketIssue })
-      .subscribe(
-        (response) => {
-          console.log('Ticket updated successfully:', response);
-          this.toastService.showSuccess('Ticket updated successfully', 'OK');
-          this.toggleIssueEdit(); // Switch back to read-only mode
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError('Error updating ticket', error.message);
-        }
-      );
-  }
 
   changeStatus() {
     console.log('Cambio de Estatus');
@@ -383,7 +441,9 @@ convertToLocalDate(dateString: string): string {
     console.log('Change priority');
     // Call the updateTicket method with the ticket id and the updated priority
     this.ticketsService
-      .updateTicket(this.ticket.id, { priority: this.ticketPriority as Priority })
+      .updateTicket(this.ticket.id, {
+        priority: this.ticketPriority as Priority,
+      })
       .subscribe(
         (response) => {
           console.log('Ticket updated successfully:', response);
@@ -402,37 +462,240 @@ convertToLocalDate(dateString: string): string {
       );
   }
 
-  changeClientData() {
-  console.log('Change client data');
-  // Call the updateTicket method with the ticket id and the updated client data
-  this.ticketsService
-    .updateTicket(this.ticket.id, {
-      clientName: this.clientName,
-      clientEmail: this.clientEmail,
-      clientPhone: this.clientPhone,
-      clientAddress: this.clientAddress
-    })
-    .subscribe(
+  onSaveIssue() {
+    if (this.issueForm.invalid) {
+      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      return;
+    }
+    const issueData = this.issueForm.value;
+    const updatedTicketData = {
+      issue: issueData.issue,
+      // Add other fields as necessary
+    };
+    this.ticketIssue = issueData.issue;
+    console.log('Issue Data:', issueData);
+    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
       (response) => {
-        console.log('Ticket client data updated successfully:', response);
-        // Update the ticket object with the response from the server
-        this.ticket.clientName = this.clientName;
-        this.ticket.clientEmail = this.clientEmail;
-        this.ticket.clientPhone = this.clientPhone;
-        this.ticket.clientAddress = this.clientAddress;
-        this.clientReadOnly = true; // Switch back to read-only mode
-        this.toastService.showSuccess(
-          'Datos del cliente actualizados correctamente',
-          'OK'
-        );
+        this.toastService.showSuccess('Problema del ticket actualizado correctamente', 'OK');
+        this.issueReadOnly = true;
       },
       (error) => {
         console.error('Error:', error);
-        this.toastService.showError(
-          'Error al actualizar los datos del cliente',
-          error.message
-        );
+        this.toastService.showError('Error al actualizar el problema del ticket', error.message);
       }
     );
-}
+  }
+
+  onSaveEvent(): void {
+    if (this.eventForm.invalid) {
+      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      return;
+    }
+    const eventData = this.eventForm.value;
+    const updatedTicketData = {
+      title: eventData.title,
+      type: eventData.type,
+      appointmentStartTime: this.calculateStartDate(eventData.dateStart, eventData.timeStart),
+      appointmentEndTime: this.calculateEndDate(eventData.dateStart, eventData.timeEnd),
+      // Add other fields as necessary
+    };
+      
+    this.ticketTitle = eventData.title;
+    this.ticketType = eventData.type;
+    this.ticketAppointmentDateStart = this.calculateStartDate(eventData.dateStart, eventData.timeStart)
+    this.ticketAppointmentDateEnd = this.calculateEndDate(eventData.dateStart, eventData.timeEnd);
+
+    console.log('Event Data:', eventData);
+    // Call the updateTicket method with the ticket id and the updated issue
+    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
+      (response) => {
+        this.toastService.showSuccess('Evento del ticket actualizado correctamente', 'OK');
+        this.eventReadOnly = true;
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.toastService.showError('Error al actualizar el evento del ticket', error.message);
+      }
+    );
+  }
+
+  onSaveClient() {
+    if (this.clientForm.invalid) {
+      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      return;
+    }
+    const clientData = this.clientForm.value;
+    const updatedTicketData = {
+      clientName: clientData.name,
+      clientEmail: clientData.email,
+      clientPhone: clientData.phone,
+      clientAddress: clientData.address,
+      // Add other fields as necessary
+    };
+    console.log('Client Data:', clientData);
+    this.clientName = clientData.name;
+    this.clientEmail = clientData.email;
+    this.clientPhone = clientData.phone;
+    this.clientAddress = clientData.address;
+
+    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
+      (response) => {
+        console.log('Ticket client data updated successfully:', response);
+        this.clientReadOnly = true;
+        this.toastService.showSuccess('Datos del cliente actualizados correctamente', 'OK');
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.toastService.showError('Error al actualizar los datos del cliente', error.message);
+      }
+    );
+  }
+
+  calculateStartDate(dateStart: Date, timeStart: string): Date {
+    const [hours, minutes] = timeStart.split(':').map(Number);
+  
+    // Create a new Date object based on dateStart and set the hours and minutes
+    const startDate = new Date(dateStart);
+    startDate.setHours(hours, minutes);
+  
+    return startDate;
+  }
+
+  calculateEndDate(dateEnd: Date, timeEnd: string): Date {
+    const [hours, minutes] = timeEnd.split(':').map(Number);
+  
+    // Create a new Date object based on dateStart and set the hours and minutes
+    const endDate = new Date(dateEnd);
+    endDate.setHours(hours, minutes);
+  
+    return endDate;
+  }
+
+  isValidFieldEventForm(field: string): boolean | null {
+    if (!this.eventForm || !this.eventForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.eventForm, field);
+  }
+
+  isValidFieldClientForm(field: string): boolean | null {
+    if (!this.clientForm || !this.clientForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.clientForm, field);
+  }
+
+  isValidFieldIssueForm(field: string): boolean | null {
+    if (!this.issueForm || !this.issueForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.issueForm, field);
+  }
+
+  isValidFieldActivityForm(field: string): boolean | null {
+    if (!this.activityForm || !this.activityForm.controls[field]) {
+      return null;
+    }
+    return this.validatorsService.isValidField(this.activityForm, field);
+  }
+
+  getFieldErrorEventForm(field: string): string | null {
+    if (!this.eventForm || !this.eventForm.controls[field]) return null;
+
+    const errors = this.eventForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  getFieldErrorClientForm(field: string): string | null {
+    if (!this.clientForm || !this.clientForm.controls[field]) return null;
+
+    const errors = this.clientForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  getFieldErrorIssueForm(field: string): string | null {
+    if (!this.issueForm || !this.issueForm.controls[field]) return null;
+
+    const errors = this.issueForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  getFieldErrorActivityForm(field: string): string | null {
+    if (!this.activityForm || !this.activityForm.controls[field]) return null;
+
+    const errors = this.activityForm.controls[field].errors || {};
+
+    console.log(errors);
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo esta en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'matDatepickerParse': // Add this case
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
+  }
+
+  openDatepicker() {
+    this.datepicker.open();
+  }
 }

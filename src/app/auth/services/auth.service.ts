@@ -101,6 +101,6 @@ export class AuthService {
 
   getCurrentUserRoles(): string[] {
     const user = this.getCurrentUser();
-    return user ? user.roles.map((role) => role.name) : [];
+    return user && user.roles ? user.roles.map((role) => role.name).filter((name): name is string => Boolean(name)) : [];
   }
 }

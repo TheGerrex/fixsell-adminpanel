@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ticket-list-card-body" [class.visible]="isHighPriorityTicketListVisible">
+                        <div class="ticket-list-card-body" *ngIf="highPriorityTickets.length > 0" [class.visible]="isHighPriorityTicketListVisible">
                             <div class="ticket-list-card-body-content">
                                 <div class="ticket" *ngFor="let ticket of highPriorityTickets">
                                     <div class="ticket-container">
@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ticket-list-card-body" [class.visible]="isMediumPriorityTicketListVisible">
+                        <div class="ticket-list-card-body" *ngIf="mediumPriorityTickets.length > 0" [class.visible]="isMediumPriorityTicketListVisible">
                             <div class="ticket-list-card-body-content">
                                 <div class="ticket" *ngFor="let ticket of mediumPriorityTickets">
                                     <div class="ticket-container">
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ticket-list-card-body" [class.visible]="isLowPriorityTicketListVisible">
+                        <div class="ticket-list-card-body" *ngIf="lowPriorityTickets.length > 0" [class.visible]="isLowPriorityTicketListVisible">
                             <div class="ticket-list-card-body-content">
                                 <div class="ticket" *ngFor="let ticket of lowPriorityTickets">
                                     <div class="ticket-container">
@@ -180,8 +180,7 @@
                     </button>
                     </div>
                 </div>
-                <div class="ticket-card-body">
-                    <!-- Add content for closed tickets card here -->
+                <!-- <div class="ticket-card-body">
                     <div class="no-tickets" *ngIf="closedTickets.length < 0">
                         <mat-icon>error</mat-icon>
                         <p>No hay tickets por el momento.</p>
@@ -212,7 +211,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 

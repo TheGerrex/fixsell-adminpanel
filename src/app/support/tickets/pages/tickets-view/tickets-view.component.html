@@ -252,8 +252,8 @@
                             <mat-icon>help</mat-icon>
                             <p>Alguna nueva actividad en el servicio de tu ticket?</p>
                         </div>
-                        <form [formGroup]="activityForm" (ngSubmit)="addActivity()">
-                            <div class="new-activity" *ngIf="newActivity">
+                        <form [formGroup]="activityForm" (ngSubmit)="addActivity()" *ngIf="newActivity">
+                            <div class="new-activity">
                                 <quill-editor formControlName="text" placeholder="Cual es tu nueva actividad?" [class.is-invalid]="
                                     activityForm.controls['text'].invalid &&
                                     activityForm.controls['text'].touched"></quill-editor>

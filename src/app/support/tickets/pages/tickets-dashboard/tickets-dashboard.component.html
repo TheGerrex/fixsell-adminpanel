@@ -37,7 +37,7 @@
                                 </h5>
                             </div>
                             <div class="ticket-list-card-header-actions">
-                                <div class="arrow-down-icon" [class.rotate]="isHighPriorityTicketListVisible">
+                                <div class="arrow-down-icon" *ngIf="highPriorityTickets.length > 0" [class.rotate]="isHighPriorityTicketListVisible">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                 </h5>
                             </div>
                             <div class="ticket-list-card-header-actions">
-                                <div class="arrow-down-icon" [class.rotate]="isMediumPriorityTicketListVisible">
+                                <div class="arrow-down-icon" *ngIf="mediumPriorityTickets.length > 0" [class.rotate]="isMediumPriorityTicketListVisible">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@
                                 </h5>
                             </div>
                             <div class="ticket-list-card-header-actions">
-                                <div class="arrow-down-icon" [class.rotate]="isLowPriorityTicketListVisible">
+                                <div class="arrow-down-icon" *ngIf="lowPriorityTickets.length > 0" [class.rotate]="isLowPriorityTicketListVisible">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </div>
                             </div>

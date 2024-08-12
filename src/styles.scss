@@ -5,7 +5,11 @@
 @import "quill/dist/quill.snow.css";
 @import "quill/dist/quill.bubble.css";
 @import "_variables.scss";
+@import './m3-theme.scss';
 @import "@angular/cdk/overlay-prebuilt.css";
+@import '../node_modules/@angular/material/theme';
+// Light theme
+@include mat.all-component-themes($light-theme);
 
 /*----------------------[ HTML and Body Main Structure ]-------------------------------*/
 

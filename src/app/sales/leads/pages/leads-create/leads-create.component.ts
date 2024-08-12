@@ -53,11 +53,14 @@ export class LeadsCreateComponent implements OnInit {
 
     this.filteredPrinterNames = this.printerControl.valueChanges.pipe(
       startWith(''),
-      switchMap((value) =>
-        this.dealService
-          .getAllPrinterNames()
-          .pipe(map((printerNames) => this._filter(value, printerNames)))
-      )
+      switchMap((value) => {
+        return this.dealService.getAllPrinterNames().pipe(
+          map((printerNames) => {
+            console.log('All Printer Names:', printerNames);
+            return this._filter(value, printerNames);
+          })
+        );
+      })
     );
 
     this.filteredProductNames = this.productControl.valueChanges.pipe(
@@ -73,6 +76,7 @@ export class LeadsCreateComponent implements OnInit {
       )
     );
   }
+
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
@@ -177,7 +181,7 @@ export class LeadsCreateComponent implements OnInit {
     this.createLeadForm = this.fb.group({
       selectedType: ['multifuncional'],
       client: new FormControl('', [Validators.required]),
-      status: new FormControl('', [Validators.required]),
+      status: new FormControl('prospect', [Validators.required]),
       product_interested: new FormControl('', [Validators.required]),
       type_of_product: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),

@@ -2,11 +2,8 @@
   <form [formGroup]="createLeadForm" class="deal-container">
     <div class="deal-header">
       <h2>Crear Cliente Potencial</h2>
-      <button
-        class="button button-primary button-raised button-icon-text"
-        (click)="submitForm()"
-      >
-        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+      <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+        <mat-icon>add</mat-icon><span class="button-label">Crear Cliente</span>
       </button>
     </div>
 
@@ -15,14 +12,18 @@
     <div class="deal-info">
       <div class="deal-form-container">
         <div class="deal-data">
+          <div class="full-row">
+            <h5 class="section-form-header">Datos del Cliente Potencial</h5>
+          </div>
           <!-- client -->
-          <div class="deal-data-item full-row">
-            <h5>Cliente</h5>
+          <div class="deal-data-item half-row">
+            <p>Nombre</p>
             <input
               type="text"
               class="form-control"
               id="client"
               formControlName="client"
+              placeholder="John Doe"
               [class.is-invalid]="
                 createLeadForm.controls['client'].invalid &&
                 createLeadForm.controls['client'].touched
@@ -33,13 +34,14 @@
             </span>
           </div>
           <!-- email -->
-          <div class="deal-data-item full-row">
-            <h5>Email</h5>
+          <div class="deal-data-item half-row">
+            <p>Email</p>
             <input
               type="text"
               class="form-control"
               id="email"
               formControlName="email"
+              placeholder="ejemplo@email.com"
               [class.is-invalid]="
                 createLeadForm.controls['email'].invalid &&
                 createLeadForm.controls['email'].touched
@@ -51,13 +53,15 @@
           </div>
 
           <!-- phone -->
-          <div class="deal-data-item full-row">
-            <h5>Telefono</h5>
+          <div class="deal-data-item half-row">
+            <p>Telefono</p>
             <input
               type="text"
               class="form-control"
               id="phone"
               formControlName="phone"
+              mask="000-000-0000" 
+              placeholder="811-111-1111"
               [class.is-invalid]="
                 createLeadForm.controls['phone'].invalid &&
                 createLeadForm.controls['phone'].touched
@@ -68,10 +72,10 @@
             </span>
           </div>
           <!-- status: prospect etc. -->
-          <div class="deal-data-item full-row">
-            <h5>Estado</h5>
+          <div class="deal-data-item half-row">
+            <p>Estado</p>
             <select
-              class="form-control"
+              class="form-select"
               id="status"
               formControlName="status"
               [class.is-invalid]="
@@ -88,11 +92,14 @@
             </span>
           </div>
 
+          <div class="full-row mt-3">
+            <h5 class="section-form-header">En que producto esta interesado?</h5>
+          </div>
           <!-- type_of_product -->
-          <div class="deal-data-item">
-            <h5>Tipo</h5>
+          <div class="deal-data-item half-row">
+            <p>Tipo</p>
             <select
-              class="form-control"
+              class="form-select"
               formControlName="selectedType"
               (change)="onTypeChange($event)"
             >
@@ -102,14 +109,14 @@
           </div>
 
           <!-- product_interested -->
-          <div class="deal-data-item">
-            <h5>
+          <div class="deal-data-item half-row">
+            <p>
               {{
                 (selectedType | async) === "multifuncional"
                   ? "Multifuncional"
                   : "Consumible"
               }}
-            </h5>
+            </p>
             <input
               type="text"
               placeholder="Elige {{ selectedType.value }}"

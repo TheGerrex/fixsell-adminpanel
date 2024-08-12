@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { LeadsRoutingModule } from './leads-routing.module';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
@@ -14,6 +14,7 @@ import { LeadsCreateComponent } from './pages/leads-create/leads-create.componen
 import { CommunicationDetailComponent } from './pages/communication-detail/communication-detail.component';
 import { CommunicationCreateComponent } from './pages/communication-create/communication-create.component';
 import { CommunicationEditComponent } from './pages/communication-edit/communication-edit.component';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,10 @@ import { CommunicationEditComponent } from './pages/communication-edit/communica
     CommonModule,
     LeadsRoutingModule,
     SharedModule,
-    WebsiteModule, // This is correct
+    NgxMaskDirective,
+    NgxMaskPipe,
+    WebsiteModule,
   ],
+  providers: [DatePipe, provideNgxMask()],
 })
 export class LeadsModule {}

@@ -84,7 +84,7 @@
                     </div>
                     <form [formGroup]="eventForm" (ngSubmit)="onSaveEvent()">
                         <div class="ticket-card-body">
-                            <div class="ticket-data-item" style="width: 100%;" *ngIf="ticketTitle">
+                            <div class="ticket-data-item" *ngIf="ticketTitle">
                                 <p class="ticket-data-item-label">Titulo</p>
                                 <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketTitle }}</p>
                                 <!-- <input type="text" class="form-control" [(ngModel)]="ticketTitle" *ngIf="!eventReadOnly"> -->
@@ -104,9 +104,9 @@
                                     </option>
                                     </select>
                             </div>
-                            <div class="ticket-data-item" *ngIf="ticketType">
+                            <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
                                 <p class="ticket-data-item-label">Fecha</p>
-                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'EEE d MMM yyyy hh:mm a' }} - {{ ticketAppointmentDateEnd | date: 'hh:mm a' }}</p>
+                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'EEE d MMM yyyy' }}</p>
                                 <!-- <input type="text" class="form-control" *ngIf="!eventReadOnly"> -->
                                 <div class="date-picker" *ngIf="!eventReadOnly">
                                     <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="dateStart" class="form-control" [class.is-invalid]="
@@ -117,11 +117,12 @@
                                 </div>
                                 <span *ngIf="isValidFieldEventForm('dateStart')" class="form-text text-danger">
                                     {{ getFieldErrorEventForm("dateStart") }}
-                                    </span>
+                                </span>
                             </div>
-                            <div class="ticket-data-item" *ngIf="!eventReadOnly">
+                            <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
                                 <p class="ticket-data-item-label">Hora</p>
-                                <div class="time-inputs" style="display: flex; align-items: center">
+                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'hh:mm a' }} - {{ ticketAppointmentDateEnd | date: 'hh:mm a' }}</p>
+                                <div class="time-inputs" *ngIf="!eventReadOnly" style="display: flex; align-items: center">
                                     <input type="time" formControlName="timeStart" class="form-control" [class.is-invalid]="
                                         eventForm.controls['timeStart'].invalid &&
                                         eventForm.controls['timeStart'].touched
@@ -158,7 +159,7 @@
                     </div>
                     <form [formGroup]="clientForm" (ngSubmit)="onSaveClient()">
                         <div class="ticket-card-body">
-                            <div class="ticket-data-item" *ngIf="clientName" style="width: 100%;">
+                            <div class="ticket-data-item" *ngIf="clientName">
                                 <p class="ticket-data-item-label">Nombre</p>
                                 <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientName }}</p>
                                 <input type="text" formControlName="name" *ngIf="!clientReadOnly" placeholder="John Doe" class="form-control" [class.is-invalid]="
@@ -190,7 +191,7 @@
                                     {{ getFieldErrorClientForm("phone") }}
                                 </span>
                             </div>
-                            <div class="ticket-data-item" style="width: 100%;">
+                            <div class="ticket-data-item">
                                 <p class="ticket-data-item-label">Dirección</p>
                                 <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientAddress || 'N/A' }}</p>
                                 <!-- <input type="text" class="form-control" [(ngModel)]="clientAddress" *ngIf="!clientReadOnly"> -->

@@ -47,7 +47,7 @@ export class DealCreateComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {}
 
   ngOnInit() {
@@ -58,8 +58,8 @@ export class DealCreateComponent implements OnInit {
       switchMap((value) =>
         this.dealService
           .getAllPrinterNames()
-          .pipe(map((printerNames) => this._filter(value, printerNames)))
-      )
+          .pipe(map((printerNames) => this._filter(value, printerNames))),
+      ),
     );
 
     this.filteredProductNames = this.productControl.valueChanges.pipe(
@@ -71,15 +71,15 @@ export class DealCreateComponent implements OnInit {
               .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
               .getAllConsumiblesNames()
-              .pipe(map((productNames) => this._filter(value, productNames)))
-      )
+              .pipe(map((productNames) => this._filter(value, productNames))),
+      ),
     );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
-      printerName.toLowerCase().includes(filterValue)
+      printerName.toLowerCase().includes(filterValue),
     );
   }
 
@@ -110,8 +110,8 @@ export class DealCreateComponent implements OnInit {
         switchMap((value) =>
           this.dealService
             .getAllPrinterNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
-        )
+            .pipe(map((productNames) => this._filter(value, productNames))),
+        ),
       );
     } else {
       //if consumible
@@ -120,8 +120,8 @@ export class DealCreateComponent implements OnInit {
         switchMap((value) =>
           this.dealService
             .getAllConsumiblesNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
-        )
+            .pipe(map((productNames) => this._filter(value, productNames))),
+        ),
       );
     }
   }
@@ -160,9 +160,9 @@ export class DealCreateComponent implements OnInit {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
@@ -184,18 +184,25 @@ export class DealCreateComponent implements OnInit {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
   calculatePrice() {
     if (this.createDealForm.get('dealDiscountPercentage')?.value) {
-      const discount = Number(this.createDealForm.get('printerPrice')?.value) * (Number(this.createDealForm.get('dealDiscountPercentage')?.value) /100);
+      const discount =
+        Number(this.createDealForm.get('printerPrice')?.value) *
+        (Number(this.createDealForm.get('dealDiscountPercentage')?.value) /
+          100);
       this.createDealForm
         .get('dealPrice')
-        ?.setValue((Number(this.createDealForm.get('printerPrice')?.value) - discount).toFixed(1).toString()); // Convert the calculated price to a string
+        ?.setValue(
+          (Number(this.createDealForm.get('printerPrice')?.value) - discount)
+            .toFixed(1)
+            .toString(),
+        ); // Convert the calculated price to a string
     }
   }
 
@@ -220,25 +227,7 @@ export class DealCreateComponent implements OnInit {
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createDealForm.controls[field]) return null;
-
-    const errors = this.createDealForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.createDealForm, field);
   }
 
   async submitForm() {
@@ -250,7 +239,7 @@ export class DealCreateComponent implements OnInit {
             ', Value = ' +
             this.createDealForm.controls[key].value +
             ', Valid = ' +
-            this.createDealForm.controls[key].valid
+            this.createDealForm.controls[key].valid,
         );
       });
       console.log('invalid form');
@@ -291,26 +280,21 @@ export class DealCreateComponent implements OnInit {
     }
     this.isSubmitting = true;
 
-    
-    
     console.log('formData:', formData);
     this.dealService.submitDealCreateForm(formData).subscribe(
       (response: Deal) => {
         console.log('Response:', response);
         this.isSubmitting = false;
         this.toastService.showSuccess('Promoción creado', 'Cerrar'); // Show success toast
-        this.router.navigate(['/website/deals/', response.id,]);
+        this.router.navigate(['/website/deals/', response.id]);
       },
       (error) => {
         console.log('Error:', error);
         //log object to console
-        console.log("Error FormData:",formData);
+        console.log('Error FormData:', formData);
         this.isSubmitting = false;
-        this.toastService.showError(
-          error.error.message,
-          'Cerrar'
-        );
-      }
+        this.toastService.showError(error.error.message, 'Cerrar');
+      },
     );
   }
 }

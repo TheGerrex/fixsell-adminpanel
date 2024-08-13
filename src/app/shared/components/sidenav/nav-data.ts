@@ -1,3 +1,5 @@
+import { is } from 'date-fns/locale';
+
 export const navbarData = [
   {
     label: 'Dashboard',
@@ -76,6 +78,30 @@ export const navbarData = [
       {
         label: 'Configuracion',
         routeLink: 'support/config',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+    ],
+  },
+  {
+    label: 'Chat',
+    routeLink: 'chat/chat',
+    icon: 'chat',
+    allowedRoles: ['admin', 'user', 'vendor'],
+    isExpanded: false,
+    subRoutes: [
+      {
+        label: 'Chat',
+        routeLink: 'chat/chats',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+      {
+        label: 'Chat en vivo',
+        routeLink: 'chat/live-chat',
+        allowedRoles: ['admin', 'user', 'vendor'],
+      },
+      {
+        label: 'Configuracion',
+        routeLink: 'chat/config',
         allowedRoles: ['admin', 'user', 'vendor'],
       },
     ],

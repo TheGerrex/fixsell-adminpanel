@@ -19,7 +19,6 @@ export class DealEditComponent implements OnInit {
   isSubmitting = false;
   public editDealForm!: FormGroup;
 
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -28,7 +27,7 @@ export class DealEditComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {
     this.editDealForm = this.fb.group({
       printer: ['', Validators.required],
@@ -117,7 +116,7 @@ export class DealEditComponent implements OnInit {
         this.deal = dealResponse;
         this.initializeForm(); // Move this inside the subscribe block
         console.log(this.editDealForm);
-        this.sharedService.changeDealName(dealResponse.dealName);  
+        this.sharedService.changeDealName(dealResponse.dealName);
         this.isLoadingData = false;
       });
     }
@@ -140,7 +139,7 @@ export class DealEditComponent implements OnInit {
         ?.setValue(
           (
             Number(this.editDealForm.get(priceControl)?.value) - discount
-          ).toString()
+          ).toString(),
         ); // Convert the calculated price to a string
     }
   }
@@ -166,25 +165,7 @@ export class DealEditComponent implements OnInit {
   }
 
   getFieldError(field: string): string | null {
-    if (!this.editDealForm.controls[field]) return null;
-
-    const errors = this.editDealForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.editDealForm, field);
   }
 
   submitForm() {
@@ -217,7 +198,7 @@ export class DealEditComponent implements OnInit {
         console.error('Error:', error);
         this.toastService.showError('Error updating deal', 'OK'); // Show error toast
         this.isSubmitting = false;
-      }
+      },
     );
   }
 }

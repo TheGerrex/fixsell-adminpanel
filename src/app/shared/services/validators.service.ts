@@ -7,7 +7,8 @@ import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 export class ValidatorsService {
   public firstNameAndLastnamePattern: string = '([a-zA-Z]+) ([a-zA-Z]+)';
   public emailPattern: string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
-  public numberPattern: string = '^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$';
+  public numberPattern: string =
+    '^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$';
   public floatNumberPattern: string = '^[0-9]*.?[0-9]+$';
 
   constructor() {}
@@ -57,7 +58,7 @@ export class ValidatorsService {
       const hasLowerCase = /[a-z]/.test(value);
       const hasNumeric = /[0-9]/.test(value);
       const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-        value
+        value,
       );
 
       const passwordValid =
@@ -88,5 +89,35 @@ export class ValidatorsService {
 
       return null;
     };
+  }
+
+  public getFieldError(form: FormGroup, field: string): string | null {
+    if (!form.controls[field]) return null;
+    const errors = form.controls[field].errors || {};
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'pattern':
+          return 'Este campo está en formato incorrecto';
+        case 'maxlength':
+          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
+        case 'minlength':
+          return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+        case 'email':
+          return 'Este campo debe ser un email válido';
+        case 'serverError':
+          return 'Error del servidor';
+        case 'min':
+          return `El precio tiene que ser minimo ${errors['min'].min}`;
+        case 'phoneInvalid':
+          return 'El número de teléfono debe tener 10 dígitos';
+        case 'matDatepickerParse':
+          return 'Fecha inválida';
+        default:
+          return 'Error desconocido';
+      }
+    }
+    return null;
   }
 }

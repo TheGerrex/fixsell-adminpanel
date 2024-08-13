@@ -37,7 +37,7 @@ export class CommunicationCreateComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {}
 
   ngOnInit() {
@@ -55,7 +55,7 @@ export class CommunicationCreateComponent implements OnInit {
         this.createCommunicationForm = this.fb.group({
           client: new FormControl(
             { value: this.lead?.client, disabled: true },
-            Validators.required
+            Validators.required,
           ),
           message: new FormControl('', Validators.required),
           date: new FormControl(new Date().toISOString(), Validators.required),
@@ -66,42 +66,22 @@ export class CommunicationCreateComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error fetching lead:', error);
-      }
+      },
     );
   }
 
   isValidField(field: string): boolean | null {
     return this.validatorsService.isValidField(
       this.createCommunicationForm,
-      field
+      field,
     );
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createCommunicationForm.controls[field]) return null;
-
-    const errors = this.createCommunicationForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'phoneInvalid':
-          return 'El número de teléfono debe tener 10 dígitos';
-        case 'email':
-          return 'El email no es válido';
-
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(
+      this.createCommunicationForm,
+      field,
+    );
   }
 
   async submitForm() {
@@ -121,7 +101,7 @@ export class CommunicationCreateComponent implements OnInit {
         console.log('Communication created:', response);
         this.toastService.showSuccess(
           'Comunicación creada con éxito',
-          'success-snackbar'
+          'success-snackbar',
         );
         this.router.navigate(['/sales/leads']);
       },
@@ -129,9 +109,9 @@ export class CommunicationCreateComponent implements OnInit {
         console.error('Error creating communication:', error);
         this.toastService.showError(
           'Error creando la comunicación',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 }

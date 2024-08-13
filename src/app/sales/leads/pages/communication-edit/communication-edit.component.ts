@@ -37,12 +37,12 @@ export class CommunicationEditComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {
     this.editCommunicationForm = this.fb.group({
       client: new FormControl(
         { value: '', disabled: true },
-        Validators.required
+        Validators.required,
       ),
       message: new FormControl('', Validators.required),
       date: new FormControl('', Validators.required),
@@ -85,11 +85,11 @@ export class CommunicationEditComponent implements OnInit {
         this.editCommunicationForm = this.fb.group({
           client: new FormControl(
             { value: this.communication?.lead.client, disabled: true },
-            Validators.required
+            Validators.required,
           ),
           message: new FormControl(
             this.communication?.message,
-            Validators.required
+            Validators.required,
           ),
           date: new FormControl(this.communication?.date, Validators.required),
           type: new FormControl(this.communication?.type, Validators.required),
@@ -99,42 +99,22 @@ export class CommunicationEditComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error fetching communication:', error);
-      }
+      },
     );
   }
 
   isValidField(field: string): boolean | null {
     return this.validatorsService.isValidField(
       this.editCommunicationForm,
-      field
+      field,
     );
   }
 
   getFieldError(field: string): string | null {
-    if (!this.editCommunicationForm.controls[field]) return null;
-
-    const errors = this.editCommunicationForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'phoneInvalid':
-          return 'El número de teléfono debe tener 10 dígitos';
-        case 'email':
-          return 'El email no es válido';
-
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(
+      this.editCommunicationForm,
+      field,
+    );
   }
 
   async submitForm() {
@@ -157,7 +137,7 @@ export class CommunicationEditComponent implements OnInit {
         console.log('Communication updated:', response);
         this.toastService.showSuccess(
           'Comunicación actualizada con éxito',
-          'success-snackbar'
+          'success-snackbar',
         );
         this.router.navigate(['/sales/leads']);
       },
@@ -165,9 +145,9 @@ export class CommunicationEditComponent implements OnInit {
         console.error('Error updating communication:', error);
         this.toastService.showError(
           'Error actualizando la comunicación',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 }

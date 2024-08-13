@@ -62,6 +62,9 @@ export class RoleService {
     '/support/tickets/*/edit': ['admin', 'user', 'vendor'],
     '/support/config': ['admin', 'user', 'vendor'],
     '/support/tickets/list': ['admin', 'user', 'vendor'],
+    '/chat/chats': ['admin', 'user', 'vendor'],
+    '/chat/live-chat': ['admin', 'user', 'vendor'],
+    '/chat/config': ['admin', 'user', 'vendor'],
   };
 
   getAllowedRoles(path: string): string[] {

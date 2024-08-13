@@ -20,15 +20,6 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-/* 
-TODO 1: add user input validation
-TODO 2: add error handling
-TODO 3: add success message
-TODO 4: add loading indicator
-TODO 5: add confirmation dialog 
-TODO 6: add better front end design
-*/
-
 @Component({
   selector: 'app-consumibles-create',
   templateUrl: './consumibles-create.component.html',
@@ -51,7 +42,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     private ConsumiblesService: ConsumiblesService,
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {}
 
   ngOnInit(): void {
@@ -60,9 +51,9 @@ export class ConsumiblesCreateComponent implements OnInit {
       startWith(''),
       switchMap((value) =>
         this.ConsumiblesService.getAllPrinterNames().pipe(
-          map((printerNames) => this._filter(value, printerNames))
-        )
-      )
+          map((printerNames) => this._filter(value, printerNames)),
+        ),
+      ),
     );
     this.filteredCounterpartNames =
       this.counterpartNameControl.valueChanges.pipe(
@@ -70,29 +61,29 @@ export class ConsumiblesCreateComponent implements OnInit {
         switchMap((value) =>
           this.ConsumiblesService.getAllConsumibleNames().pipe(
             map((counterpartNames) =>
-              this._counterfilter(value, counterpartNames)
-            )
-          )
-        )
+              this._counterfilter(value, counterpartNames),
+            ),
+          ),
+        ),
       );
     this.ConsumiblesService.getAllConsumibles().subscribe(
       (consumibles: Consumible[]) => {
         this.consumibles = consumibles;
-      }
+      },
     );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
-      printerName.toLowerCase().includes(filterValue)
+      printerName.toLowerCase().includes(filterValue),
     );
   }
 
   private _counterfilter(value: string, counterpartNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return counterpartNames.filter((counterpartName) =>
-      counterpartName.toLowerCase().includes(filterValue)
+      counterpartName.toLowerCase().includes(filterValue),
     );
   }
 
@@ -145,7 +136,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     const printerName = event.option.viewValue;
     const printers = this.createConsumibleForm.get('printers') as FormArray;
     const emptyIndex = printers.controls.findIndex(
-      (control) => control.value === ''
+      (control) => control.value === '',
     );
 
     if (emptyIndex !== -1) {
@@ -160,10 +151,10 @@ export class ConsumiblesCreateComponent implements OnInit {
   addCounterpartFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
     const counterpartName = event.option.viewValue;
     const counterparts = this.createConsumibleForm.get(
-      'counterparts'
+      'counterparts',
     ) as FormArray;
     const emptyIndex = counterparts.controls.findIndex(
-      (control) => control.value === ''
+      (control) => control.value === '',
     );
 
     if (emptyIndex !== -1) {
@@ -177,7 +168,7 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   addPrinter(printerName: string = ''): void {
     (this.createConsumibleForm.get('printers') as FormArray).push(
-      this.fb.control(printerName)
+      this.fb.control(printerName),
     );
   }
 
@@ -188,13 +179,13 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   addCounterpart(counterpart: string = ''): void {
     (this.createConsumibleForm.get('counterparts') as FormArray).push(
-      this.fb.control(counterpart)
+      this.fb.control(counterpart),
     );
   }
 
   removeCounterpart(index: number) {
     const counterparts = this.createConsumibleForm.get(
-      'counterparts'
+      'counterparts',
     ) as FormArray;
     counterparts.removeAt(index);
   }
@@ -215,13 +206,13 @@ export class ConsumiblesCreateComponent implements OnInit {
 
   addModel() {
     (this.createConsumibleForm.get('compatibleModels') as FormArray).push(
-      new FormControl('')
+      new FormControl(''),
     );
   }
 
   removeModel(index: number) {
     (this.createConsumibleForm.get('compatibleModels') as FormArray).removeAt(
-      index
+      index,
     );
   }
 
@@ -265,7 +256,7 @@ export class ConsumiblesCreateComponent implements OnInit {
             datasheetControl.setValue(file);
             console.log(
               'I have set the value for datasheet:',
-              datasheetControl.value
+              datasheetControl.value,
             );
           }
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
@@ -275,7 +266,7 @@ export class ConsumiblesCreateComponent implements OnInit {
 
           // Get a reference to the img_url form array
           const imgUrlArray = this.createConsumibleForm.get(
-            'img_url'
+            'img_url',
           ) as FormArray;
 
           // Create a new control with the URL and push it to the form array
@@ -324,39 +315,22 @@ export class ConsumiblesCreateComponent implements OnInit {
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
-      }
+      },
     );
   }
 
   isValidField(field: string): boolean | null {
     return this.validatorsService.isValidField(
       this.createConsumibleForm,
-      field
+      field,
     );
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createConsumibleForm.controls[field]) return null;
-
-    const errors = this.createConsumibleForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'min':
-          return `El precio tiene que ser minimo ${errors['min'].min}`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(
+      this.createConsumibleForm,
+      field,
+    );
   }
 
   async submitForm() {
@@ -368,7 +342,7 @@ export class ConsumiblesCreateComponent implements OnInit {
             ', Value = ' +
             this.createConsumibleForm.controls[key].value +
             ', Valid = ' +
-            this.createConsumibleForm.controls[key].valid
+            this.createConsumibleForm.controls[key].valid,
         );
       });
       console.log('invalid form');
@@ -386,14 +360,14 @@ export class ConsumiblesCreateComponent implements OnInit {
     // Convert printer names to IDs
     const printerNames = formData.printers;
     const printerIdsPromises = printerNames.map((name: string) =>
-      this.ConsumiblesService.getPrinterIdByName(name).toPromise()
+      this.ConsumiblesService.getPrinterIdByName(name).toPromise(),
     );
     const printersIds = await Promise.all(printerIdsPromises);
 
     //convert counterpart names to IDs
     const counterpartNames = formData.counterparts;
     const counterpartIdsPromises = counterpartNames.map((name: string) =>
-      this.ConsumiblesService.getConsumibleIdByName(name).toPromise()
+      this.ConsumiblesService.getConsumibleIdByName(name).toPromise(),
     );
     const counterpartIds = await Promise.all(counterpartIdsPromises);
 
@@ -421,9 +395,9 @@ export class ConsumiblesCreateComponent implements OnInit {
         this.isSubmitting = false;
         this.toastService.showError(
           'There was an error: ' + error.error.message + '. Please try again.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 }

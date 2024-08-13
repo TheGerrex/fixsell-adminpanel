@@ -12,12 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PackageService } from '../../services/package.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import {
-  Observable,
-  map,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Observable, map, startWith, switchMap } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { PrinterService } from 'src/app/website/printer/services/printer.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
@@ -43,7 +38,7 @@ export class PackageCreateComponent implements OnInit {
     private fb: FormBuilder,
     private validatorsService: ValidatorsService,
     private packageService: PackageService,
-    private printerService: PrinterService
+    private printerService: PrinterService,
   ) {}
 
   ngOnInit(): void {
@@ -53,16 +48,16 @@ export class PackageCreateComponent implements OnInit {
       switchMap((value) =>
         this.printerService.getAllRentablePrinters().pipe(
           map((printers) => printers.map((printer) => printer.model)),
-          map((printerNames) => this._filter(value, printerNames))
-        )
-      )
+          map((printerNames) => this._filter(value, printerNames)),
+        ),
+      ),
     );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
-      printerName.toLowerCase().includes(filterValue)
+      printerName.toLowerCase().includes(filterValue),
     );
   }
 
@@ -89,7 +84,7 @@ export class PackageCreateComponent implements OnInit {
     const price = this.createPackageForm.controls['packagePrice'].value;
     const discount = ((this.printerPrice - price) / this.printerPrice) * 100;
     this.createPackageForm.controls['packageDiscountPercentage'].setValue(
-      Number(discount.toFixed(1))
+      Number(discount.toFixed(1)),
     );
   }
 
@@ -101,30 +96,11 @@ export class PackageCreateComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.createPrinterForm, field))
     return this.validatorsService.isValidField(this.createPackageForm, field);
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createPackageForm.controls[field]) return null;
-
-    const errors = this.createPackageForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.createPackageForm, field);
   }
 
   addPrinterFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
@@ -154,9 +130,9 @@ export class PackageCreateComponent implements OnInit {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
@@ -167,20 +143,20 @@ export class PackageCreateComponent implements OnInit {
 
   addInclude() {
     (this.createPackageForm.get('packageIncludes') as FormArray).push(
-      new FormControl('')
+      new FormControl(''),
     );
   }
 
   removeInclude(index: number) {
     (this.createPackageForm.get('packageIncludes') as FormArray).removeAt(
-      index
+      index,
     );
   }
 
   submitForm(): void {
     // sets selected printer to printer uuid
     this.createPackageForm.controls['printer'].setValue(
-      this.printerControl.value
+      this.printerControl.value,
     );
 
     if (this.createPackageForm.invalid) {
@@ -191,13 +167,13 @@ export class PackageCreateComponent implements OnInit {
             ', Value = ' +
             this.createPackageForm.controls[key].value +
             ', Valid = ' +
-            this.createPackageForm.controls[key].valid
+            this.createPackageForm.controls[key].valid,
         );
       });
       console.log('invalid form');
       this.toastService.showError(
         'Por favor, llena todos los campos requeridos',
-        'Error'
+        'Error',
       );
       console.log(this.createPackageForm.errors);
       console.log(this.createPackageForm);
@@ -229,9 +205,9 @@ export class PackageCreateComponent implements OnInit {
               'There was an error: ' +
                 error.error.message +
                 '. Please try again.',
-              'error-snackbar'
+              'error-snackbar',
             );
-          }
+          },
         );
       },
       (error) => {
@@ -240,9 +216,9 @@ export class PackageCreateComponent implements OnInit {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 }

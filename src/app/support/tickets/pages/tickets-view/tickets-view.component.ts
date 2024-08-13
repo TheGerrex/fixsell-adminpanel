@@ -11,7 +11,12 @@ import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivityService } from 'src/app/support/services/activity.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { format } from 'date-fns';
@@ -22,7 +27,6 @@ import { format } from 'date-fns';
   styleUrls: ['./tickets-view.component.scss'],
 })
 export class TicketsViewComponent implements OnInit {
-
   ticket: Ticket;
   ticketIssue = '';
   activities: Activity[] = [];
@@ -62,7 +66,6 @@ export class TicketsViewComponent implements OnInit {
   ];
   ticketStatus = Status.OPEN; // Default status
 
-  
   clientForm!: FormGroup;
   eventForm!: FormGroup;
   issueForm!: FormGroup;
@@ -70,10 +73,9 @@ export class TicketsViewComponent implements OnInit {
 
   types = [
     { value: 'remote', viewValue: 'Remoto' },
-    { value: 'on-site', viewValue: 'Sitio' }
+    { value: 'on-site', viewValue: 'Sitio' },
   ];
 
-  
   @ViewChild('ticketDatepicker') datepicker!: MatDatepicker<Date>;
 
   statusTranslations: { [key in Status]: string } = {
@@ -120,7 +122,6 @@ export class TicketsViewComponent implements OnInit {
     this.ticket = {} as Ticket;
   }
 
-
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       const ticketId = params.get('id');
@@ -142,8 +143,20 @@ export class TicketsViewComponent implements OnInit {
   initializeClientForm() {
     this.clientForm = this.fb.group({
       name: [this.clientName, Validators.required],
-      email: [this.clientEmail, [Validators.required, Validators.pattern(this.validatorsService.emailPattern)]],
-      phone: [this.clientPhone, [Validators.required, Validators.pattern(this.validatorsService.numberPattern)]],
+      email: [
+        this.clientEmail,
+        [
+          Validators.required,
+          Validators.pattern(this.validatorsService.emailPattern),
+        ],
+      ],
+      phone: [
+        this.clientPhone,
+        [
+          Validators.required,
+          Validators.pattern(this.validatorsService.numberPattern),
+        ],
+      ],
       address: [this.clientAddress],
     });
   }
@@ -158,11 +171,22 @@ export class TicketsViewComponent implements OnInit {
     this.eventForm = this.fb.group({
       title: [this.ticketTitle || '', Validators.required],
       type: [this.ticketType || '', Validators.required],
-      dateStart: [format(this.ticketAppointmentDateStart, 'yyyy-MM-dd') || '', Validators.required],
-      dateEnd: [format(this.ticketAppointmentDateEnd, 'yyyy-MM-dd') || '', Validators.required],
-      timeStart: [format(this.ticketAppointmentDateStart, 'HH:mm') || '', Validators.required],
-      timeEnd: [format(this.ticketAppointmentDateEnd, 'HH:mm') || '', Validators.required],
-      
+      dateStart: [
+        format(this.ticketAppointmentDateStart, 'yyyy-MM-dd') || '',
+        Validators.required,
+      ],
+      dateEnd: [
+        format(this.ticketAppointmentDateEnd, 'yyyy-MM-dd') || '',
+        Validators.required,
+      ],
+      timeStart: [
+        format(this.ticketAppointmentDateStart, 'HH:mm') || '',
+        Validators.required,
+      ],
+      timeEnd: [
+        format(this.ticketAppointmentDateEnd, 'HH:mm') || '',
+        Validators.required,
+      ],
     });
     console.log('Event form:', this.eventForm);
   }
@@ -196,10 +220,10 @@ export class TicketsViewComponent implements OnInit {
       this.assignee =
         ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
       this.ticket.createdDate = this.convertToLocalDate(
-        this.ticket.createdDate
+        this.ticket.createdDate,
       );
       this.ticket.updatedDate = this.convertToLocalDate(
-        this.ticket.updatedDate
+        this.ticket.updatedDate,
       );
       this.activities = this.ticket.activities;
       console.log('Activities:', this.activities);
@@ -261,7 +285,9 @@ export class TicketsViewComponent implements OnInit {
       console.log('Invalid date string');
       return dateString;
     } else {
-      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000,
+      );
       return localDate;
     }
   }
@@ -280,11 +306,9 @@ export class TicketsViewComponent implements OnInit {
     console.log('Current user:', this.currentUser);
   }
 
-
-
   transferTicket(): void {
     const selectedUser = this.users.find(
-      (user) => user.name === this.ticket.assigned.name
+      (user) => user.name === this.ticket.assigned.name,
     );
     if (!selectedUser) {
       console.error('Selected user not found');
@@ -306,16 +330,16 @@ export class TicketsViewComponent implements OnInit {
           this.ticket.assigned.name = selectedUser.name; // Update the assignedUser property with the username
           this.toastService.showSuccess(
             'Ticket transferred successfully',
-            'OK'
+            'OK',
           );
         },
         (error) => {
           console.error('Error:', error);
           this.toastService.showError(
             'Error transferring ticket',
-            error.message
+            error.message,
           );
-        }
+        },
       );
   }
 
@@ -351,15 +375,18 @@ export class TicketsViewComponent implements OnInit {
     console.log('New activity:', newActivity);
     // Log current activity array:
     console.log('Activities:', this.activities);
-  
+
     // Initialize activities as an empty array if it is null or undefined
     if (!this.activities) {
       this.activities = [];
     }
-  
+
     const createActivityObserver = {
       next: (activity: Activity) => {
-        this.toastService.showSuccess('Actividad del ticket agregado correctamente', 'OK');
+        this.toastService.showSuccess(
+          'Actividad del ticket agregado correctamente',
+          'OK',
+        );
         this.activities.push(activity);
         this.newActivity = false;
         this.activityForm.reset();
@@ -368,7 +395,7 @@ export class TicketsViewComponent implements OnInit {
         this.toastService.showError('Error creando actividad', error);
       },
     };
-  
+
     this.activityService
       .createActivity(newActivity)
       .subscribe(createActivityObserver);
@@ -381,16 +408,24 @@ export class TicketsViewComponent implements OnInit {
     activityWithoutId.addedBy = this.currentUser ? this.currentUser : undefined;
     if (activity.id !== undefined) {
       console.log('Updating activity:', activityWithoutId);
-      this.activityService.updateActivity(activity.id, activityWithoutId).subscribe(
-        (updatedActivity) => {
-          this.toastService.showSuccess('Actividad del ticket actualizado correctamente', 'OK');
-          this.activities[index] = updatedActivity;
-          this.editingIndex = null;
-        },
-        (error) => {
-          console.error('Error actualizadando la actividad del ticket:', error);
-        }
-      );
+      this.activityService
+        .updateActivity(activity.id, activityWithoutId)
+        .subscribe(
+          (updatedActivity) => {
+            this.toastService.showSuccess(
+              'Actividad del ticket actualizado correctamente',
+              'OK',
+            );
+            this.activities[index] = updatedActivity;
+            this.editingIndex = null;
+          },
+          (error) => {
+            console.error(
+              'Error actualizadando la actividad del ticket:',
+              error,
+            );
+          },
+        );
     } else {
       console.error('El ID de la actividad no está definido');
     }
@@ -402,18 +437,20 @@ export class TicketsViewComponent implements OnInit {
       console.log('Deleting activity:', activity.id);
       this.activityService.deleteActivity(activity.id).subscribe(
         () => {
-          this.toastService.showSuccess('Actividad eliminada correctamente', 'OK');
+          this.toastService.showSuccess(
+            'Actividad eliminada correctamente',
+            'OK',
+          );
           this.activities.splice(index, 1);
         },
         (error) => {
           console.error('Error al borrar actividad:', error);
-        }
+        },
       );
     } else {
       console.error('El ID de la actividad no está definido');
     }
   }
-
 
   changeStatus() {
     console.log('Cambio de Estatus');
@@ -425,15 +462,15 @@ export class TicketsViewComponent implements OnInit {
           this.ticket.status = this.ticketStatus;
           this.toastService.showSuccess(
             'Estado del ticket actualizado correctamente',
-            'OK'
+            'OK',
           );
         },
         (error) => {
           this.toastService.showError(
             'Error al actualizar el estado del ticket',
-            error.message
+            error.message,
           );
-        }
+        },
       );
   }
 
@@ -450,21 +487,24 @@ export class TicketsViewComponent implements OnInit {
           this.ticket.priority = this.ticketPriority as Priority;
           this.toastService.showSuccess(
             'Prioridad del ticket actualizado correctamente',
-            'OK'
+            'OK',
           );
         },
         (error) => {
           this.toastService.showError(
             'Error al actualizar la prioridad del ticket',
-            error.message
+            error.message,
           );
-        }
+        },
       );
   }
 
   onSaveIssue() {
     if (this.issueForm.invalid) {
-      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      this.toastService.showError(
+        'Datos de formulario no válidos',
+        'Por favor, corrija los errores del formulario.',
+      );
       return;
     }
     const issueData = this.issueForm.value;
@@ -474,54 +514,88 @@ export class TicketsViewComponent implements OnInit {
     };
     this.ticketIssue = issueData.issue;
     console.log('Issue Data:', issueData);
-    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
-      (response) => {
-        this.toastService.showSuccess('Problema del ticket actualizado correctamente', 'OK');
-        this.issueReadOnly = true;
-      },
-      (error) => {
-        console.error('Error:', error);
-        this.toastService.showError('Error al actualizar el problema del ticket', error.message);
-      }
-    );
+    this.ticketsService
+      .updateTicket(this.ticket.id, updatedTicketData)
+      .subscribe(
+        (response) => {
+          this.toastService.showSuccess(
+            'Problema del ticket actualizado correctamente',
+            'OK',
+          );
+          this.issueReadOnly = true;
+        },
+        (error) => {
+          console.error('Error:', error);
+          this.toastService.showError(
+            'Error al actualizar el problema del ticket',
+            error.message,
+          );
+        },
+      );
   }
 
   onSaveEvent(): void {
     if (this.eventForm.invalid) {
-      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      this.toastService.showError(
+        'Datos de formulario no válidos',
+        'Por favor, corrija los errores del formulario.',
+      );
       return;
     }
     const eventData = this.eventForm.value;
     const updatedTicketData = {
       title: eventData.title,
       type: eventData.type,
-      appointmentStartTime: this.calculateStartDate(eventData.dateStart, eventData.timeStart),
-      appointmentEndTime: this.calculateEndDate(eventData.dateStart, eventData.timeEnd),
+      appointmentStartTime: this.calculateStartDate(
+        eventData.dateStart,
+        eventData.timeStart,
+      ),
+      appointmentEndTime: this.calculateEndDate(
+        eventData.dateStart,
+        eventData.timeEnd,
+      ),
       // Add other fields as necessary
     };
-      
+
     this.ticketTitle = eventData.title;
     this.ticketType = eventData.type;
-    this.ticketAppointmentDateStart = this.calculateStartDate(eventData.dateStart, eventData.timeStart)
-    this.ticketAppointmentDateEnd = this.calculateEndDate(eventData.dateStart, eventData.timeEnd);
+    this.ticketAppointmentDateStart = this.calculateStartDate(
+      eventData.dateStart,
+      eventData.timeStart,
+    );
+    this.ticketAppointmentDateEnd = this.calculateEndDate(
+      eventData.dateStart,
+      eventData.timeEnd,
+    );
 
     console.log('Event Data:', eventData);
     // Call the updateTicket method with the ticket id and the updated issue
-    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
-      (response) => {
-        this.toastService.showSuccess('Evento del ticket actualizado correctamente', 'OK');
-        this.eventReadOnly = true;
-      },
-      (error) => {
-        console.error('Error:', error);
-        this.toastService.showError('Error al actualizar el evento del ticket', error.message);
-      }
-    );
+    this.ticketsService
+      .updateTicket(this.ticket.id, updatedTicketData)
+      .subscribe(
+        (response) => {
+          this.toastService.showSuccess(
+            'Evento del ticket actualizado correctamente',
+            'OK',
+          );
+          this.eventReadOnly = true;
+        },
+        (error) => {
+          console.error('Error:', error);
+          this.toastService.showError(
+            'Error al actualizar el evento del ticket',
+            error.message,
+          );
+        },
+      );
   }
 
   onSaveClient() {
     if (this.clientForm.invalid) {
-      this.toastService.showError('Datos de formulario no válidos', 'Por favor, corrija los errores del formulario.');
+      this.toastService.showError(
+        'Datos de formulario no válidos',
+        'Por favor, corrija los errores del formulario.',
+      );
       return;
     }
     const clientData = this.clientForm.value;
@@ -538,161 +612,77 @@ export class TicketsViewComponent implements OnInit {
     this.clientPhone = clientData.phone;
     this.clientAddress = clientData.address;
 
-    this.ticketsService.updateTicket(this.ticket.id, updatedTicketData).subscribe(
-      (response) => {
-        console.log('Ticket client data updated successfully:', response);
-        this.clientReadOnly = true;
-        this.toastService.showSuccess('Datos del cliente actualizados correctamente', 'OK');
-      },
-      (error) => {
-        console.error('Error:', error);
-        this.toastService.showError('Error al actualizar los datos del cliente', error.message);
-      }
-    );
+    this.ticketsService
+      .updateTicket(this.ticket.id, updatedTicketData)
+      .subscribe(
+        (response) => {
+          console.log('Ticket client data updated successfully:', response);
+          this.clientReadOnly = true;
+          this.toastService.showSuccess(
+            'Datos del cliente actualizados correctamente',
+            'OK',
+          );
+        },
+        (error) => {
+          console.error('Error:', error);
+          this.toastService.showError(
+            'Error al actualizar los datos del cliente',
+            error.message,
+          );
+        },
+      );
   }
 
   calculateStartDate(dateStart: Date, timeStart: string): Date {
     const [hours, minutes] = timeStart.split(':').map(Number);
-  
+
     // Create a new Date object based on dateStart and set the hours and minutes
     const startDate = new Date(dateStart);
     startDate.setHours(hours, minutes);
-  
+
     return startDate;
   }
 
   calculateEndDate(dateEnd: Date, timeEnd: string): Date {
     const [hours, minutes] = timeEnd.split(':').map(Number);
-  
+
     // Create a new Date object based on dateStart and set the hours and minutes
     const endDate = new Date(dateEnd);
     endDate.setHours(hours, minutes);
-  
+
     return endDate;
   }
 
   isValidFieldEventForm(field: string): boolean | null {
-    if (!this.eventForm || !this.eventForm.controls[field]) {
-      return null;
-    }
     return this.validatorsService.isValidField(this.eventForm, field);
   }
 
   isValidFieldClientForm(field: string): boolean | null {
-    if (!this.clientForm || !this.clientForm.controls[field]) {
-      return null;
-    }
     return this.validatorsService.isValidField(this.clientForm, field);
   }
 
   isValidFieldIssueForm(field: string): boolean | null {
-    if (!this.issueForm || !this.issueForm.controls[field]) {
-      return null;
-    }
     return this.validatorsService.isValidField(this.issueForm, field);
   }
 
   isValidFieldActivityForm(field: string): boolean | null {
-    if (!this.activityForm || !this.activityForm.controls[field]) {
-      return null;
-    }
     return this.validatorsService.isValidField(this.activityForm, field);
   }
 
   getFieldErrorEventForm(field: string): string | null {
-    if (!this.eventForm || !this.eventForm.controls[field]) return null;
-
-    const errors = this.eventForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'matDatepickerParse': // Add this case
-          return 'Fecha inválida';
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.eventForm, field);
   }
 
   getFieldErrorClientForm(field: string): string | null {
-    if (!this.clientForm || !this.clientForm.controls[field]) return null;
-
-    const errors = this.clientForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'matDatepickerParse': // Add this case
-          return 'Fecha inválida';
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.clientForm, field);
   }
 
   getFieldErrorIssueForm(field: string): string | null {
-    if (!this.issueForm || !this.issueForm.controls[field]) return null;
-
-    const errors = this.issueForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'matDatepickerParse': // Add this case
-          return 'Fecha inválida';
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.issueForm, field);
   }
 
   getFieldErrorActivityForm(field: string): string | null {
-    if (!this.activityForm || !this.activityForm.controls[field]) return null;
-
-    const errors = this.activityForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'matDatepickerParse': // Add this case
-          return 'Fecha inválida';
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.activityForm, field);
   }
 
   openDatepicker() {

@@ -46,7 +46,7 @@ export class PrinterCreateComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class PrinterCreateComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching brands', error);
-      }
+      },
     );
 
     this.printerService.getCategories().subscribe(
@@ -71,9 +71,10 @@ export class PrinterCreateComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching categories', error);
-      }
+      },
     );
   }
+
   initializeForm() {
     this.createPrinterForm = this.fb.group({
       brand: [null, Validators.required],
@@ -141,7 +142,7 @@ export class PrinterCreateComponent implements OnInit {
 
   get tagsControls() {
     return (this.createPrinterForm.get('tags') as FormArray).controls.map(
-      (control) => control.value
+      (control) => control.value,
     );
   }
 
@@ -185,30 +186,11 @@ export class PrinterCreateComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.createPrinterForm, field))
     return this.validatorsService.isValidField(this.createPrinterForm, field);
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createPrinterForm.controls[field]) return null;
-
-    const errors = this.createPrinterForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.createPrinterForm, field);
   }
 
   submitForm() {
@@ -233,7 +215,7 @@ export class PrinterCreateComponent implements OnInit {
       (error) => {
         this.isSubmitting = false;
         this.toastService.showError(error.error.message, 'Cerrar');
-      }
+      },
     );
   }
 
@@ -258,7 +240,7 @@ export class PrinterCreateComponent implements OnInit {
             datasheetControl.setValue(file);
             console.log(
               'I have set the value for datasheet:',
-              datasheetControl.value
+              datasheetControl.value,
             );
           }
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
@@ -268,7 +250,7 @@ export class PrinterCreateComponent implements OnInit {
 
           // Get a reference to the img_url form array
           const imgUrlArray = this.createPrinterForm.get(
-            'img_url'
+            'img_url',
           ) as FormArray;
 
           // Create a new control with the URL and push it to the form array
@@ -340,7 +322,7 @@ export class PrinterCreateComponent implements OnInit {
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
-      }
+      },
     );
   }
 

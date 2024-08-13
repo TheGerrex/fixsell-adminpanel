@@ -47,7 +47,7 @@ export class ConsumiblesEditComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private sharedService: SharedService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {}
 
   ngOnInit(): void {
@@ -58,9 +58,9 @@ export class ConsumiblesEditComponent implements OnInit {
       startWith(''),
       switchMap((value) =>
         this.ConsumiblesService.getAllPrinterNames().pipe(
-          map((printerNames) => this._filter(value, printerNames))
-        )
-      )
+          map((printerNames) => this._filter(value, printerNames)),
+        ),
+      ),
     );
     this.filteredCounterpartNames =
       this.counterpartNameControl.valueChanges.pipe(
@@ -68,30 +68,30 @@ export class ConsumiblesEditComponent implements OnInit {
         switchMap((value) =>
           this.ConsumiblesService.getAllConsumibleNames().pipe(
             map((consumibleNames) =>
-              this._counterfilter(value, consumibleNames)
-            )
-          )
-        )
+              this._counterfilter(value, consumibleNames),
+            ),
+          ),
+        ),
       );
 
     this.ConsumiblesService.getAllConsumibles().subscribe(
       (consumibles: Consumible[]) => {
         this.consumibles = consumibles;
-      }
+      },
     );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
-      printerName.toLowerCase().includes(filterValue)
+      printerName.toLowerCase().includes(filterValue),
     );
   }
 
   private _counterfilter(value: string, consumibleNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return consumibleNames.filter((consumibleName) =>
-      consumibleName.toLowerCase().includes(filterValue)
+      consumibleName.toLowerCase().includes(filterValue),
     );
   }
 
@@ -106,16 +106,16 @@ export class ConsumiblesEditComponent implements OnInit {
           map((Consumible) => {
             if (Consumible.printers) {
               Consumible.printers = Consumible.printers.map(
-                (printer) => printer.model
+                (printer) => printer.model,
               ) as unknown as Printer[];
             }
             if (Consumible.counterparts) {
               Consumible.counterparts = Consumible.counterparts.map(
-                (counterpart) => counterpart.name
+                (counterpart) => counterpart.name,
               ) as unknown as Consumible[];
             }
             return Consumible;
-          })
+          }),
         )
         .subscribe((Consumible) => {
           console.log('got consumible from service' + { Consumible });
@@ -155,7 +155,7 @@ export class ConsumiblesEditComponent implements OnInit {
           ? this.Consumible.img_url
               .filter((image) => typeof image === 'string')
               .map((image) => this.fb.control(image))
-          : []
+          : [],
       ),
       origen: [
         this.Consumible ? this.Consumible.origen : '',
@@ -165,9 +165,9 @@ export class ConsumiblesEditComponent implements OnInit {
       compatibleModels: this.fb.array(
         this.Consumible
           ? this.Consumible.compatibleModels?.map((model) =>
-              this.fb.control(model)
+              this.fb.control(model),
             ) ?? []
-          : []
+          : [],
       ),
 
       category: [
@@ -180,10 +180,10 @@ export class ConsumiblesEditComponent implements OnInit {
       ],
       yield: [this.Consumible ? this.Consumible.yield : ''],
       printers: this.fb.array(
-        this.Consumible ? this.Consumible.printers || [] : []
+        this.Consumible ? this.Consumible.printers || [] : [],
       ),
       counterparts: this.fb.array(
-        this.Consumible ? this.Consumible.counterparts || [] : []
+        this.Consumible ? this.Consumible.counterparts || [] : [],
       ),
     });
     console.log('this.Consumible:', this.Consumible);
@@ -191,7 +191,7 @@ export class ConsumiblesEditComponent implements OnInit {
     console.log('printers', this.editConsumibleForm.get('printers')?.value);
     console.log(
       'counterparts',
-      this.editConsumibleForm.get('counterparts')?.value
+      this.editConsumibleForm.get('counterparts')?.value,
     );
   }
 
@@ -224,30 +224,11 @@ export class ConsumiblesEditComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.editPrinterForm, field))
     return this.validatorsService.isValidField(this.editConsumibleForm, field);
   }
 
   getFieldError(field: string): string | null {
-    if (!this.editConsumibleForm.controls[field]) return null;
-
-    const errors = this.editConsumibleForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.editConsumibleForm, field);
   }
 
   onFileUploaded(event: any): void {
@@ -263,7 +244,7 @@ export class ConsumiblesEditComponent implements OnInit {
 
           // Get a reference to the img_url form array
           const imgUrlArray = this.editConsumibleForm.get(
-            'img_url'
+            'img_url',
           ) as FormArray;
 
           // Create a new control with the URL and push it to the form array
@@ -319,13 +300,13 @@ export class ConsumiblesEditComponent implements OnInit {
 
   addModel() {
     (this.editConsumibleForm.get('compatibleModels') as FormArray).push(
-      new FormControl('')
+      new FormControl(''),
     );
   }
 
   removeModel(index: number) {
     (this.editConsumibleForm.get('compatibleModels') as FormArray).removeAt(
-      index
+      index,
     );
   }
 
@@ -333,7 +314,7 @@ export class ConsumiblesEditComponent implements OnInit {
     const printerName = event.option.viewValue;
     const printers = this.editConsumibleForm.get('printers') as FormArray;
     const emptyIndex = printers.controls.findIndex(
-      (control) => control.value === ''
+      (control) => control.value === '',
     );
 
     if (emptyIndex !== -1) {
@@ -348,10 +329,10 @@ export class ConsumiblesEditComponent implements OnInit {
   addCounterpartFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
     const counterpartName = event.option.viewValue;
     const counterparts = this.editConsumibleForm.get(
-      'counterparts'
+      'counterparts',
     ) as FormArray;
     const emptyIndex = counterparts.controls.findIndex(
-      (control) => control.value === ''
+      (control) => control.value === '',
     );
 
     if (emptyIndex !== -1) {
@@ -365,13 +346,13 @@ export class ConsumiblesEditComponent implements OnInit {
 
   addPrinter(printerName: string = ''): void {
     (this.editConsumibleForm.get('printers') as FormArray).push(
-      this.fb.control(printerName)
+      this.fb.control(printerName),
     );
   }
 
   addCounterpart(counterpartName: string = ''): void {
     (this.editConsumibleForm.get('counterparts') as FormArray).push(
-      this.fb.control(counterpartName)
+      this.fb.control(counterpartName),
     );
   }
 
@@ -382,7 +363,7 @@ export class ConsumiblesEditComponent implements OnInit {
 
   removeCounterpart(index: number) {
     const counterparts = this.editConsumibleForm.get(
-      'counterparts'
+      'counterparts',
     ) as FormArray;
     counterparts.removeAt(index);
   }
@@ -405,7 +386,7 @@ export class ConsumiblesEditComponent implements OnInit {
             ' value = ' +
             this.editConsumibleForm.controls[key].value +
             ' valid = ' +
-            this.editConsumibleForm.controls[key].valid
+            this.editConsumibleForm.controls[key].valid,
         );
         this.editConsumibleForm.controls[key].markAsTouched();
       });
@@ -413,7 +394,7 @@ export class ConsumiblesEditComponent implements OnInit {
       this.editConsumibleForm.markAllAsTouched();
       this.toastService.showError(
         'Error',
-        'Error al actualizar consumible, revise los campos'
+        'Error al actualizar consumible, revise los campos',
       );
       return;
     }
@@ -431,14 +412,14 @@ export class ConsumiblesEditComponent implements OnInit {
     // Convert printer names to IDs
     const printerNames = formData.printers;
     const printerIdsPromises = printerNames.map((name: string) =>
-      this.ConsumiblesService.getPrinterIdByName(name).toPromise()
+      this.ConsumiblesService.getPrinterIdByName(name).toPromise(),
     );
     const printersIds = await Promise.all(printerIdsPromises);
 
     // Convert counterpart names to IDs
     const counterpartNames = formData.counterparts;
     const counterpartIdsPromises = counterpartNames.map((name: string) =>
-      this.ConsumiblesService.getCounterpartIdByName(name).toPromise()
+      this.ConsumiblesService.getCounterpartIdByName(name).toPromise(),
     );
     const counterpartIds = await Promise.all(counterpartIdsPromises);
 
@@ -459,7 +440,7 @@ export class ConsumiblesEditComponent implements OnInit {
         this.isSubmitting = false;
         this.toastService.showSuccess(
           'Consumible actualizado',
-          'Consumible actualizado correctamente'
+          'Consumible actualizado correctamente',
         );
         this.router.navigate(['website/consumibles', consumiblesId]);
       },
@@ -468,9 +449,9 @@ export class ConsumiblesEditComponent implements OnInit {
         this.isSubmitting = false;
         this.toastService.showError(
           'Error',
-          'Error al actualizar consumible' + error.error.message
+          'Error al actualizar consumible' + error.error.message,
         );
-      }
+      },
     );
   }
 }

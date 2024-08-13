@@ -45,7 +45,7 @@ export class LeadsCreateComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {}
 
   ngOnInit() {
@@ -58,9 +58,9 @@ export class LeadsCreateComponent implements OnInit {
           map((printerNames) => {
             console.log('All Printer Names:', printerNames);
             return this._filter(value, printerNames);
-          })
+          }),
         );
-      })
+      }),
     );
 
     this.filteredProductNames = this.productControl.valueChanges.pipe(
@@ -72,15 +72,15 @@ export class LeadsCreateComponent implements OnInit {
               .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
               .getAllConsumiblesNames()
-              .pipe(map((productNames) => this._filter(value, productNames)))
-      )
+              .pipe(map((productNames) => this._filter(value, productNames))),
+      ),
     );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
-      printerName.toLowerCase().includes(filterValue)
+      printerName.toLowerCase().includes(filterValue),
     );
   }
 
@@ -97,8 +97,8 @@ export class LeadsCreateComponent implements OnInit {
         switchMap((value) =>
           this.dealService
             .getAllPrinterNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
-        )
+            .pipe(map((productNames) => this._filter(value, productNames))),
+        ),
       );
     } else {
       //if consumible
@@ -107,8 +107,8 @@ export class LeadsCreateComponent implements OnInit {
         switchMap((value) =>
           this.dealService
             .getAllConsumiblesNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
-        )
+            .pipe(map((productNames) => this._filter(value, productNames))),
+        ),
       );
     }
   }
@@ -138,7 +138,7 @@ export class LeadsCreateComponent implements OnInit {
         this.printerPrice = price;
         this.printerControl.setValue(printerName);
         this.createLeadForm.controls['product_interested'].setValue(
-          printerName
+          printerName,
         );
       },
       (error) => {
@@ -147,9 +147,9 @@ export class LeadsCreateComponent implements OnInit {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
@@ -162,7 +162,7 @@ export class LeadsCreateComponent implements OnInit {
       (price) => {
         console.log('Price:', price);
         this.createLeadForm.controls['product_interested'].setValue(
-          consumibleName
+          consumibleName,
         );
       },
       (error) => {
@@ -171,9 +171,9 @@ export class LeadsCreateComponent implements OnInit {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
@@ -195,7 +195,7 @@ export class LeadsCreateComponent implements OnInit {
             `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
               this.productControl.value
             }`,
-            [Validators.required]
+            [Validators.required],
           ),
           date: new FormControl(new Date().toISOString(), [
             Validators.required,
@@ -212,30 +212,7 @@ export class LeadsCreateComponent implements OnInit {
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createLeadForm.controls[field]) return null;
-
-    const errors = this.createLeadForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'phoneInvalid':
-          return 'El número de teléfono debe tener 10 dígitos';
-        case 'email':
-          return 'El email no es válido';
-
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.createLeadForm, field);
   }
 
   async submitForm() {
@@ -277,7 +254,7 @@ export class LeadsCreateComponent implements OnInit {
       this.lead = lead;
       this.toastService.showSuccess(
         'Lead creado exitosamente',
-        'success-snackbar'
+        'success-snackbar',
       );
 
       // Prepare the sales communication data
@@ -299,7 +276,7 @@ export class LeadsCreateComponent implements OnInit {
           next: (salesResponse: any) => {
             console.log(
               'Sales communication created successfully:',
-              salesResponse
+              salesResponse,
             );
           },
           error: (salesError) => {

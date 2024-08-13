@@ -46,7 +46,7 @@ export class LeadsEditComponent {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
-    private validatorsService: ValidatorsService
+    private validatorsService: ValidatorsService,
   ) {}
 
   ngOnInit() {
@@ -64,8 +64,8 @@ export class LeadsEditComponent {
       switchMap((value) =>
         this.dealService
           .getAllPrinterNames()
-          .pipe(map((printerNames) => this._filter(value, printerNames)))
-      )
+          .pipe(map((printerNames) => this._filter(value, printerNames))),
+      ),
     );
 
     this.filteredProductNames = this.productControl.valueChanges.pipe(
@@ -77,8 +77,8 @@ export class LeadsEditComponent {
               .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
               .getAllConsumiblesNames()
-              .pipe(map((productNames) => this._filter(value, productNames)))
-      )
+              .pipe(map((productNames) => this._filter(value, productNames))),
+      ),
     );
   }
 
@@ -98,7 +98,7 @@ export class LeadsEditComponent {
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
-      printerName.toLowerCase().includes(filterValue)
+      printerName.toLowerCase().includes(filterValue),
     );
   }
 
@@ -115,8 +115,8 @@ export class LeadsEditComponent {
         switchMap((value) =>
           this.dealService
             .getAllPrinterNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
-        )
+            .pipe(map((productNames) => this._filter(value, productNames))),
+        ),
       );
     } else {
       //if consumible
@@ -125,8 +125,8 @@ export class LeadsEditComponent {
         switchMap((value) =>
           this.dealService
             .getAllConsumiblesNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
-        )
+            .pipe(map((productNames) => this._filter(value, productNames))),
+        ),
       );
     }
   }
@@ -167,9 +167,9 @@ export class LeadsEditComponent {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
@@ -182,7 +182,7 @@ export class LeadsEditComponent {
       (price) => {
         console.log('Price:', price);
         this.editLeadForm.controls['product_interested'].setValue(
-          consumibleName
+          consumibleName,
         );
       },
       (error) => {
@@ -191,9 +191,9 @@ export class LeadsEditComponent {
           'Hubo un error: ' +
             error.error.message +
             '. Por favor, intenta de nuevo.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 
@@ -215,7 +215,7 @@ export class LeadsEditComponent {
             `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
               this.productControl.value
             }`,
-            [Validators.required]
+            [Validators.required],
           ),
           date: new FormControl(new Date().toISOString(), [
             Validators.required,
@@ -232,30 +232,7 @@ export class LeadsEditComponent {
   }
 
   getFieldError(field: string): string | null {
-    if (!this.editLeadForm.controls[field]) return null;
-
-    const errors = this.editLeadForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        case 'phoneInvalid':
-          return 'El número de teléfono debe tener 10 dígitos';
-        case 'email':
-          return 'El email no es válido';
-
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.editLeadForm, field);
   }
 
   async submitForm() {
@@ -297,7 +274,7 @@ export class LeadsEditComponent {
           this.lead = lead;
           this.toastService.showSuccess(
             'Lead actualizado exitosamente',
-            'success-snackbar'
+            'success-snackbar',
           );
           this.isLoading = false;
           this.router.navigate(['../'], { relativeTo: this.route });

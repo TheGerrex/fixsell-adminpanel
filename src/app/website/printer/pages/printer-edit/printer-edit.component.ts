@@ -46,7 +46,7 @@ export class PrinterEditComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +68,10 @@ export class PrinterEditComponent implements OnInit {
           Validators.pattern(this.validatorsService.floatNumberPattern),
         ],
       ],
-      currency: [this.printer ? this.printer.currency : 'MXN', Validators.required],
+      currency: [
+        this.printer ? this.printer.currency : 'MXN',
+        Validators.required,
+      ],
       category: [
         this.printer ? this.printer.category : '',
         Validators.required,
@@ -80,7 +83,7 @@ export class PrinterEditComponent implements OnInit {
         (this.printer && this.printer.tags.length > 0
           ? this.printer.tags
           : []
-        ).map((tag) => this.fb.control(tag))
+        ).map((tag) => this.fb.control(tag)),
       ),
       powerConsumption: [this.printer ? this.printer.powerConsumption : ''],
       dimensions: [this.printer ? this.printer.dimensions : ''],
@@ -146,7 +149,7 @@ export class PrinterEditComponent implements OnInit {
   handleTagsUpdated(tags: any[]) {
     const tagsFormArray = this.editPrinterForm.get('tags') as FormArray;
     tagsFormArray.clear();
-    tags.forEach(tag => tagsFormArray.push(new FormControl(tag.name)));
+    tags.forEach((tag) => tagsFormArray.push(new FormControl(tag.name)));
   }
 
   get tagsControls() {
@@ -193,30 +196,11 @@ export class PrinterEditComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.editPrinterForm, field))
     return this.validatorsService.isValidField(this.editPrinterForm, field);
   }
 
   getFieldError(field: string): string | null {
-    if (!this.editPrinterForm.controls[field]) return null;
-
-    const errors = this.editPrinterForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.editPrinterForm, field);
   }
 
   submitForm() {
@@ -254,7 +238,7 @@ export class PrinterEditComponent implements OnInit {
       (error) => {
         this.isSubmitting = false;
         this.toastService.showError(error.error.message, 'Cerrar');
-      }
+      },
     );
   }
 
@@ -279,7 +263,7 @@ export class PrinterEditComponent implements OnInit {
             datasheetControl.setValue(file);
             console.log(
               'I have set the value for datasheet:',
-              datasheetControl.value
+              datasheetControl.value,
             );
           }
         } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
@@ -362,7 +346,7 @@ export class PrinterEditComponent implements OnInit {
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
-      }
+      },
     );
   }
 

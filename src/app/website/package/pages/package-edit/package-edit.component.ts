@@ -44,7 +44,7 @@ export class PackageEditComponent implements OnInit {
     private fb: FormBuilder,
     private PackageService: PackageService,
     private validatorsService: ValidatorsService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {}
 
   ngOnInit(): void {
@@ -104,7 +104,9 @@ export class PackageEditComponent implements OnInit {
         this.package ? this.package.packageDiscountPercentage : 0,
       ],
       packageDescription: [this.package ? this.package.packageDescription : ''],
-      packageDepositPrice: [this.package ? this.package.packageDepositPrice : 0],
+      packageDepositPrice: [
+        this.package ? this.package.packageDepositPrice : 0,
+      ],
       packagePrintsBw: [this.package ? this.package.packagePrintsBw : 0],
       packagePrintsColor: [this.package ? this.package.packagePrintsColor : 0],
       packageExtraClickPriceBw: [
@@ -114,7 +116,7 @@ export class PackageEditComponent implements OnInit {
         this.package ? this.package.packageExtraClickPriceColor : 0,
       ],
       packageIncludes: this.fb.array(
-        this.package ? this.package.packageIncludes : []
+        this.package ? this.package.packageIncludes : [],
       ),
     });
   }
@@ -122,7 +124,7 @@ export class PackageEditComponent implements OnInit {
     const price = this.editPackageForm.controls['packagePrice'].value;
     const discount = ((this.printerPrice - price) / this.printerPrice) * 100;
     this.editPackageForm.controls['packageDiscountPercentage'].setValue(
-      discount
+      discount,
     );
   }
 
@@ -139,7 +141,7 @@ export class PackageEditComponent implements OnInit {
 
   addInclude() {
     (this.editPackageForm.get('packageIncludes') as FormArray).push(
-      new FormControl('')
+      new FormControl(''),
     );
   }
 
@@ -148,37 +150,18 @@ export class PackageEditComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    // console.log(this.validatorsService.isValidField(this.createPrinterForm, field))
     return this.validatorsService.isValidField(this.editPackageForm, field);
   }
 
   getFieldError(field: string): string | null {
-    if (!this.editPackageForm.controls[field]) return null;
-
-    const errors = this.editPackageForm.controls[field].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.editPackageForm, field);
   }
 
   submitForm(): void {
     if (this.editPackageForm.invalid) {
       this.toastService.showError(
         'Please fill all the required fields',
-        'Error'
+        'Error',
       );
       this.editPackageForm.markAllAsTouched();
       return;
@@ -188,10 +171,10 @@ export class PackageEditComponent implements OnInit {
       ...this.editPackageForm.value,
       packagePrice: Number(this.editPackageForm.value.packagePrice),
       packageDiscountPercentage: Number(
-        this.editPackageForm.value.packageDiscountPercentage
+        this.editPackageForm.value.packageDiscountPercentage,
       ),
       packageExtraClickPrice: Number(
-        this.editPackageForm.value.packageExtraClickPrice
+        this.editPackageForm.value.packageExtraClickPrice,
       ),
     };
 
@@ -206,9 +189,9 @@ export class PackageEditComponent implements OnInit {
         console.log(error);
         this.toastService.showError(
           'There was an error: ' + error.error.message + '. Please try again.',
-          'error-snackbar'
+          'error-snackbar',
         );
-      }
+      },
     );
   }
 }

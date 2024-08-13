@@ -42,7 +42,7 @@ export class UserEditComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -61,7 +61,7 @@ export class UserEditComponent implements OnInit {
         },
         (error) => {
           console.error('error:', error);
-        }
+        },
       );
     });
   }
@@ -74,7 +74,7 @@ export class UserEditComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching roles', error);
-      }
+      },
     );
   }
 
@@ -96,13 +96,12 @@ export class UserEditComponent implements OnInit {
     ).filter((role): role is string => Boolean(role));
   }
 
-
   setupPasswordValidation() {
     const passwordControl = this.editUserForm.get('password');
     const repeatPasswordControl = this.editUserForm.get('repeatPassword');
-  
+
     if (passwordControl && repeatPasswordControl) {
-      passwordControl.valueChanges.subscribe(password => {
+      passwordControl.valueChanges.subscribe((password) => {
         if (password) {
           repeatPasswordControl.setValidators([Validators.required]);
         } else {
@@ -123,33 +122,7 @@ export class UserEditComponent implements OnInit {
   }
 
   getFieldError(field: string): string | null {
-    if (
-      !this.editUserForm.controls[
-        field as keyof typeof this.editUserForm.controls
-      ]
-    )
-      return null;
-
-    const errors =
-      this.editUserForm.controls[
-        field as keyof typeof this.editUserForm.controls
-      ].errors || {};
-
-    console.log(errors);
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'pattern':
-          return 'Este campo esta en formato incorrecto';
-        case 'maxlength':
-          return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
-        default:
-          return 'Error desconocido';
-      }
-    }
-    return null;
+    return this.validatorsService.getFieldError(this.editUserForm, field);
   }
 
   public isStrongPassword() {
@@ -160,7 +133,7 @@ export class UserEditComponent implements OnInit {
       const hasLowerCase = /[a-z]/.test(value);
       const hasNumeric = /[0-9]/.test(value);
       const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-        value
+        value,
       );
 
       const passwordValid =
@@ -216,7 +189,6 @@ export class UserEditComponent implements OnInit {
     this.editUserForm.controls['roles'].setValue(selectedItems);
   }
 
-
   openAddUserRoleDialog() {
     const dialogRef = this.dialog.open(AddUserRoleDialogComponent);
 
@@ -232,7 +204,10 @@ export class UserEditComponent implements OnInit {
       this.editUserForm.markAllAsTouched();
       return;
     }
-    if (this.editUserForm.value.password === "" || this.editUserForm.value.password === null) {
+    if (
+      this.editUserForm.value.password === '' ||
+      this.editUserForm.value.password === null
+    ) {
       delete this.editUserForm.value.password;
     }
     this.isLoadingForm = true;
@@ -246,7 +221,7 @@ export class UserEditComponent implements OnInit {
           this.isLoadingForm = false;
           this.toastService.showSuccess(
             'Usuario actualizado con exito',
-            'Close'
+            'Close',
           );
           // Navigate to the user detail page
           this.router.navigate(['/users/user']);
@@ -257,7 +232,7 @@ export class UserEditComponent implements OnInit {
           this.isLoadingForm = false;
           this.toastService.showError(
             `Error creando usuario: ${error.error.message}`,
-            'Close'
+            'Close',
           );
           console.error('Error actualizando usuario:', error.error.message);
         },

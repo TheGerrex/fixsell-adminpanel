@@ -23,7 +23,7 @@ export class PrinterDetailComponent implements OnInit {
     private sharedService: SharedService,
     private printerService: PrinterService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +57,6 @@ export class PrinterDetailComponent implements OnInit {
     this.router.navigate(['/website', 'printers', id, 'edit']);
   }
 
-
   openConfirmDialog(printer: Printer): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -76,25 +75,27 @@ export class PrinterDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (printer.id){
-            this.deletePrinter(printer)
+        if (printer.id) {
+          this.deletePrinter(printer);
         }
-        
       }
     });
   }
 
   deletePrinter(printer: Printer) {
-  if (printer.id){
-    this.printerService.deletePrinter(printer.id).subscribe(
-      (response) => {
-        this.toastService.showSuccess('Multifuncional eliminado con exito', 'Aceptar');
-        this.router.navigateByUrl('website/printers');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+    if (printer.id) {
+      this.printerService.deletePrinter(printer.id).subscribe({
+        next: (response) => {
+          this.toastService.showSuccess(
+            'Multifuncional eliminado con exito',
+            'Aceptar',
+          );
+          this.router.navigateByUrl('website/printers');
+        },
+        error: (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        },
+      });
     }
   }
 }

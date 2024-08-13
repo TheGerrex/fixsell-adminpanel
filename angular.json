@@ -32,10 +32,9 @@
                         ],
                         "styles": [
                             "node_modules/angular-calendar/css/angular-calendar.css",
-                            "@angular/material/prebuilt-themes/indigo-pink.css",
                             "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                            "src/styles.scss",
-                            "src/m3-theme.scss"
+                            "./src/styles.scss",
+                            "./m3-theme.scss"
                         ],
                         "scripts": [
                             "node_modules/bootstrap/dist/js/bootstrap.js"

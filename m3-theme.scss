@@ -3,9 +3,158 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 // Note: Color palettes are generated from primary: #3b82f6, secondary: #64748B, tertiary: #6366f1
-$_palettes: ( primary: ( 0: #000000, 10: #001a42, 20: #002e6a, 25: #00397f, 30: #004395, 35: #004fab, 40: #005ac2, 50: #2573e6, 60: #4d8eff, 70: #81aaff, 80: #adc6ff, 90: #d8e2ff, 95: #edf0ff, 98: #f9f9ff, 99: #fefbff, 100: #ffffff, ), secondary: ( 0: #000000, 10: #001c38, 20: #00325b, 25: #003d6d, 30: #004880, 35: #005494, 40: #1160a4, 50: #387abf, 60: #5594db, 70: #72aef8, 80: #a1c9ff, 90: #d2e4ff, 95: #eaf1ff, 98: #f8f9ff, 99: #fdfcff, 100: #ffffff, ), tertiary: ( 0: #000000, 10: #07006c, 20: #1000a9, 25: #201cb4, 30: #2f2ebe, 35: #3c3dca, 40: #494bd6, 50: #6366f1, 60: #8083ff, 70: #a0a3ff, 80: #c0c1ff, 90: #e1e0ff, 95: #f2efff, 98: #fcf8ff, 99: #fffbff, 100: #ffffff, ), neutral: ( 0: #000000, 10: #1b1b1f, 20: #303034, 25: #3b3b3f, 30: #46464a, 35: #525256, 40: #5e5e62, 50: #77777a, 60: #919094, 70: #ababaf, 80: #c7c6ca, 90: #e3e2e6, 95: #f2f0f4, 98: #faf8fd, 99: #fefbff, 100: #ffffff, 4: #0d0e11, 6: #121316, 12: #1f1f23, 17: #292a2d, 22: #343538, 24: #38393c, 87: #dbd9dd, 92: #e9e7ec, 94: #efedf1, 96: #f5f3f7, ), neutral-variant: ( 0: #000000, 10: #191b22, 20: #2e3038, 25: #393b43, 30: #44474f, 35: #50525a, 40: #5c5e66, 50: #75777f, 60: #8e9099, 70: #a9abb4, 80: #c4c6d0, 90: #e1e2ec, 95: #eff0fa, 98: #f9f9ff, 99: #fefbff, 100: #ffffff, ), error: ( 0: #000000, 10: #410002, 20: #690005, 25: #7e0007, 30: #93000a, 35: #a80710, 40: #ba1a1a, 50: #de3730, 60: #ff5449, 70: #ff897d, 80: #ffb4ab, 90: #ffdad6, 95: #ffedea, 98: #fff8f7, 99: #fffbff, 100: #ffffff, ), );
-$_rest: ( secondary: map.get($_palettes, secondary), neutral: map.get($_palettes, neutral), neutral-variant: map.get($_palettes, neutral-variant), error: map.get($_palettes, error), );
+$_palettes: (
+  primary: (
+    0: #000000,
+    10: #001a42,
+    20: #002e6a,
+    25: #00397f,
+    30: #004395,
+    35: #004fab,
+    40: #005ac2,
+    50: #2573e6,
+    60: #4d8eff,
+    70: #81aaff,
+    80: #adc6ff,
+    90: #d8e2ff,
+    95: #edf0ff,
+    98: #f9f9ff,
+    99: #fff,
+    100: #ffffff,
+  ),
+  secondary: (
+    0: #000000,
+    10: #001c38,
+    20: #00325b,
+    25: #003d6d,
+    30: #004880,
+    35: #005494,
+    40: #1160a4,
+    50: #387abf,
+    60: #5594db,
+    70: #72aef8,
+    80: #a1c9ff,
+    90: #d2e4ff,
+    95: #eaf1ff,
+    98: #f8f9ff,
+    99: #fdfcff,
+    100: #ffffff,
+  ),
+  tertiary: (
+    0: #000000,
+    10: #07006c,
+    20: #1000a9,
+    25: #201cb4,
+    30: #2f2ebe,
+    35: #3c3dca,
+    40: #494bd6,
+    50: #6366f1,
+    60: #8083ff,
+    70: #a0a3ff,
+    80: #c0c1ff,
+    90: #e1e0ff,
+    95: #f2efff,
+    98: #fcf8ff,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+  neutral: (
+    0: #000000,
+    10: #1b1b1f,
+    20: #303034,
+    25: #3b3b3f,
+    30: #46464a,
+    35: #525256,
+    40: #5e5e62,
+    50: #77777a,
+    60: #919094,
+    70: #ababaf,
+    80: #c7c6ca,
+    90: #e3e2e6,
+    95: #f2f0f4,
+    98: #faf8fd,
+    99: #fff,
+    100: #ffffff,
+    hover: #6b7280,
+    4: #0d0e11,
+    6: #121316,
+    12: #1f1f23,
+    17: #292a2d,
+    22: #9333ea,
+    24: #9333ea,
+    87: #dbd9dd,
+    92: #e9e7ec,
+    94: #f9fafb,
+    96: #f5f3f7,
+  ),
+  neutral-variant: (
+    0: #000000,
+    10: #111827,
+    20: #1f2937,
+    25: #374151,
+    30: #4b5563,
+    35: #6b7280,
+    40: #9ca3af,
+    50: #d1d5db,
+    60: #e5e7eb,
+    70: #f3f4f6,
+    80: #f9fafb,
+    90: #e1e2ec,
+    95: #eff0fa,
+    98: #f9f9ff,
+    99: #fff,
+    100: #ffffff,
+  ),
+  error: (
+    0: #000000,
+    10: #8c2828,
+    20: #7f1d1d,
+    25: #991b1b,
+    30: #b91c1c,
+    35: #dc2626,
+    40: #ef4444,
+    50: #f87171,
+    60: #fca5a5,
+    70: #fecaca,
+    80: #fee2e2,
+    90: #fef2f2,
+    95: #ffedea,
+    98: #fff8f7,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+);
+$_rest: (
+  secondary: map.get($_palettes, secondary),
+  neutral: map.get($_palettes, neutral),
+  neutral-variant: map.get($_palettes, neutral-variant),
+  error: map.get($_palettes, error),
+);
 $_primary: map.merge(map.get($_palettes, primary), $_rest);
 $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
-$light-theme: mat.define-theme(( color: ( theme-type: light, primary: $_tertiary, tertiary: $_tertiary, use-system-variables: true, ), typography: ( use-system-variables: true, ), ));
-$dark-theme: mat.define-theme(( color: ( theme-type: dark, primary: $_primary, tertiary: $_tertiary, use-system-variables: true, ), typography: ( use-system-variables: true, ), ));
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: $_primary,
+      tertiary: $_tertiary,
+      use-system-variables: true,
+    ),
+    typography: (
+      use-system-variables: true,
+    ),
+  )
+);
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: $_primary,
+      tertiary: $_tertiary,
+      use-system-variables: true,
+    ),
+    typography: (
+      use-system-variables: true,
+    ),
+  )
+);

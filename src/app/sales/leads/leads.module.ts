@@ -15,6 +15,7 @@ import { CommunicationDetailComponent } from './pages/communication-detail/commu
 import { CommunicationCreateComponent } from './pages/communication-create/communication-create.component';
 import { CommunicationEditComponent } from './pages/communication-edit/communication-edit.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { LeadStatusTranslatePipe } from './pipes/lead-status-translate.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     NgxMaskDirective,
     NgxMaskPipe,
     WebsiteModule,
+    LeadStatusTranslatePipe,
   ],
   providers: [DatePipe, provideNgxMask()],
 })
-export class LeadsModule {}
+export class LeadsModule { }

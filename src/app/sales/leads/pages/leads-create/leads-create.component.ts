@@ -16,6 +16,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
 @Component({
   selector: 'app-leads-create',
   templateUrl: './leads-create.component.html',
@@ -46,7 +47,7 @@ export class LeadsCreateComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -68,11 +69,11 @@ export class LeadsCreateComponent implements OnInit {
       switchMap((value) =>
         this.selectedType.getValue() === 'multifuncional'
           ? this.dealService
-              .getAllPrinterNames()
-              .pipe(map((productNames) => this._filter(value, productNames)))
+            .getAllPrinterNames()
+            .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
-              .getAllConsumiblesNames()
-              .pipe(map((productNames) => this._filter(value, productNames))),
+            .getAllConsumiblesNames()
+            .pipe(map((productNames) => this._filter(value, productNames))),
       ),
     );
   }
@@ -84,11 +85,14 @@ export class LeadsCreateComponent implements OnInit {
     );
   }
 
-  onTypeChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const value = target?.value;
+  onTypeChange(event: MatSelectChange): void {
+    const value = event.value;
+
     // Update the BehaviorSubject with the new value
     this.selectedType.next(value);
+
+    // Clear the productControl value
+    this.productControl.reset();
 
     //if multifuncional
     if (value === 'multifuncional') {
@@ -145,8 +149,8 @@ export class LeadsCreateComponent implements OnInit {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
@@ -169,8 +173,8 @@ export class LeadsCreateComponent implements OnInit {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
@@ -192,8 +196,7 @@ export class LeadsCreateComponent implements OnInit {
       communications: this.fb.array([
         this.fb.group({
           message: new FormControl(
-            `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
-              this.productControl.value
+            `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
             }`,
             [Validators.required],
           ),
@@ -222,8 +225,7 @@ export class LeadsCreateComponent implements OnInit {
     //set communications.message to the value of the product interested
     this.createLeadForm.controls[
       'communications'
-    ].value[0].message = `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
-      this.productControl.value
+    ].value[0].message = `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
     }`;
 
     //delete selected type from form
@@ -259,9 +261,8 @@ export class LeadsCreateComponent implements OnInit {
 
       // Prepare the sales communication data
       const salesCommunicationData = {
-        message: `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
-          this.productControl.value
-        }`,
+        message: `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
+          }`,
         date: new Date().toISOString(),
         type: 'manual',
         leadId: this.lead?.id,

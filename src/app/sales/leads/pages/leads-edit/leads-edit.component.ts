@@ -16,6 +16,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-leads-edit',
@@ -26,7 +27,6 @@ export class LeadsEditComponent {
   public editLeadForm!: FormGroup;
   lead: Lead | null = null;
   isLoading = false;
-  isSubmitting = false;
   selectedType = new BehaviorSubject<string>('multifuncional');
   filteredProductNames: Observable<string[]> | undefined;
   productControl = new FormControl();
@@ -47,7 +47,7 @@ export class LeadsEditComponent {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -73,11 +73,11 @@ export class LeadsEditComponent {
       switchMap((value) =>
         this.selectedType.getValue() === 'multifuncional'
           ? this.dealService
-              .getAllPrinterNames()
-              .pipe(map((productNames) => this._filter(value, productNames)))
+            .getAllPrinterNames()
+            .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
-              .getAllConsumiblesNames()
-              .pipe(map((productNames) => this._filter(value, productNames))),
+            .getAllConsumiblesNames()
+            .pipe(map((productNames) => this._filter(value, productNames))),
       ),
     );
   }
@@ -102,11 +102,14 @@ export class LeadsEditComponent {
     );
   }
 
-  onTypeChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const value = target?.value;
+  onTypeChange(event: MatSelectChange): void {
+    const value = event.value;
+
     // Update the BehaviorSubject with the new value
     this.selectedType.next(value);
+
+    // Clear the productControl value
+    this.productControl.reset();
 
     //if multifuncional
     if (value === 'multifuncional') {
@@ -165,8 +168,8 @@ export class LeadsEditComponent {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
@@ -189,8 +192,8 @@ export class LeadsEditComponent {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
@@ -212,8 +215,7 @@ export class LeadsEditComponent {
       communications: this.fb.array([
         this.fb.group({
           message: new FormControl(
-            `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
-              this.productControl.value
+            `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
             }`,
             [Validators.required],
           ),
@@ -236,7 +238,7 @@ export class LeadsEditComponent {
   }
 
   async submitForm() {
-    this.isSubmitting = true;
+    this.isLoading = true;
 
     console.log('Form unprepared:', this.editLeadForm.value);
 
@@ -270,15 +272,23 @@ export class LeadsEditComponent {
     if (this.lead && this.lead.id) {
       this.leadsService
         .updateLead(data, this.lead.id.toString())
-        .subscribe((lead) => {
-          this.lead = lead;
-          this.toastService.showSuccess(
-            'Lead actualizado exitosamente',
-            'success-snackbar',
-          );
-          this.isLoading = false;
-          this.router.navigate(['../'], { relativeTo: this.route });
-        });
+        .subscribe(
+          (lead) => {
+            this.lead = lead;
+            this.toastService.showSuccess(
+              'Cliente potencial actualizado correctamente',
+              'ok',
+            );
+            this.isLoading = false;
+            this.router.navigate(['../'], { relativeTo: this.route });
+          },
+          (error) => {
+            this.isLoading = false;
+            this.toastService.showError(
+              'Error al actualizar el cliente potencial', error.message,
+            );
+          }
+        );
     }
   }
 }

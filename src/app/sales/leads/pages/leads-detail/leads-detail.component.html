@@ -1,13 +1,34 @@
+<app-breadcrumb></app-breadcrumb>
 <div *ngIf="lead" class="container mt-4">
-  <div class="card mb-4">
-    <div class="card-header">
-      <h2 class="card-title">Cliente: {{ lead.client }}</h2>
+
+  <div class="section-card">
+    <div class="section-card-header borderless">    
+      <h3 class="header-title">Datos del Cliente</h3>
     </div>
-    <div class="card-body">
-      <p class="card-text">
-        <strong>Email:</strong> {{ lead.email }}<br />
-        <strong>Numero de Celular:</strong> {{ lead.phone }}
-      </p>
+
+    <div class="section-card-body">
+        <div class="data-grid">
+          <!-- name -->
+          <div class="item">
+              <p class="item-label">Nombre</p>
+              <p class="item-value"> {{ lead.client }}</p>
+          </div>
+          <!-- name -->
+          <div class="item">
+              <p class="item-label">Teléfono</p>
+              <p class="item-value"> {{ lead.phone }}</p>
+          </div>
+          <!-- name -->
+          <div class="item">
+              <p class="item-label">Email</p>
+              <p class="item-value"> {{ lead.email }}</p>
+          </div>
+          <!-- name -->
+          <div class="item">
+              <p class="item-label">Estado</p>
+              <p class="item-value"> {{ lead.status | leadStatusTranslate }}</p>
+          </div>
+        </div>
     </div>
   </div>
 

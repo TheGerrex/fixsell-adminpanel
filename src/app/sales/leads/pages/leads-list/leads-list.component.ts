@@ -24,12 +24,12 @@ export class LeadsListComponent implements OnInit {
   isLoadingData = false;
   leadData: Lead[] = [];
   displayedColumns: string[] = [
-    'client',
     'status',
-    'assigned',
+    'client',
     'product_interested',
     'email',
     'last_contacted',
+    'assigned',
     'action',
   ];
   searchTerm = '';
@@ -176,13 +176,25 @@ export class LeadsListComponent implements OnInit {
     return 'no-communications'; // Transparent if no communications
   }
 
+  getStatusClass(lead: Lead): string {
+    if (lead.status === 'prospect') {
+      return 'prospect-class';
+    } else if (lead.status === 'client') {
+      return 'client-class';
+    } else if (lead.status === 'no-client') {
+      return 'no-client-class';
+    } else {
+      return '';
+    }
+  }
+
   openConfirmDialog(lead: Lead): void {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Estas seguro de eliminar esta cliente potencial?',
+      title: 'Estas seguro de eliminar este cliente potencial?',
       message: 'El cliente potencial será eliminado permanentemente.',
       buttonText: {
         ok: 'Eliminar',
@@ -212,11 +224,8 @@ export class LeadsListComponent implements OnInit {
     this.router.navigate([`sales/leads/${lead.id}/edit`]);
   }
 
-  //{{baseURL}}/leads/:id
-  //deletes a lead
   deleteLead(lead: Lead) {
     if (lead.id) {
-      //show dialog
 
       this.leadsService.deleteLead(String(lead.id)).subscribe(
         (response) => {
@@ -226,7 +235,7 @@ export class LeadsListComponent implements OnInit {
           // Update dataSource
           this.dataSource.data = this.leadData;
           this.toastService.showSuccess(
-            'Cliente potencial eliminado con exito',
+            'Cliente potencial eliminado con éxito',
             'Aceptar'
           );
         },

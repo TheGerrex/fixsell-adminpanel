@@ -1,3 +1,4 @@
+<app-breadcrumb></app-breadcrumb>
 <div>
     <form [formGroup]="createLeadForm" class="section-card">
         <div class="section-card-header">
@@ -65,7 +66,7 @@
                         <div class="form-item half-row">
                             <mat-form-field appearance="outline">
                                 <mat-label>Tipo</mat-label>
-                                <mat-select formControlName="selectedType" (change)="onTypeChange($event)">
+                                <mat-select formControlName="selectedType" (selectionChange)="onTypeChange($event)">
                                     <mat-option value="multifuncional">Multifuncional</mat-option>
                                     <mat-option value="consumible">Consumible</mat-option>
                                 </mat-select>
@@ -77,7 +78,7 @@
                         <div class="form-item half-row">
                             <mat-form-field appearance="outline">
                                 <mat-label>{{ (selectedType | async) === "multifuncional" ? "Multifuncional" : "Consumible" }}</mat-label>
-                                <input matInput type="text" placeholder="Elige {{ selectedType.value }}" [formControl]="productControl" [matAutocomplete]="auto">
+                                <input matInput type="text" placeholder="Escribe y agrega {{ selectedType.value }}" [formControl]="productControl" [matAutocomplete]="auto">
                                 <mat-error *ngIf="isValidField('phone')">{{ getFieldError("phone") }}</mat-error>
                             </mat-form-field>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addProductFromAutocomplete($event)" class="form-control">

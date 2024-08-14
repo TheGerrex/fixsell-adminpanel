@@ -820,6 +820,10 @@ button.delete-icon mat-icon {
   color: $help-color;
 }
 
+.borderless {
+  border: none !important;
+}
+
 /*----------------------[ Cards ]-------------------------------*/
 
 .card {
@@ -859,7 +863,9 @@ button.delete-icon mat-icon {
   border-radius: $border-radius $border-radius 0 0;
   background-color: $white;
   padding: 1em;
-  h3 {
+  h3,
+  .header-title {
+    color: $text;
     margin: 0;
   }
   .button-actions {
@@ -900,10 +906,12 @@ button.delete-icon mat-icon {
   width: 100%;
   .table-header-container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     gap: 1rem;
+    row-gap: 0.5rem;
     .table-title {
       font-optical-sizing: auto;
       font-weight: 600;

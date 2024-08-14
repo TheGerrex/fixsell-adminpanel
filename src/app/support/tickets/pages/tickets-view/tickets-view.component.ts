@@ -420,8 +420,8 @@ export class TicketsViewComponent implements OnInit {
             this.editingIndex = null;
           },
           (error) => {
-            console.error(
-              'Error actualizadando la actividad del ticket:',
+            this.toastService.showError(
+              'Error actualizadando la actividad del ticket',
               error,
             );
           },

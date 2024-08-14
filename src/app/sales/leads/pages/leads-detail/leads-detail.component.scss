@@ -1,4 +1,4 @@
-@import "_variables.scss";
+@import '_variables.scss';
 .table-header {
   display: flex;
   flex-wrap: wrap;
@@ -61,5 +61,28 @@
 .search-box {
   input {
     padding: 8px 8px;
+  }
+}
+
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25em;
+  .item-label {
+    font-weight: 500;
+    color: $text;
+  }
+  .item-value {
+    color: $text;
+    word-break: break-word; // Ensures long words break and wrap to the next line
+    white-space: normal; // Allows the text to wrap normally
   }
 }

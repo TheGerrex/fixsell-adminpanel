@@ -1,34 +1,50 @@
 <app-breadcrumb></app-breadcrumb>
 <div *ngIf="lead" class="container mt-4">
-
-  <div class="section-card">
-    <div class="section-card-header borderless">    
-      <h3 class="header-title">Datos del Cliente</h3>
-    </div>
-
-    <div class="section-card-body">
+  <div class="cards-container">
+    <div class="data-card">
+      <div class="data-card-header">
+        <h3 class="header-title">Datos del Cliente</h3>
+      </div>
+      <div class="data-card-body">
         <div class="data-grid">
           <!-- name -->
           <div class="item">
-              <p class="item-label">Nombre</p>
-              <p class="item-value"> {{ lead.client }}</p>
+            <p class="item-label">Nombre</p>
+            <p class="item-value">{{ lead.client }}</p>
           </div>
           <!-- name -->
           <div class="item">
-              <p class="item-label">Teléfono</p>
-              <p class="item-value"> {{ lead.phone }}</p>
+            <p class="item-label">Teléfono</p>
+            <p class="item-value">{{ lead.phone }}</p>
           </div>
           <!-- name -->
           <div class="item">
-              <p class="item-label">Email</p>
-              <p class="item-value"> {{ lead.email }}</p>
+            <p class="item-label">Email</p>
+            <p class="item-value">{{ lead.email }}</p>
           </div>
           <!-- name -->
           <div class="item">
-              <p class="item-label">Estado</p>
-              <p class="item-value"> {{ lead.status | leadStatusTranslate }}</p>
+            <p class="item-label">Estado</p>
+            <p class="item-value">{{ lead.status | leadStatusTranslate }}</p>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-header">
+        <h3 class="header-title">Producto Interesado</h3>
+        <div class="button-actions">
+          <button class="button-icon-option">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="data-card-body">
+        <lead-product-card
+          [product_name]="lead.product_interested"
+          [type_product]="lead.type_of_product"
+        ></lead-product-card>
+      </div>
     </div>
   </div>
 
@@ -76,7 +92,7 @@
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Date</th>
           <td mat-cell *matCellDef="let communication">
-            {{ communication.date | date : "dd/MM/yyyy" }}
+            {{ communication.date | date : 'dd/MM/yyyy' }}
           </td>
         </ng-container>
 

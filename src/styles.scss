@@ -727,8 +727,8 @@ button {
   align-items: center;
   justify-content: center;
   position: relative;
-  gap: 8px;
-  color: $text;
+  gap: 0.25rem;
+  color: $gray-600;
   font-size: 1em;
   padding: 0.5em;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
@@ -740,23 +740,19 @@ button {
   &:focus:not(:focus-visible) {
     outline: 0;
   }
-  &:focus {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
-      0 1px 2px 0 black;
-  }
+  // &:focus {
+  //   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
+  //     0 1px 2px 0 black;
+  // }
   &:disabled {
     opacity: 0.6;
   }
   &:hover {
-    background: $gray-300;
-    border-color: $gray-300;
+    background: $gray-100;
   }
   &:active {
-    background: $gray-400;
-    border-color: $gray-400;
-  }
-  &:focus {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $gray-200, 0 1px 2px 0 black;
+    background: $gray-200;
+    border-color: $gray-200;
   }
 }
 
@@ -826,23 +822,23 @@ button.delete-icon mat-icon {
 
 /*----------------------[ Cards ]-------------------------------*/
 
-.card {
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.5rem;
-  background-color: #fff;
-  margin: 1.25rem 0 1.25rem 0;
-  box-shadow: 0 0.25rem 0.5rem #e6edef;
-  .card-head {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #edf1f7;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  .card-body {
-    padding: 1rem 1.5rem;
-  }
-}
+// .card {
+//   display: flex;
+//   flex-direction: column;
+//   border-radius: 0.5rem;
+//   background-color: #fff;
+//   margin: 1.25rem 0 1.25rem 0;
+//   box-shadow: 0 0.25rem 0.5rem #e6edef;
+//   .card-head {
+//     padding: 1rem 1.5rem;
+//     border-bottom: 1px solid #edf1f7;
+//     font-size: 1rem;
+//     font-weight: 600;
+//   }
+//   .card-body {
+//     padding: 1rem 1.5rem;
+//   }
+// }
 
 .section-card {
   display: flex;
@@ -878,6 +874,52 @@ button.delete-icon mat-icon {
 }
 
 .section-card-body {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.data-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  flex: 1;
+}
+
+.data-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: $border-radius $border-radius 0 0;
+  background-color: $white;
+  padding: 1rem 1rem 0rem 1rem;
+  h3,
+  .header-title {
+    color: $text;
+    margin: 0;
+  }
+  .button-actions {
+    display: flex;
+    gap: 0.5rem;
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.data-card-body {
   display: flex;
   gap: 1em;
   width: 100%;

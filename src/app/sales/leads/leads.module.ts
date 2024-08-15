@@ -16,6 +16,7 @@ import { CommunicationCreateComponent } from './pages/communication-create/commu
 import { CommunicationEditComponent } from './pages/communication-edit/communication-edit.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { LeadStatusTranslatePipe } from './pipes/lead-status-translate.pipe';
+import { ProductCardComponent } from './components/product-card/product-card.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { LeadStatusTranslatePipe } from './pipes/lead-status-translate.pipe';
     CommunicationDetailComponent,
     CommunicationCreateComponent,
     CommunicationEditComponent,
+    ProductCardComponent,
   ],
   imports: [
     CommonModule,

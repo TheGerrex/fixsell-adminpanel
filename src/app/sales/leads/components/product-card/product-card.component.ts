@@ -30,6 +30,10 @@ export class ProductCardComponent implements OnInit {
     this.getProductData();
   }
 
+  navigateToSeePrinter(id: string) {
+    this.router.navigate(['/website/printers', id]);
+  }
+
   getProductData(): void {
     if (this.type_product === 'consumible') {
       const consumibleName = this.product_name;

@@ -1,4 +1,22 @@
 @import '_variables.scss';
+
+.lead-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.lead-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1024px;
+}
+
 .table-header {
   display: flex;
   flex-wrap: wrap;

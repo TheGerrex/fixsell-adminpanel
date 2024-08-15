@@ -2,12 +2,30 @@
 
 .product-card {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   gap: 1rem;
+  width: 100%;
+}
+
+.product-body {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  gap: 0.5rem;
+  // width: 100%;
+}
+
+.product-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .product-image-container {
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   height: 100px;
@@ -21,4 +39,71 @@
     height: 100%;
     object-fit: contain;
   }
+}
+
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25em;
+  .item-label {
+    font-weight: 500;
+    color: $text;
+  }
+  .item-value {
+    color: $text;
+    word-break: break-word; // Ensures long words break and wrap to the next line
+    white-space: normal; // Allows the text to wrap normally
+  }
+}
+
+.item-value-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.item-title {
+  font-weight: 500 !important;
+  color: $text;
+  margin-bottom: 0;
+}
+
+.menu-button-item {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: flex-start;
+  height: min-content;
+}
+
+.item-type {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // gap: 0.25rem;
+  // // background-color: $gray-500;
+  // // border-radius: $border-radius;
+  // // padding: 0.25rem 0.5rem;
+  color: $text;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
 }

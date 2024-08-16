@@ -1,91 +1,93 @@
+<app-breadcrumb></app-breadcrumb>
 <div>
-    <form [formGroup]="createLeadForm" class="deal-container">
-        <div class="deal-header">
+    <form [formGroup]="createLeadForm" class="section-card">
+        <div class="section-card-header">
             <h3>Nuevo Cliente Potencial</h3>
-            <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="submitForm()">
-              <mat-icon>add</mat-icon><span class="button-label">Crear Cliente</span>
-            </button>
+            <div class="button-actions">
+                <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="submitForm()">
+                    <mat-icon>add</mat-icon><span class="button-label">Crear Cliente</span>
+                </button>
+            </div>
         </div>
 
         <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
 
-        <div class="deal-info">
-            <div class="deal-form-container">
-                <div class="deal-data">
-                    <div class="full-row">
-                        <h5 class="section-form-header">Datos del Cliente</h5>
-                    </div>
-                    <!-- client -->
-                    <div class="deal-data-item half-row">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Nombre</mat-label>
-                            <input matInput type="text" placeholder="John Doe" formControlName="client">
-                            <mat-error *ngIf="isValidField('client')">{{ getFieldError("client") }}</mat-error>
-                        </mat-form-field>
-                    </div>
-                    <!-- email -->
-                    <div class="deal-data-item half-row">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Email</mat-label>
-                            <input matInput type="text" placeholder="ejemplo@email.com" formControlName="email">
-                            <mat-error *ngIf="isValidField('email')">{{ getFieldError("email") }}</mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- phone -->
-                    <div class="deal-data-item half-row">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Teléfono</mat-label>
-                            <input matInput type="text" mask="000-000-0000" placeholder="811-111-1111" formControlName="phone">
-                            <mat-error *ngIf="isValidField('phone')">{{ getFieldError("phone") }}</mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- status: prospect etc. -->
-                    <div class="deal-data-item half-row">
-                        <div class="deal-data-item half-row">
+        <div class="section-card-body">
+            <div class="form-container">
+                <div class="form-section">
+                    <h5 class="form-section-subheader">Datos del Cliente</h5>
+                    <div class="form-grid">
+                        <!-- client -->
+                        <div class="form-item half-row">
                             <mat-form-field appearance="outline">
-                                <mat-label>Estado</mat-label>
-                                <mat-select formControlName="status">
-                                    <mat-option value="prospect">Prospecto</mat-option>
-                                    <mat-option value="client">Cliente</mat-option>
-                                    <mat-option value="lost">Perdido</mat-option>
+                                <mat-label>Nombre</mat-label>
+                                <input matInput type="text" placeholder="John Doe" formControlName="client">
+                                <mat-error *ngIf="isValidField('client')">{{ getFieldError("client") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <!-- email -->
+                        <div class="form-item half-row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Email</mat-label>
+                                <input matInput type="text" placeholder="ejemplo@email.com" formControlName="email">
+                                <mat-error *ngIf="isValidField('email')">{{ getFieldError("email") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- phone -->
+                        <div class="form-item half-row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Teléfono</mat-label>
+                                <input matInput type="text" mask="000-000-0000" placeholder="811-111-1111" formControlName="phone">
+                                <mat-error *ngIf="isValidField('phone')">{{ getFieldError("phone") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- status: prospect etc. -->
+                        <div class="form-item half-row">
+                            <div class="form-item half-row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Estado</mat-label>
+                                    <mat-select formControlName="status">
+                                        <mat-option value="prospect">Prospecto</mat-option>
+                                        <mat-option value="client">Cliente</mat-option>
+                                        <mat-option value="lost">Perdido</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="isValidField('status')">{{ getFieldError("status") }}</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h5 class="form-section-subheader">En que producto esta interesado?</h5>
+                    <div class="form-grid">
+                        <!-- type_of_product -->
+                        <div class="form-item half-row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Tipo</mat-label>
+                                <mat-select formControlName="selectedType" (selectionChange)="onTypeChange($event)">
+                                    <mat-option value="multifuncional">Multifuncional</mat-option>
+                                    <mat-option value="consumible">Consumible</mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="isValidField('status')">{{ getFieldError("status") }}</mat-error>
                             </mat-form-field>
                         </div>
-                    </div>
 
-                    <div class="full-row mt-3">
-                        <h5 class="section-form-header">En que producto esta interesado?</h5>
+                        <!-- product_interested -->
+                        <div class="form-item half-row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>{{ (selectedType | async) === "multifuncional" ? "Multifuncional" : "Consumible" }}</mat-label>
+                                <input matInput type="text" placeholder="Escribe y agrega {{ selectedType.value }}" [formControl]="productControl" [matAutocomplete]="auto">
+                                <mat-error *ngIf="isValidField('phone')">{{ getFieldError("phone") }}</mat-error>
+                            </mat-form-field>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addProductFromAutocomplete($event)" class="form-control">
+                                <mat-option *ngFor="let productName of filteredProductNames | async" [value]="productName">
+                                    {{ productName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
                     </div>
-                    <!-- type_of_product -->
-                    <div class="deal-data-item half-row">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Tipo</mat-label>
-                            <mat-select formControlName="selectedType" (change)="onTypeChange($event)">
-                                <mat-option value="multifuncional">Multifuncional</mat-option>
-                                <mat-option value="consumible">Consumible</mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="isValidField('status')">{{ getFieldError("status") }}</mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- product_interested -->
-                    <div class="deal-data-item half-row">
-                        <mat-form-field appearance="outline">
-                            <mat-label>{{ (selectedType | async) === "multifuncional" ? "Multifuncional" : "Consumible" }}</mat-label>
-                            <input matInput type="text" placeholder="Elige {{ selectedType.value }}" [formControl]="productControl" [matAutocomplete]="auto">
-                            <mat-error *ngIf="isValidField('phone')">{{ getFieldError("phone") }}</mat-error>
-                        </mat-form-field>
-                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addProductFromAutocomplete($event)" class="form-control">
-                            <mat-option *ngFor="let productName of filteredProductNames | async" [value]="productName">
-                                {{ productName }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </div>
-
-                    <!-- communication -->
                 </div>
             </div>
         </div>

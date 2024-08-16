@@ -24,14 +24,15 @@ export class LeadsListComponent implements OnInit {
   isLoadingData = false;
   leadData: Lead[] = [];
   displayedColumns: string[] = [
-    'client',
     'status',
-    'assigned',
+    'client',
     'product_interested',
     'email',
     'last_contacted',
+    'assigned',
     'action',
   ];
+  searchTerm = '';
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -39,7 +40,7 @@ export class LeadsListComponent implements OnInit {
     private leadsService: LeadsService,
     private toastService: ToastService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadData();
@@ -83,14 +84,14 @@ export class LeadsListComponent implements OnInit {
                 const lastCommunicationA =
                   a.communications && a.communications.length > 0
                     ? new Date(
-                        a.communications[a.communications.length - 1].date
-                      )
+                      a.communications[a.communications.length - 1].date
+                    )
                     : new Date(0);
                 const lastCommunicationB =
                   b.communications && b.communications.length > 0
                     ? new Date(
-                        b.communications[b.communications.length - 1].date
-                      )
+                      b.communications[b.communications.length - 1].date
+                    )
                     : new Date(0);
 
                 return (
@@ -116,8 +117,8 @@ export class LeadsListComponent implements OnInit {
         case 'last_contacted':
           return item.communications && item.communications.length > 0
             ? new Date(
-                item.communications[item.communications.length - 1].date
-              ).getTime()
+              item.communications[item.communications.length - 1].date
+            ).getTime()
             : 0;
         default:
           return String(item[property as keyof Lead]);
@@ -139,11 +140,13 @@ export class LeadsListComponent implements OnInit {
       const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
       const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
 
-      if (diffInHours < 24) {
-        return `${Math.floor(diffInHours)} horas atrás`;
+      if (diffInHours < 1) {
+        return 'Menos de una hora';
+      } else if (diffInHours < 24) {
+        return Math.floor(diffInHours) === 1 ? '1 hora' : `${Math.floor(diffInHours)} horas`;
       } else {
         const diffInDays = diffInHours / 24;
-        return `${Math.floor(diffInDays)} días atrás`;
+        return Math.floor(diffInDays) === 1 ? '1 día' : `${Math.floor(diffInDays)} días`;
       }
     }
     return 'Sin comunicaciones';
@@ -158,19 +161,31 @@ export class LeadsListComponent implements OnInit {
       const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
       const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
 
-      if (diffInDays <= 2) {
-        return 'within-two-days'; // Green if within 2 days
-      } else if (diffInDays <= 4) {
-        return 'within-four-days'; // Light Green if within 4 days
+      if (diffInDays <= 1) {
+        return 'within-one-days'; // Green if within 1 days
+      } else if (diffInDays <= 3) {
+        return 'within-three-days'; // Light Green if within 4 days
+      } else if (diffInDays <= 5) {
+        return 'within-five-days'; // Yellow if within 5 days
       } else if (diffInDays <= 7) {
-        return 'within-seven-days'; // Yellow if within 7 days
-      } else if (diffInDays <= 14) {
-        return 'within-fourteen-days'; // Orange if within 14 days
+        return 'within-seven-days'; // Orange if within 7 days
       } else {
-        return 'more-than-fourteen-days'; // Red if more than 14 days
+        return 'more-than-seven-days'; // Red if more than 14 days
       }
     }
     return 'no-communications'; // Transparent if no communications
+  }
+
+  getStatusClass(lead: Lead): string {
+    if (lead.status === 'prospect') {
+      return 'prospect-class';
+    } else if (lead.status === 'client') {
+      return 'client-class';
+    } else if (lead.status === 'no-client') {
+      return 'no-client-class';
+    } else {
+      return '';
+    }
   }
 
   openConfirmDialog(lead: Lead): void {
@@ -179,7 +194,7 @@ export class LeadsListComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Estas seguro de eliminar esta cliente potencial?',
+      title: 'Estas seguro de eliminar este cliente potencial?',
       message: 'El cliente potencial será eliminado permanentemente.',
       buttonText: {
         ok: 'Eliminar',
@@ -209,11 +224,8 @@ export class LeadsListComponent implements OnInit {
     this.router.navigate([`sales/leads/${lead.id}/edit`]);
   }
 
-  //{{baseURL}}/leads/:id
-  //deletes a lead
   deleteLead(lead: Lead) {
     if (lead.id) {
-      //show dialog
 
       this.leadsService.deleteLead(String(lead.id)).subscribe(
         (response) => {
@@ -223,7 +235,7 @@ export class LeadsListComponent implements OnInit {
           // Update dataSource
           this.dataSource.data = this.leadData;
           this.toastService.showSuccess(
-            'Cliente potencial eliminado con exito',
+            'Cliente potencial eliminado con éxito',
             'Aceptar'
           );
         },

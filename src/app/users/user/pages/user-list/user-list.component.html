@@ -1,5 +1,5 @@
 <div class="table-header">
-    <div class="header-wrapper">
+    <div class="table-header-container">
         <h3 class="table-title">Usuarios</h3>
         <div class="table-actions">
             <div class="search-box">
@@ -11,8 +11,8 @@
             <div class="action-buttons">
                 <website-export [data]="userData" [ignoreFields]="['id']"></website-export>
                 <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="addUser()">
-                        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-                    </button>
+                    <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+                </button>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
 
 <div class="responsive-table">
     <div class="table-container">
-        <table mat-table matSort [dataSource]="dataSource" class="user-list-table">
+        <table mat-table matSort [dataSource]="dataSource" class="list-table">
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
                 <td mat-cell *matCellDef="let user" data-column="name">
@@ -63,13 +63,13 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
                 <td mat-cell *matCellDef="let user" data-column="actions">
-                    <button mat-icon-button color="basic" *ngIf="isAdmin" (click)="seeUser(user.id)">
+                    <button mat-icon-button class="see-icon" *ngIf="isAdmin" (click)="seeUser(user.id)">
                             <mat-icon>visibility</mat-icon>
                         </button>
-                    <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editUser(user.id)">
+                    <button mat-icon-button class="edit-icon" *ngIf="isAdmin" (click)="editUser(user.id)">
                             <mat-icon>edit</mat-icon>
                         </button>
-                    <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="openConfirmDialog(user)">
+                    <button mat-icon-button class="delete-icon" *ngIf="isAdmin" (click)="openConfirmDialog(user)">
                             <mat-icon>delete</mat-icon>
                         </button>
                 </td>

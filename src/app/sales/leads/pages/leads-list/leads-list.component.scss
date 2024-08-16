@@ -1,67 +1,37 @@
-@import "_variables.scss";
-.table-header {
+@import '_variables.scss';
+
+.lead-status {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  background-color: $gray-50;
-  border: 1px solid #e0e0e0;
-  border-bottom: none;
-  padding: 16px;
-  border-radius: $border-radius $border-radius 0 0;
-  width: 100%;
-  gap: 1em;
-  h2 {
-    margin: 0;
-  }
-  .table-action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    flex-wrap: wrap;
-    @media (max-width: 576px) {
-      .search-box {
-        width: 100%;
-      }
-    }
-  }
-}
-
-.responsive-table {
+  gap: 0.25rem;
+  background-color: transparent;
   border-radius: $border-radius;
+  color: $white;
+  padding: 0.25rem 0.5rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 400;
+  // width: fit-content;
+  min-height: 34px;
 }
 
-.table-container {
-  overflow-x: auto;
-  width: 100%;
-  display: block;
-  border: 1px solid #e0e0e0;
+.prospect-class {
+  color: $indigo-500;
+  font-weight: 500;
 }
 
-.responsive-table tr {
-  &:hover {
-    background-color: #f5f5f5 !important; // replace with your preferred color
-  }
+.last-contact-container {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
 }
 
-.lead-list-table {
-  width: max-content;
-  table-layout: fixed;
-}
-
-// .printer-list-table th,
-// .printer-list-table td {
-//     min-width: 150px; // adjust this value as needed
-// }
-.table-paginator {
-  border: 1px solid #e0e0e0;
-  border-top: none;
-}
-
-.search-box {
-  input {
-    padding: 8px 8px;
-  }
+.status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
 }
 
 .wrap-text {
@@ -69,23 +39,23 @@
   word-wrap: break-word;
 }
 
-.within-two-days {
+.within-one-days {
+  background-color: $green-500;
+}
+
+.within-three-days {
   background-color: $green-400;
 }
 
-.within-four-days {
-  background-color: $green-200;
-}
-
-.within-seven-days {
+.within-five-days {
   background-color: $yellow-300;
 }
 
-.within-fourteen-days {
+.within-seven-days {
   background-color: $orange-400;
 }
 
-.more-than-fourteen-days {
+.more-than-seven-days {
   background-color: $red-400;
 }
 

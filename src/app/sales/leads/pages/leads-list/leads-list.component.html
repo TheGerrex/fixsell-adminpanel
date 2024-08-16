@@ -1,31 +1,30 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div [hidden]="isLoadingData">
   <div class="table-header">
-    <h2>Clientes Potenciales</h2>
-    <div class="table-action-buttons">
-      <div class="search-box">
-        <div class="input-group">
-          <span class="input-group-text" id="basic-addon1">
-            <mat-icon>search</mat-icon>
-          </span>
-          <input
-            class="form-control"
-            type="text"
-            placeholder="Buscar"
-            (input)="applyFilter($event)"
-          />
+    <div class="table-header-container">
+        <h3 class="table-title">Clientes Potenciales</h3>
+        <div class="table-actions">
+            <div class="search-box">
+                <div class="search-box-container">
+                    <mat-icon *ngIf="!searchTerm">search</mat-icon>
+                    <input class="search-input" type="text" placeholder="Buscar Clientes" [(ngModel)]="searchTerm" (input)="applyFilter($event)" />
+                </div>
+            </div>
+            <div class="action-buttons">
+                <website-export [data]="leadData" [ignoreFields]="['id']"></website-export>
+                <button ButtonResize class="button button-primary button-raised button-icon-text" (click)="addLead()">
+                    <mat-icon>add</mat-icon><span class="button-label">Crear Cliente</span>
+                </button>
+            </div>
         </div>
-      </div>
-      <website-export
-        [data]="leadData"
-        [ignoreFields]="['id']"
-      ></website-export>
-      <button
-        class="button button-primary button-raised button-icon-text"
-        (click)="addLead()"
-      >
-        <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-      </button>
+    </div>
+    <div class="table-search">
+        <div class="search-box">
+            <div class="search-box-container">
+                <mat-icon *ngIf="!searchTerm">search</mat-icon>
+                <input class="search-input" type="text" placeholder="Buscar Clientes" [(ngModel)]="searchTerm" (input)="applyFilter($event)" />
+            </div>
+        </div>
     </div>
   </div>
   <div class="responsive-table">
@@ -34,7 +33,7 @@
         mat-table
         matSort
         [dataSource]="dataSource"
-        class="lead-list-table"
+        class="list-table"
       >
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>id</th>
@@ -59,7 +58,7 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Estatus</th>
           <td mat-cell *matCellDef="let lead" data-column="status">
-            {{ lead.status }}
+            <div [class]="getStatusClass(lead)">{{ lead.status | leadStatusTranslate }}</div>
           </td>
         </ng-container>
 
@@ -82,7 +81,7 @@
           <th mat-header-cell *matHeaderCellDef>Contacto</th>
           <td mat-cell *matCellDef="let lead" data-column="email">
             {{ lead.email }} <br />
-            {{ lead.phone }}
+            {{ lead.phone | mask: '(000) 000-0000' }}
           </td>
         </ng-container>
 
@@ -92,10 +91,8 @@
             Último Contacto
           </th>
           <td mat-cell *matCellDef="let lead" data-column="last_contacted">
-            <div
-              style="display: inline-block; padding: 5px; border-radius: 5px"
-              [class]="getCommunicationClass(lead)"
-            >
+            <div class="last-contact-container">
+              <div class="status-icon" [class]="getCommunicationClass(lead)"></div>
               {{ getLastCommunicationTime(lead) }}
             </div>
           </td>
@@ -105,15 +102,15 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let lead" data-column="actions">
-            <button mat-icon-button color="basic" (click)="seeLead(lead)">
+            <button mat-icon-button class="see-icon" (click)="seeLead(lead)">
               <mat-icon>visibility</mat-icon>
             </button>
-            <button mat-icon-button color="primary" (click)="editLead(lead)">
+            <button mat-icon-button class="edit-icon" (click)="editLead(lead)">
               <mat-icon>edit</mat-icon>
             </button>
             <button
               mat-icon-button
-              color="warn"
+              class="delete-icon"
               (click)="openConfirmDialog(lead)"
             >
               <mat-icon>delete</mat-icon>

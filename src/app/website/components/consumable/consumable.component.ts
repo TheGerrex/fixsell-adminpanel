@@ -10,15 +10,14 @@ import { ConsumiblesService } from '../../consumibles/services/consumibles.servi
 @Component({
   selector: 'website-consumable',
   templateUrl: './consumable.component.html',
-  styleUrls: ['./consumable.component.scss']
+  styleUrls: ['./consumable.component.scss'],
 })
 export class ConsumableComponent {
-
   constructor(
     private router: Router,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private consumiblesService: ConsumiblesService
+    private consumiblesService: ConsumiblesService,
   ) {}
 
   @Input() product: any;
@@ -32,7 +31,7 @@ export class ConsumableComponent {
   navigateToEditConsumible(id: string) {
     this.router.navigate([`/website/consumibles/${id}/edit`]);
   }
-  
+
   openConfirmDialog(consumableId: string): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -51,21 +50,27 @@ export class ConsumableComponent {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.deleteConsumible(consumableId)
+        this.deleteConsumible(consumableId);
       }
     });
   }
 
   deleteConsumible(id: string): void {
-    this.consumiblesService.deleteConsumible(id).subscribe(
-      (response) => {
-        this.product.consumibles = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
-        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+    const observer = {
+      next: (response: any) => {
+        this.product.consumibles = this.product.consumibles.filter(
+          (consumible: Consumible) => consumible.id !== id,
+        );
+        this.toastService.showSuccess(
+          'Consumible eliminado con exito',
+          'Aceptar',
+        );
       },
-      (error) => {
+      error: (error: any) => {
         this.toastService.showError(error.error.message, 'Cerrar');
-      }
-    );
-    
+      },
+    };
+
+    this.consumiblesService.deleteConsumible(id).subscribe(observer);
   }
 }

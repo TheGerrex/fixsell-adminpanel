@@ -48,9 +48,6 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'auth',
   },
-
-  //{path:'login', component:LoginComponent},
-  //{path:'printersregister', component:PrintersregisterComponent}
 ];
 
 @NgModule({

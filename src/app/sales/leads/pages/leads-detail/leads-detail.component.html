@@ -1,133 +1,178 @@
 <app-breadcrumb></app-breadcrumb>
-<div *ngIf="lead" class="lead-container">
-  <div class="lead-wrapper">
-    <div class="cards-container">
-      <div class="data-card">
-        <div class="data-card-header">
-          <h3 class="header-title">Datos del Cliente</h3>
-        </div>
-        <div class="data-card-body">
-          <div class="data-grid">
-            <!-- name -->
-            <div class="item">
-              <p class="item-label">Nombre</p>
-              <p class="item-value">{{ lead.client }}</p>
+<div>
+  <form class="section-card">
+    <div *ngIf="lead" class="section-card-header">
+      <h3>Cliente Potencial</h3>
+      <div class="button-actions">
+        <button
+          ButtonResize
+          class="button button-danger button-raised button-icon-text"
+          (click)="openConfirmDialogLead(this.lead)"
+        >
+          <mat-icon>delete</mat-icon
+          ><span class="button-label">Borrar Cliente</span>
+        </button>
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="editLead(this.leadId)"
+        >
+          <mat-icon>edit</mat-icon
+          ><span class="button-label">Editar Cliente</span>
+        </button>
+      </div>
+    </div>
+
+    <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+
+    <div class="section-card-body">
+      <div *ngIf="lead" class="lead-container">
+        <div class="lead-wrapper">
+          <div class="cards-container">
+            <div class="data-card">
+              <div class="data-card-header">
+                <h4 class="header-title">Datos del Cliente</h4>
+              </div>
+              <div class="data-card-body">
+                <div class="data-grid">
+                  <!-- name -->
+                  <div class="item">
+                    <p class="item-label">Nombre</p>
+                    <p class="item-value">{{ lead.client }}</p>
+                  </div>
+                  <!-- name -->
+                  <div class="item">
+                    <p class="item-label">Teléfono</p>
+                    <p class="item-value">{{ lead.phone }}</p>
+                  </div>
+                  <!-- name -->
+                  <div class="item">
+                    <p class="item-label">Email</p>
+                    <p class="item-value">{{ lead.email }}</p>
+                  </div>
+                  <!-- name -->
+                  <div class="item">
+                    <p class="item-label">Estado</p>
+                    <p class="item-value">
+                      {{ lead.status | leadStatusTranslate }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- name -->
-            <div class="item">
-              <p class="item-label">Teléfono</p>
-              <p class="item-value">{{ lead.phone }}</p>
+
+            <lead-product-card
+              [product_name]="lead.product_interested"
+              [type_product]="lead.type_of_product"
+            ></lead-product-card>
+          </div>
+
+          <div class="comunications">
+            <div class="table-header">
+              <div class="table-header-container">
+                <h4 class="table-title">Comunicaciones</h4>
+                <div class="table-actions">
+                  <div class="action-buttons">
+                    <button
+                      ButtonResize
+                      class="button button-primary button-raised button-icon-text"
+                      (click)="addCommunication()"
+                    >
+                      <mat-icon>add</mat-icon
+                      ><span class="button-label">Crear Comunicacion</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- name -->
-            <div class="item">
-              <p class="item-label">Email</p>
-              <p class="item-value">{{ lead.email }}</p>
-            </div>
-            <!-- name -->
-            <div class="item">
-              <p class="item-label">Estado</p>
-              <p class="item-value">{{ lead.status | leadStatusTranslate }}</p>
+
+            <div class="responsive-table">
+              <div class="table-container">
+                <table mat-table [dataSource]="dataSource" class="list-table">
+                  <!-- Date Column -->
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                    <td mat-cell *matCellDef="let communication">
+                      {{ communication.date | date : 'dd/MM/yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Message Column -->
+                  <ng-container matColumnDef="message">
+                    <th mat-header-cell *matHeaderCellDef>Mensaje</th>
+                    <td mat-cell *matCellDef="let communication">
+                      {{ communication.message }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Type Column -->
+                  <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                    <td mat-cell *matCellDef="let communication">
+                      {{ communication.type }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Notes Column -->
+                  <ng-container matColumnDef="notes">
+                    <th mat-header-cell *matHeaderCellDef>Notas</th>
+                    <td mat-cell *matCellDef="let communication">
+                      {{ communication.notes }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <!-- Edit Column -->
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let communication"
+                      data-column="actions"
+                    >
+                      <button
+                        mat-icon-button
+                        class="see-icon"
+                        (click)="viewCommunication(communication)"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="edit-icon"
+                        (click)="editCommunication(communication)"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="delete-icon"
+                        (click)="openConfirmDialogComunication(communication)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+                </table>
+              </div>
+              <div>
+                <mat-paginator
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  [pageSize]="8"
+                  showFirstLastButtons
+                  class="table-paginator"
+                ></mat-paginator>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <lead-product-card
-        [product_name]="lead.product_interested"
-        [type_product]="lead.type_of_product"
-        style="flex: 1"
-      ></lead-product-card>
     </div>
-
-    <div class="comunications">
-      <div class="table-header">
-        <h2>Communications</h2>
-
-        <button
-          class="button button-primary button-raised button-icon-text"
-          (click)="addCommunication()"
-        >
-          <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-        </button>
-      </div>
-
-      <div class="responsive-table">
-        <div class="table-container">
-          <table
-            mat-table
-            [dataSource]="lead.communications"
-            class="communications-table"
-          >
-            <!-- Date Column -->
-            <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef>Date</th>
-              <td mat-cell *matCellDef="let communication">
-                {{ communication.date | date : 'dd/MM/yyyy' }}
-              </td>
-            </ng-container>
-
-            <!-- Message Column -->
-            <ng-container matColumnDef="message">
-              <th mat-header-cell *matHeaderCellDef>Message</th>
-              <td mat-cell *matCellDef="let communication">
-                {{ communication.message }}
-              </td>
-            </ng-container>
-
-            <!-- Type Column -->
-            <ng-container matColumnDef="type">
-              <th mat-header-cell *matHeaderCellDef>Type</th>
-              <td mat-cell *matCellDef="let communication">
-                {{ communication.type }}
-              </td>
-            </ng-container>
-
-            <!-- Notes Column -->
-            <ng-container matColumnDef="notes">
-              <th mat-header-cell *matHeaderCellDef>Notes</th>
-              <td mat-cell *matCellDef="let communication">
-                {{ communication.notes }}
-              </td>
-            </ng-container>
-
-            <!-- Actions Column -->
-            <!-- Edit Column -->
-            <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef>Acciones</th>
-              <td
-                mat-cell
-                *matCellDef="let communication"
-                data-column="actions"
-              >
-                <button
-                  mat-icon-button
-                  color="basic"
-                  (click)="viewCommunication(communication)"
-                >
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                <button
-                  mat-icon-button
-                  color="primary"
-                  (click)="editCommunication(communication)"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="openConfirmDialog(communication)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+  </form>
 </div>

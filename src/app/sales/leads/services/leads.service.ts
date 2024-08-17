@@ -13,7 +13,7 @@ export class LeadsService {
     private http: HttpClient,
     private consumiblesService: ConsumiblesService,
     private printerService: PrinterService
-  ) {}
+  ) { }
   // Get all leads by vendor
   getLeadsbyVendor(vendorId: string): Observable<any> {
     return this.http
@@ -41,17 +41,24 @@ export class LeadsService {
       .pipe(map((leadsResponse) => leadsResponse));
   }
 
-  // create sales communication
-  createSalesCommunication(data: any): Observable<any> {
-    return this.http
-      .post(`${environment.baseUrl}/sale-communication`, data)
-      .pipe(map((leadsResponse) => leadsResponse));
-  }
-
   // update lead
   updateLead(data: any, id: string): Observable<any> {
     return this.http
       .patch(`${environment.baseUrl}/leads/${id}`, data)
+      .pipe(map((leadsResponse) => leadsResponse));
+  }
+
+  //delete lead {{baseURL}}/leads/:id
+  deleteLead(id: string): Observable<any> {
+    return this.http
+      .delete(`${environment.baseUrl}/leads/${id}`)
+      .pipe(map((leadsResponse) => leadsResponse));
+  }
+
+  // create sales communication
+  createSalesCommunication(data: any): Observable<any> {
+    return this.http
+      .post(`${environment.baseUrl}/sale-communication`, data)
       .pipe(map((leadsResponse) => leadsResponse));
   }
 
@@ -66,12 +73,6 @@ export class LeadsService {
 
     return this.http
       .patch(url, data)
-      .pipe(map((leadsResponse) => leadsResponse));
-  }
-  //delete lead {{baseURL}}/leads/:id
-  deleteLead(id: string): Observable<any> {
-    return this.http
-      .delete(`${environment.baseUrl}/leads/${id}`)
       .pipe(map((leadsResponse) => leadsResponse));
   }
 

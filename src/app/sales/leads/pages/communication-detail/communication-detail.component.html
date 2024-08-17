@@ -1,3 +1,4 @@
+<app-breadcrumb></app-breadcrumb>
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div class="communication-container" *ngIf="communication && !isLoadingData">
   <div class="communication-header">
@@ -59,9 +60,9 @@
                     <p><strong>Mensaje:</strong> {{ communication.message }}</p>
                     <p>
                       <strong>Fecha:</strong>
-                      {{ communication.date | date : "dd/MM/yyyy" }}
+                      {{ communication.date | date : 'dd/MM/yyyy' }}
                       <strong>Hora:</strong>
-                      {{ communication.date | date : "HH:mm" }}
+                      {{ communication.date | date : 'HH:mm' }}
                     </p>
                     <p><strong>Tipo:</strong> {{ communication.type }}</p>
                     <p><strong>Notas:</strong> {{ communication.notes }}</p>

@@ -255,7 +255,7 @@ export class LeadsCreateComponent implements OnInit {
     this.leadsService.createLead(data).subscribe((lead) => {
       this.lead = lead;
       this.toastService.showSuccess(
-        'Lead creado exitosamente',
+        'Cliente potencial creado con éxito',
         'success-snackbar',
       );
 

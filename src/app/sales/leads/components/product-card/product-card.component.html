@@ -1,95 +1,58 @@
 <div class="data-card">
   <div class="data-card-header">
-    <h3 class="header-title">Producto Interesado</h3>
-    <div class="button-actions">
-      <button class="button-icon-option" [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu" class="export-menu">
-        <button mat-menu-item>
-          <!-- <mat-icon>ios_share</mat-icon> -->
-          <div
-            class="menu-button-item"
-            (click)="navigateToSeePrinter(productData?.id ?? '')"
-          >
-            <mat-icon>visibility</mat-icon>
-            Ver producto
-          </div>
-        </button>
-      </mat-menu>
-    </div>
+    <h4 class="header-title">Producto Interesado</h4>
   </div>
-  <div class="data-card-body">
-    <div class="product-card">
-      <div class="product-image-container">
-        <img
-          class="product-image"
-          src="{{
-            productData && isPrinter(productData) ? productData.img_url[0] : ''
-          }}"
-          alt="product image"
-        />
-      </div>
-      <div class="product-body">
-        <div class="product-wrapper">
-          <div class="header">
-            <div class="item-type">
-              {{
-                productData && isPrinter(productData)
-                  ? 'Multifuncional'
-                  : 'Consumible'
-              }}
-            </div>
-            <h4 class="item-title">
-              {{
-                productData && isPrinter(productData) ? productData.model : ''
-              }}
-            </h4>
-          </div>
-          <div class="data-grid">
-            <!-- name -->
-            <div class="item">
-              <p class="item-label">Marca</p>
-              <p class="item-value">
-                {{
-                  productData && isPrinter(productData) ? productData.brand : ''
-                }}
-              </p>
-            </div>
-            <!-- category -->
-            <div class="item">
-              <p class="item-label">Categoria</p>
-              <p class="item-value">
-                {{
-                  productData && isPrinter(productData)
-                    ? productData.category
-                    : ''
-                }}
-              </p>
-            </div>
-            <!-- color -->
-            <div class="item">
-              <p class="item-label">Color</p>
-              <div class="item-value-container">
-                <img
-                  *ngIf="!productData?.color"
-                  class="black-and-white-icon"
-                  src="../../../../../assets/icons/products/B&W.svg"
-                  alt="B&W Icon"
-                />
-                <img
-                  *ngIf="productData?.color"
-                  class="cmyk-icon"
-                  src="../../../../../assets/icons/products/CMYK.svg"
-                  alt="CMYK Icon"
-                />
-                <p class="item-value">
-                  {{ productData?.color ? 'CMYK' : 'B&N' }}
-                </p>
-              </div>
-            </div>
-          </div>
+  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+  <div class="data-card-body" *ngIf="!isLoading">
+    <div class="product-thumbnail-card">
+      <div
+        class="product-image-container"
+        (click)="navigateToSeeProduct(this.type_product, productData?.id ?? '')"
+      >
+        <div
+          class="product-image-wrapper"
+          *ngIf="productData && isPrinter(productData)"
+        >
+          <img
+            class="product-image"
+            src="{{
+              productData && isPrinter(productData)
+                ? productData.img_url[0]
+                : ''
+            }}"
+            alt="product image"
+          />
         </div>
+        <div
+          class="product-image-wrapper"
+          *ngIf="productData && isConsumable(productData)"
+        >
+          <img
+            class="product-image"
+            src="{{
+              productData && isConsumable(productData)
+                ? productData.img_url[0]
+                : ''
+            }}"
+            alt="product image"
+          />
+        </div>
+      </div>
+      <div class="header">
+        <div class="item-type">
+          {{
+            productData && isPrinter(productData)
+              ? 'Multifuncional'
+              : 'Consumible'
+          }}
+        </div>
+        <h4 class="item-title">
+          {{
+            productData && isPrinter(productData)
+              ? productData.model
+              : productData?.name
+          }}
+        </h4>
       </div>
     </div>
   </div>

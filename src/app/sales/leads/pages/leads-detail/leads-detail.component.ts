@@ -27,7 +27,7 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
   product: Product | null = null;
   lead!: Lead;
   typeOfProduct: string | null = null; // add this line
-  displayedColumns: string[] = ['date', 'message', 'type', 'notes', 'action']; // add 'actions'
+  displayedColumns: string[] = ['date', 'message', 'type', 'action']; // add 'actions'
   isLoading = false;
   leadId: string = '';
 
@@ -178,10 +178,11 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
             this.lead.communications = this.lead.communications.filter(
               (c) => c.id !== communication.id
             );
+            this.dataSource = new MatTableDataSource(this.lead.communications);
           }
 
           this.toastService.showSuccess(
-            'Comunicación eliminada con exito',
+            'Comunicación eliminada con éxito',
             'Aceptar'
           );
         },

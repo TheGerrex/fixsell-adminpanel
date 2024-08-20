@@ -1,78 +1,110 @@
 <app-breadcrumb></app-breadcrumb>
-<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
-<div class="communication-container" *ngIf="communication && !isLoadingData">
-  <div class="communication-header">
-    <h2>Communication Details</h2>
-    <div class="button-actions">
-      <button
-        class="button button-danger button-raised button-icon-text"
-        *ngIf="communication.id"
-        (click)="openConfirmDialog(communication)"
-      >
-        <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
-      </button>
-      <button
-        class="button button-primary button-raised button-icon-text"
-        *ngIf="communication.id"
-        (click)="navigateToEditCommunication(communication)"
-      >
-        <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-      </button>
+<div *ngIf="communication && !isLoadingData">
+  <form class="section-card">
+    <div class="section-card-header">
+      <h3>Comunicación #{{ communication.id }}</h3>
+      <div class="button-actions">
+        <button
+          ButtonResize
+          *ngIf="communication.id"
+          class="button button-danger button-raised button-icon-text"
+          (click)="openConfirmDialogComunication(communication)"
+        >
+          <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+        </button>
+        <button
+          ButtonResize
+          *ngIf="communication.id"
+          class="button button-primary button-raised button-icon-text"
+          (click)="editComunication(communication)"
+        >
+          <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="communication-info">
-    <div class="communication-info-container">
-      <div class="communication-data-container">
-        <div class="communication-card">
-          <div class="communication-card-header">
-            <div class="communication-card-title">
-              <h4>
-                {{ communication.type }} con {{ communication.lead.client }}
-              </h4>
+
+    <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+
+    <div class="section-card-body">
+      <div class="form-container">
+        <div class="form-section">
+          <h4 class="form-section-subheader">Comunicación</h4>
+          <div class="form-grid">
+            <!-- Fecha -->
+            <div class="form-item half-row">
+              <p class="item-label">Fecha</p>
+              <p class="item-value">
+                {{ communication.date | date : 'd MMM yyyy hh:mm a' }}
+              </p>
+            </div>
+            <!-- Tipo -->
+            <div class="form-item half-row">
+              <p class="item-label">Tipo</p>
+              <p class="item-value">{{ communication.type }}</p>
+            </div>
+            <!-- mensaje -->
+            <div class="form-item full-row">
+              <p class="item-label">Mensaje</p>
+              <p class="item-value">{{ communication.message }}</p>
+            </div>
+            <!-- Notas -->
+            <div class="form-item full-row">
+              <p class="item-label">Notas</p>
+              <p class="item-value">{{ communication.notes }}</p>
             </div>
           </div>
-
-          <div class="communication-card-body">
-            <div class="communication-card-body-content">
-              <div class="lead-data">
-                <div class="communication-data-item">
-                  <div class="lead-details">
-                    <p>
-                      <strong>Estado:</strong> {{ communication.lead.status }}
-                    </p>
-                    <p>
-                      <strong>Producto de Interés:</strong>
-                      {{ communication.lead.product_interested }}
-                    </p>
-                    <p>
-                      <strong>Tipo de Producto:</strong>
-                      {{ communication.lead.type_of_product }}
-                    </p>
-                    <p>
-                      <strong>Correo Electrónico:</strong>
-                      {{ communication.lead.email }}
-                    </p>
-                    <p>
-                      <strong>Teléfono:</strong> {{ communication.lead.phone }}
-                    </p>
-                  </div>
-                  <div class="communication-details">
-                    <p><strong>Mensaje:</strong> {{ communication.message }}</p>
-                    <p>
-                      <strong>Fecha:</strong>
-                      {{ communication.date | date : 'dd/MM/yyyy' }}
-                      <strong>Hora:</strong>
-                      {{ communication.date | date : 'HH:mm' }}
-                    </p>
-                    <p><strong>Tipo:</strong> {{ communication.type }}</p>
-                    <p><strong>Notas:</strong> {{ communication.notes }}</p>
-                  </div>
-                </div>
-              </div>
+        </div>
+        <div class="form-section">
+          <h4 class="form-section-subheader">Cliente</h4>
+          <div class="form-grid">
+            <!-- Nombre -->
+            <div class="form-item half-row">
+              <p class="item-label">Nombre</p>
+              <p class="item-value">{{ communication.lead.client }}</p>
+            </div>
+            <!-- correo -->
+            <div class="form-item half-row">
+              <p class="item-label">Correo</p>
+              <p class="item-value">{{ communication.lead.email }}</p>
+            </div>
+            <!-- telefono -->
+            <div class="form-item half-row">
+              <p class="item-label">Teléfono</p>
+              <p class="item-value">
+                {{ communication.lead.phone | mask : '(000) 000-0000' }}
+              </p>
+            </div>
+            <!-- Estatus -->
+            <div class="form-item half-row">
+              <p class="item-label">Estado</p>
+              <p class="item-value">{{ communication.lead.status }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h4 class="form-section-subheader">Producto</h4>
+          <div class="form-grid">
+            <!-- Producto de Interes -->
+            <div class="form-item half-row">
+              <p class="item-label">Producto de Interés</p>
+              <p class="item-value">
+                {{ communication.lead.product_interested }}
+              </p>
+            </div>
+            <!-- Tipo de producto -->
+            <div class="form-item half-row">
+              <p class="item-label">Tipo de producto</p>
+              <p class="item-value">
+                {{
+                  communication.lead.type_of_product === 'printer'
+                    ? 'Multifuncional'
+                    : 'Consumible'
+                }}
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 </div>

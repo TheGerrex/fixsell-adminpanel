@@ -79,7 +79,7 @@
                       (click)="addCommunication()"
                     >
                       <mat-icon>add</mat-icon
-                      ><span class="button-label">Crear Comunicacion</span>
+                      ><span class="button-label">Nueva Comunicacion</span>
                     </button>
                   </div>
                 </div>
@@ -93,7 +93,7 @@
                   <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef>Fecha</th>
                     <td mat-cell *matCellDef="let communication">
-                      {{ communication.date | date : 'dd/MM/yyyy' }}
+                      {{ communication.date | date : 'd MMM yyyy hh:mm a' }}
                     </td>
                   </ng-container>
 
@@ -102,6 +102,12 @@
                     <th mat-header-cell *matHeaderCellDef>Mensaje</th>
                     <td mat-cell *matCellDef="let communication">
                       {{ communication.message }}
+                      <br />
+                      <span class="comunication-notes">{{
+                        communication.notes?.length > 60
+                          ? (communication.notes | slice : 0 : 80) + '...'
+                          : communication.notes
+                      }}</span>
                     </td>
                   </ng-container>
 

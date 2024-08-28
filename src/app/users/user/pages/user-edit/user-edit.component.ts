@@ -21,16 +21,17 @@ import { AddUserRoleDialogComponent } from '../../../../shared/components/add-us
   styleUrls: ['./user-edit.component.scss'],
 })
 export class UserEditComponent implements OnInit {
-  public editUserForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    name: ['', Validators.required],
-    password: ['', [this.validatorsService.isStrongPassword()]],
-    repeatPassword: [''],
-    isActive: [false],
-    roles: [this.fb.array([]), Validators.required],
-  });
-
+  // public editUserForm = this.fb.group({
+  //   email: ['', [Validators.required, Validators.email]],
+  //   name: ['', Validators.required],
+  //   password: ['', [this.validatorsService.isStrongPassword()]],
+  //   repeatPassword: [''],
+  //   isActive: [false],
+  //   roles: [this.fb.array([]), Validators.required],
+  // });
+  public editUserForm!: FormGroup;
   user: User | null = null;
+  hide = true;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
   selectedRoles: string[] = [];
@@ -43,11 +44,11 @@ export class UserEditComponent implements OnInit {
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getUser();
-    this.setupPasswordValidation();
+    this.initializeForm();
   }
 
   getUser(): void {
@@ -73,7 +74,7 @@ export class UserEditComponent implements OnInit {
         console.log('roles:', this.roles);
       },
       (error) => {
-        console.error('Error fetching roles', error);
+        console.error('Error al traer roles', error);
       },
     );
   }
@@ -83,33 +84,22 @@ export class UserEditComponent implements OnInit {
   }
 
   initializeForm() {
-    this.editUserForm.setValue({
-      email: this.user?.email || '',
-      name: this.user?.name || '',
-      password: this.user?.password || '',
-      repeatPassword: '',
-      isActive: this.user?.isActive || false,
-      roles: this.user?.roles?.map((role) => role.name) ?? null,
-    });
-    this.selectedRoles = (
-      this.user?.roles?.map((role) => role.name) || []
-    ).filter((role): role is string => Boolean(role));
-  }
-
-  setupPasswordValidation() {
-    const passwordControl = this.editUserForm.get('password');
-    const repeatPasswordControl = this.editUserForm.get('repeatPassword');
-
-    if (passwordControl && repeatPasswordControl) {
-      passwordControl.valueChanges.subscribe((password) => {
-        if (password) {
-          repeatPasswordControl.setValidators([Validators.required]);
-        } else {
-          repeatPasswordControl.clearValidators();
-        }
-        repeatPasswordControl.updateValueAndValidity();
-      });
-    }
+    this.editUserForm = this.fb.group(
+      {
+        email: [this.user?.email || '', [Validators.required, Validators.email]],
+        name: [this.user?.name || '', Validators.required],
+        password: [this.user?.password || '', [this.validatorsService.isStrongPassword()]],
+        repeatPassword: [''],
+        isActive: [this.user?.isActive || false],
+        roles: [this.user?.roles?.map((role) => role.name) ?? null, Validators.required],
+      },
+      {
+        validators: this.validatorsService.passwordsMatch(
+          'password',
+          'repeatPassword'
+        ),
+      }
+    );
   }
 
   onIsActiveChange(event: Event) {
@@ -171,22 +161,8 @@ export class UserEditComponent implements OnInit {
     // Do nothing. This is just to trigger change detection.
   }
 
-  roleSelected(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedOption = selectElement.value;
-
-    if (
-      selectedOption !== 'addNew' &&
-      !this.selectedRoles.includes(selectedOption)
-    ) {
-      this.selectedRoles = [...this.selectedRoles, selectedOption];
-      this.editUserForm.get('roles')?.setValue(this.selectedRoles);
-      console.log('selectedRoles:', this.selectedRoles);
-    }
-  }
-
-  handleItemsChange(selectedItems: string[]) {
-    this.editUserForm.controls['roles'].setValue(selectedItems);
+  newRole() {
+    this.openAddUserRoleDialog();
   }
 
   openAddUserRoleDialog() {
@@ -220,7 +196,7 @@ export class UserEditComponent implements OnInit {
         next: (response) => {
           this.isLoadingForm = false;
           this.toastService.showSuccess(
-            'Usuario actualizado con exito',
+            'Usuario actualizado con éxito',
             'Close',
           );
           // Navigate to the user detail page

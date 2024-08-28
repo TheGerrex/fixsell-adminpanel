@@ -77,7 +77,7 @@ export class BreadcrumbComponent implements OnInit {
     private sharedService: SharedService,
     private printerService: PrinterService,
     private itemNameService: ItemNameService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const labelMap: { [key: string]: string } = {
@@ -94,6 +94,7 @@ export class BreadcrumbComponent implements OnInit {
       tickets: 'Tickets',
       leads: 'Clientes Potenciales',
       list: 'Listado',
+      communication: 'Comunicación',
       // Add more mappings here if needed
     };
 

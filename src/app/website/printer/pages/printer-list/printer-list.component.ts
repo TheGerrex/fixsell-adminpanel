@@ -16,7 +16,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   templateUrl: './printer-list.component.html',
   styleUrls: ['./printer-list.component.scss'],
 })
-export class PrinterListComponent implements OnInit, AfterViewInit{
+export class PrinterListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Printer>();
@@ -42,7 +42,7 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
     private authService: AuthService,
     private toastService: ToastService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
@@ -56,10 +56,6 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
         'price',
       ];
     }
-  }
-
-  ngAfterViewInit() {
-    // this.loadData();
   }
 
   loadData() {
@@ -113,29 +109,29 @@ export class PrinterListComponent implements OnInit, AfterViewInit{
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (printer.id){
-            this.deletePrinter(printer)
+        if (printer.id) {
+          this.deletePrinter(printer)
         }
-        
+
       }
     });
   }
 
   deletePrinter(printer: Printer) {
-  if (printer.id){
-    this.printerService.deletePrinter(printer.id).subscribe(
-      (response) => {
-        // Update consumibleData
-        this.printerData = this.printerData.filter((p) => p.id !== printer.id);
-        
-        // Update dataSource
-        this.dataSource.data = this.printerData;
-        this.toastService.showSuccess('Multifuncional eliminado con exito', 'Aceptar');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+    if (printer.id) {
+      this.printerService.deletePrinter(printer.id).subscribe(
+        (response) => {
+          // Update consumibleData
+          this.printerData = this.printerData.filter((p) => p.id !== printer.id);
+
+          // Update dataSource
+          this.dataSource.data = this.printerData;
+          this.toastService.showSuccess('Multifuncional eliminado con exito', 'Aceptar');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 

@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -8,14 +7,9 @@ import {
 } from '@angular/forms';
 import { Lead, Communication } from 'src/app/sales/interfaces/leads.interface';
 import { LeadsService } from '../../services/leads.service';
-import { DealService } from 'src/app/website/deal/services/deal.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { startWith, map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-communication-edit',
   templateUrl: './communication-edit.component.html',
@@ -31,11 +25,8 @@ export class CommunicationEditComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private sharedService: SharedService,
-    private dealService: DealService,
     private leadsService: LeadsService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
   ) {
@@ -139,7 +130,7 @@ export class CommunicationEditComponent implements OnInit {
           'Comunicación actualizada con éxito',
           'success-snackbar',
         );
-        this.router.navigate(['/sales/leads']);
+        this.router.navigate(['/sales/leads/', this.communication?.lead.id]);
       },
       (error: any) => {
         console.error('Error updating communication:', error);

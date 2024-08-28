@@ -90,11 +90,12 @@ export class LeadsEditComponent {
       type_of_product: lead.type_of_product,
       email: lead.email,
       phone: lead.phone,
-      selectedType:
-        lead.type_of_product === 'printer' ? 'multifuncional' : 'consumible',
+      selectedType: lead.type_of_product,
     });
     this.productControl.patchValue(lead.product_interested);
+    this.selectedType.next(lead.type_of_product);
   }
+
   private _filter(value: string, printerNames: string[]): string[] {
     const filterValue = value.toLowerCase();
     return printerNames.filter((printerName) =>
@@ -276,7 +277,7 @@ export class LeadsEditComponent {
           (lead) => {
             this.lead = lead;
             this.toastService.showSuccess(
-              'Cliente potencial actualizado correctamente',
+              'Cliente potencial actualizado con éxito',
               'ok',
             );
             this.isLoading = false;

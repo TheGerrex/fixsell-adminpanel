@@ -1,108 +1,93 @@
-<div *ngIf="createCommunicationForm">
-  <div>
-    <form [formGroup]="createCommunicationForm" class="deal-container">
-      <div class="deal-header">
-        <h2>Crear Nuevo Communicacion</h2>
+<app-breadcrumb></app-breadcrumb>
+<div>
+  <form [formGroup]="createCommunicationForm" class="section-card">
+    <div class="section-card-header">
+      <h3>Nueva Comunicación</h3>
+      <div class="button-actions">
         <button
+          ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="submitForm()"
         >
-          <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Comunicación</span>
         </button>
       </div>
+    </div>
 
-      <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+    <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
 
-      <div class="deal-info">
-        <div class="deal-form-container">
-          <div class="deal-data">
-            <!-- client, greyed out selected -->
-            <div class="deal-data-item full-row">
-              <h5>Cliente</h5>
-              <input
-                type="text"
-                class="form-control"
-                id="client"
-                formControlName="client"
-                [class.is-invalid]="
-                  createCommunicationForm.controls['client'].invalid &&
-                  createCommunicationForm.controls['client'].touched
-                "
-              />
-              <span
-                *ngIf="isValidField('client')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("client") }}
-              </span>
+    <div class="section-card-body">
+      <div class="form-container">
+        <div class="form-section">
+          <h4 class="form-section-subheader">Datos del Cliente</h4>
+          <div class="form-grid">
+            <!-- client -->
+            <div class="form-item half-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Cliente</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="John Doe"
+                  formControlName="client"
+                />
+                <mat-error *ngIf="isValidField('client')">{{
+                  getFieldError('client')
+                }}</mat-error>
+              </mat-form-field>
             </div>
-            <!-- message -->
-            <div class="deal-data-item full-row">
-              <h5>Mensaje</h5>
-              <input
-                type="text"
-                class="form-control"
-                id="client"
-                formControlName="message"
-                [class.is-invalid]="
-                  createCommunicationForm.controls['message'].invalid &&
-                  createCommunicationForm.controls['message'].touched
-                "
-              />
-              <span
-                *ngIf="isValidField('message')"
-                class="form-text text-danger"
-              >
-                {{ getFieldError("message") }}
-              </span>
-            </div>
-            <!-- type export enum Type {
-  EMAIL = 'email',
-  CALL = 'llamada',
-  MEETING = 'reunión',
-  Manual = 'manual',
-} -->
-            <div class="deal-data-item full-row">
-              <h5>Tipo</h5>
-              <select
-                class="form-select"
-                id="type"
-                formControlName="type"
-                [class.is-invalid]="
-                  createCommunicationForm.controls['type'].invalid &&
-                  createCommunicationForm.controls['type'].touched
-                "
-              >
-                <option value="email">Email</option>
-                <option value="llamada">Llamada</option>
-                <option value="reunión">Reunión</option>
-                <option value="manual">Manual</option>
-              </select>
-              <span *ngIf="isValidField('type')" class="form-text text-danger">
-                {{ getFieldError("type") }}
-              </span>
+            <!-- email -->
+            <div class="form-item three-quarter-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Mensaje</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="ejemplo@email.com"
+                  formControlName="message"
+                />
+                <mat-error *ngIf="isValidField('message')">{{
+                  getFieldError('message')
+                }}</mat-error>
+              </mat-form-field>
             </div>
 
-            <!-- notes -->
-            <div class="deal-data-item full-row">
-              <h5>Notas</h5>
-              <textarea
-                type="text"
-                class="form-control"
-                id="notes"
-                formControlName="notes"
-                [class.is-invalid]="
-                  createCommunicationForm.controls['notes'].invalid &&
-                  createCommunicationForm.controls['notes'].touched
-                "
-              ></textarea>
-              <span *ngIf="isValidField('notes')" class="form-text text-danger">
-                {{ getFieldError("notes") }}
-              </span>
+            <!-- status: prospect etc. -->
+            <div class="form-item quarter-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Tipo</mat-label>
+                <mat-select formControlName="type">
+                  <mat-option value="email">Email</mat-option>
+                  <mat-option value="llamada">Llamada</mat-option>
+                  <mat-option value="reunión">Reunión</mat-option>
+                  <mat-option value="manual">Manual</mat-option>
+                </mat-select>
+                <mat-error *ngIf="isValidField('type')">{{
+                  getFieldError('type')
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+            <!-- email -->
+            <div class="form-item full-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Notas</mat-label>
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"
+                  formControlName="notes"
+                ></textarea>
+                <mat-error *ngIf="isValidField('notes')">{{
+                  getFieldError('notes')
+                }}</mat-error>
+              </mat-form-field>
             </div>
           </div>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

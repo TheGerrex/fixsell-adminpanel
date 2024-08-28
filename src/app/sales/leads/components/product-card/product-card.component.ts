@@ -25,16 +25,22 @@ export class ProductCardComponent implements OnInit {
   @Input() type_product!: string;
   @Input() product_name!: string;
   productData: Consumible | Printer | null = null;
+  isLoading = false;
 
   ngOnInit() {
     this.getProductData();
   }
 
-  navigateToSeePrinter(id: string) {
-    this.router.navigate(['/website/printers', id]);
+  navigateToSeeProduct(type: string, id: string) {
+    if (type === 'printer') {
+      this.router.navigate(['/website/printers', id]);
+    } else if (type === 'consumible') {
+      this.router.navigate(['/website/consumibles', id]);
+    }
   }
 
   getProductData(): void {
+    this.isLoading = true;
     if (this.type_product === 'consumible') {
       const consumibleName = this.product_name;
       this.consumiblesService.getConsumibleIdByName(consumibleName).pipe(
@@ -42,13 +48,14 @@ export class ProductCardComponent implements OnInit {
       ).subscribe(
         (data) => {
           this.productData = data;
+          this.isLoading = false;
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
+          this.isLoading = false;
         }
       );
     } else if (this.type_product === 'printer') {
-      console.log(this.product_name);
       const printerName = this.product_name;
       this.printerService.getPrinterIdByName(printerName).pipe(
         switchMap((id: string) => {
@@ -64,9 +71,11 @@ export class ProductCardComponent implements OnInit {
         (data) => {
           this.productData = data;
           console.log(data);
+          this.isLoading = false;
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
+          this.isLoading = false;
         }
       );
     }
@@ -77,50 +86,7 @@ export class ProductCardComponent implements OnInit {
   isPrinter(product: Consumible | Printer): product is Printer {
     return (product as Printer).model !== undefined;
   }
-
-  navigateToCreateConsumible() {
-    this.router.navigate(['/website', 'consumibles', 'create']);
+  isConsumable(product: Consumible | Printer): product is Consumible {
+    return (product as Consumible).name !== undefined;
   }
-  navigateToSeeConsumible(id: string) {
-    this.router.navigate(['/website/consumibles', id]);
-  }
-  navigateToEditConsumible(id: string) {
-    this.router.navigate([`/website/consumibles/${id}/edit`]);
-  }
-
-  openConfirmDialog(consumableId: string): void {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      title: 'Estas seguro de querer eliminar esta consumible?',
-      message: 'El consumible sera eliminado permanentemente.',
-      buttonText: {
-        ok: 'Eliminar',
-        cancel: 'Cancelar',
-      },
-    };
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        // this.deleteConsumible(consumableId)
-      }
-    });
-  }
-
-  // deleteConsumible(id: string): void {
-  //   this.consumiblesService.deleteConsumible(id).subscribe(
-  //     (response) => {
-  //       this.product.consumible = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
-  //       this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
-  //     },
-  //     (error) => {
-  //       this.toastService.showError(error.error.message, 'Cerrar');
-  //     }
-  //   );
-
-  // }
 }

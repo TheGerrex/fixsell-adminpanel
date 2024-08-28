@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LeadsService } from '../../services/leads.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 export interface Product {
   // other properties...
   consumibles?: Consumible[]; // consumibles is optional and is an array of Consumible objects
@@ -19,30 +21,47 @@ export interface Product {
   templateUrl: './leads-detail.component.html',
   styleUrls: ['./leads-detail.component.scss'],
 })
-export class LeadsDetailComponent implements OnInit {
+export class LeadsDetailComponent implements OnInit, AfterViewInit {
   printer: Printer | null = null;
   consumable: Consumible | null = null;
   product: Product | null = null;
-  lead: Lead | null = null;
+  lead!: Lead;
   typeOfProduct: string | null = null; // add this line
-  displayedColumns: string[] = ['date', 'message', 'type', 'notes', 'action']; // add 'actions'
+  displayedColumns: string[] = ['date', 'message', 'type', 'action']; // add 'actions'
+  isLoading = false;
+  leadId: string = '';
+
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource<Communication>();
+
   constructor(
     private leadsService: LeadsService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
     private toastService: ToastService
-  ) {}
+  ) { }
+
+  ngAfterViewInit(): void {
+    Promise.resolve().then(() => this.loadData());
+  }
 
   ngOnInit(): void {
-    //get lead id from url
-    const leadId = this.route.snapshot.paramMap.get('id') ?? '';
+    Promise.resolve().then(() => this.loadData());
+  }
 
-    //get lead
-    this.leadsService.getLead(leadId).subscribe((lead) => {
-      console.log(lead);
+
+  loadData() {
+    this.isLoading = true; // Set isLoading to true before fetching the data
+
+    //get lead id from url
+    this.leadId = this.route.snapshot.paramMap.get('id') ?? '';
+
+    this.leadsService.getLead(this.leadId).subscribe((lead) => {
       // set lead
       this.lead = lead;
+      this.dataSource = new MatTableDataSource(lead.communications);
+      this.dataSource.paginator = this.paginator;
       //store type_of_product and product_interested
       this.typeOfProduct = lead.type_of_product;
       const productInterested = lead.product_interested;
@@ -84,7 +103,10 @@ export class LeadsDetailComponent implements OnInit {
                 ],
               };
             }
+            this.isLoading = false; // Set isLoading to false after receiving the data
           });
+      } else {
+        this.isLoading = false; // Set isLoading to false if there is no typeOfProduct
       }
     });
   }
@@ -122,7 +144,7 @@ export class LeadsDetailComponent implements OnInit {
     ]);
   }
 
-  openConfirmDialog(communication: Communication): void {
+  openConfirmDialogComunication(communication: Communication): void {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
@@ -146,6 +168,7 @@ export class LeadsDetailComponent implements OnInit {
       }
     });
   }
+
   deleteCommunication(communication: Communication) {
     if (communication.id) {
       this.leadsService.deleteCommunication(String(communication.id)).subscribe(
@@ -155,10 +178,11 @@ export class LeadsDetailComponent implements OnInit {
             this.lead.communications = this.lead.communications.filter(
               (c) => c.id !== communication.id
             );
+            this.dataSource = new MatTableDataSource(this.lead.communications);
           }
 
           this.toastService.showSuccess(
-            'Comunicación eliminada con exito',
+            'Comunicación eliminada con éxito',
             'Aceptar'
           );
         },
@@ -168,4 +192,52 @@ export class LeadsDetailComponent implements OnInit {
       );
     }
   }
+
+  openConfirmDialogLead(lead: Lead): void {
+    console.log("entre!", lead);
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Estas seguro de eliminar este cliente potencial?',
+      message: 'El cliente potencial será eliminado permanentemente.',
+      buttonText: {
+        ok: 'Eliminar',
+        cancel: 'Cancelar',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        if (lead.id) {
+          this.deleteLead(lead);
+        }
+      }
+    });
+  }
+
+  deleteLead(lead: Lead) {
+    if (lead.id) {
+      this.leadsService.deleteLead(String(lead.id)).subscribe(
+        (response) => {
+          this.router.navigate(['/sales/leads']);
+          this.toastService.showSuccess(
+            'Cliente potencial eliminado con éxito',
+            'Aceptar'
+          );
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
+    }
+  }
+
+  editLead(id: string) {
+    this.router.navigate(['/sales/leads/', id, 'edit']);
+  }
+
 }

@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -8,14 +7,9 @@ import {
 } from '@angular/forms';
 import { Lead, Communication } from 'src/app/sales/interfaces/leads.interface';
 import { LeadsService } from '../../services/leads.service';
-import { DealService } from 'src/app/website/deal/services/deal.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { startWith, map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-communication-create',
   templateUrl: './communication-create.component.html',
@@ -25,44 +19,44 @@ export class CommunicationCreateComponent implements OnInit {
   public createCommunicationForm!: FormGroup;
   isLoading = false;
   isSubmitting = false;
+  leadId = this.route.snapshot.paramMap.get('id');
   lead: Lead | null = null;
   Communication: Communication | null = null;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private sharedService: SharedService,
-    private dealService: DealService,
     private leadsService: LeadsService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.loadLeadData();
     this.initializeForm();
   }
 
   initializeForm(): void {
-    const leadId = this.route.snapshot.paramMap.get('id');
-    console.log(leadId);
+    this.createCommunicationForm = this.fb.group({
+      client: new FormControl(
+        { value: this.lead?.client, disabled: true },
+        Validators.required,
+      ),
+      message: new FormControl('', Validators.required),
+      date: new FormControl(new Date().toISOString(), Validators.required),
+      type: new FormControl('', Validators.required),
+      notes: new FormControl(''),
+      lead: new FormControl(this.leadId, Validators.required),
+    });
+  }
 
-    this.leadsService.getLead(leadId ?? '').subscribe(
+  loadLeadData() {
+    this.leadsService.getLead(this.leadId ?? '').subscribe(
       (lead: Lead) => {
         this.lead = lead;
         console.log(lead);
-        this.createCommunicationForm = this.fb.group({
-          client: new FormControl(
-            { value: this.lead?.client, disabled: true },
-            Validators.required,
-          ),
-          message: new FormControl('', Validators.required),
-          date: new FormControl(new Date().toISOString(), Validators.required),
-          type: new FormControl('', Validators.required),
-          notes: new FormControl(''),
-          lead: new FormControl(leadId, Validators.required),
-        });
+        this.initializeForm(); // Call initializeForm here
       },
       (error: any) => {
         console.error('Error fetching lead:', error);
@@ -98,17 +92,17 @@ export class CommunicationCreateComponent implements OnInit {
 
     this.leadsService.createSalesCommunication(communicationData).subscribe(
       (response: any) => {
-        console.log('Communication created:', response);
+        console.log('Comunicación creada correctamente:', response);
         this.toastService.showSuccess(
           'Comunicación creada con éxito',
           'success-snackbar',
         );
-        this.router.navigate(['/sales/leads']);
+        this.router.navigate(['/sales/leads', this.leadId]);
       },
       (error: any) => {
-        console.error('Error creating communication:', error);
+        console.error('Error creando comunicación:', error);
         this.toastService.showError(
-          'Error creando la comunicación',
+          'Error creando comunicación',
           'error-snackbar',
         );
       },

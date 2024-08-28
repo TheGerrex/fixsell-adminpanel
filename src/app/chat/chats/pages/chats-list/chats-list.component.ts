@@ -1,10 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Manager, Socket } from 'socket.io-client';
-import {
-  connectToServerAsAdmin,
-  addListeners,
-  connectToServerAsUser,
-} from '../../services/chat.service';
+import { Socket } from 'socket.io-client';
+import { ChatService } from '../../services/chat.service';
 import { FormsModule } from '@angular/forms';
 import { ClientService } from '../../services/client.service';
 import { interval, Subscription } from 'rxjs';
@@ -13,7 +9,7 @@ import { startWith, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-chats-list',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule], // Ensure ChatListsComponent is correctly imported
   templateUrl: './chats-list.component.html',
   styleUrls: ['./chats-list.component.scss'],
 })
@@ -36,14 +32,14 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     this.clientsSubscription = interval(5000)
       .pipe(
         startWith(0),
-        switchMap(() => this.clientService.getConnectedClients())
+        switchMap(() => this.clientService.getConnectedClients()),
       )
       .subscribe(
         (clients) => {
           console.log('Updating clients:', clients);
           this.clients = clients;
         },
-        (error) => console.error('Error fetching connected clients:', error)
+        (error) => console.error('Error fetching connected clients:', error),
       );
   }
 
@@ -80,12 +76,15 @@ export class ChatsListComponent implements OnInit, OnDestroy {
       const savedState = this.currentState || localStorage.getItem('chatState');
       console.log('Connecting as user with room name:', roomName);
       console.log('Connecting as user with state:', savedState);
-      this.socket = connectToServerAsUser(roomName || '', savedState || '');
+      this.socket = ChatService.connectToServerAsUser(
+        roomName || '',
+        savedState || '',
+      );
       if (this.socket) {
-        addListeners(
+        ChatService.addListeners(
           this.socket,
           this.updateRoomName.bind(this),
-          this.handleChatHistory.bind(this)
+          this.handleChatHistory.bind(this),
         );
 
         this.socket.on('message-from-server', (message: any) => {
@@ -113,12 +112,12 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     }
 
     if (!this.socket) {
-      this.socket = connectToServerAsAdmin(roomName);
+      this.socket = ChatService.connectToServerAsAdmin(roomName);
       if (this.socket) {
-        addListeners(
+        ChatService.addListeners(
           this.socket,
           this.updateRoomName.bind(this),
-          this.handleChatHistory.bind(this)
+          this.handleChatHistory.bind(this),
         );
       }
     }

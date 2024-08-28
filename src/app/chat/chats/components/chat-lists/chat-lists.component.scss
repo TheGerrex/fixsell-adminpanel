@@ -1,0 +1,120 @@
+// chat-lists.component.scss
+
+$background-color: #f5f5f5;
+$border-color: #e0e0e0;
+$search-border-color: #ccc;
+$avatar-bg-color: #ccc;
+$online-color: #4caf50;
+$offline-color: #f44336;
+$text-color: #666;
+$time-color: #999;
+
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 100vh;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  font-family: Arial, sans-serif;
+  background-color: $background-color;
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    flex-shrink: 0;
+
+    div {
+      padding: 10px;
+      cursor: pointer;
+
+      &.active {
+        border-bottom: 2px solid #007bff;
+      }
+    }
+  }
+
+  .search-bar {
+    padding: 10px;
+    border-bottom: 1px solid $border-color;
+
+    input {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid $search-border-color;
+      border-radius: 4px;
+    }
+  }
+
+  .chat-items {
+    flex: 1;
+    overflow-y: auto; /* Enable vertical scrolling for only chat items */
+  }
+
+  .chat-item {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid lighten($border-color, 5%);
+    align-items: center;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: $avatar-bg-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-weight: bold;
+      position: relative;
+      flex-shrink: 0; /* Prevent shrinking */
+
+      &.online::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: $online-color;
+        border-radius: 50%;
+        bottom: 0;
+        right: 0;
+      }
+
+      &.offline::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: $offline-color;
+        border-radius: 50%;
+        bottom: 0;
+        right: 0;
+      }
+    }
+
+    .chat-details {
+      flex-grow: 1;
+
+      .name-time {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .name {
+          font-weight: bold;
+        }
+
+        .time {
+          font-size: 0.8em;
+          color: $time-color;
+        }
+      }
+
+      .last-message {
+        font-size: 0.9em;
+        color: $text-color;
+      }
+    }
+  }
+}

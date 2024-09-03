@@ -31,7 +31,7 @@ export class TicketsCreateComponent implements OnInit {
     { value: 'remote', viewValue: 'Remoto' },
     { value: 'on-site', viewValue: 'Sitio' },
   ];
-  timeValues: string[] = [];
+  timeValues: { value: string; display: string }[] = [];
 
   defaultStartDate!: string;
   defaultEndDate!: string;
@@ -66,6 +66,8 @@ export class TicketsCreateComponent implements OnInit {
   ngOnInit(): void {
     this.getActualDefaultDate();
     this.initializeForm();
+    this.initializeTimeValues();
+    this.setInitialTimes();
 
     console.log('defaultStartTime', this.defaultStartTime);
     console.log('defaultEndTime', this.defaultEndTime);
@@ -101,31 +103,73 @@ export class TicketsCreateComponent implements OnInit {
     // Initial call to set validators based on the default type
     this.updateValidators(this.createTicketForm.get('type')?.value);
 
+  }
 
+  private initializeTimeValues(): void {
     // Populate timeValues with 24-hour time values in 15-minute increments
+    this.timeValues = []; // Ensure timeValues is initialized as an empty array
+
     for (let i = 0; i < 24; i++) {
       for (let j = 0; j < 60; j += 15) {
         let hour = i;
+        let displayHour = i;
         let amPm = 'am';
 
-        if (hour >= 12) {
+        if (displayHour >= 12) {
           amPm = 'pm';
-          if (hour > 12) hour -= 12;
-        } else if (hour === 0) {
-          hour = 12;
+          if (displayHour > 12) displayHour -= 12;
+        } else if (displayHour === 0) {
+          displayHour = 12;
         }
 
         const hourString = hour < 10 ? `0${hour}` : `${hour}`;
         const minuteString = j < 10 ? `0${j}` : `${j}`;
-        this.timeValues.push(`${hourString}:${minuteString} ${amPm}`);
+        const displayHourString = displayHour < 10 ? `${displayHour}` : `${displayHour}`;
+        const displayMinuteString = minuteString;
+
+        this.timeValues.push({
+          value: `${hourString}:${minuteString}`,
+          display: `${displayHourString}:${displayMinuteString} ${amPm}`
+        });
       }
     }
+  }
+
+  private setInitialTimes(): void {
+    // Function to get the next 15-minute increment
+    const getNext15Minutes = (date: Date): Date => {
+      const ms = 1000 * 60 * 15; // 15 minutes in milliseconds
+      return new Date(Math.ceil(date.getTime() / ms) * ms);
+    };
+
+    // Get the current time and calculate the next 15-minute increment
+    const now = new Date();
+    const next15Minutes = getNext15Minutes(now);
+
+    // Format the next 15-minute increment to match the timeValues format
+    const startHour = next15Minutes.getHours();
+    const startMinute = next15Minutes.getMinutes();
+    const startHourString = startHour < 10 ? `0${startHour}` : `${startHour}`;
+    const startMinuteString = startMinute < 10 ? `0${startMinute}` : `${startMinute}`;
+    const startTimeValue = `${startHourString}:${startMinuteString}`;
+
+    // Calculate the end time (1 hour after the start time)
+    const endTime = new Date(next15Minutes.getTime() + 60 * 60 * 1000);
+    const endHour = endTime.getHours();
+    const endMinute = endTime.getMinutes();
+    const endHourString = endHour < 10 ? `0${endHour}` : `${endHour}`;
+    const endMinuteString = endMinute < 10 ? `0${endMinute}` : `${endMinute}`;
+    const endTimeValue = `${endHourString}:${endMinuteString}`;
+
+    // Set the initial values for startTime and endTime
+    this.createTicketForm.get('startTime')?.setValue(startTimeValue);
+    this.createTicketForm.get('endTime')?.setValue(endTimeValue);
 
     // Update endTime whenever startTime changes
     this.createTicketForm.get('startTime')?.valueChanges.subscribe((value) => {
-      const index = this.timeValues.indexOf(value);
+      const index = this.timeValues.findIndex(time => time.value === value);
       if (index !== -1 && index + 4 < this.timeValues.length) {
-        this.createTicketForm.get('endTime')?.setValue(this.timeValues[index + 4]);
+        this.createTicketForm.get('endTime')?.setValue(this.timeValues[index + 4].value);
       }
     });
   }
@@ -136,26 +180,6 @@ export class TicketsCreateComponent implements OnInit {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.zonedDate = toZonedTime(currentDate, timeZone);
     console.log('zonedDate', this.zonedDate);
-
-    let hours = this.zonedDate.getHours();
-    let minutes = this.zonedDate.getMinutes();
-
-    // round up to the next 30-minute interval
-    minutes = Math.ceil(minutes / 30) * 30;
-
-    // if minutes is 60, set it to 0 and increment the hour
-    if (minutes === 60) {
-      minutes = 0;
-      hours++;
-    }
-    this.defaultStartDate = format(this.zonedDate, 'yyyy-MM-dd');
-    this.defaultEndDate = format(this.zonedDate, 'yyyy-MM-dd');
-    this.defaultStartTime = `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
-    this.defaultEndTime = `${(hours + 1).toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
   }
 
   initializeForm() {
@@ -182,26 +206,15 @@ export class TicketsCreateComponent implements OnInit {
       assignee: ['', Validators.required],
       issue: ['', Validators.required],
       priority: ['', Validators.required],
-      appointmentStartTime: [this.defaultStartDate],
+      appointmentStartTime: [new Date()],
       appointmentEndTime: [{ value: this.defaultEndDate, disabled: true }],
       startTime: [this.defaultStartTime],
       endTime: [this.defaultEndTime],
       status: ['open'],
     });
+    // this.setInitialDate();
     this.createTicketForm
       .get('appointmentStartTime')
-      ?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
-      .subscribe((value: string) => {
-        this.calculateEndDate();
-      });
-    this.createTicketForm
-      .get('startTime')
-      ?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
-      .subscribe((value: string) => {
-        this.calculateEndDate();
-      });
-    this.createTicketForm
-      .get('endTime')
       ?.valueChanges.pipe(debounceTime(1000)) // delay of 1 second
       .subscribe((value: string) => {
         this.calculateEndDate();
@@ -250,6 +263,9 @@ export class TicketsCreateComponent implements OnInit {
       const startDate = startDateControl.value;
       const startTime = startTimeControl.value;
       const endTime = endTimeControl.value;
+      console.log('startDate', startDate);
+      console.log('startTime', startTime);
+      console.log('endTime', endTime);
 
       if (startTime !== null && endTime !== null) {
         const [startHour, startMinute] = startTime.split(':').map(Number);
@@ -281,8 +297,19 @@ export class TicketsCreateComponent implements OnInit {
       return;
     }
     this.isSubmitting = true;
+    this.calculateEndDate();
     if (this.createTicketForm.valid) {
       const formData = this.createTicketForm.getRawValue(); // getRawValue includes disabled controls
+
+      // Combine date and time values into Date objects
+      const startDate = new Date(formData.appointmentStartTime);
+      const [startHour, startMinute] = formData.startTime.split(':').map(Number);
+      startDate.setHours(startHour, startMinute);
+
+      const endDate = new Date(formData.appointmentEndTime);
+      const [endHour, endMinute] = formData.endTime.split(':').map(Number);
+      endDate.setHours(endHour, endMinute);
+
       let ticket = {
         ...formData, // use correct form control name
       };
@@ -322,9 +349,5 @@ export class TicketsCreateComponent implements OnInit {
 
   getFieldError(field: string): string | null {
     return this.validatorsService.getFieldError(this.createTicketForm, field);
-  }
-
-  openDatepicker() {
-    this.datepicker.open();
   }
 }

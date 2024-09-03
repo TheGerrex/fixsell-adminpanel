@@ -1145,8 +1145,13 @@ button.delete-icon mat-icon {
       }
       @media (max-width: 600px) {
         grid-template-columns: 1fr;
-        row-gap: 1em;
-        column-gap: 0em;
+        row-gap: 1rem;
+        column-gap: 1rem;
+        .three-quarter-row,
+        .half-row,
+        .quarter-row {
+          grid-column: 1 / -1;
+        }
       }
     }
   }

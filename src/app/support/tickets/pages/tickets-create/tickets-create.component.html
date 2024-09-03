@@ -82,9 +82,11 @@
               <mat-form-field appearance="outline">
                 <mat-label>Hora de Inicio</mat-label>
                 <mat-select formControlName="startTime">
-                  <mat-option *ngFor="let time of timeValues" [value]="time">{{
-                    time
-                  }}</mat-option>
+                  <mat-option
+                    *ngFor="let time of timeValues"
+                    [value]="time.value"
+                    >{{ time.display }}</mat-option
+                  >
                 </mat-select>
                 <mat-error *ngIf="isValidField('startTime')">{{
                   getFieldError('startTime')
@@ -95,11 +97,13 @@
             <!-- Time End -->
             <div class="form-item quarter-row">
               <mat-form-field appearance="outline">
-                <mat-label>Hora de Terminación</mat-label>
+                <mat-label>Hora de Finalización</mat-label>
                 <mat-select formControlName="endTime">
-                  <mat-option *ngFor="let time of timeValues" [value]="time">{{
-                    time
-                  }}</mat-option>
+                  <mat-option
+                    *ngFor="let time of timeValues"
+                    [value]="time.value"
+                    >{{ time.display }}</mat-option
+                  >
                 </mat-select>
                 <mat-error *ngIf="isValidField('endTime')">{{
                   getFieldError('endTime')

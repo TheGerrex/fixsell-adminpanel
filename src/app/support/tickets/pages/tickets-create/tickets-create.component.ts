@@ -31,6 +31,7 @@ export class TicketsCreateComponent implements OnInit {
     { value: 'remote', viewValue: 'Remoto' },
     { value: 'on-site', viewValue: 'Sitio' },
   ];
+  timeValues: string[] = [];
 
   defaultStartDate!: string;
   defaultEndDate!: string;
@@ -47,7 +48,7 @@ export class TicketsCreateComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) { }
 
   translatePriority(priority: Priority): string {
     switch (priority) {
@@ -99,6 +100,34 @@ export class TicketsCreateComponent implements OnInit {
 
     // Initial call to set validators based on the default type
     this.updateValidators(this.createTicketForm.get('type')?.value);
+
+
+    // Populate timeValues with 24-hour time values in 15-minute increments
+    for (let i = 0; i < 24; i++) {
+      for (let j = 0; j < 60; j += 15) {
+        let hour = i;
+        let amPm = 'am';
+
+        if (hour >= 12) {
+          amPm = 'pm';
+          if (hour > 12) hour -= 12;
+        } else if (hour === 0) {
+          hour = 12;
+        }
+
+        const hourString = hour < 10 ? `0${hour}` : `${hour}`;
+        const minuteString = j < 10 ? `0${j}` : `${j}`;
+        this.timeValues.push(`${hourString}:${minuteString} ${amPm}`);
+      }
+    }
+
+    // Update endTime whenever startTime changes
+    this.createTicketForm.get('startTime')?.valueChanges.subscribe((value) => {
+      const index = this.timeValues.indexOf(value);
+      if (index !== -1 && index + 4 < this.timeValues.length) {
+        this.createTicketForm.get('endTime')?.setValue(this.timeValues[index + 4]);
+      }
+    });
   }
 
   getActualDefaultDate(): void {

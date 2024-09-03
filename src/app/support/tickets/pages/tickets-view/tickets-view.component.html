@@ -1,303 +1,544 @@
+<app-breadcrumb></app-breadcrumb>
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div class="ticket-container" *ngIf="!isLoadingData">
-    <div class="ticket-header">
-        <h3 class="ticket-header-title">Ticket #{{ ticketNumber }}</h3>
-        <div class="ticket-header-container">
-            <!-- Estado section moved here -->
-            <div class="ticket-data-item">
-                <p class="ticket-data-item-name">Estado</p>
-                <select [(ngModel)]="ticketStatus" class="form-select" (change)="changeStatus()">
-                  <option *ngFor="let option of statusOptions" [value]="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-            </div>
-            <div class="ticket-data-item">
-                <p class="ticket-data-item-name">Prioridad</p>
-                <select [(ngModel)]="ticketPriority" class="form-select" (change)="changePriority()">
-                  <option *ngFor="let option of priorityOptions" [value]="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-            </div>
+  <div class="ticket-header">
+    <h3 class="ticket-header-title">Ticket #{{ ticketNumber }}</h3>
+    <div class="ticket-header-container">
+      <!-- Estado section moved here -->
+      <div class="ticket-data-item">
+        <p class="ticket-data-item-name">Estado</p>
+        <select
+          [(ngModel)]="ticketStatus"
+          class="form-select"
+          (change)="changeStatus()"
+        >
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+      <div class="ticket-data-item">
+        <p class="ticket-data-item-name">Prioridad</p>
+        <select
+          [(ngModel)]="ticketPriority"
+          class="form-select"
+          (change)="changePriority()"
+        >
+          <option *ngFor="let option of priorityOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
 
+      <div class="ticket-data-item">
+        <p class="ticket-data-item-name">Transferir Ticket</p>
+        <select
+          [(ngModel)]="ticket.assigned.name"
+          class="form-select"
+          (change)="transferTicket()"
+        >
+          <option *ngFor="let user of users" [value]="user.name">
+            {{ user.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="ticket-body">
+    <div class="ticket-wrapper">
+      <div class="ticket-content">
+        <div class="ticket-info-card">
+          <div class="ticket-info-card-header">
+            <h4 class="ticket-info-card-header-title">
+              Información del Ticket
+            </h4>
+            <div class="ticket-info-icons">
+              <div class="ticket-priority" [ngSwitch]="ticket.priority">
+                <div
+                  class="priority-flags-container high-priority"
+                  *ngSwitchCase="'high'"
+                >
+                  <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                  <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                  <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                </div>
+                <div
+                  class="priority-flags-container medium-priority"
+                  *ngSwitchCase="'medium'"
+                >
+                  <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                  <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                  <mat-icon [ngClass]="getPriorityClass(ticket)"
+                    >outlined_flag</mat-icon
+                  >
+                </div>
+                <div
+                  class="priority-flags-container low-priority"
+                  *ngSwitchCase="'low'"
+                >
+                  <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+                  <mat-icon [ngClass]="getPriorityClass(ticket)"
+                    >outlined_flag</mat-icon
+                  >
+                  <mat-icon [ngClass]="getPriorityClass(ticket)"
+                    >outlined_flag</mat-icon
+                  >
+                </div>
+              </div>
+              <div class="ticket-status" [ngClass]="getStatusClass(ticket)">
+                {{ ticket.status | ticketStatus }}
+              </div>
+            </div>
+          </div>
+          <div class="ticket-info-card-body">
             <div class="ticket-data-item">
-                <p class="ticket-data-item-name">Transferir Ticket</p>
-                <select [(ngModel)]="ticket.assigned.name" class="form-select" (change)="transferTicket()">
-                  <option *ngFor="let user of users" [value]="user.name">
-                    {{ user.name }}
+              <p class="ticket-data-item-label">Creado</p>
+              <p class="ticket-data-item-value">
+                {{ ticket.createdDate | date : 'd MMM yyyy hh:mm a' }}
+              </p>
+            </div>
+            <div class="ticket-data-item">
+              <p class="ticket-data-item-label">Ultima Actualización</p>
+              <p class="ticket-data-item-value">
+                {{ ticket.updatedDate | date : 'd MMM yyyy hh:mm a' }}
+              </p>
+            </div>
+            <div class="ticket-data-item">
+              <p class="ticket-data-item-label">Asignado</p>
+              <p class="ticket-data-item-value">{{ ticket.assigned.name }}</p>
+            </div>
+            <div class="ticket-data-item">
+              <p class="ticket-data-item-label">Asignador</p>
+              <p class="ticket-data-item-value">{{ ticket.assignee.name }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-card">
+          <div class="ticket-card-header">
+            <h4 class="ticket-card-header-title">Evento</h4>
+            <button
+              class="button button-text-primary"
+              *ngIf="eventReadOnly"
+              (click)="toggleEventEdit()"
+            >
+              <span class="button-label">Editar</span>
+            </button>
+          </div>
+          <form [formGroup]="eventForm" (ngSubmit)="onSaveEvent()">
+            <div class="ticket-card-body">
+              <div class="ticket-data-item" *ngIf="ticketTitle">
+                <p class="ticket-data-item-label">Titulo</p>
+                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
+                  {{ ticketTitle }}
+                </p>
+                <!-- <input type="text" class="form-control" [(ngModel)]="ticketTitle" *ngIf="!eventReadOnly"> -->
+                <input
+                  type="text"
+                  formControlName="title"
+                  *ngIf="!eventReadOnly"
+                  placeholder="Descripción simple del problema"
+                  class="form-control"
+                  [class.is-invalid]="
+                    eventForm.controls['title'].invalid &&
+                    eventForm.controls['title'].touched
+                  "
+                />
+                <span
+                  *ngIf="isValidFieldEventForm('title') && !eventReadOnly"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorEventForm('title') }}
+                </span>
+              </div>
+              <div class="ticket-data-item" *ngIf="ticketType">
+                <p class="ticket-data-item-label">Tipo</p>
+                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
+                  {{ ticketType | ticketType }}
+                </p>
+                <select
+                  formControlName="type"
+                  class="form-select"
+                  *ngIf="!eventReadOnly"
+                >
+                  <option *ngFor="let type of types" [value]="type.value">
+                    {{ type.viewValue }}
                   </option>
                 </select>
+              </div>
+              <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
+                <p class="ticket-data-item-label">Fecha</p>
+                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
+                  {{ ticketAppointmentDateStart | date : 'EEE d MMM yyyy' }}
+                </p>
+                <!-- <input type="text" class="form-control" *ngIf="!eventReadOnly"> -->
+                <div class="date-picker" *ngIf="!eventReadOnly">
+                  <input
+                    matInput
+                    [matDatepicker]="ticketDatepicker"
+                    placeholder="DD/MM/YYYY"
+                    formControlName="dateStart"
+                    class="form-control"
+                    [class.is-invalid]="
+                      eventForm.controls['dateStart'].invalid &&
+                      eventForm.controls['dateStart'].touched
+                    "
+                    (focus)="openDatepicker()"
+                  />
+                  <mat-datepicker #ticketDatepicker></mat-datepicker>
+                </div>
+                <span
+                  *ngIf="isValidFieldEventForm('dateStart')"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorEventForm('dateStart') }}
+                </span>
+              </div>
+              <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
+                <p class="ticket-data-item-label">Hora</p>
+                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
+                  {{ ticketAppointmentDateStart | date : 'hh:mm a' }} -
+                  {{ ticketAppointmentDateEnd | date : 'hh:mm a' }}
+                </p>
+                <div
+                  class="time-inputs"
+                  *ngIf="!eventReadOnly"
+                  style="display: flex; align-items: center"
+                >
+                  <input
+                    type="time"
+                    formControlName="timeStart"
+                    class="form-control"
+                    [class.is-invalid]="
+                      eventForm.controls['timeStart'].invalid &&
+                      eventForm.controls['timeStart'].touched
+                    "
+                  />
+                  <span style="margin: 0 10px"> - </span>
+                  <input
+                    type="time"
+                    formControlName="timeEnd"
+                    class="form-control"
+                    [class.is-invalid]="
+                      eventForm.controls['timeEnd'].invalid &&
+                      eventForm.controls['timeEnd'].touched
+                    "
+                  />
+                </div>
+                <span
+                  *ngIf="isValidFieldEventForm('timeStart')"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorEventForm('startTime') }}
+                </span>
+              </div>
             </div>
+            <div class="ticket-card-footer" *ngIf="!eventReadOnly">
+              <div class="button-actions">
+                <button
+                  type="submit"
+                  class="button button-primary"
+                  [disabled]="eventForm.invalid"
+                >
+                  <span class="button-label"> Guardar </span>
+                </button>
+                <button
+                  class="button button-text-secondary"
+                  (click)="toggleEventEdit()"
+                >
+                  <span class="button-label">Cancelar</span>
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
-    </div>
-    <div class="ticket-body">
-        <div class="ticket-wrapper">
-            <div class="ticket-content">
-                <div class="ticket-info-card">
-                    <div class="ticket-info-card-header">
-                        <h4 class="ticket-info-card-header-title">Información del Ticket</h4>
-                        <div class="ticket-info-icons">
-                            <div class="ticket-priority" [ngSwitch]="ticket.priority">
-                                <div class="priority-flags-container high-priority" *ngSwitchCase="'high'">
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                </div>
-                                <div class="priority-flags-container medium-priority" *ngSwitchCase="'medium'">
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
-                                </div>
-                                <div class="priority-flags-container low-priority" *ngSwitchCase="'low'">
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
-                                    <mat-icon [ngClass]="getPriorityClass(ticket)">outlined_flag</mat-icon>
-                                </div>
-                            </div>
-                            <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ticket.status | ticketStatus}}</div>
-                        </div>
-                    </div>
-                    <div class="ticket-info-card-body">
-                        <div class="ticket-data-item">
-                            <p class="ticket-data-item-label">Creado</p>
-                            <p class="ticket-data-item-value">{{ticket.createdDate | date: 'd MMM yyyy hh:mm a'}}</p>
-                        </div>
-                        <div class="ticket-data-item">
-                            <p class="ticket-data-item-label">Ultima Actualización</p>
-                            <p class="ticket-data-item-value">{{ticket.updatedDate | date: 'd MMM yyyy hh:mm a'}}</p>
-                        </div>
-                        <div class="ticket-data-item">
-                            <p class="ticket-data-item-label">Asignado</p>
-                            <p class="ticket-data-item-value">{{ticket.assigned.name}}</p>
-                        </div>
-                        <div class="ticket-data-item">
-                            <p class="ticket-data-item-label">Asignador</p>
-                            <p class="ticket-data-item-value">{{ticket.assignee.name}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="ticket-card">
-                    <div class="ticket-card-header">
-                        <h4 class="ticket-card-header-title">Evento</h4>
-                        <button class="button button-text-primary" *ngIf="eventReadOnly" (click)="toggleEventEdit()"><span class="button-label">Editar</span></button>
-                    </div>
-                    <form [formGroup]="eventForm" (ngSubmit)="onSaveEvent()">
-                        <div class="ticket-card-body">
-                            <div class="ticket-data-item" *ngIf="ticketTitle">
-                                <p class="ticket-data-item-label">Titulo</p>
-                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketTitle }}</p>
-                                <!-- <input type="text" class="form-control" [(ngModel)]="ticketTitle" *ngIf="!eventReadOnly"> -->
-                                <input type="text" formControlName="title" *ngIf="!eventReadOnly" placeholder="Descripción simple del problema" class="form-control" [class.is-invalid]="
-                                    eventForm.controls['title'].invalid &&
-                                    eventForm.controls['title'].touched" />
-                                <span *ngIf="isValidFieldEventForm('title') && !eventReadOnly" class="form-text text-danger">
-                                        {{ getFieldErrorEventForm("title") }}
-                                    </span>
-                            </div>
-                            <div class="ticket-data-item" *ngIf="ticketType">
-                                <p class="ticket-data-item-label">Tipo</p>
-                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketType | ticketType }}</p>
-                                <select formControlName="type" class="form-select" *ngIf="!eventReadOnly">
-                                    <option *ngFor="let type of types" [value]="type.value">
-                                        {{ type.viewValue }}
-                                    </option>
-                                    </select>
-                            </div>
-                            <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
-                                <p class="ticket-data-item-label">Fecha</p>
-                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'EEE d MMM yyyy' }}</p>
-                                <!-- <input type="text" class="form-control" *ngIf="!eventReadOnly"> -->
-                                <div class="date-picker" *ngIf="!eventReadOnly">
-                                    <input matInput [matDatepicker]="ticketDatepicker" placeholder="DD/MM/YYYY" formControlName="dateStart" class="form-control" [class.is-invalid]="
-                                        eventForm.controls['dateStart'].invalid &&
-                                        eventForm.controls['dateStart'].touched
-                                        " (focus)="openDatepicker()" />
-                                    <mat-datepicker #ticketDatepicker></mat-datepicker>
-                                </div>
-                                <span *ngIf="isValidFieldEventForm('dateStart')" class="form-text text-danger">
-                                    {{ getFieldErrorEventForm("dateStart") }}
-                                </span>
-                            </div>
-                            <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
-                                <p class="ticket-data-item-label">Hora</p>
-                                <p class="ticket-data-item-value" *ngIf="eventReadOnly">{{ ticketAppointmentDateStart | date: 'hh:mm a' }} - {{ ticketAppointmentDateEnd | date: 'hh:mm a' }}</p>
-                                <div class="time-inputs" *ngIf="!eventReadOnly" style="display: flex; align-items: center">
-                                    <input type="time" formControlName="timeStart" class="form-control" [class.is-invalid]="
-                                        eventForm.controls['timeStart'].invalid &&
-                                        eventForm.controls['timeStart'].touched
-                                        " />
-                                    <span style="margin: 0 10px"> - </span>
-                                    <input type="time" formControlName="timeEnd" class="form-control" [class.is-invalid]="
-                                        eventForm.controls['timeEnd'].invalid &&
-                                        eventForm.controls['timeEnd'].touched
-                                        " />
-                                </div>
-                                <span *ngIf="isValidFieldEventForm('timeStart')" class="form-text text-danger">
-                                    {{ getFieldErrorEventForm("startTime") }}
-                                    </span>
-                            </div>
-                        </div>
-                        <div class="ticket-card-footer" *ngIf="!eventReadOnly">
-                            <div class="button-actions">
-                                <button type="submit" class="button button-primary" [disabled]="eventForm.invalid">
-                                <span class="button-label">
-                                    Guardar
-                                </span>
-                                </button>
-                                <button class="button button-text-secondary" (click)="toggleEventEdit()">
-                                <span class="button-label">Cancelar</span>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="ticket-card">
-                    <div class="ticket-card-header">
-                        <h4 class="ticket-card-header-title">Cliente</h4>
-                        <button class="button button-text-primary" *ngIf="clientReadOnly" (click)="toggleClientEdit()"><span class="button-label">Editar</span></button>
-                    </div>
-                    <form [formGroup]="clientForm" (ngSubmit)="onSaveClient()">
-                        <div class="ticket-card-body">
-                            <div class="ticket-data-item" *ngIf="clientName">
-                                <p class="ticket-data-item-label">Nombre</p>
-                                <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientName }}</p>
-                                <input type="text" formControlName="name" *ngIf="!clientReadOnly" placeholder="John Doe" class="form-control" [class.is-invalid]="
-                                    clientForm.controls['name'].invalid &&
-                                    clientForm.controls['name'].touched" />
-                                <span *ngIf="isValidFieldClientForm('name') && !clientReadOnly" class="form-text text-danger">
-                                        {{ getFieldErrorClientForm("name") }}
-                                </span>
-                            </div>
-                            <div class="ticket-data-item" *ngIf="clientEmail">
-                                <p class="ticket-data-item-label">Email</p>
-                                <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientEmail }}</p>
-                                <!-- <input type="text" class="form-control" [(ngModel)]="clientEmail" *ngIf="!clientReadOnly"> -->
-                                <input type="text" formControlName="email" *ngIf="!clientReadOnly" placeholder="ejemplo@email.com" class="form-control" [class.is-invalid]="
-                                    clientForm.controls['email'].invalid &&
-                                    clientForm.controls['email'].touched" />
-                                <span *ngIf="isValidFieldClientForm('email') && !clientReadOnly" class="form-text text-danger">
-                                        {{ getFieldErrorClientForm("email") }}
-                                </span>
-                            </div>
-                            <div class="ticket-data-item" *ngIf="clientPhone">
-                                <p class="ticket-data-item-label">Teléfono</p>
-                                <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientPhone | mask: '(000) 000-0000' }}</p>
-                                <input type="text" *ngIf="!clientReadOnly" mask="000-000-0000" placeholder="811-111-1111" formControlName="phone" class="form-control" [class.is-invalid]="
-                                clientForm.controls['phone'].invalid &&
-                                clientForm.controls['phone'].touched
-                                " />
-                                <span *ngIf="isValidFieldClientForm('phone')" class="form-text text-danger">
-                                    {{ getFieldErrorClientForm("phone") }}
-                                </span>
-                            </div>
-                            <div class="ticket-data-item">
-                                <p class="ticket-data-item-label">Dirección</p>
-                                <p class="ticket-data-item-value" *ngIf="clientReadOnly">{{ clientAddress || 'N/A' }}</p>
-                                <!-- <input type="text" class="form-control" [(ngModel)]="clientAddress" *ngIf="!clientReadOnly"> -->
-                                <input type="text" formControlName="address" *ngIf="!clientReadOnly" placeholder="Calle #123, Col. Ejemplo" class="form-control" [class.is-invalid]="
-                                    clientForm.controls['address'].invalid &&
-                                    clientForm.controls['address'].touched" />
-                                <span *ngIf="isValidFieldClientForm('address') && !clientReadOnly" class="form-text text-danger">
-                                        {{ getFieldErrorClientForm("address") }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="ticket-card-footer" *ngIf="!clientReadOnly">
-                            <div class="button-actions">
-                                <button type="submit" class="button button-primary" [disabled]="clientForm.invalid">
-                                <span class="button-label">
-                                    Guardar
-                                </span>
-                                </button>
-                                <button class="button button-text-secondary" (click)="toggleClientEdit()">
-                                <span class="button-label">Cancelar</span>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
+        <div class="ticket-card">
+          <div class="ticket-card-header">
+            <h4 class="ticket-card-header-title">Cliente</h4>
+            <button
+              class="button button-text-primary"
+              *ngIf="clientReadOnly"
+              (click)="toggleClientEdit()"
+            >
+              <span class="button-label">Editar</span>
+            </button>
+          </div>
+          <form [formGroup]="clientForm" (ngSubmit)="onSaveClient()">
+            <div class="ticket-card-body">
+              <div class="ticket-data-item" *ngIf="clientName">
+                <p class="ticket-data-item-label">Nombre</p>
+                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
+                  {{ clientName }}
+                </p>
+                <input
+                  type="text"
+                  formControlName="name"
+                  *ngIf="!clientReadOnly"
+                  placeholder="John Doe"
+                  class="form-control"
+                  [class.is-invalid]="
+                    clientForm.controls['name'].invalid &&
+                    clientForm.controls['name'].touched
+                  "
+                />
+                <span
+                  *ngIf="isValidFieldClientForm('name') && !clientReadOnly"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorClientForm('name') }}
+                </span>
+              </div>
+              <div class="ticket-data-item" *ngIf="clientEmail">
+                <p class="ticket-data-item-label">Email</p>
+                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
+                  {{ clientEmail }}
+                </p>
+                <!-- <input type="text" class="form-control" [(ngModel)]="clientEmail" *ngIf="!clientReadOnly"> -->
+                <input
+                  type="text"
+                  formControlName="email"
+                  *ngIf="!clientReadOnly"
+                  placeholder="ejemplo@email.com"
+                  class="form-control"
+                  [class.is-invalid]="
+                    clientForm.controls['email'].invalid &&
+                    clientForm.controls['email'].touched
+                  "
+                />
+                <span
+                  *ngIf="isValidFieldClientForm('email') && !clientReadOnly"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorClientForm('email') }}
+                </span>
+              </div>
+              <div class="ticket-data-item" *ngIf="clientPhone">
+                <p class="ticket-data-item-label">Teléfono</p>
+                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
+                  {{ clientPhone | mask : '(000) 000-0000' }}
+                </p>
+                <input
+                  type="text"
+                  *ngIf="!clientReadOnly"
+                  mask="000-000-0000"
+                  placeholder="811-111-1111"
+                  formControlName="phone"
+                  class="form-control"
+                  [class.is-invalid]="
+                    clientForm.controls['phone'].invalid &&
+                    clientForm.controls['phone'].touched
+                  "
+                />
+                <span
+                  *ngIf="isValidFieldClientForm('phone')"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorClientForm('phone') }}
+                </span>
+              </div>
+              <div class="ticket-data-item">
+                <p class="ticket-data-item-label">Dirección</p>
+                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
+                  {{ clientAddress || 'N/A' }}
+                </p>
+                <!-- <input type="text" class="form-control" [(ngModel)]="clientAddress" *ngIf="!clientReadOnly"> -->
+                <input
+                  type="text"
+                  formControlName="address"
+                  *ngIf="!clientReadOnly"
+                  placeholder="Calle #123, Col. Ejemplo"
+                  class="form-control"
+                  [class.is-invalid]="
+                    clientForm.controls['address'].invalid &&
+                    clientForm.controls['address'].touched
+                  "
+                />
+                <span
+                  *ngIf="isValidFieldClientForm('address') && !clientReadOnly"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorClientForm('address') }}
+                </span>
+              </div>
             </div>
-            <div class="activity-container">
-                <div class="ticket-card">
-                    <div class="ticket-card-header">
-                        <h4 class="ticket-card-header-title">Problema</h4>
-                        <button *ngIf="issueReadOnly" class="button button-text-primary" (click)="toggleIssueEdit()"><span class="button-label">Editar</span></button>
-                    </div>
-                    <form [formGroup]="issueForm" (ngSubmit)="onSaveIssue()">
-                        <div class="ticket-card-body">
-                            <div class="ticket-problem-content" *ngIf="issueReadOnly" [innerHTML]="ticketIssue"></div>
-                            <div class="quill-container" *ngIf="!issueReadOnly">
-                                <quill-editor formControlName="issue" placeholder="Descripción detallada del problema" [class.is-invalid]="
-                                    issueForm.controls['issue'].invalid &&
-                                    issueForm.controls['issue'].touched"></quill-editor>
-                                <span *ngIf="isValidFieldIssueForm('issue') && !issueReadOnly" class="form-text text-danger">
-                                        {{ getFieldErrorIssueForm("issue") }}
-                                </span>
-                                <div class="button-actions">
-                                    <button type="submit" class="button button-primary" [disabled]="issueForm.invalid"><span class="button-label">Guardar</span></button>
-                                    <button class="button button-text-secondary" (click)="toggleIssueEdit()"><span class="button-label">Cancelar</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="ticket-activity">
-                    <div class="ticket-activity-header">
-                        <h4 class="ticket-activity-header-title">Actividades</h4>
-                        <button class="button button-icon-text button-primary" (click)="toggleNewActivity()"><mat-icon>add</mat-icon><span class="button-label">Agregar</span></button>
-                    </div>
-                    <div class="ticket-activity-body">
-                        <div class="default-message" *ngIf="activities.length === 0 && !newActivity">
-                            <mat-icon>help</mat-icon>
-                            <p>Alguna nueva actividad en el servicio de tu ticket?</p>
-                        </div>
-                        <form [formGroup]="activityForm" (ngSubmit)="addActivity()" *ngIf="newActivity">
-                            <div class="new-activity">
-                                <quill-editor formControlName="text" placeholder="Cual es tu nueva actividad?" [class.is-invalid]="
-                                    activityForm.controls['text'].invalid &&
-                                    activityForm.controls['text'].touched"></quill-editor>
-                                <span *ngIf="isValidFieldActivityForm('text') && newActivity" class="form-text text-danger">
-                                        {{ getFieldErrorActivityForm("text") }}
-                                </span>
-                                <div class="button-actions">
-                                    <button type="submit" class="button button-primary" [disabled]="activityForm.invalid">
-                                        <span class="button-label">Guardar</span>
-                                    </button>
-                                    <button class="button button-text-secondary" (click)="cancelNewActivity()">
-                                        <span class="button-label">Cancelar</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="activity-card-container" *ngIf="activities.length > 0">
-                            <div class="activity-card" *ngFor="let activity of activities; let i = index">
-                                <div class="activity-card-header">
-                                    <p class="activity-card-header-title">{{activity.addedBy?.name}}</p>
-                                    <p class="activity-card-header-date">{{ activity.addedAt | relativeTime }}</p>
-                                </div>
-                                <quill-editor [(ngModel)]="activity.text" *ngIf="editingIndex === i"></quill-editor>
-                                <div class="button-actions" *ngIf="editingIndex === i">
-                                    <button class="button button-primary" (click)="updateActivity(i)">
-                                      <span class="button-label">
-                                        Guardar
-                                      </span>
-                                    </button>
-                                    <button class="button button-text-secondary" (click)="editingIndex = null">
-                                      <span class="button-label">Cancelar</span>
-                                    </button>
-                                </div>
-                                <div class="activity-card-content" [innerHTML]="activity.text" *ngIf="editingIndex !== i"></div>
-                                <div class="button-actions" *ngIf="editingIndex !== i">
-                                    <a class="button-link edit-button" (click)="editingIndex = i">Editar</a>
-                                    <a class="button-link delete-button" (click)="deleteActivity(i)">Borrar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="ticket-card-footer" *ngIf="!clientReadOnly">
+              <div class="button-actions">
+                <button
+                  type="submit"
+                  class="button button-primary"
+                  [disabled]="clientForm.invalid"
+                >
+                  <span class="button-label"> Guardar </span>
+                </button>
+                <button
+                  class="button button-text-secondary"
+                  (click)="toggleClientEdit()"
+                >
+                  <span class="button-label">Cancelar</span>
+                </button>
+              </div>
             </div>
+          </form>
         </div>
+      </div>
+      <div class="activity-container">
+        <div class="ticket-card">
+          <div class="ticket-card-header">
+            <h4 class="ticket-card-header-title">Problema</h4>
+            <button
+              *ngIf="issueReadOnly"
+              class="button button-text-primary"
+              (click)="toggleIssueEdit()"
+            >
+              <span class="button-label">Editar</span>
+            </button>
+          </div>
+          <form [formGroup]="issueForm" (ngSubmit)="onSaveIssue()">
+            <div class="ticket-card-body">
+              <div
+                class="ticket-problem-content"
+                *ngIf="issueReadOnly"
+                [innerHTML]="ticketIssue"
+              ></div>
+              <div class="quill-container" *ngIf="!issueReadOnly">
+                <quill-editor
+                  formControlName="issue"
+                  placeholder="Descripción detallada del problema"
+                  [class.is-invalid]="
+                    issueForm.controls['issue'].invalid &&
+                    issueForm.controls['issue'].touched
+                  "
+                ></quill-editor>
+                <span
+                  *ngIf="isValidFieldIssueForm('issue') && !issueReadOnly"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorIssueForm('issue') }}
+                </span>
+                <div class="button-actions">
+                  <button
+                    type="submit"
+                    class="button button-primary"
+                    [disabled]="issueForm.invalid"
+                  >
+                    <span class="button-label">Guardar</span>
+                  </button>
+                  <button
+                    class="button button-text-secondary"
+                    (click)="toggleIssueEdit()"
+                  >
+                    <span class="button-label">Cancelar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="ticket-activity">
+          <div class="ticket-activity-header">
+            <h4 class="ticket-activity-header-title">Actividades</h4>
+            <button
+              class="button button-icon-text button-primary"
+              (click)="toggleNewActivity()"
+            >
+              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+            </button>
+          </div>
+          <div class="ticket-activity-body">
+            <div
+              class="default-message"
+              *ngIf="activities.length === 0 && !newActivity"
+            >
+              <mat-icon>help</mat-icon>
+              <p>Alguna nueva actividad en el servicio de tu ticket?</p>
+            </div>
+            <form
+              [formGroup]="activityForm"
+              (ngSubmit)="addActivity()"
+              *ngIf="newActivity"
+            >
+              <div class="new-activity">
+                <quill-editor
+                  formControlName="text"
+                  placeholder="Cual es tu nueva actividad?"
+                  [class.is-invalid]="
+                    activityForm.controls['text'].invalid &&
+                    activityForm.controls['text'].touched
+                  "
+                ></quill-editor>
+                <span
+                  *ngIf="isValidFieldActivityForm('text') && newActivity"
+                  class="form-text text-danger"
+                >
+                  {{ getFieldErrorActivityForm('text') }}
+                </span>
+                <div class="button-actions">
+                  <button
+                    type="submit"
+                    class="button button-primary"
+                    [disabled]="activityForm.invalid"
+                  >
+                    <span class="button-label">Guardar</span>
+                  </button>
+                  <button
+                    class="button button-text-secondary"
+                    (click)="cancelNewActivity()"
+                  >
+                    <span class="button-label">Cancelar</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="activity-card-container" *ngIf="activities.length > 0">
+              <div
+                class="activity-card"
+                *ngFor="let activity of activities; let i = index"
+              >
+                <div class="activity-card-header">
+                  <p class="activity-card-header-title">
+                    {{ activity.addedBy?.name }}
+                  </p>
+                  <p class="activity-card-header-date">
+                    {{ activity.addedAt | relativeTime }}
+                  </p>
+                </div>
+                <quill-editor
+                  [(ngModel)]="activity.text"
+                  *ngIf="editingIndex === i"
+                ></quill-editor>
+                <div class="button-actions" *ngIf="editingIndex === i">
+                  <button
+                    class="button button-primary"
+                    (click)="updateActivity(i)"
+                  >
+                    <span class="button-label"> Guardar </span>
+                  </button>
+                  <button
+                    class="button button-text-secondary"
+                    (click)="editingIndex = null"
+                  >
+                    <span class="button-label">Cancelar</span>
+                  </button>
+                </div>
+                <div
+                  class="activity-card-content"
+                  [innerHTML]="activity.text"
+                  *ngIf="editingIndex !== i"
+                ></div>
+                <div class="button-actions" *ngIf="editingIndex !== i">
+                  <a class="button-link edit-button" (click)="editingIndex = i"
+                    >Editar</a
+                  >
+                  <a
+                    class="button-link delete-button"
+                    (click)="deleteActivity(i)"
+                    >Borrar</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

@@ -12,8 +12,7 @@ export class RoleService {
 
   constructor(
     private http: HttpClient,
-    private toastService: ToastService
-  ) {}
+  ) { }
   private roles: { [key: string]: string[] } = {
     '/website/printers': ['admin', 'user'],
     '/website/printers/create': ['admin', 'user', 'vendor'],
@@ -79,7 +78,7 @@ export class RoleService {
 
   // create role
   createRole(role: string | null): Observable<any> {
-    return this.http.post(`${environment.baseUrl}/roles`, {name: role?.toLocaleLowerCase()}).pipe(
+    return this.http.post(`${environment.baseUrl}/roles`, { name: role?.toLocaleLowerCase() }).pipe(
       catchError((error) => {
         console.error('Error occurred:', error);
         return throwError(error);
@@ -88,7 +87,7 @@ export class RoleService {
   }
 
   editRole(roleId: string, roleName: string | null): Observable<any> {
-    return this.http.patch(`${environment.baseUrl}/roles/${roleId}`, {name: roleName?.toLocaleLowerCase()}).pipe(
+    return this.http.patch(`${environment.baseUrl}/roles/${roleId}`, { name: roleName?.toLocaleLowerCase() }).pipe(
       catchError((error) => {
         console.error('Error occurred:', error);
         return throwError(error);

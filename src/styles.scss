@@ -155,18 +155,23 @@ quill-editor {
 
 quill-editor.is-invalid {
   .ql-editor {
-    border: 1px solid $danger-color !important;
+    border: 1px solid #ef4444 !important;
   }
 }
 
 .ql-editor {
   border: 1px solid transparent !important;
   border-radius: 0 0 $border-radius $border-radius !important;
-  min-height: 120px;
+  min-height: 180px;
+  height: 100%;
 }
 
+.ql-editor:hover {
+  border: 1px solid #000 !important;
+  border-radius: 0 0 $border-radius $border-radius !important;
+}
 .ql-editor:focus {
-  border: 1px solid $primary-color-focus !important;
+  border: 2px solid #005ac2 !important;
   border-radius: 0 0 $border-radius $border-radius !important;
 }
 
@@ -203,6 +208,12 @@ input:focus {
       height: 100%;
     }
   }
+}
+
+/*----------------------[ Text ]-------------------------------*/
+
+.text-danger {
+  color: $danger-color !important;
 }
 
 /*----------------------[ Button ]-------------------------------*/

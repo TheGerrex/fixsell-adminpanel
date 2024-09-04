@@ -6,41 +6,42 @@
     <div class="ticket-header-container">
       <!-- Estado section moved here -->
       <div class="ticket-data-item">
-        <p class="ticket-data-item-name">Estado</p>
-        <select
-          [(ngModel)]="ticketStatus"
-          class="form-select"
-          (change)="changeStatus()"
-        >
-          <option *ngFor="let option of statusOptions" [value]="option.value">
-            {{ option.label }}
-          </option>
-        </select>
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="ticketStatus" (change)="changeStatus()">
+            <mat-option
+              *ngFor="let option of statusOptions"
+              [value]="option.value"
+              >{{ option.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
       </div>
       <div class="ticket-data-item">
-        <p class="ticket-data-item-name">Prioridad</p>
-        <select
-          [(ngModel)]="ticketPriority"
-          class="form-select"
-          (change)="changePriority()"
-        >
-          <option *ngFor="let option of priorityOptions" [value]="option.value">
-            {{ option.label }}
-          </option>
-        </select>
+        <mat-form-field appearance="outline">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(ngModel)]="ticketPriority" (change)="changePriority()">
+            <mat-option
+              *ngFor="let option of priorityOptions"
+              [value]="option.value"
+              >{{ option.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
       </div>
 
       <div class="ticket-data-item">
-        <p class="ticket-data-item-name">Transferir Ticket</p>
-        <select
-          [(ngModel)]="ticket.assigned.name"
-          class="form-select"
-          (change)="transferTicket()"
-        >
-          <option *ngFor="let user of users" [value]="user.name">
-            {{ user.name }}
-          </option>
-        </select>
+        <mat-form-field appearance="outline">
+          <mat-label>Transferir Ticket</mat-label>
+          <mat-select
+            [(ngModel)]="ticket.assigned.name"
+            (change)="transferTicket()"
+          >
+            <mat-option *ngFor="let user of users" [value]="user.name">{{
+              user.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
   </div>

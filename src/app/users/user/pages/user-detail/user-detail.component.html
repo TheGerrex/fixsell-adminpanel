@@ -1,43 +1,67 @@
-<div class="user-container" *ngIf="user">
-    <div class="user-header">
-        <h3 class="table-title">Usuario</h3>
-        <div class="table-actions">
-            <div class="action-buttons">
-                <button ButtonResize class="button button-danger button-icon-text button-raised" (click)="openConfirmDialog(user)">
-                  <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
-                </button>
-                <button ButtonResize class="button button-primary button-icon-text button-raised" (click)="navigateToEditUser(user)">
-                  <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-                </button>
-            </div>
-        </div>
+<app-breadcrumb></app-breadcrumb>
+<div class="section-card" *ngIf="user">
+  <div class="section-card-header">
+    <h3 class="header-title">Usuario</h3>
+    <div class="button-actions">
+      <button
+        ButtonResize
+        class="button button-danger button-icon-text button-raised"
+        (click)="openConfirmDialog(user)"
+      >
+        <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+      </button>
+      <button
+        ButtonResize
+        class="button button-primary button-icon-text button-raised"
+        (click)="navigateToEditUser(user)"
+      >
+        <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+      </button>
     </div>
+  </div>
 
-    <div class="user-info">
-        <div class="card-settings-body">
-            <div class="avatar-icon"><img src="../../../../assets/icons/avatar/avatar-1.svg" alt="avatar"></div>
-            <div class="user-info">
-                <div class="info-row">
-                    <div class="info-container">
-                        <p>Nombre</p><span class="username">{{ user.name }}</span>
-                    </div>
-                    <div class="info-container">
-                        <p>Email</p><span class="user-email">{{ user.email }}</span>
-                    </div>
-                    <div class="info-container">
-                        <p>Roles</p>
-                        <div class="roles"><span class="role" *ngFor="let role of user.roles">{{ role.name }}</span></div>
-                    </div>
-                    <div class="info-container" *ngIf="user.isActive; else notActive">
-                        <p>Estado</p> <span class="status">ACTIVO</span>
-                    </div>
-                    <ng-template #notActive>
-                        <div class="info-container">
-                            <p>Estado</p> <span class="status-noactive">INACTIVO</span>
-                        </div>
-                    </ng-template>
-                </div>
+  <div class="section-card-body">
+    <div class="form-container">
+      <div class="form-section">
+        <!-- <div class="avatar-icon">
+          <img
+            src="../../../../assets/icons/avatar/avatar-1.svg"
+            alt="avatar"
+          />
+        </div> -->
+        <!-- <h5 class="form-section-subheader">Datos del Cliente</h5> -->
+        <div class="form-grid">
+          <!-- name -->
+          <div class="form-item half-row">
+            <div class="item-label">Nombre</div>
+            <div class="item-value">{{ user.name }}</div>
+          </div>
+          <div class="form-item half-row">
+            <div class="item-label">Email</div>
+            <div class="item-value">{{ user.email }}</div>
+          </div>
+          <div class="form-item half-row">
+            <div class="item-label">Roles</div>
+            <div class="item-value">
+              <div class="roles">
+                <span class="role" *ngFor="let role of user.roles">{{
+                  role.name
+                }}</span>
+              </div>
             </div>
+          </div>
+          <div class="form-item half-row">
+            <div class="item-label">Estado</div>
+            <div class="item-value">
+              <span
+                [class.status]="user.isActive"
+                [class.status-noactive]="!user.isActive"
+                >{{ user.isActive ? 'ACTIVO' : 'INACTIVO' }}</span
+              >
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

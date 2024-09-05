@@ -1,12 +1,25 @@
 <div class="dialog">
-    <div class="title-container">
-        <h5 class="title">Estas seguro de eliminar este Rol?</h5>
-    </div>
-    <div class="content">
-        <p>El rol <span>{{data.name}}</span> será eliminado permanentemente y puede que otros usuarios tengan asignado este rol.</p>
-    </div>
-    <div class="button-actions">
-        <button class="button button-outline-secondary button-full" (click)="onCancel()"><span class="button-label">Cancelar</span></button>
-        <button class="button button-danger button-raised button-full" (click)="onConfirm()"><span class="button-label">Eliminar</span></button>
-    </div>
+  <div class="title-container">
+    <h5 class="title">Estas seguro de eliminar este Rol?</h5>
+  </div>
+  <div class="content">
+    <p>
+      El rol <span>{{ data.name }}</span> será eliminado permanentemente y puede
+      que otros usuarios tengan asignado este rol.
+    </p>
+  </div>
+  <div class="button-actions">
+    <button
+      class="button button-outline-secondary button-full"
+      (click)="onCancel()"
+    >
+      <span class="button-label">Cancelar</span>
+    </button>
+    <button
+      class="button button-danger button-raised button-full"
+      (click)="onConfirm()"
+    >
+      <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+    </button>
+  </div>
 </div>

@@ -1,186 +1,285 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <!-- header -->
 <div class="main-container" [hidden]="isLoadingData">
-    <div class="main-header">
-        <h3 class="main-title">Mis Tickets</h3>
-        <div class="main-action-buttons">
-            <button class="button button-primary button-raised button-icon-text" (click)="addTicket()">
-              <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
-            </button>
-        </div>
+  <div class="main-header">
+    <h3 class="main-title">Mis Tickets</h3>
+    <div class="main-action-buttons">
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="addTicket()"
+      >
+        <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
+      </button>
     </div>
-    <div class="main-body">
-        <!-- open tickets and closed tickets -->
-        <div class="tickets-container">
-            <div class="ticket-card">
-                <div class="ticket-card-header">
-                    <div class="ticket-card-header-content">
-                        <div class="ticket-count">{{ openTicketsCount }}</div>
-                        <h4 class="card-title">
-                            Tickets Abiertos
-                        </h4>
-                    </div>
-                    <div class="ticket-card-header-actions">
-                        <button class="button button-outline-primary button-full" (click)="navigateOpenTickets()">
-                        <span class="button-label">Ver Todos</span>
-                    </button>
-                    </div>
+  </div>
+  <div class="main-body">
+    <!-- open tickets and closed tickets -->
+    <div class="tickets-container">
+      <div class="ticket-card">
+        <div class="ticket-card-header">
+          <div class="ticket-card-header-content">
+            <div class="ticket-count">{{ openTicketsCount }}</div>
+            <h4 class="card-title">Tickets Abiertos</h4>
+          </div>
+          <div class="ticket-card-header-actions">
+            <button
+              class="button button-outline-primary button-full"
+              (click)="navigateOpenTickets()"
+            >
+              <span class="button-label">Ver Todos</span>
+            </button>
+          </div>
+        </div>
+        <div class="ticket-card-body">
+          <!-- Add content for open tickets card here -->
+          <div class="ticket-list-card">
+            <div
+              class="ticket-list-card-header"
+              (click)="
+                isHighPriorityTicketListVisible =
+                  !isHighPriorityTicketListVisible
+              "
+            >
+              <div class="ticket-list-card-header-content">
+                <div class="ticket-count high-priority">
+                  {{ highPriorityTicketsCount }}
                 </div>
-                <div class="ticket-card-body">
-                    <!-- Add content for open tickets card here -->
-                    <div class="ticket-list-card">
-                        <div class="ticket-list-card-header" (click)="isHighPriorityTicketListVisible = !isHighPriorityTicketListVisible">
-                            <div class="ticket-list-card-header-content">
-                                <div class="ticket-count high-priority">{{ highPriorityTicketsCount }}</div>
-                                <h5 class="header-title">
-                                    Prioridad Alta
-                                </h5>
-                            </div>
-                            <div class="ticket-list-card-header-actions">
-                                <div class="arrow-down-icon" *ngIf="highPriorityTickets.length > 0" [class.rotate]="isHighPriorityTicketListVisible">
-                                    <mat-icon>arrow_drop_down</mat-icon>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ticket-list-card-body" *ngIf="highPriorityTickets.length > 0" [class.visible]="isHighPriorityTicketListVisible">
-                            <div class="ticket-list-card-body-content">
-                                <div class="ticket" *ngFor="let ticket of highPriorityTickets">
-                                    <div class="ticket-container">
-                                        <div class="ticket-body">
-                                            <div class="ticket-info">
-                                                <div class="ticket-info-item">
-                                                    <span class="ticket-info-item-title">PROBLEMA</span>
-                                                    <span class="ticket-info-item-content">{{ ticket.title }}</span>
-                                                </div>
-                                                <button class="button button-outline-primary" (click)="seeTicket(ticket)"><span class="button-label">Ver Ticket</span></button>
-                                            </div>
-                                        </div>
-                                        <div class="ticket-header">
-                                            <div class="ticket-header-chips">
-                                                <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
-                                                <div class="ticket-type">{{ ticket.type | ticketType }}</div>
-                                                <div class="ticket-client">
-                                                    <mat-icon>person</mat-icon>{{ ticket.clientName }}
-                                                </div>
-                                                <div class="ticket-date">
-                                                    <mat-icon>event</mat-icon>
-                                                    {{ ticket.appointmentStartTime | date : "E, MMM d - h:mm a" }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ticket-list-card">
-                        <div class="ticket-list-card-header" (click)="isMediumPriorityTicketListVisible = !isMediumPriorityTicketListVisible">
-                            <div class="ticket-list-card-header-content">
-                                <div class="ticket-count medium-priority">{{ mediumPriorityTicketsCount }}</div>
-                                <h5 class="header-title">
-                                    Prioridad Media
-                                </h5>
-                            </div>
-                            <div class="ticket-list-card-header-actions">
-                                <div class="arrow-down-icon" *ngIf="mediumPriorityTickets.length > 0" [class.rotate]="isMediumPriorityTicketListVisible">
-                                    <mat-icon>arrow_drop_down</mat-icon>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ticket-list-card-body" *ngIf="mediumPriorityTickets.length > 0" [class.visible]="isMediumPriorityTicketListVisible">
-                            <div class="ticket-list-card-body-content">
-                                <div class="ticket" *ngFor="let ticket of mediumPriorityTickets">
-                                    <div class="ticket-container">
-                                        <div class="ticket-body">
-                                            <div class="ticket-info">
-                                                <div class="ticket-info-item">
-                                                    <span class="ticket-info-item-title">PROBLEMA</span>
-                                                    <span class="ticket-info-item-content">{{ ticket.title }}</span>
-                                                </div>
-                                                <button class="button button-outline-primary" (click)="seeTicket(ticket)"><span class="button-label">Ver Ticket</span></button>
-                                            </div>
-                                        </div>
-                                        <div class="ticket-header">
-                                            <div class="ticket-header-chips">
-                                                <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
-                                                <div class="ticket-type">{{ ticket.type | ticketType }}</div>
-                                                <div class="ticket-client">
-                                                    <mat-icon>person</mat-icon>{{ ticket.clientName }}
-                                                </div>
-                                                <div class="ticket-date">
-                                                    <mat-icon>event</mat-icon>
-                                                    {{ ticket.appointmentStartTime | date : "MMMM d, y - h:mm a" }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ticket-list-card">
-                        <div class="ticket-list-card-header" (click)="isLowPriorityTicketListVisible = !isLowPriorityTicketListVisible">
-                            <div class="ticket-list-card-header-content">
-                                <div class="ticket-count low-priority">{{ lowPriorityTicketsCount }}</div>
-                                <h5 class="header-title">
-                                    Prioridad Baja
-                                </h5>
-                            </div>
-                            <div class="ticket-list-card-header-actions">
-                                <div class="arrow-down-icon" *ngIf="lowPriorityTickets.length > 0" [class.rotate]="isLowPriorityTicketListVisible">
-                                    <mat-icon>arrow_drop_down</mat-icon>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ticket-list-card-body" *ngIf="lowPriorityTickets.length > 0" [class.visible]="isLowPriorityTicketListVisible">
-                            <div class="ticket-list-card-body-content">
-                                <div class="ticket" *ngFor="let ticket of lowPriorityTickets">
-                                    <div class="ticket-container">
-                                        <div class="ticket-body">
-                                            <div class="ticket-info">
-                                                <div class="ticket-info-item">
-                                                    <span class="ticket-info-item-title">PROBLEMA</span>
-                                                    <span class="ticket-info-item-content">{{ ticket.title }}</span>
-                                                </div>
-                                                <button class="button button-outline-primary" (click)="seeTicket(ticket)"><span class="button-label">Ver Ticket</span></button>
-                                            </div>
-                                        </div>
-                                        <div class="ticket-header">
-                                            <div class="ticket-header-chips">
-                                                <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
-                                                <div class="ticket-type">{{ ticket.type | ticketType }}</div>
-                                                <div class="ticket-client">
-                                                    <mat-icon>person</mat-icon>{{ ticket.clientName }}
-                                                </div>
-                                                <div class="ticket-date">
-                                                    <mat-icon>event</mat-icon>
-                                                    {{ ticket.appointmentStartTime | date : "MMMM d, y - h:mm a" }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h5 class="header-title">Prioridad Alta</h5>
+              </div>
+              <div class="ticket-list-card-header-actions">
+                <div
+                  class="arrow-down-icon"
+                  *ngIf="highPriorityTickets.length > 0"
+                  [class.rotate]="isHighPriorityTicketListVisible"
+                >
+                  <mat-icon>arrow_drop_down</mat-icon>
                 </div>
+              </div>
             </div>
-            <div class="ticket-card">
-                <div class="ticket-card-header">
-                    <div class="ticket-card-header-content">
-                        <div class="ticket-count">{{ closedTicketsCount }}</div>
-                        <h4 class="card-title">
-                            Tickets Cerrados
-                        </h4>
+            <div
+              class="ticket-list-card-body"
+              *ngIf="highPriorityTickets.length > 0"
+              [class.visible]="isHighPriorityTicketListVisible"
+            >
+              <div class="ticket-list-card-body-content">
+                <div class="ticket" *ngFor="let ticket of highPriorityTickets">
+                  <div class="ticket-container">
+                    <div class="ticket-body">
+                      <div class="ticket-info">
+                        <div class="ticket-info-item">
+                          <span class="ticket-info-item-title">PROBLEMA</span>
+                          <span class="ticket-info-item-content">{{
+                            ticket.title
+                          }}</span>
+                        </div>
+                        <button
+                          class="button button-outline-primary"
+                          (click)="seeTicket(ticket)"
+                        >
+                          <span class="button-label">Ver Ticket</span>
+                        </button>
+                      </div>
                     </div>
-                    <div class="ticket-card-header-actions">
-                        <button class="button button-outline-primary" (click)="navigateClosedTickets()">
-                        <span class="button-label">Ver Todos</span>
-                    </button>
+                    <div class="ticket-header">
+                      <div class="ticket-header-chips">
+                        <div
+                          class="ticket-status"
+                          [ngClass]="getStatusClass(ticket)"
+                        >
+                          {{ ticket.status | ticketStatus }}
+                        </div>
+                        <div class="ticket-type">
+                          {{ ticket.type | ticketType }}
+                        </div>
+                        <div class="ticket-client">
+                          <mat-icon>person</mat-icon>{{ ticket.clientName }}
+                        </div>
+                        <div class="ticket-date">
+                          <mat-icon>event</mat-icon>
+                          {{
+                            ticket.appointmentStartTime
+                              | date : 'E, MMM d - h:mm a'
+                          }}
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <!-- <div class="ticket-card-body">
+              </div>
+            </div>
+          </div>
+          <div class="ticket-list-card">
+            <div
+              class="ticket-list-card-header"
+              (click)="
+                isMediumPriorityTicketListVisible =
+                  !isMediumPriorityTicketListVisible
+              "
+            >
+              <div class="ticket-list-card-header-content">
+                <div class="ticket-count medium-priority">
+                  {{ mediumPriorityTicketsCount }}
+                </div>
+                <h5 class="header-title">Prioridad Media</h5>
+              </div>
+              <div class="ticket-list-card-header-actions">
+                <div
+                  class="arrow-down-icon"
+                  *ngIf="mediumPriorityTickets.length > 0"
+                  [class.rotate]="isMediumPriorityTicketListVisible"
+                >
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ticket-list-card-body"
+              *ngIf="mediumPriorityTickets.length > 0"
+              [class.visible]="isMediumPriorityTicketListVisible"
+            >
+              <div class="ticket-list-card-body-content">
+                <div
+                  class="ticket"
+                  *ngFor="let ticket of mediumPriorityTickets"
+                >
+                  <div class="ticket-container">
+                    <div class="ticket-body">
+                      <div class="ticket-info">
+                        <div class="ticket-info-item">
+                          <span class="ticket-info-item-title">PROBLEMA</span>
+                          <span class="ticket-info-item-content">{{
+                            ticket.title
+                          }}</span>
+                        </div>
+                        <button
+                          class="button button-outline-primary"
+                          (click)="seeTicket(ticket)"
+                        >
+                          <span class="button-label">Ver Ticket</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ticket-header">
+                      <div class="ticket-header-chips">
+                        <div
+                          class="ticket-status"
+                          [ngClass]="getStatusClass(ticket)"
+                        >
+                          {{ ticket.status | ticketStatus }}
+                        </div>
+                        <div class="ticket-type">
+                          {{ ticket.type | ticketType }}
+                        </div>
+                        <div class="ticket-client">
+                          <mat-icon>person</mat-icon>{{ ticket.clientName }}
+                        </div>
+                        <div class="ticket-date">
+                          <mat-icon>event</mat-icon>
+                          {{
+                            ticket.appointmentStartTime
+                              | date : 'MMMM d, y - h:mm a'
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ticket-list-card">
+            <div
+              class="ticket-list-card-header"
+              (click)="
+                isLowPriorityTicketListVisible = !isLowPriorityTicketListVisible
+              "
+            >
+              <div class="ticket-list-card-header-content">
+                <div class="ticket-count low-priority">
+                  {{ lowPriorityTicketsCount }}
+                </div>
+                <h5 class="header-title">Prioridad Baja</h5>
+              </div>
+              <div class="ticket-list-card-header-actions">
+                <div
+                  class="arrow-down-icon"
+                  *ngIf="lowPriorityTickets.length > 0"
+                  [class.rotate]="isLowPriorityTicketListVisible"
+                >
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ticket-list-card-body"
+              *ngIf="lowPriorityTickets.length > 0"
+              [class.visible]="isLowPriorityTicketListVisible"
+            >
+              <div class="ticket-list-card-body-content">
+                <div class="ticket" *ngFor="let ticket of lowPriorityTickets">
+                  <div class="ticket-container">
+                    <div class="ticket-body">
+                      <div class="ticket-info">
+                        <div class="ticket-info-item">
+                          <span class="ticket-info-item-title">PROBLEMA</span>
+                          <span class="ticket-info-item-content">{{
+                            ticket.title
+                          }}</span>
+                        </div>
+                        <button
+                          class="button button-outline-primary"
+                          (click)="seeTicket(ticket)"
+                        >
+                          <span class="button-label">Ver Ticket</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="ticket-header">
+                      <div class="ticket-header-chips">
+                        <div
+                          class="ticket-status"
+                          [ngClass]="getStatusClass(ticket)"
+                        >
+                          {{ ticket.status | ticketStatus }}
+                        </div>
+                        <div class="ticket-type">
+                          {{ ticket.type | ticketType }}
+                        </div>
+                        <div class="ticket-client">
+                          <mat-icon>person</mat-icon>{{ ticket.clientName }}
+                        </div>
+                        <div class="ticket-date">
+                          <mat-icon>event</mat-icon>
+                          {{
+                            ticket.appointmentStartTime
+                              | date : 'MMMM d, y - h:mm a'
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ticket-card">
+        <div class="ticket-card-header">
+          <div class="ticket-card-header-content">
+            <div class="ticket-count">{{ closedTicketsCount }}</div>
+            <h4 class="card-title">Tickets Cerrados</h4>
+          </div>
+          <div class="ticket-card-header-actions">
+            <button
+              class="button button-outline-primary"
+              (click)="navigateClosedTickets()"
+            >
+              <span class="button-label">Ver Todos</span>
+            </button>
+          </div>
+        </div>
+        <!-- <div class="ticket-card-body">
                     <div class="no-tickets" *ngIf="closedTickets.length < 0">
                         <mat-icon>error</mat-icon>
                         <p>No hay tickets por el momento.</p>
@@ -212,96 +311,125 @@
                         </div>
                     </div>
                 </div> -->
-            </div>
-        </div>
-
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button class="button button-outline-secondary" (click)="today()"><span class="button-label">Hoy</span></button>
-                <div class="calendar-date-container" [ngSwitch]="view">
-                    <!-- Day View -->
-                    <div *ngSwitchCase="'day'" class="view-header day-view-header">
-                        <div class="navigation-buttons">
-                            <button class="nav-button" (click)="previousDay()">
-                                <mat-icon>chevron_left</mat-icon>
-                            </button>
-                            <button class="nav-button" (click)="nextDay()">
-                                <mat-icon>chevron_right</mat-icon>
-                            </button>
-                        </div>
-                        <h2 class="date-title">{{ viewDate | date : "fullDate" }}</h2>
-                    </div>
-
-                    <!-- Week View -->
-                    <div *ngSwitchCase="'week'" class="view-header week-view-header">
-                        <div class="navigation-buttons">
-                            <button class="nav-button" (click)="previousWeek()">
-                                <mat-icon>chevron_left</mat-icon>
-                            </button>
-                            <button class="nav-button" (click)="nextWeek()">
-                                <mat-icon>chevron_right</mat-icon>
-                            </button>
-                        </div>
-                        <h2 class="date-title">Semana {{ viewDate | date : "w" }}</h2>
-                    </div>
-
-                    <!-- Month View -->
-                    <div *ngSwitchCase="'month'" class="view-header month-view-header">
-                        <div class="navigation-buttons">
-                            <button class="nav-button" (click)="previousMonth()">
-                                <mat-icon>chevron_left</mat-icon>
-                            </button>
-                            <button class="nav-button" (click)="nextMonth()">
-                                <mat-icon>chevron_right</mat-icon>
-                            </button>
-                        </div>
-                        <h2 class="date-title">{{ viewDate | date : "MMMM yyyy" }}</h2>
-                    </div>
-                </div>
-                <div class="calendar-date-selector">
-                    <select [(ngModel)]="view" (change)="setView()" class="form-select">
-                      <option value="day">Dia</option>
-                      <option value="week">Semana</option>
-                      <option value="month">Mes</option>
-                    </select>
-                </div>
-            </div>
-
-
-            <!-- Calendar Views -->
-            <mwl-calendar-day-view *ngIf="view === 'day'" [viewDate]="viewDate" [events]="events" [dayStartHour]="7" [dayEndHour]="20" [eventTitleTemplate]="customEventTitleTemplate" (eventClicked)="eventClicked($event)">
-            </mwl-calendar-day-view>
-
-            <ng-template #customEventTitleTemplate let-event="event">
-                <div style="
-                padding: 0.5em;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                height: 100%;
-                flex-wrap: wrap;
-            ">
-                    <div>
-                        <div style="font-weight: bold">{{ event.clientName }}</div>
-                        <div>
-                            {{ event.start | date : "shortTime" }} - {{ event.end | date : "shortTime" }}
-                        </div>
-                        <div>{{ event.title }}</div>
-                    </div>
-                    <div style="display: flex; align-items: center">
-                        <mat-icon>person</mat-icon>
-                        <span style="margin-left: 0.5em">{{ event.assigned }}</span>
-                    </div>
-                </div>
-            </ng-template>
-
-            <mwl-calendar-week-view *ngIf="view === 'week'" [dayStartHour]="7" [dayEndHour]="20" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event)">
-            </mwl-calendar-week-view>
-
-            <mwl-calendar-month-view *ngIf="view === 'month'" [viewDate]="viewDate" [events]="events" (dayClicked)="dayClicked($event.day.date)" (eventClicked)="eventClicked($event)">
-            </mwl-calendar-month-view>
-        </div>
+      </div>
     </div>
+
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div class="calendar-date-today">
+          <button class="button button-outline-secondary" (click)="today()">
+            <span class="button-label">Hoy</span>
+          </button>
+        </div>
+        <div class="calendar-date-container" [ngSwitch]="view">
+          <!-- Day View -->
+          <div *ngSwitchCase="'day'" class="view-header day-view-header">
+            <div class="navigation-buttons">
+              <button class="nav-button" (click)="previousDay()">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button class="nav-button" (click)="nextDay()">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+            <h2 class="date-title">{{ viewDate | date : 'fullDate' }}</h2>
+          </div>
+
+          <!-- Week View -->
+          <div *ngSwitchCase="'week'" class="view-header week-view-header">
+            <div class="navigation-buttons">
+              <button class="nav-button" (click)="previousWeek()">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button class="nav-button" (click)="nextWeek()">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+            <h2 class="date-title">Semana {{ viewDate | date : 'w' }}</h2>
+          </div>
+
+          <!-- Month View -->
+          <div *ngSwitchCase="'month'" class="view-header month-view-header">
+            <div class="navigation-buttons">
+              <button class="nav-button" (click)="previousMonth()">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button class="nav-button" (click)="nextMonth()">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+            <h2 class="date-title">{{ viewDate | date : 'MMMM yyyy' }}</h2>
+          </div>
+        </div>
+        <div class="calendar-date-selector">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="view" (change)="setView()">
+              <mat-option value="day">Dia</mat-option>
+              <mat-option value="week">Semana</mat-option>
+              <mat-option value="month">Mes</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Calendar Views -->
+      <mwl-calendar-day-view
+        *ngIf="view === 'day'"
+        [viewDate]="viewDate"
+        [events]="events"
+        [dayStartHour]="7"
+        [dayEndHour]="20"
+        [eventTitleTemplate]="customEventTitleTemplate"
+        (eventClicked)="eventClicked($event)"
+      >
+      </mwl-calendar-day-view>
+
+      <ng-template #customEventTitleTemplate let-event="event">
+        <div
+          style="
+            padding: 0.5em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            flex-wrap: wrap;
+          "
+        >
+          <div>
+            <div style="font-weight: bold">{{ event.clientName }}</div>
+            <div>
+              {{ event.start | date : 'shortTime' }} -
+              {{ event.end | date : 'shortTime' }}
+            </div>
+            <div>{{ event.title }}</div>
+          </div>
+          <div style="display: flex; align-items: center">
+            <mat-icon>person</mat-icon>
+            <span style="margin-left: 0.5em">{{ event.assigned }}</span>
+          </div>
+        </div>
+      </ng-template>
+
+      <mwl-calendar-week-view
+        *ngIf="view === 'week'"
+        [dayStartHour]="7"
+        [dayEndHour]="20"
+        [viewDate]="viewDate"
+        [events]="events"
+        (eventClicked)="eventClicked($event)"
+      >
+      </mwl-calendar-week-view>
+
+      <mwl-calendar-month-view
+        *ngIf="view === 'month'"
+        [viewDate]="viewDate"
+        [events]="events"
+        (dayClicked)="dayClicked($event.day.date)"
+        (eventClicked)="eventClicked($event)"
+      >
+      </mwl-calendar-month-view>
+    </div>
+  </div>
 </div>
 
 <div class="priority-low" hidden></div>

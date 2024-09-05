@@ -25,6 +25,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { ButtonResizeDirective } from './directives/button-resize.directive';
 import { EditUserRoleDialogComponent } from './components/edit-user-role-dialog/edit-user-role-dialog.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
+import { DeleteUserRoleDialogComponent } from './components/delete-user-role-dialog/delete-user-role-dialog.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -45,6 +46,7 @@ import { RichTextEditorComponent } from './components/rich-text-editor/rich-text
     ButtonResizeDirective,
     EditUserRoleDialogComponent,
     RichTextEditorComponent,
+    DeleteUserRoleDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +76,7 @@ import { RichTextEditorComponent } from './components/rich-text-editor/rich-text
     ButtonResizeDirective,
     EditUserRoleDialogComponent,
     RichTextEditorComponent,
+    DeleteUserRoleDialogComponent,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

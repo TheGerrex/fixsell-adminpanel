@@ -16,7 +16,7 @@ export class DeleteUserRoleDialogComponent {
     private toastService: ToastService,
     public dialogRef: MatDialogRef<DeleteUserRoleDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Role,
-  ) {}
+  ) { console.log(data); }
 
   onCancel(): void {
     this.dialogRef.close();
@@ -31,7 +31,7 @@ export class DeleteUserRoleDialogComponent {
           this.dialogRef.close();
         },
         error: (error) => {
-          // handle error...
+          this.toastService.showError('Problema para eliminar Rol', 'Close');
         }
       });
     }

@@ -16,14 +16,15 @@ import { IConfig } from 'ngx-mask';
 import { TicketsModule } from './support/tickets/tickets.module';
 import { QuillModule } from 'ngx-quill';
 import { QuillConfiguration } from './shared/components/rich-text-editor/rich-text-editor.component';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 const maskConfig: Partial<IConfig> = {
-  validation: false,
+    validation: false,
 };
 
 registerLocaleData(localeEs, 'es');
 
-@NgModule({ 
+@NgModule({
     declarations: [
         AppComponent,
     ],
@@ -44,12 +45,18 @@ registerLocaleData(localeEs, 'es');
             provide: DateAdapter,
             useFactory: adapterFactory,
         }),
-    ], 
+    ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },
         provideNgxMask(maskConfig),
         provideHttpClient(withInterceptorsFromDi()),
+        {
+            provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+            useValue: {
+                subscriptSizing: 'dynamic'
+            }
+        }
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

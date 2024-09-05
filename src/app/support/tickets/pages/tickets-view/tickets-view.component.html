@@ -8,7 +8,10 @@
       <div class="ticket-data-item">
         <mat-form-field appearance="outline">
           <mat-label>Estado</mat-label>
-          <mat-select [(ngModel)]="ticketStatus" (change)="changeStatus()">
+          <mat-select
+            [(ngModel)]="ticketStatus"
+            (selectionChange)="changeStatus()"
+          >
             <mat-option
               *ngFor="let option of statusOptions"
               [value]="option.value"
@@ -20,7 +23,10 @@
       <div class="ticket-data-item">
         <mat-form-field appearance="outline">
           <mat-label>Prioridad</mat-label>
-          <mat-select [(ngModel)]="ticketPriority" (change)="changePriority()">
+          <mat-select
+            [(ngModel)]="ticketPriority"
+            (selectionChange)="changePriority()"
+          >
             <mat-option
               *ngFor="let option of priorityOptions"
               [value]="option.value"
@@ -35,7 +41,7 @@
           <mat-label>Transferir Ticket</mat-label>
           <mat-select
             [(ngModel)]="ticket.assigned.name"
-            (change)="transferTicket()"
+            (selectionChange)="transferTicket()"
           >
             <mat-option *ngFor="let user of users" [value]="user.name">{{
               user.name
@@ -92,148 +98,197 @@
             </div>
           </div>
           <div class="ticket-info-card-body">
-            <div class="ticket-data-item">
-              <p class="ticket-data-item-label">Creado</p>
-              <p class="ticket-data-item-value">
-                {{ ticket.createdDate | date : 'd MMM yyyy hh:mm a' }}
-              </p>
-            </div>
-            <div class="ticket-data-item">
-              <p class="ticket-data-item-label">Ultima Actualización</p>
-              <p class="ticket-data-item-value">
-                {{ ticket.updatedDate | date : 'd MMM yyyy hh:mm a' }}
-              </p>
-            </div>
-            <div class="ticket-data-item">
-              <p class="ticket-data-item-label">Asignado</p>
-              <p class="ticket-data-item-value">{{ ticket.assigned.name }}</p>
-            </div>
-            <div class="ticket-data-item">
-              <p class="ticket-data-item-label">Asignador</p>
-              <p class="ticket-data-item-value">{{ ticket.assignee.name }}</p>
+            <div class="form-container">
+              <div class="form-grid">
+                <div class="form-item half-row">
+                  <p class="item-label">Creado</p>
+                  <p class="item-value">
+                    {{ ticket.createdDate | date : 'd MMM yyyy hh:mm a' }}
+                  </p>
+                </div>
+                <div class="form-item half-row">
+                  <p class="item-label">Ultima Actualización</p>
+                  <p class="item-value">
+                    {{ ticket.updatedDate | date : 'd MMM yyyy hh:mm a' }}
+                  </p>
+                </div>
+                <div class="form-item half-row">
+                  <p class="item-label">Asignado</p>
+                  <p class="item-value">
+                    {{ ticket.assigned.name }}
+                  </p>
+                </div>
+                <div class="form-item half-row">
+                  <p class="item-label">Asignador</p>
+                  <p class="item-value">
+                    {{ ticket.assignee.name }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="ticket-card">
-          <div class="ticket-card-header">
-            <h4 class="ticket-card-header-title">Evento</h4>
-            <button
-              class="button button-text-primary"
-              *ngIf="eventReadOnly"
-              (click)="toggleEventEdit()"
-            >
-              <span class="button-label">Editar</span>
-            </button>
+        <div class="data-card">
+          <div class="data-card-header">
+            <h4 class="header-title">Evento</h4>
+            <div class="button-actions">
+              <button
+                class="button button-text-primary"
+                *ngIf="eventReadOnly"
+                (click)="toggleEventEdit()"
+              >
+                <span class="button-label">Editar</span>
+              </button>
+            </div>
           </div>
           <form [formGroup]="eventForm" (ngSubmit)="onSaveEvent()">
-            <div class="ticket-card-body">
-              <div class="ticket-data-item" *ngIf="ticketTitle">
-                <p class="ticket-data-item-label">Titulo</p>
-                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
-                  {{ ticketTitle }}
-                </p>
-                <!-- <input type="text" class="form-control" [(ngModel)]="ticketTitle" *ngIf="!eventReadOnly"> -->
-                <input
-                  type="text"
-                  formControlName="title"
-                  *ngIf="!eventReadOnly"
-                  placeholder="Descripción simple del problema"
-                  class="form-control"
-                  [class.is-invalid]="
-                    eventForm.controls['title'].invalid &&
-                    eventForm.controls['title'].touched
-                  "
-                />
-                <span
-                  *ngIf="isValidFieldEventForm('title') && !eventReadOnly"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorEventForm('title') }}
-                </span>
-              </div>
-              <div class="ticket-data-item" *ngIf="ticketType">
-                <p class="ticket-data-item-label">Tipo</p>
-                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
-                  {{ ticketType | ticketType }}
-                </p>
-                <select
-                  formControlName="type"
-                  class="form-select"
-                  *ngIf="!eventReadOnly"
-                >
-                  <option *ngFor="let type of types" [value]="type.value">
-                    {{ type.viewValue }}
-                  </option>
-                </select>
-              </div>
-              <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
-                <p class="ticket-data-item-label">Fecha</p>
-                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
-                  {{ ticketAppointmentDateStart | date : 'EEE d MMM yyyy' }}
-                </p>
-                <!-- <input type="text" class="form-control" *ngIf="!eventReadOnly"> -->
-                <div class="date-picker" *ngIf="!eventReadOnly">
-                  <input
-                    matInput
-                    [matDatepicker]="ticketDatepicker"
-                    placeholder="DD/MM/YYYY"
-                    formControlName="dateStart"
-                    class="form-control"
-                    [class.is-invalid]="
-                      eventForm.controls['dateStart'].invalid &&
-                      eventForm.controls['dateStart'].touched
-                    "
-                    (focus)="openDatepicker()"
-                  />
-                  <mat-datepicker #ticketDatepicker></mat-datepicker>
+            <div class="data-card-body">
+              <div class="form-container">
+                <div class="form-grid">
+                  <div class="form-item full-row" *ngIf="ticketTitle">
+                    <ng-container *ngIf="eventReadOnly">
+                      <p class="item-label">Titulo</p>
+                      <p class="item-value">
+                        {{ ticketTitle }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!eventReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Titulo</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          placeholder="Descripción simple del problema"
+                          formControlName="title"
+                        />
+                        <mat-error *ngIf="isValidFieldEventForm('title')">{{
+                          getFieldErrorEventForm('title')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div class="form-item full-row" *ngIf="ticketType">
+                    <ng-container *ngIf="eventReadOnly">
+                      <p class="item-label">Tipo</p>
+                      <p class="item-value">
+                        {{ ticketType | ticketType }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!eventReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select formControlName="type">
+                          <mat-option
+                            *ngFor="let type of types"
+                            [value]="type.value"
+                            >{{ type.viewValue }}</mat-option
+                          >
+                        </mat-select>
+                        <mat-error *ngIf="isValidFieldEventForm('type')">{{
+                          getFieldErrorEventForm('type')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div
+                    class="form-item full-row"
+                    *ngIf="ticketAppointmentDateStart"
+                  >
+                    <ng-container *ngIf="eventReadOnly"
+                      ><p class="item-label">Fecha</p>
+                      <p class="item-value">
+                        {{
+                          ticketAppointmentDateStart | date : 'EEE d MMM yyyy'
+                        }}
+                      </p></ng-container
+                    >
+                    <ng-container *ngIf="!eventReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Fecha</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="ticketDatepicker"
+                          placeholder="DD/MM/YYYY"
+                          formControlName="dateStart"
+                        />
+                        <mat-datepicker-toggle
+                          matIconSuffix
+                          [for]="ticketDatepicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #ticketDatepicker>
+                          <mat-datepicker-actions>
+                            <button mat-button matDatepickerCancel>
+                              Cancelar
+                            </button>
+                            <button mat-raised-button matDatepickerApply>
+                              Aplicar
+                            </button>
+                          </mat-datepicker-actions>
+                        </mat-datepicker>
+                        <mat-error *ngIf="isValidFieldEventForm('dateStart')">{{
+                          getFieldErrorEventForm('dateStart')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div
+                    class="form-item half-row"
+                    *ngIf="ticketAppointmentDateStart"
+                  >
+                    <ng-container *ngIf="eventReadOnly">
+                      <p class="item-label">Hora Inicial</p>
+                      <p class="item-value">
+                        {{ ticketAppointmentDateStart | date : 'hh:mm a' }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!eventReadOnly">
+                      <!-- Time Start -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Hora Inicial</mat-label>
+                        <mat-select formControlName="timeStart">
+                          <mat-option
+                            *ngFor="let time of timeValues"
+                            [value]="time.value"
+                            >{{ time.display }}</mat-option
+                          >
+                        </mat-select>
+                        <mat-error *ngIf="isValidFieldEventForm('timeStart')">{{
+                          getFieldErrorEventForm('timeStart')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div
+                    class="form-item half-row"
+                    *ngIf="ticketAppointmentDateStart"
+                  >
+                    <ng-container *ngIf="eventReadOnly">
+                      <p class="item-label">Hora Final</p>
+                      <p class="item-value">
+                        {{ ticketAppointmentDateEnd | date : 'hh:mm a' }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!eventReadOnly">
+                      <!-- Time End -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Hora Final</mat-label>
+                        <mat-select formControlName="timeEnd">
+                          <mat-option
+                            *ngFor="let time of timeValues"
+                            [value]="time.value"
+                            >{{ time.display }}</mat-option
+                          >
+                        </mat-select>
+                        <mat-error *ngIf="isValidFieldEventForm('timeEnd')">{{
+                          getFieldErrorEventForm('timeEnd')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
                 </div>
-                <span
-                  *ngIf="isValidFieldEventForm('dateStart')"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorEventForm('dateStart') }}
-                </span>
-              </div>
-              <div class="ticket-data-item" *ngIf="ticketAppointmentDateStart">
-                <p class="ticket-data-item-label">Hora</p>
-                <p class="ticket-data-item-value" *ngIf="eventReadOnly">
-                  {{ ticketAppointmentDateStart | date : 'hh:mm a' }} -
-                  {{ ticketAppointmentDateEnd | date : 'hh:mm a' }}
-                </p>
-                <div
-                  class="time-inputs"
-                  *ngIf="!eventReadOnly"
-                  style="display: flex; align-items: center"
-                >
-                  <input
-                    type="time"
-                    formControlName="timeStart"
-                    class="form-control"
-                    [class.is-invalid]="
-                      eventForm.controls['timeStart'].invalid &&
-                      eventForm.controls['timeStart'].touched
-                    "
-                  />
-                  <span style="margin: 0 10px"> - </span>
-                  <input
-                    type="time"
-                    formControlName="timeEnd"
-                    class="form-control"
-                    [class.is-invalid]="
-                      eventForm.controls['timeEnd'].invalid &&
-                      eventForm.controls['timeEnd'].touched
-                    "
-                  />
-                </div>
-                <span
-                  *ngIf="isValidFieldEventForm('timeStart')"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorEventForm('startTime') }}
-                </span>
               </div>
             </div>
-            <div class="ticket-card-footer" *ngIf="!eventReadOnly">
+            <div class="data-card-footer" *ngIf="!eventReadOnly">
               <div class="button-actions">
                 <button
                   type="submit"
@@ -252,116 +307,116 @@
             </div>
           </form>
         </div>
-        <div class="ticket-card">
-          <div class="ticket-card-header">
-            <h4 class="ticket-card-header-title">Cliente</h4>
-            <button
-              class="button button-text-primary"
-              *ngIf="clientReadOnly"
-              (click)="toggleClientEdit()"
-            >
-              <span class="button-label">Editar</span>
-            </button>
+        <div class="data-card">
+          <div class="data-card-header">
+            <h4 class="header-title">Cliente</h4>
+            <div class="button-actions">
+              <button
+                class="button button-text-primary"
+                *ngIf="clientReadOnly"
+                (click)="toggleClientEdit()"
+              >
+                <span class="button-label">Editar</span>
+              </button>
+            </div>
           </div>
           <form [formGroup]="clientForm" (ngSubmit)="onSaveClient()">
-            <div class="ticket-card-body">
-              <div class="ticket-data-item" *ngIf="clientName">
-                <p class="ticket-data-item-label">Nombre</p>
-                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
-                  {{ clientName }}
-                </p>
-                <input
-                  type="text"
-                  formControlName="name"
-                  *ngIf="!clientReadOnly"
-                  placeholder="John Doe"
-                  class="form-control"
-                  [class.is-invalid]="
-                    clientForm.controls['name'].invalid &&
-                    clientForm.controls['name'].touched
-                  "
-                />
-                <span
-                  *ngIf="isValidFieldClientForm('name') && !clientReadOnly"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorClientForm('name') }}
-                </span>
-              </div>
-              <div class="ticket-data-item" *ngIf="clientEmail">
-                <p class="ticket-data-item-label">Email</p>
-                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
-                  {{ clientEmail }}
-                </p>
-                <!-- <input type="text" class="form-control" [(ngModel)]="clientEmail" *ngIf="!clientReadOnly"> -->
-                <input
-                  type="text"
-                  formControlName="email"
-                  *ngIf="!clientReadOnly"
-                  placeholder="ejemplo@email.com"
-                  class="form-control"
-                  [class.is-invalid]="
-                    clientForm.controls['email'].invalid &&
-                    clientForm.controls['email'].touched
-                  "
-                />
-                <span
-                  *ngIf="isValidFieldClientForm('email') && !clientReadOnly"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorClientForm('email') }}
-                </span>
-              </div>
-              <div class="ticket-data-item" *ngIf="clientPhone">
-                <p class="ticket-data-item-label">Teléfono</p>
-                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
-                  {{ clientPhone | mask : '(000) 000-0000' }}
-                </p>
-                <input
-                  type="text"
-                  *ngIf="!clientReadOnly"
-                  mask="000-000-0000"
-                  placeholder="811-111-1111"
-                  formControlName="phone"
-                  class="form-control"
-                  [class.is-invalid]="
-                    clientForm.controls['phone'].invalid &&
-                    clientForm.controls['phone'].touched
-                  "
-                />
-                <span
-                  *ngIf="isValidFieldClientForm('phone')"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorClientForm('phone') }}
-                </span>
-              </div>
-              <div class="ticket-data-item">
-                <p class="ticket-data-item-label">Dirección</p>
-                <p class="ticket-data-item-value" *ngIf="clientReadOnly">
-                  {{ clientAddress || 'N/A' }}
-                </p>
-                <!-- <input type="text" class="form-control" [(ngModel)]="clientAddress" *ngIf="!clientReadOnly"> -->
-                <input
-                  type="text"
-                  formControlName="address"
-                  *ngIf="!clientReadOnly"
-                  placeholder="Calle #123, Col. Ejemplo"
-                  class="form-control"
-                  [class.is-invalid]="
-                    clientForm.controls['address'].invalid &&
-                    clientForm.controls['address'].touched
-                  "
-                />
-                <span
-                  *ngIf="isValidFieldClientForm('address') && !clientReadOnly"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorClientForm('address') }}
-                </span>
+            <div class="data-card-body">
+              <div class="form-container">
+                <div class="form-grid">
+                  <div class="form-item full-row" *ngIf="clientName">
+                    <ng-container *ngIf="clientReadOnly">
+                      <p class="item-label">Nombre</p>
+                      <p class="item-value" *ngIf="clientReadOnly">
+                        {{ clientName }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!clientReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Nombre</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          placeholder="John Doe"
+                          formControlName="name"
+                        />
+                        <mat-error *ngIf="isValidFieldClientForm('name')">{{
+                          getFieldErrorClientForm('name')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div class="form-item half-row" *ngIf="clientEmail">
+                    <ng-container *ngIf="clientReadOnly">
+                      <p class="item-label">Email</p>
+                      <p class="item-value" *ngIf="clientReadOnly">
+                        {{ clientEmail }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!clientReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          placeholder="ejemplo@email.com"
+                          formControlName="email"
+                        />
+                        <mat-error *ngIf="isValidFieldClientForm('email')">{{
+                          getFieldErrorClientForm('email')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div class="form-item half-row" *ngIf="clientPhone">
+                    <ng-container *ngIf="clientReadOnly">
+                      <p class="item-label">Teléfono</p>
+                      <p class="item-value" *ngIf="clientReadOnly">
+                        {{ clientPhone | mask : '(000) 000-0000' }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!clientReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Teléfono</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          mask="000-000-0000"
+                          placeholder="811-111-1111"
+                          formControlName="phone"
+                        />
+                        <mat-error *ngIf="isValidFieldClientForm('phone')">{{
+                          getFieldErrorClientForm('phone')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div class="form-item full-row">
+                    <ng-container *ngIf="clientReadOnly">
+                      <p class="item-label">Dirección</p>
+                      <p class="item-value" *ngIf="clientReadOnly">
+                        {{ clientAddress || 'N/A' }}
+                      </p>
+                    </ng-container>
+                    <ng-container *ngIf="!clientReadOnly">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Dirección</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="address"
+                          placeholder="Calle #123, Col. Ejemplo"
+                        />
+                        <mat-error *ngIf="isValidFieldClientForm('address')">{{
+                          getFieldErrorClientForm('address')
+                        }}</mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="ticket-card-footer" *ngIf="!clientReadOnly">
+            <div class="data-card-footer" *ngIf="!clientReadOnly">
               <div class="button-actions">
                 <button
                   type="submit"
@@ -382,19 +437,21 @@
         </div>
       </div>
       <div class="activity-container">
-        <div class="ticket-card">
-          <div class="ticket-card-header">
-            <h4 class="ticket-card-header-title">Problema</h4>
-            <button
-              *ngIf="issueReadOnly"
-              class="button button-text-primary"
-              (click)="toggleIssueEdit()"
-            >
-              <span class="button-label">Editar</span>
-            </button>
+        <div class="data-card">
+          <div class="data-card-header">
+            <h4 class="header-title">Problema</h4>
+            <div class="button-actions">
+              <button
+                *ngIf="issueReadOnly"
+                class="button button-text-primary"
+                (click)="toggleIssueEdit()"
+              >
+                <span class="button-label">Editar</span>
+              </button>
+            </div>
           </div>
           <form [formGroup]="issueForm" (ngSubmit)="onSaveIssue()">
-            <div class="ticket-card-body">
+            <div class="data-card-body" style="justify-content: flex-start">
               <div
                 class="ticket-problem-content"
                 *ngIf="issueReadOnly"
@@ -415,21 +472,23 @@
                 >
                   {{ getFieldErrorIssueForm('issue') }}
                 </span>
-                <div class="button-actions">
-                  <button
-                    type="submit"
-                    class="button button-primary"
-                    [disabled]="issueForm.invalid"
-                  >
-                    <span class="button-label">Guardar</span>
-                  </button>
-                  <button
-                    class="button button-text-secondary"
-                    (click)="toggleIssueEdit()"
-                  >
-                    <span class="button-label">Cancelar</span>
-                  </button>
-                </div>
+              </div>
+            </div>
+            <div class="data-card-footer" *ngIf="!issueReadOnly">
+              <div class="button-actions">
+                <button
+                  type="submit"
+                  class="button button-primary"
+                  [disabled]="issueForm.invalid"
+                >
+                  <span class="button-label">Guardar</span>
+                </button>
+                <button
+                  class="button button-text-secondary"
+                  (click)="toggleIssueEdit()"
+                >
+                  <span class="button-label">Cancelar</span>
+                </button>
               </div>
             </div>
           </form>

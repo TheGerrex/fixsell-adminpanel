@@ -44,6 +44,7 @@ export class ChatListsComponent implements OnInit {
 
   connectedClients: { id: string; roomName: string }[] = []; // Add property to store connected clients
   private clientsSubscription: Subscription | undefined;
+  private chatMessages: ChatMessage[] = []; // Store chat messages
 
   constructor(
     private clientService: ClientService,
@@ -71,6 +72,7 @@ export class ChatListsComponent implements OnInit {
         (clients) => {
           console.log('Updating clients:', clients);
           this.connectedClients = clients;
+          this.updateChatItems(); // Update chat items when connected clients are updated
           this.cdr.detectChanges(); // Manually trigger change detection
         },
         (error) => console.error('Error fetching connected clients:', error),
@@ -80,45 +82,50 @@ export class ChatListsComponent implements OnInit {
   private loadChatHistory(): void {
     this.chatHistoryService.getChatHistory().subscribe(
       (messages: ChatMessage[]) => {
-        const chatItems: ChatItem[] = [];
-        const groupedMessages: GroupedMessages = messages.reduce(
-          (acc: GroupedMessages, message: ChatMessage) => {
-            if (!acc[message.roomId]) {
-              acc[message.roomId] = [];
-            }
-            acc[message.roomId].push(message);
-            return acc;
-          },
-          {},
-        );
-
-        for (const roomId in groupedMessages) {
-          const roomMessages = groupedMessages[roomId];
-          const latestMessage = roomMessages.sort(
-            (a, b) =>
-              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-          )[0];
-
-          const senderName =
-            roomMessages.find((message) => message.senderName !== null)
-              ?.senderName || 'Anonymous'; // Use 'Anonymous' as fallback if no senderName is found
-
-          const isOnline = this.connectedClients.some(
-            (client) => client.roomName === roomId,
-          );
-
-          chatItems.push({
-            name: senderName,
-            lastMessage: latestMessage.message,
-            time: new Date(latestMessage.timestamp).toLocaleTimeString(),
-            status: isOnline ? 'online' : 'offline', // Set status based on connected clients
-          });
-        }
-
-        this.chats = chatItems;
-        this.cdr.detectChanges(); // Manually trigger change detection
+        this.chatMessages = messages; // Store chat messages
+        this.updateChatItems(); // Update chat items when chat history is loaded
       },
       (error) => console.error('Error loading chat history:', error),
     );
+  }
+
+  private updateChatItems(): void {
+    const chatItems: ChatItem[] = [];
+    const groupedMessages: GroupedMessages = this.chatMessages.reduce(
+      (acc: GroupedMessages, message: ChatMessage) => {
+        if (!acc[message.roomId]) {
+          acc[message.roomId] = [];
+        }
+        acc[message.roomId].push(message);
+        return acc;
+      },
+      {},
+    );
+
+    for (const roomId in groupedMessages) {
+      const roomMessages = groupedMessages[roomId];
+      const latestMessage = roomMessages.sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      )[0];
+
+      const senderName =
+        roomMessages.find((message) => message.senderName !== null)
+          ?.senderName || 'Anonymous'; // Use 'Anonymous' as fallback if no senderName is found
+
+      const isOnline = this.connectedClients.some(
+        (client) => client.roomName === roomId,
+      );
+
+      chatItems.push({
+        name: senderName,
+        lastMessage: latestMessage.message,
+        time: new Date(latestMessage.timestamp).toLocaleTimeString(),
+        status: isOnline ? 'online' : 'offline', // Set status based on connected clients
+      });
+    }
+
+    this.chats = chatItems;
+    this.cdr.detectChanges(); // Manually trigger change detection
   }
 }

@@ -13,7 +13,7 @@ $time-color: #999;
   display: flex;
   flex-direction: column;
   width: 350px;
-  height: 100vh;
+  height: calc(100vh - 80px);
   overflow: hidden;
   border: 1px solid $border-color;
   font-family: Arial, sans-serif;

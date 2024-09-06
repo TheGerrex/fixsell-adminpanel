@@ -20,7 +20,7 @@ export class PrinterListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Printer>();
-  filterValue = '';
+  searchTerm = '';
   isAdmin = false;
   printerData: Printer[] = [];
   isLoadingData = false;
@@ -73,8 +73,8 @@ export class PrinterListComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   seePrinter(printer: Printer) {

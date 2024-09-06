@@ -16,6 +16,8 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { AddPrinterBrandDialogComponent } from 'src/app/shared/components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 import { AddPrinterCategoryDialogComponent } from 'src/app/shared/components/add-printer-category-dialog/add-printer-category-dialog.component';
+import { MatSelectChange } from '@angular/material/select';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 @Component({
   selector: 'app-printer-create',
   templateUrl: './printer-create.component.html',
@@ -47,7 +49,7 @@ export class PrinterCreateComponent implements OnInit {
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -165,24 +167,20 @@ export class PrinterCreateComponent implements OnInit {
     }
   }
 
-  onColorChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.createPrinterForm.get('color')?.setValue(target.checked);
+  onColorChange(event: MatSlideToggleChange) {
+    this.createPrinterForm.get('color')?.setValue(event.checked);
   }
 
-  onRentableChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.createPrinterForm.get('rentable')?.setValue(target.checked);
+  onRentableChange(event: MatSlideToggleChange) {
+    this.createPrinterForm.get('rentable')?.setValue(event.checked);
   }
 
-  onSellableChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.createPrinterForm.get('sellable')?.setValue(target.checked);
+  onSellableChange(event: MatSlideToggleChange) {
+    this.createPrinterForm.get('sellable')?.setValue(event.checked);
   }
 
-  onDuplexUnitChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.createPrinterForm.get('duplexUnit')?.setValue(target.checked);
+  onDuplexUnitChange(event: MatSlideToggleChange) {
+    this.createPrinterForm.get('duplexUnit')?.setValue(event.checked);
   }
 
   isValidField(field: string): boolean | null {
@@ -353,18 +351,16 @@ export class PrinterCreateComponent implements OnInit {
     });
   }
 
-  brandSelected(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    if (selectElement.value === 'addNew') {
+  brandSelected(event: MatSelectChange) {
+    if (event.value === 'addNew') {
       this.openBrandDialog();
       // Reset the select to the previous value or to an empty value
       this.createPrinterForm.controls['brand'].setValue('');
     }
   }
 
-  categorySelected(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    if (selectElement.value === 'addNew') {
+  categorySelected(event: MatSelectChange) {
+    if (event.value === 'addNew') {
       this.openCategoryDialog();
       // Reset the select to the previous value or to an empty value
       this.createPrinterForm.controls['category'].setValue('');

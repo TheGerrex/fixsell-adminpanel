@@ -22,6 +22,10 @@
   @include mat.system-level-typography(m3-theme.$light-theme);
 }
 
+.dense-theme {
+  @include mat.all-component-themes(m3-theme.$light-dense-theme);
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -522,7 +526,7 @@ input:focus {
       0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
   &-icon {
-    padding: 0.5em;
+    padding: 0.625em;
     &-success {
       color: $success-color;
       border-color: $success-color;
@@ -611,7 +615,7 @@ input:focus {
     }
   }
   &-icon-text {
-    padding: 0.5em 20px 0.5em 16px;
+    padding: 0.625rem 20px 0.625rem 16px;
     mat-icon {
       font-size: 1.4rem;
     }
@@ -1034,13 +1038,16 @@ button.delete-icon mat-icon {
       display: flex;
       flex-wrap: wrap-reverse;
       justify-content: flex-end;
+      align-items: center;
       gap: 0.5em;
       .action-buttons {
         display: flex;
         gap: 0.5em;
       }
-      .search-box {
+      .search-box,
+      mat-form-field {
         display: flex;
+        min-width: 250px;
         @media (max-width: 768px) {
           display: none;
         }

@@ -1,4 +1,13 @@
 @import '_variables.scss';
+
+.printer-images {
+  width: 100%;
+  max-width: 500px;
+  align-self: flex-start;
+  @media (max-width: 1024px) {
+    max-width: 100%;
+  }
+}
 .file-container {
   display: flex;
   align-items: center;

@@ -15,7 +15,11 @@ export class AddPrinterBrandDialogComponent {
   constructor(
     private http: HttpClient,
     public dialogRef: MatDialogRef<AddPrinterBrandDialogComponent>
-  ) {}
+  ) { }
+
+  get brandNameError() {
+    return this.brandName.errors?.["serverError"];
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

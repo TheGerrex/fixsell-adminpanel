@@ -2,7 +2,7 @@
 <div>
   <form [formGroup]="createPrinterForm" class="section-card">
     <div class="section-card-header">
-      <h3 class="header-title">Nuevo Multifuncional</h3>
+      <h3 class="header-title">Nueva Multifuncional</h3>
       <div class="button-actions">
         <button
           ButtonResize
@@ -20,6 +20,7 @@
           (fileUpload)="onFileUploaded($event)"
           [productFolder]="'Multifuncionales'"
           [typeFolder]="'imagenes'"
+          style="width: 100%"
         ></app-file-upload>
         <app-product-image-grid
           [imageUrls]="imageUrlsArray"

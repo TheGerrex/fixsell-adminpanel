@@ -4,29 +4,39 @@
     <div class="table-header-container">
       <h3 class="table-title">Multifuncionales</h3>
       <div class="table-actions">
-        <div class="search-box">
-          <div class="search-box-container">
-            <mat-icon *ngIf="!searchTerm">search</mat-icon>
-            <input
-              class="search-input"
-              type="text"
-              placeholder="Buscar Usuarios"
-              [(ngModel)]="searchTerm"
-              (input)="applyFilter($event)"
-            />
-          </div>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+          <input
+            matInput
+            type="text"
+            placeholder="Buscar Multifuncionales"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilter($event)"
+        /></mat-form-field>
         <website-export
           [data]="printerData"
           [ignoreFields]="['id']"
         ></website-export>
         <button
+          ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="addPrinter()"
         >
-          <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Multifuncional</span>
         </button>
       </div>
+    </div>
+    <div class="table-search">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar Multifuncionales"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter($event)"
+      /></mat-form-field>
     </div>
   </div>
   <div class="responsive-table">
@@ -35,7 +45,7 @@
         mat-table
         matSort
         [dataSource]="dataSource"
-        class="printer-list-table"
+        class="printer-list-table dense-theme"
       >
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>id</th>

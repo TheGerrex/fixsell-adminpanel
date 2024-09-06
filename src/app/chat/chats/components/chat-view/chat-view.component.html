@@ -1,0 +1,64 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <div class="user-info">
+      <div class="user-avatar">G</div>
+      <div class="user-details">
+        <span class="user-name">Gerardo Garcia</span>
+        <span class="user-status">Web</span>
+      </div>
+    </div>
+    <div class="chat-actions">
+      <span class="chat-time">18:40 hrs</span>
+      <select class="transfer-button">
+        <option>Transferir</option>
+      </select>
+      <button class="finish-chat">Finalizar Chat</button>
+    </div>
+  </div>
+
+  <div class="chat-messages">
+    <div class="message system-message">
+      <span class="timestamp">05:19 PM</span>
+      <div class="message-content">
+        <p>
+          ¡Hola! 👋 Vamos a comenzar con su consulta. Estoy aquí para ayudarte
+          en lo que necesites.
+        </p>
+      </div>
+    </div>
+    <div class="message system-message">
+      <span class="timestamp">05:19 PM</span>
+      <div class="message-content">
+        <p>Para atenderlo mejor necesitamos algunos datos adicionales:</p>
+        <form class="user-form">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" placeholder="Cual es tu nombre?" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Cual es tu mail?" />
+          </div>
+          <div class="form-footer">
+            <span>2 de 2</span>
+            <button type="submit">Siguiente</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <div class="input-actions">
+      <button><mat-icon>format_bold</mat-icon></button>
+      <button><mat-icon>format_italic</mat-icon></button>
+      <button><mat-icon>format_underlined</mat-icon></button>
+      <button><mat-icon>more_vert</mat-icon></button>
+      <button><mat-icon>link</mat-icon></button>
+    </div>
+    <div class="input-text-chat">
+      <textarea placeholder="Escribe tu mensaje aquí..."></textarea>
+      <button class="send-message"><mat-icon>send</mat-icon></button>
+    </div>
+  </div>
+</div>

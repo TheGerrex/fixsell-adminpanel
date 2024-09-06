@@ -28,8 +28,6 @@ interface GroupedMessages {
 
 @Component({
   selector: 'app-chat-lists',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './chat-lists.component.html',
   styleUrls: ['./chat-lists.component.scss'],
 })

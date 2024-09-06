@@ -1,3 +1,11 @@
-:host {
-  display: block;
+.main-chat-container {
+  display: flex;
+}
+
+app-chat-lists {
+  flex: 0 0 350px; /* Fixed width for chat lists */
+}
+
+app-chat-view {
+  flex: 1; /* Take up remaining space */
 }

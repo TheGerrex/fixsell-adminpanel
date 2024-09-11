@@ -28,7 +28,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Consumible>();
-  filterValue = '';
+  searchTerm = '';
   isAdmin = false;
   consumibleData: Consumible[] = [];
   isLoadingData = false;
@@ -51,7 +51,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private toastService: ToastService,
     private consumiblesService: ConsumiblesService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
@@ -88,7 +88,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
       this.isLoadingData = false;
     });
   }
-  
+
 
   addConsumible() {
     this.router.navigateByUrl('website/consumibles/create');
@@ -103,8 +103,8 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   openConfirmDialog(consumible: Consumible): void {
@@ -125,30 +125,30 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (consumible.id){
-            this.deleteConsumible(consumible)
+        if (consumible.id) {
+          this.deleteConsumible(consumible)
         }
-        
+
       }
     });
   }
 
   deleteConsumible(consumible: Consumible) {
-  if (consumible.id){
-    this.consumiblesService.deleteConsumible(consumible.id).subscribe(
-      (response) => {
-        // Update consumibleData
-        this.consumibleData = this.consumibleData.filter((c) => c.id !== consumible.id);
-        
-        // Update dataSource
-        this.dataSource.data = this.consumibleData;
+    if (consumible.id) {
+      this.consumiblesService.deleteConsumible(consumible.id).subscribe(
+        (response) => {
+          // Update consumibleData
+          this.consumibleData = this.consumibleData.filter((c) => c.id !== consumible.id);
 
-        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+          // Update dataSource
+          this.dataSource.data = this.consumibleData;
+
+          this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 }

@@ -8,18 +8,17 @@ import {
 } from '@angular/forms';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 import { ConsumiblesService } from '../../services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
-import { FileUploadComponent } from 'src/app/shared/components/file-upload/file-upload.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
-
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { MatChipInputEvent } from '@angular/material/chips';
 @Component({
   selector: 'app-consumibles-create',
   templateUrl: './consumibles-create.component.html',
@@ -27,9 +26,10 @@ import { ValidatorsService } from 'src/app/shared/services/validators.service';
 })
 export class ConsumiblesCreateComponent implements OnInit {
   public createConsumibleForm!: FormGroup;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   public imageUrlsArray: string[] = [];
-  printerNameControl = new FormControl();
-  counterpartNameControl = new FormControl();
+  printerNameControl: FormControl = new FormControl();
+  counterpartNameControl: FormControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
   filteredCounterpartNames: Observable<string[]> | undefined;
   public consumibles: Consumible[] = [];
@@ -38,12 +38,11 @@ export class ConsumiblesCreateComponent implements OnInit {
   constructor(
     private toastService: ToastService,
     private router: Router,
-    private route: ActivatedRoute,
     private ConsumiblesService: ConsumiblesService,
     private fb: FormBuilder,
     private dialog: MatDialog,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initalizeForm();
@@ -91,7 +90,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     this.createConsumibleForm = this.fb.group({
       name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0.01)]],
-      currency: ['USD', Validators.required],
+      currency: ['MXN', Validators.required],
       brand: ['', [Validators.required]],
       sku: [''],
       shortDescription: [''],
@@ -104,6 +103,7 @@ export class ConsumiblesCreateComponent implements OnInit {
       color: ['', Validators.required],
       yield: [null],
       printers: this.fb.array([]),
+      printerInput: this.printerNameControl,
       counterparts: this.fb.array([]),
     });
   }
@@ -144,8 +144,9 @@ export class ConsumiblesCreateComponent implements OnInit {
     } else {
       this.addPrinter(printerName);
     }
+    console.log('printerNameControl:', this.printerNameControl);
 
-    this.printerNameControl.setValue(''); // Reset the autocomplete field
+    this.printerNameControl.setValue('Boba'); // Reset the autocomplete field
   }
 
   addCounterpartFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
@@ -166,10 +167,27 @@ export class ConsumiblesCreateComponent implements OnInit {
     this.counterpartNameControl.setValue(''); // Reset the autocomplete field
   }
 
+
   addPrinter(printerName: string = ''): void {
+    console.log('printerName:', printerName);
     (this.createConsumibleForm.get('printers') as FormArray).push(
       this.fb.control(printerName),
     );
+  }
+
+  onPrinterInput(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add the new printer
+    if ((value || '').trim()) {
+      this.addPrinter(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
   }
 
   removePrinter(index: number) {
@@ -338,11 +356,11 @@ export class ConsumiblesCreateComponent implements OnInit {
       Object.keys(this.createConsumibleForm.controls).forEach((key) => {
         console.log(
           'Key = ' +
-            key +
-            ', Value = ' +
-            this.createConsumibleForm.controls[key].value +
-            ', Valid = ' +
-            this.createConsumibleForm.controls[key].valid,
+          key +
+          ', Value = ' +
+          this.createConsumibleForm.controls[key].value +
+          ', Valid = ' +
+          this.createConsumibleForm.controls[key].valid,
         );
       });
       console.log('invalid form');

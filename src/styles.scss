@@ -42,7 +42,10 @@ html {
 }
 
 body {
-  background-color: $gray-100 !important;
+  background-color: map-get(
+    map-get(m3-theme.$palettes, neutral-variant),
+    70
+  ) !important;
 }
 
 /*----------------------[ Links ]-------------------------------*/
@@ -915,17 +918,23 @@ button.delete-icon mat-icon {
   padding: 1rem;
   gap: 1rem;
   row-gap: 0.5rem;
-  h3,
-  .header-title {
-    color: $text;
-    margin: 0;
-  }
   .button-actions {
     display: flex;
     gap: 0.5rem;
     button {
       flex-shrink: 0;
     }
+  }
+}
+
+.section-card-header-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  h3,
+  .header-title {
+    color: $text;
+    margin: 0;
   }
 }
 

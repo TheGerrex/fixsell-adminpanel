@@ -8,57 +8,12 @@
   }
 }
 
-.tag-inputs-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.custom-dropdown {
-  height: 100%;
-}
-
-.tag-inputs {
-  display: flex;
-  gap: 0.5em;
-}
-
 .color-box {
   display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 10px;
   margin-right: 5px;
-}
-
-.file-container {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: $border-radius;
-  background-color: #fff;
-  border: 1px solid $gray-300;
-  width: 100%;
-  max-width: 100%;
-  mat-icon {
-    flex-shrink: 0;
-  }
-  .file-name {
-    overflow-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-    flex-grow: 1;
-  }
-}
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
 }
 
 .short-description-textarea {

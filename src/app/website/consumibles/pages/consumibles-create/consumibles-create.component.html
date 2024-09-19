@@ -243,7 +243,6 @@
                 cdkAutosizeMinRows="1"
                 cdkAutosizeMaxRows="5"
                 formControlName="longDescription"
-                class="short-description-textarea"
               ></textarea>
               <mat-error *ngIf="isValidField('longDescription')">{{
                 getFieldError('longDescription')
@@ -291,17 +290,6 @@
                     </mat-option>
                   </ng-container>
                 </mat-autocomplete>
-                <!-- <mat-autocomplete
-                  #autoPrinter="matAutocomplete"
-                  (optionSelected)="addPrinterFromAutocomplete($event)"
-                >
-                  <mat-option
-                    *ngFor="let printerName of filteredPrinterNames | async"
-                    [value]="printerName"
-                  >
-                    {{ printerName }}
-                  </mat-option>
-                </mat-autocomplete> -->
               </mat-chip-grid>
             </mat-form-field>
           </div>

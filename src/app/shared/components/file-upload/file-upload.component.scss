@@ -33,8 +33,37 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    gap: 0.5rem;
     .spinner {
       margin-bottom: 10px;
     }
   }
+}
+
+.file-drop-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: $text-secondary;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid $gray-300;
+}
+
+.separator::before {
+  margin-right: 0.5em;
+}
+
+.separator::after {
+  margin-left: 0.5em;
 }

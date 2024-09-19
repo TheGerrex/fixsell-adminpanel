@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -18,7 +18,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
   selector: 'app-consumibles-create',
   templateUrl: './consumibles-create.component.html',
@@ -35,6 +36,8 @@ export class ConsumiblesCreateComponent implements OnInit {
   public consumibles: Consumible[] = [];
   Consumible: Consumible | undefined = undefined;
   isSubmitting = false;
+  models: string[] = [];
+
   constructor(
     private toastService: ToastService,
     private router: Router,
@@ -42,6 +45,7 @@ export class ConsumiblesCreateComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private validatorsService: ValidatorsService,
+    private changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -86,6 +90,24 @@ export class ConsumiblesCreateComponent implements OnInit {
     );
   }
 
+  get printers() {
+    return (this.createConsumibleForm.get('printers') as FormArray).controls as FormControl[];
+  }
+
+  get counterparts() {
+    return (this.createConsumibleForm.get('counterparts') as FormArray)
+      .controls as FormControl[];
+  }
+
+  get compatibleModelsControls() {
+    return (this.createConsumibleForm.get('compatibleModels') as FormArray)
+      .controls as FormControl[];
+  }
+
+  get images(): FormArray {
+    return this.createConsumibleForm.get('images') as FormArray;
+  }
+
   initalizeForm() {
     this.createConsumibleForm = this.fb.group({
       name: ['', Validators.required],
@@ -99,11 +121,10 @@ export class ConsumiblesCreateComponent implements OnInit {
       origen: ['', Validators.required],
       volume: [null],
       category: ['', Validators.required],
-      compatibleModels: this.fb.array(['']),
+      compatibleModels: this.fb.array([]),
       color: ['', Validators.required],
       yield: [null],
       printers: this.fb.array([]),
-      printerInput: this.printerNameControl,
       counterparts: this.fb.array([]),
     });
   }
@@ -132,31 +153,91 @@ export class ConsumiblesCreateComponent implements OnInit {
     });
   }
 
+  addPrinter(printerName: string = ''): void {
+    console.log('printerName:', printerName);
+    (this.createConsumibleForm.get('printers') as FormArray).push(
+      this.fb.control(printerName),
+    );
+  }
+
+  removePrinter(printerName: string) {
+    const printers = this.createConsumibleForm.get('printers') as FormArray;
+    const index = printers.controls.findIndex(control => control.value === printerName);
+
+    if (index !== -1) {
+      printers.removeAt(index);
+    }
+  }
+
+  isPrinterAdded(printerName: string) {
+    // Implement your logic here to check whether the printer is already added.
+    return this.printers.map(control => control.value).includes(printerName);
+  }
+
   addPrinterFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
     const printerName = event.option.viewValue;
     const printers = this.createConsumibleForm.get('printers') as FormArray;
-    const emptyIndex = printers.controls.findIndex(
-      (control) => control.value === '',
-    );
+
+    // Check if the printer is already added.
+    if (printers.controls.some(control => control.value === printerName)) {
+      this.printerNameControl.setValue(''); // Reset the autocomplete field
+      return; // Return early to prevent adding the printer again.
+    }
+
+    const emptyIndex = printers.controls.findIndex(control => control.value === '');
 
     if (emptyIndex !== -1) {
       printers.at(emptyIndex).setValue(printerName);
     } else {
       this.addPrinter(printerName);
     }
-    console.log('printerNameControl:', this.printerNameControl);
 
-    this.printerNameControl.setValue('Boba'); // Reset the autocomplete field
+    this.printerNameControl.setValue(''); // Reset the autocomplete field
+  }
+
+  togglePrinterSelection(event: MatCheckboxChange, printerName: string) {
+    if (event.checked) {
+      this.addPrinter(printerName);
+    } else {
+      this.removePrinter(printerName);
+    }
+
+    // Trigger change detection manually.
+    this.changeDetector.detectChanges();
+  }
+
+
+  addCounterpart(counterpart: string = ''): void {
+    (this.createConsumibleForm.get('counterparts') as FormArray).push(
+      this.fb.control(counterpart),
+    );
+  }
+
+  removeCounterpart(counterpartName: string) {
+    const counterparts = this.createConsumibleForm.get('counterparts') as FormArray;
+    const index = counterparts.controls.findIndex(control => control.value === counterpartName);
+
+    if (index !== -1) {
+      counterparts.removeAt(index);
+    }
+  }
+
+  isCounterpartAdded(counterpartName: string): boolean {
+    // Implement your logic here to check whether the counterpart is already added.
+    return this.counterparts.map(control => control.value).includes(counterpartName);
   }
 
   addCounterpartFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
     const counterpartName = event.option.viewValue;
-    const counterparts = this.createConsumibleForm.get(
-      'counterparts',
-    ) as FormArray;
-    const emptyIndex = counterparts.controls.findIndex(
-      (control) => control.value === '',
-    );
+    const counterparts = this.createConsumibleForm.get('counterparts') as FormArray;
+
+    // Check if the counterpart is already added.
+    if (counterparts.controls.some(control => control.value === counterpartName)) {
+      this.counterpartNameControl.setValue(''); // Reset the autocomplete field
+      return; // Return early to prevent adding the counterpart again.
+    }
+
+    const emptyIndex = counterparts.controls.findIndex(control => control.value === '');
 
     if (emptyIndex !== -1) {
       counterparts.at(emptyIndex).setValue(counterpartName);
@@ -167,75 +248,63 @@ export class ConsumiblesCreateComponent implements OnInit {
     this.counterpartNameControl.setValue(''); // Reset the autocomplete field
   }
 
-
-  addPrinter(printerName: string = ''): void {
-    console.log('printerName:', printerName);
-    (this.createConsumibleForm.get('printers') as FormArray).push(
-      this.fb.control(printerName),
-    );
-  }
-
-  onPrinterInput(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    // Add the new printer
-    if ((value || '').trim()) {
-      this.addPrinter(value.trim());
+  toggleCounterpartSelection(event: MatCheckboxChange, counterpartName: string) {
+    if (event.checked) {
+      this.addCounterpart(counterpartName);
+    } else {
+      console.log('counterpartName:', counterpartName);
+      this.removeCounterpart(counterpartName);
     }
 
-    // Reset the input value
+    // Trigger change detection manually.
+    this.changeDetector.detectChanges();
+  }
+
+  addModel(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value.trim();
+
+    // Add the model.
+    if (value) {
+      this.models.push(value);
+      this.syncModels();
+    }
+
+    // Reset the input value.
     if (input) {
       input.value = '';
     }
   }
 
-  removePrinter(index: number) {
-    const printers = this.createConsumibleForm.get('printers') as FormArray;
-    printers.removeAt(index);
+  removeModel(model: string): void {
+    const index = this.models.indexOf(model);
+
+    if (index !== -1) {
+      this.models.splice(index, 1);
+      this.syncModels();
+    }
   }
 
-  addCounterpart(counterpart: string = ''): void {
-    (this.createConsumibleForm.get('counterparts') as FormArray).push(
-      this.fb.control(counterpart),
-    );
+  editModel(index: number, event: MatChipEditedEvent): void {
+    const value = event.value.trim();
+
+    // Update the model.
+    if (value) {
+      this.models[index] = value;
+      this.syncModels();
+    }
   }
 
-  removeCounterpart(index: number) {
-    const counterparts = this.createConsumibleForm.get(
-      'counterparts',
-    ) as FormArray;
-    counterparts.removeAt(index);
-  }
+  syncModels(): void {
+    const models = this.createConsumibleForm.get('compatibleModels') as FormArray;
 
-  get printers() {
-    return (this.createConsumibleForm.get('printers') as FormArray).controls;
-  }
+    // Clear the FormArray.
+    while (models.length !== 0) {
+      models.removeAt(0);
+    }
 
-  get counterparts() {
-    return (this.createConsumibleForm.get('counterparts') as FormArray)
-      .controls;
-  }
-
-  get compatibleModelsControls() {
-    return (this.createConsumibleForm.get('compatibleModels') as FormArray)
-      .controls;
-  }
-
-  addModel() {
-    (this.createConsumibleForm.get('compatibleModels') as FormArray).push(
-      new FormControl(''),
-    );
-  }
-
-  removeModel(index: number) {
-    (this.createConsumibleForm.get('compatibleModels') as FormArray).removeAt(
-      index,
-    );
-  }
-
-  get images(): FormArray {
-    return this.createConsumibleForm.get('images') as FormArray;
+    // Populate the FormArray with the models.
+    this.models.forEach(model => models.push(this.fb.control(model)));
   }
 
   addImage(): void {
@@ -245,6 +314,7 @@ export class ConsumiblesCreateComponent implements OnInit {
   removeImage(index: number): void {
     this.images.removeAt(index);
   }
+
   previewImage(index: number): void {
     const imageUrl = this.images.at(index).value;
     this.dialog.open(DialogComponent, {

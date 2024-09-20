@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Printer } from '../../../interfaces/printer.interface';
 import { DealService } from '../../services/deal.service';
 import {
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -17,6 +15,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Deal } from 'src/app/website/interfaces/deal.interface';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-deal-create',
@@ -48,7 +47,7 @@ export class DealCreateComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -67,11 +66,11 @@ export class DealCreateComponent implements OnInit {
       switchMap((value) =>
         this.selectedType.getValue() === 'multifuncional'
           ? this.dealService
-              .getAllPrinterNames()
-              .pipe(map((productNames) => this._filter(value, productNames)))
+            .getAllPrinterNames()
+            .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
-              .getAllConsumiblesNames()
-              .pipe(map((productNames) => this._filter(value, productNames))),
+            .getAllConsumiblesNames()
+            .pipe(map((productNames) => this._filter(value, productNames))),
       ),
     );
   }
@@ -91,15 +90,14 @@ export class DealCreateComponent implements OnInit {
       dealStartDate: ['', Validators.required],
       dealEndDate: ['', Validators.required],
       dealPrice: ['', Validators.required],
-      dealCurrency: ['USD', Validators.required],
+      dealCurrency: ['MXN', Validators.required],
       dealDiscountPercentage: ['', Validators.required],
       dealDescription: ['', Validators.required],
     });
   }
 
-  onTypeChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const value = target?.value;
+  onTypeChange(event: MatSelectChange): void {
+    const value = event.value;
     // Update the BehaviorSubject with the new value
     this.selectedType.next(value);
 
@@ -158,8 +156,8 @@ export class DealCreateComponent implements OnInit {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
@@ -182,8 +180,8 @@ export class DealCreateComponent implements OnInit {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
@@ -194,15 +192,12 @@ export class DealCreateComponent implements OnInit {
     if (this.createDealForm.get('dealDiscountPercentage')?.value) {
       const discount =
         Number(this.createDealForm.get('printerPrice')?.value) *
-        (Number(this.createDealForm.get('dealDiscountPercentage')?.value) /
-          100);
+        (Number(this.createDealForm.get('dealDiscountPercentage')?.value) / 100);
       this.createDealForm
         .get('dealPrice')
         ?.setValue(
-          (Number(this.createDealForm.get('printerPrice')?.value) - discount)
-            .toFixed(1)
-            .toString(),
-        ); // Convert the calculated price to a string
+          Number((Number(this.createDealForm.get('printerPrice')?.value) - discount).toFixed(2))
+        );
     }
   }
 
@@ -220,7 +215,7 @@ export class DealCreateComponent implements OnInit {
     }
   }
 
-  setSelectedPrinter(event: any) {}
+  setSelectedPrinter(event: any) { }
 
   isValidField(field: string): boolean | null {
     return this.validatorsService.isValidField(this.createDealForm, field);
@@ -235,11 +230,11 @@ export class DealCreateComponent implements OnInit {
       Object.keys(this.createDealForm.controls).forEach((key) => {
         console.log(
           'Key = ' +
-            key +
-            ', Value = ' +
-            this.createDealForm.controls[key].value +
-            ', Valid = ' +
-            this.createDealForm.controls[key].valid,
+          key +
+          ', Value = ' +
+          this.createDealForm.controls[key].value +
+          ', Valid = ' +
+          this.createDealForm.controls[key].valid,
         );
       });
       console.log('invalid form');

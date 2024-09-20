@@ -1,130 +1,220 @@
 <div>
-    <form [formGroup]="createDealForm" class="deal-container">
-        <div class="deal-header">
-            <h2>Crear Promocion</h2>
-            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
-              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
+  <form [formGroup]="createDealForm" class="section-card">
+    <div class="section-card-header">
+      <div class="section-card-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="header-title">Nueva Promoción</h3>
+      </div>
+      <div class="button-actions">
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="submitForm()"
+        >
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Promoción</span>
+        </button>
+      </div>
+    </div>
+
+    <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+
+    <div class="section-card-body">
+      <div class="form-container">
+        <div class="form-grid">
+          <!-- Type Selector -->
+          <div class="form-item quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo</mat-label>
+              <mat-select
+                (selectionChange)="onTypeChange($event)"
+                formControlName="selectedType"
+              >
+                <mat-option value="multifuncional">Multifuncional</mat-option>
+                <mat-option value="consumible">Consumible</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Product Selector -->
+          <div class="form-item three-quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                (selectedType | async) === 'multifuncional'
+                  ? 'Multifuncional'
+                  : 'Consumible'
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Elige {{ selectedType.value }}"
+                [formControl]="productControl"
+                [matAutocomplete]="auto"
+              />
+            </mat-form-field>
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="addProductFromAutocomplete($event)"
+              class="form-control"
+            >
+              <mat-option
+                *ngFor="let productName of filteredProductNames | async"
+                [value]="productName"
+              >
+                {{ productName }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+
+          <!-- printer price -->
+          <!-- <div class="form-item quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Precio</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="text"
+                placeholder="Elige {{ selectedType.value }}"
+                formControlName="printerPrice"
+                [matAutocomplete]="auto"
+              />
+              <mat-error *ngIf="isValidField('printerPrice')">{{
+                getFieldError('printerPrice')
+              }}</mat-error>
+            </mat-form-field>
+          </div> -->
+
+          <!-- deal start date -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Inicio</mat-label>
+              <input
+                matInput
+                [matDatepicker]="ticketStartDatepicker"
+                id="dealStartDate"
+                formControlName="dealStartDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="ticketStartDatepicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #ticketStartDatepicker>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+              <mat-error *ngIf="isValidField('dealStartDate')">{{
+                getFieldError('dealStartDate')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- deal end date -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Finalización</mat-label>
+              <input
+                matInput
+                [matDatepicker]="ticketEndDatepicker"
+                id="dealEndDate"
+                formControlName="dealEndDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="ticketEndDatepicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #ticketEndDatepicker>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+              <mat-error *ngIf="isValidField('dealEndDate')">{{
+                getFieldError('dealEndDate')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- deal price -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Precio Promoción</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="number"
+                placeholder="$1000"
+                formControlName="dealPrice"
+              />
+              <mat-select
+                matTextSuffix
+                formControlName="dealCurrency"
+                [value]="deal?.dealCurrency"
+              >
+                <mat-option value="MXN">MXN</mat-option>
+                <mat-option value="USD">USD</mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="isValidField('dealPrice')">{{
+                getFieldError('dealPrice')
+              }}</mat-error>
+            </mat-form-field>
+            <button
+              type="button"
+              class="button button-outline-secondary"
+              style="margin-top: 0.5rem"
+              (click)="calculatePercentage()"
+            >
+              <span class="button-label">Calcular Porcentaje</span>
             </button>
+          </div>
+
+          <!-- deal percentage -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Porcentaje de Descuento</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="50"
+                formControlName="dealDiscountPercentage"
+              />
+              <span matTextSuffix>%</span>
+
+              <mat-error *ngIf="isValidField('dealDiscountPercentage')">{{
+                getFieldError('dealDiscountPercentage')
+              }}</mat-error>
+            </mat-form-field>
+            <button
+              type="button"
+              class="button button-outline-secondary"
+              style="margin-top: 0.5rem"
+              (click)="calculatePrice()"
+            >
+              <span class="button-label">Calcular Precio</span>
+            </button>
+          </div>
+
+          <!-- deal description -->
+          <div class="form-item full-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="2"
+                formControlName="dealDescription"
+              ></textarea>
+              <mat-error *ngIf="isValidField('dealDescription')">{{
+                getFieldError('dealDescription')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
         </div>
-
-        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
-
-        <div class="deal-info">
-            <div class="deal-form-container">
-                <div class="deal-data">
-
-                    <!-- Type Selector -->
-                    <div class="deal-data-item full-row">
-                        <h5>Tipo</h5>
-                        <select class="form-control" formControlName="selectedType" (change)="onTypeChange($event)">
-                          <option value="multifuncional">Multifuncional</option>
-                          <option value="consumible">Consumible</option>
-                        </select>
-                    </div>  
-
-                    <!-- Product Selector -->
-                    <div class="deal-data-item">
-                        <h5>
-                            {{ (selectedType | async) === "multifuncional" ? "Multifuncional" : "Consumible" }}
-                        </h5>
-                        <input type="text" placeholder="Elige {{ selectedType.value }}" aria-label="Number" class="form-control example-input" [formControl]="productControl" [matAutocomplete]="auto" />
-                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addProductFromAutocomplete($event)" class="form-control">
-                            <mat-option *ngFor="let productName of filteredProductNames | async" [value]="productName">
-                                {{ productName }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </div>
-
-                    <!-- printer price -->
-                    <div class="deal-data-item">
-                        <h5>Precio</h5>
-                        <input type="text" class="form-control" id="printerPrice" formControlName="printerPrice" [class.is-invalid]="
-                          createDealForm.controls['printerPrice'].invalid &&
-                          createDealForm.controls['printerPrice'].touched" />
-                        <span *ngIf="isValidField('printerPrice')" class="form-text text-danger">
-                          {{ getFieldError("printerPrice") }}
-                        </span>
-                    </div>
-
-                    <!-- deal start date -->
-                    <div class="deal-data-item">
-                        <h5>Fecha de Inicio</h5>
-                        <input type="date" class="form-control" id="dealStartDate" formControlName="dealStartDate" [class.is-invalid]="
-                createDealForm.controls['dealStartDate'].invalid &&
-                createDealForm.controls['dealStartDate'].touched
-              " />
-                        <span *ngIf="isValidField('dealStartDate')" class="form-text text-danger">
-              {{ getFieldError("dealStartDate") }}
-            </span>
-                    </div>
-
-                    <!-- deal end date -->
-                    <div class="deal-data-item">
-                        <h5>Fecha de Finalizacion</h5>
-                        <input type="date" class="form-control" id="dealEndDate" formControlName="dealEndDate" [class.is-invalid]="
-                createDealForm.controls['dealEndDate'].invalid &&
-                createDealForm.controls['dealEndDate'].touched
-              " />
-                        <span *ngIf="isValidField('dealEndDate')" class="form-text text-danger">
-              {{ getFieldError("dealEndDate") }}
-            </span>
-                    </div>
-
-                    <!-- deal price -->
-                    <div class="deal-data-item full-row">
-                        <h5>Precio Promoción</h5>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" class="form-control" formControlName="dealPrice" [class.is-invalid]="
-                  createDealForm.controls['dealPrice'].invalid &&
-                  createDealForm.controls['dealPrice'].touched
-                " />
-                            <div class="input-group-text">
-                                <select class="currency-select" formControlName="dealCurrency" [value]="deal?.dealCurrency">
-                  <option value="USD">USD</option>
-                  <option value="MXN">MXN</option>
-                </select>
-                            </div>
-                            <button type="button" class="btn btn-outline-secondary" (click)="calculatePercentage()">
-                Calcular Porcentaje
-              </button>
-                        </div>
-                        <span *ngIf="isValidField('dealPrice')" class="form-text text-danger">
-              {{ getFieldError("dealPrice") }}
-            </span>
-                    </div>
-
-                    <!-- deal percentage -->
-                    <div class="deal-data-item full-row">
-                        <h5>Porcentaje de Descuento</h5>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="dealDiscountPercentage" formControlName="dealDiscountPercentage" [class.is-invalid]="
-                  createDealForm.controls['dealDiscountPercentage'].invalid &&
-                  createDealForm.controls['dealDiscountPercentage'].touched
-                " />
-                            <span class="input-group-text">%</span>
-                            <button type="button" class="btn btn-outline-secondary" (click)="calculatePrice()">
-                Calcular Precio
-              </button>
-                        </div>
-                        <span *ngIf="isValidField('dealDiscountPercentage')" class="form-text text-danger">
-              {{ getFieldError("dealDiscountPercentage") }}
-            </span>
-                    </div>
-
-                    <!-- deal description -->
-                    <div class="deal-data-item full-row">
-                        <h5>Descripcion</h5>
-                        <textarea class="form-control" id="dealDescription" rows="3" formControlName="dealDescription" [class.is-invalid]="
-                createDealForm.controls['dealDescription'].invalid &&
-                createDealForm.controls['dealDescription'].touched
-              "></textarea>
-                        <span *ngIf="isValidField('dealDescription')" class="form-text text-danger">
-              {{ getFieldError("dealDescription") }}
-            </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+      </div>
+    </div>
+  </form>
 </div>

@@ -24,7 +24,7 @@ export class DealListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Deal>();
-  filterValue = '';
+  searchTerm = '';
   isAdmin = false;
   dealData: Deal[] = [];
   isLoadingData = false;
@@ -45,7 +45,7 @@ export class DealListComponent implements OnInit {
     private dialogService: DialogService,
     private toastService: ToastService,
     private dealService: DealService
-  ) {}
+  ) { }
 
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
@@ -115,8 +115,8 @@ export class DealListComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   openConfirmDialog(deal: Deal): void {
@@ -137,26 +137,26 @@ export class DealListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (deal.id){
-            this.deleteDeal(deal)
+        if (deal.id) {
+          this.deleteDeal(deal)
         }
-        
+
       }
     });
   }
 
   deleteDeal(deal: Deal) {
-  if (deal.id){
-    this.dealService.deleteDealById(deal.id).subscribe(
-      (response) => {
-        this.dealData = this.dealData.filter((d) => d.id !== deal.id);
-        this.dataSource.data = this.dealData;
-        this.toastService.showSuccess('Promoción eliminado con exito', 'Aceptar');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+    if (deal.id) {
+      this.dealService.deleteDealById(deal.id).subscribe(
+        (response) => {
+          this.dealData = this.dealData.filter((d) => d.id !== deal.id);
+          this.dataSource.data = this.dealData;
+          this.toastService.showSuccess('Promoción eliminado con exito', 'Aceptar');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 

@@ -35,7 +35,7 @@ export class EditUserRoleDialogComponent {
     if (this.roleName.valid) {
       this.rolService.editRole(this.data.roleId, this.roleName.value).subscribe({
         next: () => {
-          this.toastService.showSuccess('Rol editado con éxito', 'Close');
+          this.toastService.showSuccess('Rol actualizado con éxito', 'Close');
           this.dialogRef.close();
         },
         error: (error) => {

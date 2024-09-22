@@ -280,7 +280,7 @@ export class DealCreateComponent implements OnInit {
       (response: Deal) => {
         console.log('Response:', response);
         this.isSubmitting = false;
-        this.toastService.showSuccess('Promoción creado', 'Cerrar'); // Show success toast
+        this.toastService.showSuccess('Promoción creado con éxito', 'Cerrar'); // Show success toast
         this.router.navigate(['/website/deals/', response.id]);
       },
       (error) => {

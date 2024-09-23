@@ -7,6 +7,12 @@
         <span class="user-status">Web</span>
       </div>
     </div>
+    <div class="connection-status">
+      <div id="server-status"></div>
+      <button (click)="toggleConnection()">
+        {{ isConnected ? 'Disconnect' : 'Connect' }}
+      </button>
+    </div>
     <div class="chat-actions">
       <span class="chat-time">18:40 hrs</span>
       <select class="transfer-button">
@@ -17,36 +23,23 @@
   </div>
 
   <div class="chat-messages">
-    <div class="message system-message">
-      <span class="timestamp">05:19 PM</span>
-      <div class="message-content">
-        <p>
-          ¡Hola! 👋 Vamos a comenzar con su consulta. Estoy aquí para ayudarte
-          en lo que necesites.
-        </p>
-      </div>
-    </div>
-    <div class="message system-message">
-      <span class="timestamp">05:19 PM</span>
-      <div class="message-content">
-        <p>Para atenderlo mejor necesitamos algunos datos adicionales:</p>
-        <form class="user-form">
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" placeholder="Cual es tu nombre?" />
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Cual es tu mail?" />
-          </div>
-          <div class="form-footer">
-            <span>2 de 2</span>
-            <button type="submit">Siguiente</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <ul id="messages-ul">
+      <li *ngFor="let message of messages$ | async">
+        <div
+          class="message"
+          [ngClass]="{
+            'user-message': message.isUser,
+            'system-message': message.isSystem
+          }"
+        >
+          <span class="message-timestamp">{{ message.timestamp }}</span>
+          <span class="message-content">{{ message.content }}</span>
+        </div>
+      </li>
+    </ul>
   </div>
+
+  <ul id="messages-ul"></ul>
 
   <div class="chat-input">
     <div class="input-actions">
@@ -57,8 +50,27 @@
       <button><mat-icon>link</mat-icon></button>
     </div>
     <div class="input-text-chat">
-      <textarea placeholder="Escribe tu mensaje aquí..."></textarea>
-      <button class="send-message"><mat-icon>send</mat-icon></button>
+      <textarea
+        [(ngModel)]="newMessage"
+        placeholder="Escribe tu mensaje aquí..."
+      ></textarea>
+      <button class="send-message" (click)="onSendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
     </div>
   </div>
+
+  <!-- New elements added below -->
+  <ul id="messages-ul"></ul>
+  <!-- <form id="message-form">
+    <input
+      id="message-input"
+      type="text"
+      [(ngModel)]="newMessage"
+      placeholder="Type your message..."
+    />
+    <button type="submit">Send</button>
+  </form>
+  <ul id="messages-ul"></ul>
+  <ul id="clients-ul"></ul> -->
 </div>

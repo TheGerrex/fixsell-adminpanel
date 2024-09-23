@@ -73,46 +73,56 @@ export class ChatService {
     onChatHistoryReceived: (chatHistory: any[]) => void,
   ): void {
     // Element selectors
-    const serverStatusLabel = document.querySelector('#server-status')!;
+    const serverStatusLabel = document.querySelector('#server-status');
     const messageForm =
-      document.querySelector<HTMLFormElement>('#message-form')!;
+      document.querySelector<HTMLFormElement>('#message-form');
     const messageInput =
-      document.querySelector<HTMLInputElement>('#message-input')!;
-    const messagesUl =
-      document.querySelector<HTMLUListElement>('#messages-ul')!;
-    const clientsUl = document.querySelector('#clients-ul')!;
+      document.querySelector<HTMLInputElement>('#message-input');
+    const messagesUl = document.querySelector<HTMLUListElement>('#messages-ul');
+    const clientsUl = document.querySelector('#clients-ul');
 
     // Current room name storage, made mutable by wrapping in an object
     let roomState = { currentRoomName: '' };
 
     // Socket event listeners
-    ChatService.setupSocketListeners(
-      socket,
-      serverStatusLabel,
-      clientsUl,
-      messagesUl,
-      onRoomJoined,
-      roomState,
-    );
+    if (serverStatusLabel && clientsUl && messagesUl) {
+      ChatService.setupSocketListeners(
+        socket,
+        serverStatusLabel,
+        clientsUl,
+        messagesUl,
+        onRoomJoined,
+        roomState,
+      );
+    }
 
     // Form submission listener
-    ChatService.setupFormListener(messageForm, messageInput, socket, roomState);
+    if (messageForm && messageInput) {
+      ChatService.setupFormListener(
+        messageForm,
+        messageInput,
+        socket,
+        roomState,
+      );
+    }
 
     // Handle chat history event
     socket.on('chatHistory', (chatHistory) => {
       console.log('Received chat history:', chatHistory);
-      onChatHistoryReceived(chatHistory); // Call the callback with the chat history
-      // Clear existing messages
-      messagesUl.innerHTML = '';
-      // Iterate over chat history and display each message
-      chatHistory.forEach(
-        (chatHistoryItem: { senderId: any; message: any }) => {
-          const messageLi = document.createElement('li');
-          // Format the message as "senderId: Message"
-          messageLi.textContent = `${chatHistoryItem.senderId}: ${chatHistoryItem.message}`;
-          messagesUl.appendChild(messageLi);
-        },
-      );
+      onChatHistoryReceived(chatHistory);
+      if (messagesUl) {
+        // Clear existing messages
+        messagesUl.innerHTML = '';
+        // Iterate over chat history and display each message
+        chatHistory.forEach(
+          (chatHistoryItem: { senderId: any; message: any }) => {
+            const messageLi = document.createElement('li');
+            // Format the message as "senderId: Message"
+            messageLi.textContent = `${chatHistoryItem.senderId}: ${chatHistoryItem.message}`;
+            messagesUl.appendChild(messageLi);
+          },
+        );
+      }
     });
   }
 

@@ -1,16 +1,23 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../../services/chat.service';
 import { ClientService } from '../../services/client.service';
 import { ChatHistoryService } from '../../services/chat-history.service'; // Import ChatHistoryService
 import { interval, startWith, Subscription, switchMap } from 'rxjs';
-
+import { CommunicationService } from '../../services/communication.service';
 interface ChatItem {
   name: string;
   lastMessage: string;
   time: string;
   status: 'online' | 'offline';
   unreadCount?: number;
+  roomId: string;
 }
 
 interface ChatMessage {
@@ -32,6 +39,8 @@ interface GroupedMessages {
   styleUrls: ['./chat-lists.component.scss'],
 })
 export class ChatListsComponent implements OnInit {
+  @Output() chatRoomSelected: EventEmitter<string> = new EventEmitter<string>();
+
   chats: ChatItem[] = [];
   tabs = [
     { name: 'Sin Operador', count: 0 },
@@ -48,6 +57,7 @@ export class ChatListsComponent implements OnInit {
     private clientService: ClientService,
     private chatHistoryService: ChatHistoryService, // Inject ChatHistoryService
     private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
+    private communicationService: CommunicationService, // Inject CommunicationService
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +68,11 @@ export class ChatListsComponent implements OnInit {
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
     // Here you would typically filter the chats based on the active tab
+  }
+
+  selectChat(roomId: string) {
+    this.communicationService.emitChatRoomSelected(roomId);
+    console.log('Room selected:', roomId);
   }
 
   private fetchConnectedClients(): void {
@@ -120,6 +135,7 @@ export class ChatListsComponent implements OnInit {
         lastMessage: latestMessage.message,
         time: new Date(latestMessage.timestamp).toLocaleTimeString(),
         status: isOnline ? 'online' : 'offline', // Set status based on connected clients
+        roomId: roomId,
       });
     }
 

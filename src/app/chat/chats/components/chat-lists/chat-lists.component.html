@@ -12,7 +12,11 @@
     <input type="text" placeholder="Buscar por nombre" />
   </div>
   <div class="chat-items">
-    <div class="chat-item" *ngFor="let chat of chats">
+    <div
+      class="chat-item"
+      *ngFor="let chat of chats"
+      (click)="selectChat(chat.roomId)"
+    >
       <div
         class="avatar"
         [ngClass]="{

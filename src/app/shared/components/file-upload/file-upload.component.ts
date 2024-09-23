@@ -22,7 +22,7 @@ export class FileUploadComponent {
   @Input() printer?: Printer;
   @Input() consumible?: Consumible;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(private http: HttpClient, private toastService: ToastService) { }
 
   onDragOver(event: Event) {
     event.preventDefault();
@@ -35,13 +35,49 @@ export class FileUploadComponent {
   }
 
   onDrop(event: DragEvent) {
-  event.preventDefault();
-  this.isDragging = false; // Set isDragging to false when drop event occurs
+    event.preventDefault();
+    this.isDragging = false; // Set isDragging to false when drop event occurs
 
-  if (event.dataTransfer) {
-    const files = event.dataTransfer.files;
+    if (event.dataTransfer) {
+      const files = event.dataTransfer.files;
 
-    if (files.length) {
+      if (files.length) {
+        if (this.printer) {
+          this.uploadFiles(
+            files,
+            this.productFolder,
+            this.typeFolder,
+            this.printer?.brand || '',
+            this.printer?.model || ''
+          );
+        } else if (this.consumible) {
+          this.uploadFiles(
+            files,
+            this.productFolder,
+            this.typeFolder,
+            this.consumible?.brand || '',
+            this.consumible?.name || ''
+          );
+        } else {
+          // Upload files to a temporary folder if printer or consumible is not yet available
+          console.log('Uploading to temporary folder');
+          this.uploadFiles(
+            files,
+            this.productFolder,
+            this.typeFolder,
+            '',
+            ''
+          );
+        }
+      }
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    const files: FileList | null = fileInput.files || null;
+
+    if (files && files.length) {
       if (this.printer) {
         this.uploadFiles(
           files,
@@ -71,42 +107,6 @@ export class FileUploadComponent {
       }
     }
   }
-}
-
-onFileSelected(event: Event) {
-  const fileInput = event.target as HTMLInputElement;
-  const files: FileList | null = fileInput.files || null;
-
-  if (files && files.length) {
-    if (this.printer) {
-      this.uploadFiles(
-        files,
-        this.productFolder,
-        this.typeFolder,
-        this.printer?.brand || '',
-        this.printer?.model || ''
-      );
-    } else if (this.consumible) {
-      this.uploadFiles(
-        files,
-        this.productFolder,
-        this.typeFolder,
-        this.consumible?.brand || '',
-        this.consumible?.name || ''
-      );
-    } else {
-      // Upload files to a temporary folder if printer or consumible is not yet available
-      console.log('Uploading to temporary folder');
-      this.uploadFiles(
-        files,
-        this.productFolder,
-        this.typeFolder,
-        '',
-        ''
-      );
-    }
-  }
-}
 
   uploadFiles(
     files: FileList,
@@ -140,7 +140,7 @@ onFileSelected(event: Event) {
           this.isUploading = false; // Set isUploading to false when upload completes
           this.fileUpload.emit(res.urls); // Emit file upload event with response body
           this.toastService.showSuccess(
-            'Archivos agregados con exito',
+            'Archivos agregados con éxito',
             'Aceptar'
           );
         },

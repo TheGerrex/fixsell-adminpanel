@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,7 +19,7 @@ export class PrinterListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Printer>();
-  filterValue = '';
+  searchTerm = '';
   isAdmin = false;
   printerData: Printer[] = [];
   isLoadingData = false;
@@ -36,7 +35,6 @@ export class PrinterListComponent implements OnInit {
 
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private printerService: PrinterService,
     private authService: AuthService,
@@ -73,8 +71,8 @@ export class PrinterListComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   seePrinter(printer: Printer) {
@@ -126,7 +124,7 @@ export class PrinterListComponent implements OnInit {
 
           // Update dataSource
           this.dataSource.data = this.printerData;
-          this.toastService.showSuccess('Multifuncional eliminado con exito', 'Aceptar');
+          this.toastService.showSuccess('Multifuncional eliminado con éxito', 'Aceptar');
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');

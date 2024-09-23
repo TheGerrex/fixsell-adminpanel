@@ -1,115 +1,155 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
-<div class="printer-container" *ngIf="printer && !isLoadingData">
-    <div class="printer-header">
-        <h2>{{ printer.brand }} {{ printer.model }}</h2>
-        <div class="button-actions">
-            <button class="button button-danger button-raised button-icon-text" (click)="openConfirmDialog(printer)">
-                <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
-            </button>
-            <button class="button button-primary button-raised button-icon-text" (click)="navigateToEdit(printer.id)">
-                <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-            </button>
-        </div>
+<div class="section-card" *ngIf="printer && !isLoadingData">
+  <div class="section-card-header">
+    <div class="section-card-header-wrapper">
+      <app-breadcrumb></app-breadcrumb>
+      <h3 class="header-title">{{ printer.brand }} {{ printer.model }}</h3>
     </div>
+    <div class="button-actions">
+      <button
+        class="button button-danger button-raised button-icon-text"
+        (click)="openConfirmDialog(printer)"
+      >
+        <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+      </button>
+      <button
+        class="button button-primary button-raised button-icon-text"
+        (click)="navigateToEdit(printer.id)"
+      >
+        <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+      </button>
+    </div>
+  </div>
 
-    <div class="printer-info">
-        <div class="printer-info-container">
-            <div class="printer-data-container">
-                <website-carousel-images [product]="printer"></website-carousel-images>
-                <div class="printer-data">
-                    <div class="printer-data-item">
-                        <h5>Marca</h5>
-                        <p>{{ printer.brand }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Modelo</h5>
-                        <p>{{ printer.model }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Categoria</h5>
-                        <p>{{ printer.category }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Precio</h5>
-                        <p>{{ printer.price | currency:'$' : 'symbol' : '1.2-2' }} {{ printer.currency }}</p>
-                    </div>
-                    <div class="printer-data-item full-row">
-                        <h5>Descripcion</h5>
-                        <p>{{ printer.description }}</p>
-                    </div>
-                    <div class="printer-data-item full-row">
-                        <h5>Sistema Operativo</h5>
-                        <p>{{ printer.applicableOS }}</p>
-                    </div>
-                    <div class="printer-data-item quarter-row">
-                        <h5>Color</h5>
-                        <div class="item-value-container">
-                            <img *ngIf="!printer.color" class="black-and-white-icon" src="../../../../../assets/icons/products/B&W.svg" alt="B&W Icon" />
-                            <img *ngIf="printer.color" class="cmyk-icon" src="../../../../../assets/icons/products/CMYK.svg" alt="CMYK Icon" />
-                            <p>{{ printer.color ? "CMYK" : "B&N" }}</p>
-                        </div>
-                    </div>
-                    <div class="printer-data-item quarter-row">
-                        <h5>Renta</h5>
-                        <div class="item-value-container">
-                            <mat-icon *ngIf="!printer.rentable" style="color: #ef4444">cancel</mat-icon>
-                            <mat-icon *ngIf="printer.rentable" style="color: #22c55e">check_circle</mat-icon>
-                            <p>{{ printer.rentable ? "Si" : "No" }}</p>
-                        </div>
-                    </div>
-                    <div class="printer-data-item quarter-row">
-                        <h5>Venta</h5>
-                        <div class="item-value-container">
-                            <mat-icon *ngIf="!printer.sellable" style="color: #ef4444">cancel</mat-icon>
-                            <mat-icon *ngIf="printer.sellable" style="color: #22c55e">check_circle</mat-icon>
-                            <p>{{ printer.sellable ? "Si" : "No" }}</p>
-                        </div>
-                    </div>
-                    <div class="printer-data-item quarter-row">
-                        <h5>Unidad Duplex</h5>
-                        <div class="item-value-container">
-                            <mat-icon *ngIf="!printer.duplexUnit" style="color: #ef4444">cancel</mat-icon>
-                            <mat-icon *ngIf="printer.duplexUnit" style="color: #22c55e">check_circle</mat-icon>
-                            <p>{{ printer.duplexUnit ? "Si" : "No" }}</p>
-                        </div>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Funciones</h5>
-                        <p>{{ printer.printerFunctions }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Dimensiones</h5>
-                        <p>{{ printer.dimensions }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Velocidad de Impresión</h5>
-                        <p *ngIf="printer.printVelocity">{{ printer.printVelocity }} ppm</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Tamaño de Impresión</h5>
-                        <p>{{ printer.printSize }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Grosor de Papel</h5>
-                        <p *ngIf="printer.maxPaperWeight">
-                            {{ printer.maxPaperWeight }} g/m2
-                        </p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Tamaños de Papel</h5>
-                        <p>{{ printer.paperSizes }}</p>
-                    </div>
-                    <div class="printer-data-item">
-                        <h5>Etiquetas</h5>
-                        <p *ngIf="
+  <div class="printer-info">
+    <div class="printer-info-container">
+      <div class="printer-data-container">
+        <website-carousel-images [product]="printer"></website-carousel-images>
+        <div class="printer-data">
+          <div class="printer-data-item">
+            <h5>Marca</h5>
+            <p>{{ printer.brand }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Modelo</h5>
+            <p>{{ printer.model }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Categoria</h5>
+            <p>{{ printer.category }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Precio</h5>
+            <p>
+              {{ printer.price | currency : '$' : 'symbol' : '1.2-2' }}
+              {{ printer.currency }}
+            </p>
+          </div>
+          <div class="printer-data-item full-row">
+            <h5>Descripcion</h5>
+            <p>{{ printer.description }}</p>
+          </div>
+          <div class="printer-data-item full-row">
+            <h5>Sistema Operativo</h5>
+            <p>{{ printer.applicableOS }}</p>
+          </div>
+          <div class="printer-data-item quarter-row">
+            <h5>Color</h5>
+            <div class="item-value-container">
+              <img
+                *ngIf="!printer.color"
+                class="black-and-white-icon"
+                src="../../../../../assets/icons/products/B&W.svg"
+                alt="B&W Icon"
+              />
+              <img
+                *ngIf="printer.color"
+                class="cmyk-icon"
+                src="../../../../../assets/icons/products/CMYK.svg"
+                alt="CMYK Icon"
+              />
+              <p>{{ printer.color ? 'CMYK' : 'B&N' }}</p>
+            </div>
+          </div>
+          <div class="printer-data-item quarter-row">
+            <h5>Renta</h5>
+            <div class="item-value-container">
+              <mat-icon *ngIf="!printer.rentable" style="color: #ef4444"
+                >cancel</mat-icon
+              >
+              <mat-icon *ngIf="printer.rentable" style="color: #22c55e"
+                >check_circle</mat-icon
+              >
+              <p>{{ printer.rentable ? 'Si' : 'No' }}</p>
+            </div>
+          </div>
+          <div class="printer-data-item quarter-row">
+            <h5>Venta</h5>
+            <div class="item-value-container">
+              <mat-icon *ngIf="!printer.sellable" style="color: #ef4444"
+                >cancel</mat-icon
+              >
+              <mat-icon *ngIf="printer.sellable" style="color: #22c55e"
+                >check_circle</mat-icon
+              >
+              <p>{{ printer.sellable ? 'Si' : 'No' }}</p>
+            </div>
+          </div>
+          <div class="printer-data-item quarter-row">
+            <h5>Unidad Duplex</h5>
+            <div class="item-value-container">
+              <mat-icon *ngIf="!printer.duplexUnit" style="color: #ef4444"
+                >cancel</mat-icon
+              >
+              <mat-icon *ngIf="printer.duplexUnit" style="color: #22c55e"
+                >check_circle</mat-icon
+              >
+              <p>{{ printer.duplexUnit ? 'Si' : 'No' }}</p>
+            </div>
+          </div>
+          <div class="printer-data-item">
+            <h5>Funciones</h5>
+            <p>{{ printer.printerFunctions }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Dimensiones</h5>
+            <p>{{ printer.dimensions }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Velocidad de Impresión</h5>
+            <p *ngIf="printer.printVelocity">{{ printer.printVelocity }} ppm</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Tamaño de Impresión</h5>
+            <p>{{ printer.printSize }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Grosor de Papel</h5>
+            <p *ngIf="printer.maxPaperWeight">
+              {{ printer.maxPaperWeight }} g/m2
+            </p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Tamaños de Papel</h5>
+            <p>{{ printer.paperSizes }}</p>
+          </div>
+          <div class="printer-data-item">
+            <h5>Etiquetas</h5>
+            <p
+              *ngIf="
                 !printer.tags ||
                 printer.tags.length === 0 ||
                 (printer.tags.length === 1 && printer.tags[0] === '')
-              ">
-                            Vacio
-                        </p>
-                        <div *ngIf="printer.tags && printer.tags.length > 0">
-                            <span class="tag" *ngFor="let tag of printer.tags" [hidden]="tag === ''">{{ tag }}</span
+              "
+            >
+              Vacio
+            </p>
+            <div *ngIf="printer.tags && printer.tags.length > 0">
+              <span
+                class="tag"
+                *ngFor="let tag of printer.tags"
+                [hidden]="tag === ''"
+                >{{ tag }}</span
               >
             </div>
           </div>
@@ -129,7 +169,10 @@
         </div>
       </div>
       <div class="printer-extra-container">
-        <website-deals [deals]="printer.deals" style="width: 100%"></website-deals>
+        <website-deals
+          [deals]="printer.deals"
+          style="width: 100%"
+        ></website-deals>
         <website-consumable
           [product]="printer"
           style="width: 100%"

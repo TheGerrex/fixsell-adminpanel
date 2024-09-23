@@ -13,16 +13,16 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 })
 export class DealsComponent {
 
-constructor(
-  private router: Router,
-  private dialog: MatDialog,
-  private toastService: ToastService,
-  private dealService: DealService,
-) {}
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private toastService: ToastService,
+    private dealService: DealService,
+  ) { }
 
-@Input() deals!: Deal[];
+  @Input() deals!: Deal[];
 
-getDaysLeft(): number {
+  getDaysLeft(): number {
     if (this.deals) {
       const endDate = new Date(this.deals[0].dealEndDate);
       const now = new Date();
@@ -41,7 +41,7 @@ getDaysLeft(): number {
   navigateToEditDeal(id: string) {
     this.router.navigate([`/website/deals/${id}/edit`]);
   }
-  
+
   openConfirmDialog(dealId: string): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -69,12 +69,12 @@ getDaysLeft(): number {
     this.dealService.deleteDealById(id).subscribe(
       (response) => {
         this.deals = this.deals.filter((deal: Deal) => deal.id !== id);
-        this.toastService.showSuccess('Promoción eliminado con exito', 'Aceptar');
+        this.toastService.showSuccess('Promoción eliminado con éxito', 'Aceptar');
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
-    
+
   }
 }

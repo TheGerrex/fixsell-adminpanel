@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Role, User } from 'src/app/users/interfaces/users.interface';
-import { environment } from 'src/environments/environment';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -30,13 +29,12 @@ export class UserListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private dialog: MatDialog,
     private authService: AuthService,
     private userService: UsersService,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.token = this.userService.getToken();
@@ -107,27 +105,27 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (user.id){
-            this.deleteUser(user);
+        if (user.id) {
+          this.deleteUser(user);
         }
       }
     });
   }
 
   deleteUser(user: User) {
-  if (user.id){
-    this.userService.deleteUser(user, this.token).subscribe(
-      (response) => {
-        // Remove the deleted user from the dataSource
-        const data = this.dataSource.data;
-        this.dataSource.data = data.filter((u) => u.id !== user.id);
+    if (user.id) {
+      this.userService.deleteUser(user, this.token).subscribe(
+        (response) => {
+          // Remove the deleted user from the dataSource
+          const data = this.dataSource.data;
+          this.dataSource.data = data.filter((u) => u.id !== user.id);
 
-        this.toastService.showSuccess('Usuario eliminado con exito', 'Aceptar');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+          this.toastService.showSuccess('Usuario eliminado con éxito', 'Aceptar');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 

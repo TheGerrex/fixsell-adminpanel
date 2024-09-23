@@ -24,7 +24,7 @@ export class PrinterDetailComponent implements OnInit {
     private printerService: PrinterService,
     private toastService: ToastService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getPrinter();
@@ -87,7 +87,7 @@ export class PrinterDetailComponent implements OnInit {
       this.printerService.deletePrinter(printer.id).subscribe({
         next: (response) => {
           this.toastService.showSuccess(
-            'Multifuncional eliminado con exito',
+            'Multifuncional eliminado con éxito',
             'Aceptar',
           );
           this.router.navigateByUrl('website/printers');

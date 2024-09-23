@@ -23,10 +23,10 @@ export class UserDetailComponent implements OnInit {
     private userService: UsersService,
     private dialog: MatDialog,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -62,24 +62,24 @@ export class UserDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (user.id){
-            this.deleteUser(user);
+        if (user.id) {
+          this.deleteUser(user);
         }
       }
     });
   }
 
   deleteUser(user: User) {
-  if (user.id){
-    this.userService.deleteUser(user, this.token).subscribe(
-      (response) => {
-        this.router.navigate(['/users/user']);
-        this.toastService.showSuccess('Usuario eliminado con exito', 'Aceptar');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+    if (user.id) {
+      this.userService.deleteUser(user, this.token).subscribe(
+        (response) => {
+          this.router.navigate(['/users/user']);
+          this.toastService.showSuccess('Usuario eliminado con éxito', 'Aceptar');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 }

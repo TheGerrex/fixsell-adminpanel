@@ -1,20 +1,31 @@
 <div class="dialog">
-    <div class="title-container">
-        <h4 class="title">Nuevo Rol</h4>
-    </div>
-    <div class="content">
-        <p class="input-label">Nombre</p>
-        <input class="form-control" placeholder="Nombre del nuevo rol de usuario" [formControl]="roleName" [class.is-invalid]="roleNameError" />
-        <span *ngIf="roleNameError" class="invalid-feedback">{{ roleNameError }}</span>
-        <!-- <span *ngIf="roleName.invalid && roleName.touched" class="invalid-feedback">El nombre del rol es requerido</span> -->
-    </div>
-    <div class="button-actions">
-        <button class="button button-outline-secondary w-100" (click)="onNoClick()">
+  <div class="title-container">
+    <h4 class="title">Nuevo Rol</h4>
+  </div>
+  <div class="content">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Nombre del nuevo rol de usuario"
+        [formControl]="roleName"
+        [class.is-invalid]="roleNameError"
+      />
+      <mat-error *ngIf="roleNameError"> {{ roleNameError }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="button-actions">
+    <button class="button button-outline-secondary w-100" (click)="onNoClick()">
       <span class="button-label">Cancelar</span>
     </button>
-        <button class="button button-primary button-icon-text button-raised w-100" [disabled]="roleName.invalid" (click)="onSubmit()">
-          <mat-icon>add</mat-icon>
-          <span class="button-label">Agregar Rol</span>
-        </button>
-    </div>
+    <button
+      class="button button-primary button-icon-text button-raised w-100"
+      [disabled]="roleName.invalid"
+      (click)="onSubmit()"
+    >
+      <mat-icon>add</mat-icon>
+      <span class="button-label">Crear Rol</span>
+    </button>
+  </div>
 </div>

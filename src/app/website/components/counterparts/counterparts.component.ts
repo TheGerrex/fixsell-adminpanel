@@ -59,20 +59,19 @@ export class CounterpartsComponent implements OnInit {
   }
 
   deleteConsumible(id: string): void {
-    const observer = {
-      next: (response: any) => {
+    this.consumiblesService.deleteConsumible(id).subscribe(
+      (response) => {
         this.product.consumibles = this.product.consumibles.filter(
           (consumible: Consumible) => consumible.id !== id,
         );
         this.toastService.showSuccess(
-          'Consumible eliminado con exito',
+          'Consumible eliminado con éxito',
           'Aceptar',
         );
       },
-      error: (error: any) => {
+      (error: any) => {
         this.toastService.showError(error.error.message, 'Cerrar');
       },
-    };
-    this.consumiblesService.deleteConsumible(id).subscribe(observer);
+    );
   }
 }

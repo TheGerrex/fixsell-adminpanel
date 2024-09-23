@@ -24,7 +24,7 @@ export class ConsumiblesDetailComponent implements OnInit {
     private toastService: ToastService,
     private dialog: MatDialog,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getConsumible();
@@ -82,25 +82,25 @@ export class ConsumiblesDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (consumible.id){
-            this.deleteConsumible(consumible)
+        if (consumible.id) {
+          this.deleteConsumible(consumible)
         }
-        
+
       }
     });
   }
 
   deleteConsumible(consumible: Consumible) {
-  if (consumible.id){
-    this.consumiblesService.deleteConsumible(consumible.id).subscribe(
-      (response) => {
-        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
-        this.router.navigateByUrl('website/consumibles');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+    if (consumible.id) {
+      this.consumiblesService.deleteConsumible(consumible.id).subscribe(
+        (response) => {
+          this.toastService.showSuccess('Consumible eliminado con éxito', 'Aceptar');
+          this.router.navigateByUrl('website/consumibles');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 }

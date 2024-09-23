@@ -1,480 +1,487 @@
-@import "_variables.scss";
+@import '_variables.scss';
 .main-container {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .main-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $white;
+  border: 1px solid $gray-300;
+  padding: 16px;
+  border-radius: $border-radius;
+  width: 100%;
+  gap: 1em;
+  .main-title {
+    margin: 0;
+  }
+  .main-action-buttons {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     align-items: center;
-    background-color: $white;
-    border: 1px solid $gray-300;
-    padding: 16px;
-    border-radius: $border-radius;
-    width: 100%;
-    gap: 1em;
-    .main-title {
-        margin: 0;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    @media (max-width: 576px) {
+      .search-box {
+        width: 100%;
+      }
     }
-    .main-action-buttons {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-        flex-wrap: wrap;
-        @media (max-width: 576px) {
-            .search-box {
-                width: 100%;
-            }
-        }
-    }
+  }
 }
 
 .main-body {
-    display: flex;
-    gap: .5rem;
-    @media(max-width: 768px) {
-        flex-direction: column;
-    }
+  display: flex;
+  gap: 0.5rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .tickets-container {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  @media (max-width: 768px) {
     flex-direction: column;
-    gap: .5rem;
-    @media(max-width: 768px) {
-        flex-direction: column;
-    }
+  }
 }
 
 .ticket-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    background-color: $white;
-    border: 1px solid $gray-300;
-    border-radius: $border-radius;
-    padding: 1rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: $white;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  padding: 1rem;
+  width: 100%;
 }
 
 .ticket-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 1rem;
+  .ticket-card-header-content {
     display: flex;
-    justify-content: space-between;
+    gap: 0.5em;
     align-items: center;
-    flex-wrap: wrap;
-    row-gap: 1rem;
-    .ticket-card-header-content {
-        display: flex;
-        gap: 0.5em;
-        align-items: center;
-        margin-left: .5rem;
-        .card-title {
-            margin: 0;
-        }
-        .ticket-count {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: $gray-600;
-            color: $white;
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            font-family: "Roboto Mono", monospace;
-            font-size: 14px;
-            line-height: 1;
-        }
+    margin-left: 0.5rem;
+    .card-title {
+      margin: 0;
     }
+    .ticket-count {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-600;
+      color: $white;
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      line-height: 1;
+    }
+  }
 }
 
 .ticket-card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .ticket-list-card {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid $gray-300;
-    border-radius: $border-radius;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
 }
 
 .ticket-list-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  .ticket-list-card-header-content {
     display: flex;
-    justify-content: space-between;
+    gap: 0.5em;
     align-items: center;
-    padding: .5rem;
-    cursor: pointer;
-    .ticket-list-card-header-content {
-        display: flex;
-        gap: 0.5em;
-        align-items: center;
-        .header-title {
-            font-size: 18px;
-            line-height: 1;
-            font-weight: 400 !important;
-            margin: 0;
-        }
-        .ticket-count {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: $gray-600;
-            color: $white;
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            font-family: "Roboto Mono", monospace;
-            font-size: 14px;
-            line-height: 1;
-        }
+    .header-title {
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 400 !important;
+      margin: 0;
     }
-    .ticket-list-card-header-actions {
-        .arrow-down-icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: .5rem;
-            transition: all 0.3s ease;
-        }
+    .ticket-count {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-600;
+      color: $white;
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      line-height: 1;
     }
+  }
+  .ticket-list-card-header-actions {
+    .arrow-down-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem;
+      transition: all 0.3s ease;
+    }
+  }
 }
 
 .rotate {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .ticket-list-card-body {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 .ticket-list-card-body.visible {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    max-height: 500px;
-    /* Adjust as needed */
-    overflow-y: auto;
-    opacity: 1;
-    /* WebKit browsers */
-    &::-webkit-scrollbar {
-        width: 8px;
-        /* Adjust the width as needed */
-    }
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.2);
-        /* Adjust the color as needed */
-        border-radius: 10px;
-        /* Adjust the border radius as needed */
-    }
-    &::-webkit-scrollbar-track {
-        background: transparent;
-        /* Adjust the track background as needed */
-    }
-    /* Firefox */
-    scrollbar-width: thin;
-    /* "auto" or "thin" */
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-    /* thumb and track color */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 500px;
+  /* Adjust as needed */
+  overflow-y: auto;
+  opacity: 1;
+  /* WebKit browsers */
+  &::-webkit-scrollbar {
+    width: 8px;
+    /* Adjust the width as needed */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Adjust the color as needed */
+    border-radius: 10px;
+    /* Adjust the border radius as needed */
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    /* Adjust the track background as needed */
+  }
+  /* Firefox */
+  scrollbar-width: thin;
+  /* "auto" or "thin" */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  /* thumb and track color */
 }
 
 .ticket-list-card-body-content {
-    padding: .5rem;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .high-priority {
-    background-color: $red-500 !important;
+  background-color: $red-500 !important;
 }
 
 .medium-priority {
-    background-color: $orange-500 !important;
+  background-color: $orange-500 !important;
 }
 
 .low-priority {
-    background-color: $yellow-500 !important;
+  background-color: $yellow-500 !important;
 }
 
 .ticket {
-    background-color: $gray-50;
-    border-radius: $border-radius;
-    border: 1px solid $gray-200;
-    &:hover {
-        background-color: $gray-100;
-    }
-    .ticket-container {
+  background-color: $gray-50;
+  border-radius: $border-radius;
+  border: 1px solid $gray-200;
+  &:hover {
+    background-color: $gray-100;
+  }
+  .ticket-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    .ticket-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      .ticket-icon {
+        color: $gray-600;
+      }
+      .ticket-header-chips {
         display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        .ticket-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: .5rem;
-            .ticket-icon {
-                color: $gray-600;
-            }
-            .ticket-header-chips {
-                display: flex;
-                flex-wrap: wrap;
-                gap: .5rem;
-                .ticket-type {
-                    display: flex;
-                    align-items: center;
-                    gap: .25rem;
-                    background-color: $gray-600;
-                    border-radius: $border-radius;
-                    color: $white;
-                    padding: .25rem .5rem;
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 14px;
-                    line-height: 1;
-                    min-height: 34px;
-                }
-                .ticket-status {
-                    display: flex;
-                    align-items: center;
-                    gap: .25rem;
-                    background-color: transparent;
-                    border-radius: $border-radius;
-                    color: $white;
-                    padding: .25rem .5rem;
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 14px;
-                    line-height: 1;
-                    min-height: 34px;
-                }
-                .ticket-client {
-                    display: flex;
-                    align-items: center;
-                    gap: .25rem;
-                    border: 1px solid $text;
-                    background-color: transparent;
-                    border-radius: $border-radius;
-                    color: $text;
-                    padding: .25rem .5rem;
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 14px;
-                    line-height: 1;
-                    mat-icon {
-                        color: $gray-600;
-                    }
-                }
-                .ticket-date {
-                    display: flex;
-                    align-items: center;
-                    gap: .25rem;
-                    background-color: transparent;
-                    border: 1px solid $gray-600;
-                    border-radius: $border-radius;
-                    color: $gray-600;
-                    padding: .25rem .5rem;
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 14px;
-                    line-height: 1;
-                    mat-icon {
-                        color: $gray-600;
-                    }
-                }
-            }
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        .ticket-type {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          background-color: $gray-600;
+          border-radius: $border-radius;
+          color: $white;
+          padding: 0.25rem 0.5rem;
+          font-family: 'Roboto Mono', monospace;
+          font-size: 14px;
+          line-height: 1;
+          min-height: 34px;
         }
-        .ticket-body {}
+        .ticket-status {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          background-color: transparent;
+          border-radius: $border-radius;
+          color: $white;
+          padding: 0.25rem 0.5rem;
+          font-family: 'Roboto Mono', monospace;
+          font-size: 14px;
+          line-height: 1;
+          min-height: 34px;
+        }
+        .ticket-client {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          border: 1px solid $text;
+          background-color: transparent;
+          border-radius: $border-radius;
+          color: $text;
+          padding: 0.25rem 0.5rem;
+          font-family: 'Roboto Mono', monospace;
+          font-size: 14px;
+          line-height: 1;
+          mat-icon {
+            color: $gray-600;
+          }
+        }
+        .ticket-date {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          background-color: transparent;
+          border: 1px solid $gray-600;
+          border-radius: $border-radius;
+          color: $gray-600;
+          padding: 0.25rem 0.5rem;
+          font-family: 'Roboto Mono', monospace;
+          font-size: 14px;
+          line-height: 1;
+          mat-icon {
+            color: $gray-600;
+          }
+        }
+      }
     }
+    .ticket-body {
+    }
+  }
 }
 
 .ticket-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-radius: $border-radius;
+  // border: 1px solid $gray-300;
+  // padding: .5rem;
+  // background-color: $gray-100;
+  .ticket-info-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    border-radius: $border-radius;
-    // border: 1px solid $gray-300;
-    // padding: .5rem;
-    // background-color: $gray-100;
-    .ticket-info-item {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .25rem;
-        flex-wrap: wrap;
-        mat-icon {
-            color: $red-500;
-        }
-        .ticket-info-item-title {
-            font-family: "Roboto Mono", monospace;
-            font-weight: 500;
-            // padding: .25rem .5rem;
-        }
-        .ticket-info-item-content {
-            font-weight: 400;
-        }
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    mat-icon {
+      color: $red-500;
     }
+    .ticket-info-item-title {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 500;
+      // padding: .25rem .5rem;
+    }
+    .ticket-info-item-content {
+      font-weight: 400;
+    }
+  }
 }
 
 .ticket-info .button {
-    display: none;
+  display: none;
 }
 
 .ticket:hover .ticket-info .button {
-    display: flex;
-    /* or 'block', depending on your layout */
+  display: flex;
+  /* or 'block', depending on your layout */
 }
 
 @media (max-width: 768px) {
-    .ticket-info .button {
-        display: flex;
-        /* or 'block', depending on your layout */
-    }
+  .ticket-info .button {
+    display: flex;
+    /* or 'block', depending on your layout */
+  }
 }
 
 @media (max-width: 600px) {
-    .card-container {
-        flex-direction: column;
-    }
+  .card-container {
+    flex-direction: column;
+  }
 }
 
 .calendar-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .calendar-header {
-    display: flex;
-    gap: .5rem;
-    padding: 1rem;
-    background-color: $white;
-    border: 1px solid $gray-300;
-    border-bottom: 0;
-    border-radius: $border-radius $border-radius 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: $white;
+  border: 1px solid $gray-300;
+  border-bottom: 0;
+  border-radius: $border-radius $border-radius 0 0;
+}
+
+.calendar-date-today {
+  display: flex;
+  align-items: center;
 }
 
 .calendar-date-container {
-    display: flex;
-    flex-grow: 1;
+  display: flex;
+  flex-grow: 1;
 }
 
 .calendar-date-selector {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  .date-selector {
     display: flex;
-    gap: .5rem;
     align-items: center;
-    .date-selector {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        background-color: $gray-100;
-        border-radius: $border-radius;
-        padding: .25rem .5rem;
-        color: $gray-600;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        &:hover {
-            background-color: $gray-200;
-        }
+    gap: 0.5rem;
+    background-color: $gray-100;
+    border-radius: $border-radius;
+    padding: 0.25rem 0.5rem;
+    color: $gray-600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: $gray-200;
     }
+  }
 }
 
 .view-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  .navigation-buttons {
     display: flex;
+    gap: 0.5rem;
     align-items: center;
-    gap: 1rem;
-    .navigation-buttons {
-        display: flex;
-        gap: .5rem;
-        align-items: center;
-        .nav-button {
-            display: flex;
-            align-items: center;
-            background: none;
-            border-radius: 24px;
-            font-size: 24px;
-            padding: .25rem;
-            color: $gray-600;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            &:hover {
-                background-color: $gray-100;
-            }
-        }
+    .nav-button {
+      display: flex;
+      align-items: center;
+      background: none;
+      border-radius: 24px;
+      font-size: 24px;
+      padding: 0.25rem;
+      color: $gray-600;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      &:hover {
+        background-color: $gray-100;
+      }
     }
-    .date-title {
-        margin: 0;
-        font-weight: 400 !important;
-        font-size: 20px;
-        color: $text;
-    }
+  }
+  .date-title {
+    margin: 0;
+    font-weight: 400 !important;
+    font-size: 20px;
+    color: $text;
+  }
 }
 
 .day-view-header {
-    // Add any specific styles for the day view header here
+  // Add any specific styles for the day view header here
 }
 
 .week-view-header {
-    // Add any specific styles for the week view header here
+  // Add any specific styles for the week view header here
 }
 
 .month-view-header {
-    // Add any specific styles for the month view header here
+  // Add any specific styles for the month view header here
 }
 
 .status-open {
-    background-color: $indigo-500 !important;
+  background-color: $indigo-500 !important;
 }
 
 .status-in-progress {
-    background-color: $yellow-500 !important;
+  background-color: $yellow-500 !important;
 }
 
 .status-without-resolution {
-    background-color: $orange-500 !important;
+  background-color: $orange-500 !important;
 }
 
 .status-completed {
-    background-color: $green-500 !important;
+  background-color: $green-500 !important;
 }
 
 .priority-low {
-    background-color: $green-200;
+  background-color: $green-200;
 }
 
 .priority-medium {
-    background-color: $yellow-300;
+  background-color: $yellow-300;
 }
 
 .priority-high {
-    background-color: $red-400;
+  background-color: $red-400;
 }
 
 .opacity-7 {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .no-tickets {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem;
-    padding: 1rem;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    border: 1px solid $gray-300;
-    border-radius: $border-radius;
-    mat-icon {
-        color: $red-500;
-    }
-    p {
-        color: $text;
-        margin: 0;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius;
+  mat-icon {
+    color: $red-500;
+  }
+  p {
+    color: $text;
+    margin: 0;
+  }
 }

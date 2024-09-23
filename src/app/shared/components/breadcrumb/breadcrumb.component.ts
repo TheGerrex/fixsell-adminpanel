@@ -12,50 +12,39 @@ type Breadcrumb = { label: string; url: string };
   selector: 'app-breadcrumb',
   template: `
     <nav>
-      <div
-        class="breadcrumb-route"
-        *ngFor="let breadcrumb of breadcrumbs; let i = index"
-      >
-        <a
-          [routerLink]="breadcrumb.url"
-          [class.active]="i === breadcrumbs.length - 1"
-          >{{ breadcrumb.label }}</a
-        >
-        <span *ngIf="i < breadcrumbs.length - 1">/</span>
+      <div class="breadcrumb-container">
+        <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
+          <div class="breadcrumb-route">
+            <a
+              [routerLink]="breadcrumb.url"
+              [class.active]="i === breadcrumbs.length - 1"
+            >
+              {{ breadcrumb.label }}
+            </a>
+          </div>
+          <span class="divider" *ngIf="i < breadcrumbs.length - 1">
+            <mat-icon>chevron_right</mat-icon>
+          </span>
+        </ng-container>
       </div>
     </nav>
   `,
   styles: [
     `
-      nav {
+      .breadcrumb-container {
         display: flex;
         flex-wrap: wrap;
-        margin-bottom: 0.5rem;
         align-items: center;
-        height: auto;
-        background-color: #fff;
-        padding: 0.5rem;
-        border-radius: 6px;
-        border: 1px solid #d1d5db;
-      }
-      @media (max-width: 768px) {
-        nav {
-          margin-bottom: 8px;
-        }
-      }
-      .breadcrumb-route {
-        // background-color: #f9fafb;
       }
       a {
-        color: #1f2937;
         text-decoration: none;
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
-        color: #4b5563;
+        color: #64748b;
       }
       a:hover {
-        // color: #3b82f6;
+        color: #1f2937;
         text-decoration: underline;
       }
 
@@ -63,6 +52,20 @@ type Breadcrumb = { label: string; url: string };
         color: #3b82f6;
         font-weight: 500;
       }
+
+      .divider {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: min-content;
+        mat-icon {
+          height: 18px;
+          width: 18px;
+          font-size: 18px;
+          color: #64748b;
+        }
+      }   
     `,
   ],
 })

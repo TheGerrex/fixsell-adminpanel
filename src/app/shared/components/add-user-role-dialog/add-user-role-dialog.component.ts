@@ -15,9 +15,8 @@ export class AddUserRoleDialogComponent {
   constructor(
     private rolService: RoleService,
     private toastService: ToastService,
-    private cd: ChangeDetectorRef,
     public dialogRef: MatDialogRef<AddUserRoleDialogComponent>
-  ) {}
+  ) { }
 
   onNoClick(): void {
     this.dialogRef.close();

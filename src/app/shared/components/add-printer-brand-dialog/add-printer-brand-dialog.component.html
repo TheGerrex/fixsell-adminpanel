@@ -1,14 +1,31 @@
-<h2 mat-dialog-title>Agregar Marca</h2>
-<mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Nombre</mat-label>
-    <input matInput [formControl]="brandName" />
-    <mat-error *ngIf="brandName.invalid">Nombre es requerido</mat-error>
-  </mat-form-field>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button (click)="onSubmit()" [disabled]="brandName.invalid">
-    Agregar Marca
-  </button>
-</mat-dialog-actions>
+<div class="dialog">
+  <div class="title-container">
+    <h4 class="title">Nueva Marca</h4>
+  </div>
+  <div class="content">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Epson, HP, Canon, etc."
+        [formControl]="brandName"
+        [class.is-invalid]="brandName.invalid"
+      />
+      <mat-error *ngIf="brandName.invalid">{{ brandNameError }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="button-actions">
+    <button class="button button-outline-secondary w-100" (click)="onNoClick()">
+      <span class="button-label">Cancelar</span>
+    </button>
+    <button
+      class="button button-primary button-icon-text button-raised w-100"
+      [disabled]="brandName.invalid"
+      (click)="onSubmit()"
+    >
+      <mat-icon>add</mat-icon>
+      <span class="button-label">Crear Marca</span>
+    </button>
+  </div>
+</div>

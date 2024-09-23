@@ -1,105 +1,226 @@
+<app-breadcrumb></app-breadcrumb>
 <div>
-    <form [formGroup]="createUserForm" (ngSubmit)="submitForm()" class="user-container">
-        <div class="user-header">
-            <h3 class="table-title">Nuevo Usuario</h3>
-            <div class="table-actions">
-                <div class="action-buttons">
-                    <button ButtonResize type="submit" class="button button-primary button-raised">
-                        <mat-icon>add</mat-icon><span class="button-label">Agregar Usuario</span>
-                    </button>
-                </div>
+  <form
+    [formGroup]="createUserForm"
+    (ngSubmit)="submitForm()"
+    class="section-card"
+  >
+    <div class="section-card-header">
+      <h3 class="header-title">Nuevo Usuario</h3>
+      <div class="button-actions">
+        <button
+          ButtonResize
+          type="submit"
+          class="button button-primary button-raised"
+        >
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Usuario</span>
+        </button>
+      </div>
+    </div>
+
+    <app-loading-spinner *ngIf="isLoadingForm"></app-loading-spinner>
+
+    <div class="section-card-body">
+      <div class="form-container">
+        <div class="form-section">
+          <!-- <h5 class="form-section-subheader">Datos del Cliente</h5> -->
+          <div class="form-grid">
+            <!-- name -->
+            <div class="form-item half-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="John Doe"
+                  formControlName="name"
+                />
+                <mat-error *ngIf="isValidField('name')">{{
+                  getFieldError('name')
+                }}</mat-error>
+              </mat-form-field>
             </div>
-        </div>
 
-        <div class="loading-container" *ngIf="isLoadingForm">
-            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-        </div>
-
-        <div class="user-info">
-            <div class="user-data-container">
-                <div class="user-data">
-                    <!-- name -->
-                    <div class="user-data-item">
-                        <p>Nombre</p>
-                        <input type="text" placeholder="Nombre del usuario" aria-label="Name" class="form-control" id="name" formControlName="name" [class.is-invalid]="createUserForm.controls['name'].invalid && createUserForm.controls['name'].touched" />
-                        <span *ngIf="createUserForm.controls['name'].invalid && createUserForm.controls['name'].touched" class="invalid-feedback">El nombre es requerido</span>
-                    </div>
-
-                    <!-- email -->
-                    <div class="user-data-item">
-                        <p>Email</p>
-                        <input type="text" placeholder="ejemplo@email.com" aria-label="Email" class="form-control" id="email" formControlName="email" [class.is-invalid]=" createUserForm.controls['email'].invalid && createUserForm.controls['email'].touched" />
-                        <span *ngIf="createUserForm.controls['email'].invalid && createUserForm.controls['email'].touched" class="invalid-feedback">El correo es requerido, en formato: ejemplo&#64;email.com</span>
-                    </div>
-
-                    <!-- password -->
-                    <div class="user-data-item">
-                        <p>Contraseña</p>
-                        <input type="password" placeholder="" aria-label="Password" class="form-control" id="password" formControlName="password" [class.is-invalid]="
-                        createUserForm.controls['password'].invalid &&
-                        createUserForm.controls['password'].touched" (keyup)="updateValidationStatus()" (focus)="passwordFieldFocused = true" (blur)="passwordFieldFocused = false" />
-                        <div class="password-suggestions" *ngIf="passwordFieldFocused ||createUserForm.controls['password'].touched">
-                            <span class="password-feedback">La contraseña debe contener:</span>
-                            <ul class="password-suggestions-list">
-                                <li class="suggestion" [class.valid]="createUserForm.controls['password'].value.length >= 8">
-                                    <mat-icon *ngIf="createUserForm.controls['password'].value.length >= 8" [inline]="true" class="green-check">check_circle</mat-icon>
-                                    Al menos 8 caracteres
-                                </li>
-                                <li class="suggestion" [class.valid]="hasUpperCase(createUserForm.controls['password'].value)">
-                                    <mat-icon *ngIf="hasUpperCase(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                                    Al menos una letra mayúscula
-                                </li>
-                                <li class="suggestion" [class.valid]="hasLowerCase(createUserForm.controls['password'].value)">
-                                    <mat-icon *ngIf="hasLowerCase(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                                    Al menos una letra minúscula
-                                </li>
-                                <li class="suggestion" [class.valid]="hasNumeric(createUserForm.controls['password'].value)">
-                                    <mat-icon *ngIf="hasNumeric(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                                    Al menos un número
-                                </li>
-                                <li class="suggestion" [class.valid]="hasSpecialChar(createUserForm.controls['password'].value)">
-                                    <mat-icon *ngIf="hasSpecialChar(createUserForm.controls['password'].value)" [inline]="true" class="green-check">check_circle</mat-icon>
-                                    Al menos un carácter especial
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- repeat password -->
-                    <div class="user-data-item">
-                        <p>Confirmar Contraseña</p>
-                        <input type="password" placeholder="" aria-label="Repeat Password" class="form-control" id="repeatPassword" formControlName="repeatPassword" [class.is-invalid]="createUserForm.controls['repeatPassword'].invalid && createUserForm.controls['repeatPassword'].touched"
-                        />
-                        <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['required'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
-                            La contraseña es requerida
-                        </span>
-                        <span *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched" class="invalid-feedback">
-                            Las contraseñas no coinciden
-                        </span>
-                    </div>
-
-                    <!-- roles -->
-                    <div class="user-data-item full-row">
-                        <p>Roles</p>
-                        <user-dropdown-roles [items]="roles" formControlName="roles" (change)="roleSelected($event);" [isInvalid]="createUserForm.controls['roles'].invalid && createUserForm.controls['roles'].touched" (itemsChange)="handleItemsChange($event)"></user-dropdown-roles>
-                        <span *ngIf="isValidField('roles')" class="form-text text-danger">
-                          {{ getFieldError("roles") }}
-                        </span>
-                    </div>
-
-                    <!-- is active -->
-                    <div class="user-data-item full-row">
-                        <p>Estado de Usuario</p>
-                        <div class="form-check form-switch form-box">
-                            <label class="form-check-label" for="isActiveYes">{{createUserForm.get("isActive")?.value ? "Activo" : "Inactivo"}}</label>
-                            <input class="form-check-input" type="checkbox" id="isActiveYes" formControlName="isActive" [checked]="createUserForm.get('isActive')?.value || false" (change)="onIsActiveChange($event)" style="margin-bottom: .25rem;" />
-                        </div>
-                        <span *ngIf="isValidField('isActive')" class="form-text text-danger">
-                            {{ getFieldError("isActive") }}
-                        </span>
-                    </div>
-                </div>
+            <!-- email -->
+            <div class="form-item half-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="ejemplo@email.com"
+                  formControlName="email"
+                />
+                <mat-error *ngIf="isValidField('email')">{{
+                  getFieldError('email')
+                }}</mat-error>
+              </mat-form-field>
             </div>
+
+            <!-- password -->
+            <div class="form-item half-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  [type]="hide ? 'password' : 'text'"
+                  formControlName="password"
+                  (keyup)="updateValidationStatus()"
+                  (focus)="passwordFieldFocused = true"
+                  (blur)="passwordFieldFocused = false"
+                />
+                <mat-icon matSuffix (click)="hide = !hide">{{
+                  hide ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+                <mat-error *ngIf="isValidField('password')">{{
+                  getFieldError('password')
+                }}</mat-error>
+              </mat-form-field>
+              <div
+                class="password-suggestions"
+                *ngIf="
+                  passwordFieldFocused ||
+                  createUserForm.controls['password'].touched
+                "
+              >
+                <span class="password-feedback"
+                  >La contraseña debe contener:</span
+                >
+                <ul class="password-suggestions-list">
+                  <li class="suggestion">
+                    <mat-icon
+                      [class.valid]="
+                        createUserForm.controls['password'].value.length >= 8
+                      "
+                      *ngIf="
+                        createUserForm.controls['password'].value.length >= 8
+                      "
+                      [inline]="true"
+                      class="green-check"
+                      >check_circle</mat-icon
+                    >
+                    Al menos 8 caracteres
+                  </li>
+                  <li class="suggestion">
+                    <mat-icon
+                      [class.valid]="
+                        hasUpperCase(createUserForm.controls['password'].value)
+                      "
+                      *ngIf="
+                        hasUpperCase(createUserForm.controls['password'].value)
+                      "
+                      [inline]="true"
+                      class="green-check"
+                      >check_circle</mat-icon
+                    >
+                    Al menos una letra mayúscula
+                  </li>
+                  <li class="suggestion">
+                    <mat-icon
+                      [class.valid]="
+                        hasLowerCase(createUserForm.controls['password'].value)
+                      "
+                      *ngIf="
+                        hasLowerCase(createUserForm.controls['password'].value)
+                      "
+                      [inline]="true"
+                      class="green-check"
+                      >check_circle</mat-icon
+                    >
+                    Al menos una letra minúscula
+                  </li>
+                  <li class="suggestion">
+                    <mat-icon
+                      [class.valid]="
+                        hasNumeric(createUserForm.controls['password'].value)
+                      "
+                      *ngIf="
+                        hasNumeric(createUserForm.controls['password'].value)
+                      "
+                      [inline]="true"
+                      class="green-check"
+                      >check_circle</mat-icon
+                    >
+                    Al menos un número
+                  </li>
+                  <li class="suggestion">
+                    <mat-icon
+                      [class.valid]="
+                        hasSpecialChar(
+                          createUserForm.controls['password'].value
+                        )
+                      "
+                      *ngIf="
+                        hasSpecialChar(
+                          createUserForm.controls['password'].value
+                        )
+                      "
+                      [inline]="true"
+                      class="green-check"
+                      >check_circle</mat-icon
+                    >
+                    Al menos un carácter especial
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- repeat password -->
+            <div class="form-item half-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Repetir Contraseña</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  formControlName="repeatPassword"
+                />
+                <mat-error
+                  *ngIf="createUserForm.controls['repeatPassword'].errors?.['required'] && createUserForm.controls['repeatPassword'].touched"
+                  class="invalid-feedback"
+                >
+                  La contraseña es requerida
+                </mat-error>
+                <mat-error
+                  *ngIf="createUserForm.controls['repeatPassword'].errors?.['notMatch'] && createUserForm.controls['repeatPassword'].touched"
+                  class="invalid-feedback"
+                >
+                  Las contraseñas no coinciden
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Roles -->
+            <div class="form-item half-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Roles</mat-label>
+                <mat-select formControlName="roles" multiple>
+                  <mat-option *ngFor="let rol of roles" [value]="rol">{{
+                    rol
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button
+                type="button"
+                class="button button-secondary"
+                (click)="newRole()"
+                style="margin-top: 0.5rem"
+              >
+                <mat-icon>add</mat-icon>
+                <span class="button-label">Crear nuevo rol</span>
+              </button>
+            </div>
+
+            <!-- Activo -->
+            <div class="form-item half-row">
+              <p class="item-label">Estado de Usuario</p>
+              <mat-slide-toggle formControlName="isActive">{{
+                createUserForm.get('isActive')?.value ? 'Activo' : 'Inactivo'
+              }}</mat-slide-toggle>
+            </div>
+          </div>
         </div>
-    </form>
+      </div>
+    </div>
+  </form>
 </div>

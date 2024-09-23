@@ -15,7 +15,13 @@ export class AddPrinterCategoryDialogComponent {
   constructor(
     private http: HttpClient,
     public dialogRef: MatDialogRef<AddPrinterCategoryDialogComponent>
-  ) {}
+  ) { }
+
+
+  get categoryNameError() {
+    return this.categoryName.errors?.["serverError"];
+  }
+
 
   onNoClick(): void {
     this.dialogRef.close();

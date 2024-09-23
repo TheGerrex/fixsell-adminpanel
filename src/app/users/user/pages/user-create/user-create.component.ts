@@ -22,6 +22,7 @@ import { AddUserRoleDialogComponent } from '../../../../shared/components/add-us
 export class UserCreateComponent implements OnInit {
   public createUserForm!: FormGroup;
   user: User | null = null;
+  hide = true;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
   selectedRoles: string[] = [];
@@ -34,7 +35,7 @@ export class UserCreateComponent implements OnInit {
     private validatorsService: ValidatorsService,
     private http: HttpClient,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -150,19 +151,8 @@ export class UserCreateComponent implements OnInit {
     // Do nothing. This is just to trigger change detection.
   }
 
-  roleSelected(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedOption = selectElement.value;
-
-    if (selectedOption !== 'addNew' && !this.selectedRoles.includes(selectedOption)) 
-    {
-      this.selectedRoles = [...this.selectedRoles, selectedOption];
-      console.log('selectedRoles:', this.selectedRoles);
-      this.createUserForm.get('roles')?.setValue(null);
-    } else if (selectedOption === 'addNew') {
-      this.openAddUserRoleDialog();
-      this.createUserForm.get('roles')?.setValue(null);
-    }
+  newRole() {
+    this.openAddUserRoleDialog();
   }
 
   handleItemsChange(selectedItems: string[]) {
@@ -185,6 +175,22 @@ export class UserCreateComponent implements OnInit {
       // Refresh the roles here
       this.getRoles();
     });
+
+    dialogRef.afterClosed().subscribe((newRole) => {
+      if (newRole) {
+        this.getRoles();
+        // Add the new role to the roles array
+        this.roles.push(newRole);
+
+        // Check if the 'roles' control exists before trying to set its value
+        const rolesControl = this.createUserForm.get('roles');
+        if (rolesControl) {
+          rolesControl.setValue([newRole]);
+        } else {
+          console.warn('The form does not have a "roles" control.');
+        }
+      }
+    });
   }
 
   submitForm() {
@@ -195,17 +201,13 @@ export class UserCreateComponent implements OnInit {
     }
     this.isLoadingForm = true;
 
-    // Add the selectedRoles to Roles Form Control
-    this.createUserForm.get('roles')?.setValue(this.selectedRoles);
-    console.log('selectedRoles:', this.selectedRoles);
-
     const user = this.createUserForm.value;
     delete user.repeatPassword; // Delete the repeat field
     console.log('user:', user);
     this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
       next: (response) => {
         this.isLoadingForm = false;
-        this.toastService.showSuccess('Usuario creado con exito', 'Close');
+        this.toastService.showSuccess('Usuario creado con éxito', 'Close');
         // Navigate to the user detail page
         this.router.navigate(['/users/user']);
         // Reset the form

@@ -20,7 +20,7 @@ export class PdfUploadComponent {
   @Input() typeFolder: string = '';
   @Input() printer?: Printer;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(private http: HttpClient, private toastService: ToastService) { }
 
   onDragOver(event: Event) {
     event.preventDefault();
@@ -33,13 +33,41 @@ export class PdfUploadComponent {
   }
 
   onDrop(event: DragEvent) {
-  event.preventDefault();
-  this.isDragging = false; // Set isDragging to false when drop event occurs
+    event.preventDefault();
+    this.isDragging = false; // Set isDragging to false when drop event occurs
 
-  if (event.dataTransfer) {
-    const files = event.dataTransfer.files;
+    if (event.dataTransfer) {
+      const files = event.dataTransfer.files;
 
-    if (files.length) {
+      if (files.length) {
+        if (this.printer) {
+          this.uploadFiles(
+            files,
+            this.productFolder,
+            this.typeFolder,
+            this.printer?.brand || '',
+            this.printer?.model || ''
+          );
+        } else {
+          // Upload files to a temporary folder if printer or consumible is not yet available
+          console.log('Uploading to temporary folder');
+          this.uploadFiles(
+            files,
+            this.productFolder,
+            this.typeFolder,
+            '',
+            ''
+          );
+        }
+      }
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    const files: FileList | null = fileInput.files || null;
+
+    if (files && files.length) {
       if (this.printer) {
         this.uploadFiles(
           files,
@@ -61,34 +89,6 @@ export class PdfUploadComponent {
       }
     }
   }
-}
-
-onFileSelected(event: Event) {
-  const fileInput = event.target as HTMLInputElement;
-  const files: FileList | null = fileInput.files || null;
-
-  if (files && files.length) {
-    if (this.printer) {
-      this.uploadFiles(
-        files,
-        this.productFolder,
-        this.typeFolder,
-        this.printer?.brand || '',
-        this.printer?.model || ''
-      );
-    } else {
-      // Upload files to a temporary folder if printer or consumible is not yet available
-      console.log('Uploading to temporary folder');
-      this.uploadFiles(
-        files,
-        this.productFolder,
-        this.typeFolder,
-        '',
-        ''
-      );
-    }
-  }
-}
 
   uploadFiles(files: FileList,
     productFolder: string,
@@ -102,7 +102,7 @@ onFileSelected(event: Event) {
     console.log(typeFolder);
     console.log(brandFolder);
     console.log(modelFolder);
-  
+
     const formData = new FormData();
     formData.append('productFolder', productFolder);
     formData.append('typeFolder', typeFolder);
@@ -112,14 +112,14 @@ onFileSelected(event: Event) {
     for (let i = 0; i < files.length; i++) {
       formData.append('pdf', files[i], files[i].name);
     }
-    
-  
+
+
     this.http.post(`${environment.baseUrl}/upload/pdf`, formData).subscribe(
       (res: any) => {
         console.log(res);
         this.isUploading = false; // Set isUploading to false when upload completes
         this.fileUpload.emit(res.url); // Emit file upload event with response body
-        this.toastService.showSuccess('Archivos agregados con exito', 'Aceptar');
+        this.toastService.showSuccess('Archivos agregados con éxito', 'Aceptar');
       },
       (err) => {
         this.isUploading = false; // Set isUploading to false if an error occurs

@@ -1,266 +1,382 @@
 <div>
-    <form [formGroup]="createConsumibleForm" class="consumibles-container" *ngIf="createConsumibleForm">
-        <div class="consumibles-header">
-            <h2>Nuevo Consumible</h2>
-            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
-              <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-            </button>
-        </div>
-        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
-        <div class="consumibles-info">
-            <div class="consumibles-images">
-                <app-file-upload (fileUpload)="onFileUploaded($event)" [productFolder]="'Consumibles'" [typeFolder]="'imagenes'"></app-file-upload>
-                <app-product-image-grid [imageUrls]="imageUrlsArray" (remove)="openConfirmDialog($event)"></app-product-image-grid>
-                <span *ngIf="createConsumibleForm.controls['img_url'].invalid" class="form-text text-danger">
+  <form [formGroup]="createConsumibleForm" class="section-card">
+    <div class="section-card-header">
+      <div class="section-card-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="header-title">Nuevo Consumible</h3>
+      </div>
+      <div class="button-actions">
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="submitForm()"
+        >
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Consumible</span>
+        </button>
+      </div>
+    </div>
+    <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+    <div class="section-card-body">
+      <div class="consumibles-images">
+        <app-file-upload
+          (fileUpload)="onFileUploaded($event)"
+          [productFolder]="'Consumibles'"
+          [typeFolder]="'imagenes'"
+        ></app-file-upload>
+        <app-product-image-grid
+          [imageUrls]="imageUrlsArray"
+          (remove)="openConfirmDialog($event)"
+        ></app-product-image-grid>
+        <span
+          *ngIf="createConsumibleForm.controls['img_url'].invalid"
+          class="form-text text-danger"
+        >
           Por favor, sube una imagen.
         </span>
-            </div>
+      </div>
 
-            <div class="consumibles-form-container">
-                <div class="consumibles-data">
-                    <div class="consumibles-data-item">
-                        <h5>Nombre</h5>
-                        <input formControlName="name" class="form-control" type="text" placeholder="Ej. TN011" [class.is-invalid]="
-                createConsumibleForm.controls['name'].invalid &&
-                createConsumibleForm.controls['name'].touched
-              " />
-                        <span *ngIf="isValidField('name')" class="form-text text-danger">
-              {{ getFieldError("name") }}
-            </span>
-                    </div>
+      <div class="form-container">
+        <div class="form-grid">
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Ej. TN011"
+                formControlName="name"
+              />
+              <mat-error *ngIf="isValidField('name')">{{
+                getFieldError('name')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <!-- Brand Field -->
-                    <div class="consumibles-data-item">
-                        <h5>Marca</h5>
-                        <input formControlName="brand" class="form-control" type="text" placeholder="Ej. Konica Minolta" [class.is-invalid]="
-                createConsumibleForm.controls['brand'].invalid &&
-                createConsumibleForm.controls['brand'].touched
-              " />
-                        <span *ngIf="isValidField('brand')" class="form-text text-danger">
-              {{ getFieldError("brand") }}
-            </span>
-                    </div>
+          <!-- Brand Field -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Marca</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Ej. Konica Minolta"
+                formControlName="brand"
+              />
+              <mat-error *ngIf="isValidField('brand')">{{
+                getFieldError('brand')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <!-- Category field -->
-                    <div class="consumibles-data-item">
-                        <h5>Categoria</h5>
-                        <select class="form-select" formControlName="category" [class.is-invalid]="
-                createConsumibleForm.controls['category'].invalid &&
-                createConsumibleForm.controls['category'].touched
-              ">
-              <option value="Toner">Cartucho de tóner</option>
-              <option value="Toner">Cartucho de tinta</option>
-              <option value="Drum">Fusor</option>
-              <option value="Drum">Tambor</option>
-              <option value="Drum">Cilindros y rodillos</option>
-              <option value="Papel">Papel</option>
-            </select>
-                        <span *ngIf="isValidField('category')" class="form-text text-danger">
-              {{ getFieldError("category") }}
-            </span>
-                    </div>
+          <!-- Category field -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Categoria</mat-label>
+              <mat-select formControlName="category">
+                <mat-option value="Toner">Cartucho de tóner</mat-option>
+                <mat-option value="Toner">Cartucho de tinta</mat-option>
+                <mat-option value="Drum">Fusor</mat-option>
+                <mat-option value="Drum">Tambor</mat-option>
+                <mat-option value="Drum">Cilindros y rodillos</mat-option>
+                <mat-option value="Papel">Papel</mat-option>
+              </mat-select>
+              <mat-error *ngIf="isValidField('category')">{{
+                getFieldError('category')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <!-- Price field -->
-                    <div class="consumibles-data-item">
-                        <h5>Precio</h5>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" class="form-control" formControlName="price" step="0.01" [class.is-invalid]="
-                  createConsumibleForm.controls['price'].invalid &&
-                  createConsumibleForm.controls['price'].touched
-                " />
-                            <div class="input-group-text">
-                                <select class="currency-select" formControlName="currency">
-                  <option value="USD">USD</option>
-                  <option value="MXN">MXN</option>
-                </select>
-                            </div>
-                        </div>
-                        <span *ngIf="isValidField('price')" class="form-text text-danger">
-              {{ getFieldError("price") }}
-            </span>
-                    </div>
+          <!-- Price field -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Precio</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="number"
+                placeholder="3500"
+                formControlName="price"
+              />
+              <mat-select matTextSuffix formControlName="currency">
+                <mat-option value="MXN">MXN</mat-option>
+                <mat-option value="USD">USD</mat-option>
+              </mat-select>
+              <mat-error *ngIf="isValidField('price')">{{
+                getFieldError('price')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <!-- color -->
-                    <div class="consumibles-data-item">
-                        <h5>Color</h5>
-                        <select formControlName="color" class="form-select" [class.is-invalid]="
-                createConsumibleForm.controls['color'].invalid &&
-                createConsumibleForm.controls['color'].touched
-              ">
+          <!-- color -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Color</mat-label>
+              <mat-select formControlName="color">
+                <mat-option value="K">
+                  <span
+                    class="color-box"
+                    style="background-color: black"
+                  ></span>
+                  Negro
+                </mat-option>
+                <mat-option value="C">
+                  <span class="color-box" style="background-color: cyan"></span>
+                  Cyan
+                </mat-option>
+                <mat-option value="M">
+                  <span
+                    class="color-box"
+                    style="background-color: magenta"
+                  ></span>
+                  Magenta
+                </mat-option>
+                <mat-option value="Y">
+                  <span
+                    class="color-box"
+                    style="background-color: yellow"
+                  ></span>
+                  Amarillo
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="isValidField('color')">{{
+                getFieldError('color')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- origin field selector-->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Origen del producto</mat-label>
+              <mat-select formControlName="origen">
+                <mat-option value="OEM">OEM</mat-option>
+                <mat-option value="Generico">Generico</mat-option>
+                <mat-option value="Recarga">Recarga</mat-option>
+              </mat-select>
+              <mat-error *ngIf="isValidField('origen')">{{
+                getFieldError('origen')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- yield field -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Vida Util &#64; 5%</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="Ej. 25000"
+                formControlName="yield"
+              />
+              <span matTextSuffix>páginas</span>
+              <mat-error *ngIf="isValidField('yield')">{{
+                getFieldError('yield')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- volume field -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Volumen</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="Ej. 350 gr"
+                formControlName="volume"
+              />
+              <span matTextSuffix>gr</span>
+              <mat-error *ngIf="isValidField('volume')">{{
+                getFieldError('volume')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- SKU Field -->
+          <div class="form-item full-row">
+            <mat-form-field appearance="outline">
+              <mat-label>SKU</mat-label>
+              <input
+                matInput
+                type="text"
+                (input)="skuField.value = skuField.value.toUpperCase()"
+                placeholder="Ej. A0TH030"
+                #skuField
+                style="text-transform: uppercase"
+                formControlName="sku"
+              />
+              <mat-error *ngIf="isValidField('sku')">{{
+                getFieldError('sku')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Short Description field -->
+          <div class="form-item full-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción Corta</mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="2"
+                formControlName="shortDescription"
+                class="short-description-textarea"
+              ></textarea>
+              <mat-error *ngIf="isValidField('shortDescription')">{{
+                getFieldError('shortDescription')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Long Description field -->
+          <div class="form-item full-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción Larga</mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"
+                formControlName="longDescription"
+              ></textarea>
+              <mat-error *ngIf="isValidField('longDescription')">{{
+                getFieldError('longDescription')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- printers -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Multifuncionales Relacionados</mat-label>
+              <mat-chip-grid #chipGridPrinter aria-label="Escribe etiquetas">
+                <mat-chip-row
+                  *ngFor="let printer of printers; let i = index"
+                  (removed)="removePrinter(printer.value)"
+                  [aria-description]="'press enter to edit ' + printer"
+                >
+                  {{ printer.value }}
+                  <button matChipRemove [attr.aria-label]="'remove ' + printer">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+                <input
+                  placeholder="Agrega una multifuncional..."
+                  [matChipInputFor]="chipGridPrinter"
+                  [formControl]="printerNameControl"
+                  [matAutocomplete]="autoPrinter"
+                  [matChipInputAddOnBlur]="true"
+                />
+                <mat-autocomplete
+                  #autoPrinter="matAutocomplete"
+                  (optionSelected)="addPrinterFromAutocomplete($event)"
+                >
+                  <ng-container
+                    *ngFor="let printerName of filteredPrinterNames | async"
+                  >
+                    <mat-option [value]="printerName">
+                      <mat-checkbox
+                        [checked]="isPrinterAdded(printerName)"
+                        (click)="$event.stopPropagation()"
+                        (change)="togglePrinterSelection($event, printerName)"
+                      >
+                        {{ printerName }}
+                      </mat-checkbox>
+                    </mat-option>
+                  </ng-container>
+                </mat-autocomplete>
+              </mat-chip-grid>
+            </mat-form-field>
+          </div>
+
+          <!-- counterparts -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Consumibles Relacionados</mat-label>
+              <mat-chip-grid
+                #chipGridCounterpart
+                aria-label="Escribe etiquetas"
               >
-              <option value="K">
-                <span class="color-box" style="background-color: black"></span>
-                Negro
-              </option>
-              <option value="C">
-                <span class="color-box" style="background-color: cyan"></span>
-                Cyan
-              </option>
-              <option value="M">
-                <span
-                  class="color-box"
-                  style="background-color: magenta"
-                ></span>
-                Magenta
-              </option>
-              <option value="Y">
-                <span class="color-box" style="background-color: yellow"></span>
-                Amarillo
-              </option>
-            </select>
-                        <span *ngIf="isValidField('color')" class="form-text text-danger">
-              {{ getFieldError("color") }}
-            </span>
-                    </div>
-
-                    <!-- origin field selector-->
-                    <div class="consumibles-data-item">
-                        <h5>Origen del producto</h5>
-                        <select formControlName="origen" class="form-select" [class.is-invalid]="
-                createConsumibleForm.controls['origen'].invalid &&
-                createConsumibleForm.controls['origen'].touched
-              ">
-              <option value="OEM">OEM</option>
-              <option value="Generico">Generico</option>
-              <option value="Recarga">Recarga</option>
-            </select>
-                        <span *ngIf="isValidField('origen')" class="form-text text-danger">
-              {{ getFieldError("origen") }}
-            </span>
-                    </div>
-
-                    <!-- SKU Field -->
-                    <div class="consumibles-data-item">
-                        <h5>SKU</h5>
-                        <input formControlName="sku" class="form-control" type="text" placeholder="Ej. A0TH030" [class.is-invalid]="
-                createConsumibleForm.controls['sku'].invalid &&
-                createConsumibleForm.controls['sku'].touched
-              " />
-                        <span *ngIf="isValidField('sku')" class="form-text text-danger">
-              {{ getFieldError("sku") }}
-            </span>
-                    </div>
-
-                    <!-- yield field -->
-                    <div class="consumibles-data-item">
-                        <h5>Vida Util &#64; 5%</h5>
-                        <div class="input-group">
-                            <input type="number" class="form-control" formControlName="yield" [class.is-invalid]="
-                  createConsumibleForm.controls['yield'].invalid &&
-                  createConsumibleForm.controls['yield'].touched
-                " />
-                            <span class="input-group-text">páginas</span>
-                        </div>
-                        <span *ngIf="isValidField('yield')" class="form-text text-danger">
-              {{ getFieldError("yield") }}
-            </span>
-                    </div>
-
-                    <!-- Short Description field -->
-                    <div class="consumibles-data-item full-row">
-                        <h5>Descripción corta</h5>
-                        <textarea formControlName="shortDescription" class="form-control text-area-small" rows="1" [class.is-invalid]="
-                createConsumibleForm.controls['shortDescription'].invalid &&
-                createConsumibleForm.controls['shortDescription'].touched
-              ">
-            </textarea>
-                        <span *ngIf="isValidField('shortDescription')" class="form-text text-danger">
-              {{ getFieldError("shortDescription") }}
-            </span>
-                    </div>
-
-                    <!-- Long Description field -->
-                    <div class="consumibles-data-item full-row">
-                        <h5>Descripción larga</h5>
-                        <textarea formControlName="longDescription" class="form-control text-area-large" rows="5" [class.is-invalid]="
-                createConsumibleForm.controls['longDescription'].invalid &&
-                createConsumibleForm.controls['longDescription'].touched
-              ">
-            </textarea>
-                        <span *ngIf="isValidField('longDescription')" class="form-text text-danger">
-              {{ getFieldError("longDescription") }}
-            </span>
-                    </div>
-
-                    <!-- volume field -->
-                    <div class="consumibles-data-item">
-                        <h5>Volumen</h5>
-                        <div class="input-group">
-                            <input type="number" class="form-control" formControlName="volume" [class.is-invalid]="
-                  createConsumibleForm.controls['volume'].invalid &&
-                  createConsumibleForm.controls['volume'].touched
-                " />
-                            <span class="input-group-text">gr</span>
-                        </div>
-                        <span *ngIf="isValidField('volume')" class="form-text text-danger">
-              {{ getFieldError("volume") }}
-            </span>
-                    </div>
-
-                    <!-- printers -->
-                    <div class="consumibles-data-item">
-                        <h5>Multifuncionales compatibles</h5>
-                        <div class="tag-inputs-container" formArrayName="printers">
-                            <div *ngFor="let printer of printers; let i = index">
-                                <div class="tag-inputs">
-                                    <input [formControlName]="i" class="form-control" />
-                                    <button class="button button-danger button-icon" (click)="removePrinter(i)">
-                    <mat-icon>delete</mat-icon>
+                <mat-chip-row
+                  *ngFor="let counterpart of counterparts; let i = index"
+                  (removed)="removeCounterpart(counterpart.value)"
+                  [aria-description]="'press enter to edit ' + counterpart"
+                >
+                  {{ counterpart.value }}
+                  <button
+                    matChipRemove
+                    [attr.aria-label]="'remove ' + counterpart"
+                  >
+                    <mat-icon>cancel</mat-icon>
                   </button>
-                                </div>
-                            </div>
-                            <input type="text" placeholder="Agrega una multifuncional..." aria-label="Number" class="form-control" [formControl]="printerNameControl" [matAutocomplete]="autoPrinter" />
-                            <mat-autocomplete #autoPrinter="matAutocomplete" (optionSelected)="addPrinterFromAutocomplete($event)" class="form-control">
-                                <mat-option *ngFor="let printerName of filteredPrinterNames | async" [value]="printerName">
-                                    {{ printerName }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </div>
-                    </div>
+                </mat-chip-row>
+                <input
+                  placeholder="Agrega un consumible..."
+                  [matChipInputFor]="chipGridCounterpart"
+                  [formControl]="counterpartNameControl"
+                  [matAutocomplete]="autoCounterpart"
+                  [matChipInputAddOnBlur]="true"
+                />
+                <mat-autocomplete
+                  #autoCounterpart="matAutocomplete"
+                  (optionSelected)="addCounterpartFromAutocomplete($event)"
+                >
+                  <ng-container
+                    *ngFor="
+                      let counterpartName of filteredCounterpartNames | async
+                    "
+                  >
+                    <mat-option [value]="counterpartName">
+                      <mat-checkbox
+                        [checked]="isCounterpartAdded(counterpartName)"
+                        (click)="$event.stopPropagation()"
+                        (change)="
+                          toggleCounterpartSelection($event, counterpartName)
+                        "
+                      >
+                        {{ counterpartName }}
+                      </mat-checkbox>
+                    </mat-option>
+                  </ng-container>
+                </mat-autocomplete>
+              </mat-chip-grid>
+            </mat-form-field>
+          </div>
 
-                    <!-- counterparts -->
-                    <div class="consumibles-data-item">
-                        <h5>Consumibles Relacionados</h5>
-                        <div class="tag-inputs-container" formArrayName="counterparts">
-                            <div *ngFor="let counterpart of counterparts; let i = index">
-                                <div class="tag-inputs">
-                                    <input [formControlName]="i" class="form-control" />
-                                    <button class="button button-danger button-icon" (click)="removeCounterpart(i)">
-                    <mat-icon>delete</mat-icon>
+          <!-- Compatible Models Field -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Modelos Compatibles</mat-label>
+              <mat-chip-grid #chipGrid aria-label="Agrega Modelos">
+                <mat-chip-row
+                  *ngFor="let model of models; let i = index"
+                  (removed)="removeModel(model)"
+                  [editable]="true"
+                  (edited)="editModel(i, $event)"
+                  [aria-description]="'presiona enter para editar ' + model"
+                >
+                  {{ model }}
+                  <button matChipRemove [attr.aria-label]="'borra ' + model">
+                    <mat-icon>cancel</mat-icon>
                   </button>
-                                </div>
-                            </div>
-                            <input type="text" placeholder="Agrega un Consumibles Relacionados..." aria-label="Number" class="form-control" [formControl]="counterpartNameControl" [matAutocomplete]="autoCounterpart" />
-                            <mat-autocomplete #autoCounterpart="matAutocomplete" (optionSelected)="addCounterpartFromAutocomplete($event)" class="form-control">
-                                <mat-option *ngFor="
-                    let counterpartName of filteredCounterpartNames | async
-                  " [value]="counterpartName">
-                                    {{ counterpartName }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </div>
-                    </div>
-
-                    <!-- Compatible Models Field -->
-                    <div class="consumibles-data-item">
-                        <h5>Modelos compatibles</h5>
-                        <div class="tag-inputs-container" formArrayName="compatibleModels">
-                            <div *ngFor="let model of compatibleModelsControls; let i = index">
-                                <div class="tag-inputs">
-                                    <input [formControlName]="i" class="form-control" />
-                                    <button class="button button-danger button-icon" (click)="removeModel(i)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                                </div>
-                            </div>
-                            <button class="button button-secondary button-icon" (click)="addModel()">
-                <mat-icon>add</mat-icon>
-              </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </mat-chip-row>
+                <input
+                  placeholder="Nuevo modelo compatible..."
+                  [matChipInputFor]="chipGrid"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="true"
+                  (matChipInputTokenEnd)="addModel($event)"
+                />
+              </mat-chip-grid>
+            </mat-form-field>
+          </div>
         </div>
-    </form>
+      </div>
+    </div>
+  </form>
 </div>

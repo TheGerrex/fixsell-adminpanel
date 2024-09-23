@@ -11,7 +11,7 @@ export class ToastService {
   showSuccess(message: string, buttonText: string) {
     this.snackBar.openFromComponent(ToastComponent, {
       data: {
-        title: 'Exito',
+        title: 'Éxito',
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-success',

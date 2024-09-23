@@ -1,180 +1,180 @@
-@import "_variables.scss";
+@import '_variables.scss';
 .user-container {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: $border-radius;
-    border: 1px solid $gray-300;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  justify-content: center;
 }
 
 .user-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  background-color: $white;
+  padding: 1rem;
+  gap: 0.5rem;
+  border-radius: $border-radius $border-radius 0 0;
+  width: 100%;
+  .table-title {
+    // font-family: "Roboto Condensed", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    margin: 0;
+  }
+  .table-actions {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid $gray-300;
-    background-color: $white;
-    padding: 1rem;
-    gap: .5rem;
-    border-radius: $border-radius $border-radius 0 0;
-    width: 100%;
-    .table-title {
-        // font-family: "Roboto Condensed", sans-serif;
-        font-optical-sizing: auto;
-        font-weight: 600;
-        font-style: normal;
-        margin: 0;
+    flex-wrap: wrap-reverse;
+    justify-content: flex-end;
+    gap: 0.5em;
+    .action-buttons {
+      display: flex;
+      gap: 0.5em;
+      button {
+        flex-shrink: 0;
+      }
     }
-    .table-actions {
-        display: flex;
-        flex-wrap: wrap-reverse;
-        justify-content: flex-end;
-        gap: 0.5em;
-        .action-buttons {
-            display: flex;
-            gap: 0.5em;
-            button {
-                flex-shrink: 0;
-            }
-        }
-    }
+  }
 }
 
 .user-info {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-    width: 100%;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 1em;
-    @media (max-width: 1024px) {
-        flex-direction: column;
-    }
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  width: 100%;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 1em;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
 }
 
 .card-settings {
-    max-width: 1024px;
-    width: 100%;
+  max-width: 1024px;
+  width: 100%;
 }
 
 .card-settings-body {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 1em;
-    gap: 1em;
-    height: 100%;
-    @media(max-width: 768px) {
-        flex-direction: column;
-    }
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1em;
+  gap: 1em;
+  height: 100%;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .avatar-icon {
-    min-width: 100px;
-    min-height: 100px;
-    border-radius: 50%;
-    display: block;
-    background-color: #f5f5f5;
-    color: #333;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: block;
+  background-color: #f5f5f5;
+  color: #333;
 }
 
 .card-settings-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1em;
-    padding: 1em;
-    border-top: 1px solid $gray-200;
-    width: 100%;
-    button {
-        @media (max-width: 500px) {
-            width: 100%;
-        }
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+  border-top: 1px solid $gray-200;
+  width: 100%;
+  button {
+    @media (max-width: 500px) {
+      width: 100%;
     }
+  }
 }
 
 .user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1em;
+  width: 100%;
+  .info-row {
+    // Container for the 3 columns
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 1em;
     width: 100%;
-    .info-row {
-        // Container for the 3 columns
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        .info-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 0.25em;
-            flex-grow: 1;
-            p {
-                font-size: 1em;
-                font-weight: 500;
-                color: $text;
-                margin: 0 !important;
-            }
-        }
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    .info-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 0.25em;
+      flex-grow: 1;
+      p {
+        font-size: 1em;
+        font-weight: 500;
+        color: $text;
+        margin: 0 !important;
+      }
     }
+  }
 }
 
 .status {
-    font-family: "Roboto Mono", monospace;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-style: normal;
-    font-size: 14px;
-    color: $white;
-    background-color: $success-color;
-    border-radius: $border-radius;
-    padding: .25rem .5rem;
+  font-family: 'Roboto Mono', monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 14px;
+  color: $white;
+  background-color: $success-color;
+  border-radius: $border-radius;
+  padding: 0.25rem 0.5rem;
 }
 
 .status-noactive {
-    font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto Mono', monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 14px;
+  color: $danger-color;
+  background-color: $message-danger-color;
+  border-radius: $border-radius;
+  padding: 0.25rem 0.5rem;
+}
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  .role {
+    font-family: 'Roboto Mono', monospace;
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
     font-size: 14px;
-    color: $danger-color;
-    background-color: $message-danger-color;
+    color: $text-secondary;
+    margin: 0 !important;
+    background-color: $gray-100;
+    padding: 0.25rem 0.5rem;
     border-radius: $border-radius;
-    padding: .25rem .5rem;
-}
-
-.roles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-    .role {
-        font-family: "Roboto Mono", monospace;
-        font-optical-sizing: auto;
-        font-weight: 600;
-        font-style: normal;
-        font-size: 14px;
-        color: $text-secondary;
-        margin: 0 !important;
-        background-color: $gray-100;
-        padding: .25rem .5rem;
-        border-radius: $border-radius;
-    }
+  }
 }
 
 .user-email {
-    padding: .25rem 0rem;
+  padding: 0.25rem 0rem;
 }
 
 .username {
-    padding: .25rem 0rem;
+  padding: 0.25rem 0rem;
 }

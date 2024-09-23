@@ -143,7 +143,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
           // Update dataSource
           this.dataSource.data = this.consumibleData;
 
-          this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+          this.toastService.showSuccess('Consumible eliminado con éxito', 'Aceptar');
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');

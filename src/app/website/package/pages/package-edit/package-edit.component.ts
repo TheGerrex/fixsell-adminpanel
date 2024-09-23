@@ -8,13 +8,12 @@ import {
 } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, from } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { PackageService } from '../../services/package.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-package-edit',
@@ -33,9 +32,19 @@ export class PackageEditComponent implements OnInit {
   isLoadingData = false;
   isSubmitting = false;
   selectedPrinter!: Printer;
-
+  customOptionControl: FormControl = new FormControl();
+  allOptions: string[] = [];
   printerNameControl = new FormControl();
   filteredPrinterNames: Observable<string[]> | undefined;
+
+  showCustomOptionInput: boolean = false;
+  predefinedOptions: string[] = [
+    'Tóner, consumibles y refacciones',
+    'Servicios preventivos',
+    'Servicios correctivos ilimitados',
+    'Tiempo de respuesta 6 hrs. máximo',
+    'Capacitación de uso del equipo',
+    'Servicio técnico certificado por la marca'];
 
   constructor(
     private toastService: ToastService,
@@ -45,7 +54,7 @@ export class PackageEditComponent implements OnInit {
     private PackageService: PackageService,
     private validatorsService: ValidatorsService,
     private datePipe: DatePipe,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getPackage();
@@ -65,6 +74,7 @@ export class PackageEditComponent implements OnInit {
         this.printerPrice = this.package.printer.price; // set the printer price
         this.printerBrand = this.package.printer.brand; // set the printer brand
         this.initalizeForm();
+        this.mergeOptions(this.package.packageIncludes);
         console.log(packages);
         this.isLoadingData = false;
       });
@@ -120,33 +130,44 @@ export class PackageEditComponent implements OnInit {
       ),
     });
   }
-  calculatePercentage() {
-    const price = this.editPackageForm.controls['packagePrice'].value;
-    const discount = ((this.printerPrice - price) / this.printerPrice) * 100;
-    this.editPackageForm.controls['packageDiscountPercentage'].setValue(
-      discount,
-    );
+
+  mergeOptions(customOptions: string[]): void {
+    const allOptionsSet = new Set([...this.predefinedOptions, ...customOptions]);
+    this.allOptions = Array.from(allOptionsSet);
   }
 
-  calculatePrice() {
-    const discount =
-      this.editPackageForm.controls['packageDiscountPercentage'].value;
-    const price = this.printerPrice * ((100 - discount) / 100);
-    this.editPackageForm.controls['packagePrice'].setValue(price);
+  get packageIncludes() {
+    return this.editPackageForm.get('packageIncludes') as FormArray;
   }
 
-  get packageIncludesControls() {
-    return (this.editPackageForm.get('packageIncludes') as FormArray).controls;
+  onCheckboxChange(event: MatCheckboxChange, option: string): void {
+    if (event.checked) {
+      this.packageIncludes.push(this.fb.control(option));
+    } else {
+      const index = this.packageIncludes.controls.findIndex(x => x.value === option);
+      this.packageIncludes.removeAt(index);
+    }
   }
 
-  addInclude() {
-    (this.editPackageForm.get('packageIncludes') as FormArray).push(
-      new FormControl(''),
-    );
+  addCustomOption(): void {
+    const customOption = this.customOptionControl.value;
+    if (customOption && !this.allOptions.includes(customOption)) {
+      this.allOptions.push(customOption);
+      this.packageIncludes.push(this.fb.control(customOption));
+      this.customOptionControl.setValue(''); // Reset the input field
+      this.showCustomOptionInput = false; // Hide the input field
+    }
   }
 
-  removeInclude(index: number) {
-    (this.editPackageForm.get('packageIncludes') as FormArray).removeAt(index);
+  isChecked(option: string): boolean {
+    return this.packageIncludes.controls.some(x => x.value === option);
+  }
+
+  toggleCustomOptionInput(): void {
+    this.showCustomOptionInput = !this.showCustomOptionInput;
+    if (!this.showCustomOptionInput) {
+      this.customOptionControl.setValue(''); // Reset the input field if hiding
+    }
   }
 
   isValidField(field: string): boolean | null {
@@ -169,26 +190,26 @@ export class PackageEditComponent implements OnInit {
     this.isSubmitting = true;
     const formData = {
       ...this.editPackageForm.value,
-      packagePrice: Number(this.editPackageForm.value.packagePrice),
-      packageDiscountPercentage: Number(
-        this.editPackageForm.value.packageDiscountPercentage,
-      ),
-      packageExtraClickPrice: Number(
-        this.editPackageForm.value.packageExtraClickPrice,
-      ),
+      packageMonthlyPrice: Number(this.editPackageForm.value.packageMonthlyPrice),
+      packageExtraClickPriceBw: Number(this.editPackageForm.value.packageExtraClickPriceBw),
+      packageDepositPrice: Number(this.editPackageForm.value.packageDepositPrice),
+      packagePrintsBw: Number(this.editPackageForm.value.packagePrintsBw),
+      packagePrintsColor: Number(this.editPackageForm.value.packagePrintsColor),
+      packageExtraClickPriceColor: Number(this.editPackageForm.value.packageExtraClickPriceColor),
+      packageDiscountPercentage: Number(this.editPackageForm.value.packageDiscountPercentage),
     };
 
     this.PackageService.updatePackage(this.package.id, formData).subscribe(
       (response) => {
         this.isSubmitting = false;
-        this.toastService.showSuccess('Package updated successfully', 'OK'); // Show success toast
+        this.toastService.showSuccess('Paquete de renta actualizado con éxito', 'OK'); // Show success toast
         this.router.navigate(['/website/packages']);
       },
       (error) => {
         this.isSubmitting = false;
         console.log(error);
         this.toastService.showError(
-          'There was an error: ' + error.error.message + '. Please try again.',
+          'Hubo un error: ' + error.error.message + '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },

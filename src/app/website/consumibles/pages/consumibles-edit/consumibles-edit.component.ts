@@ -245,7 +245,7 @@ export class ConsumiblesEditComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.onRemove(index);
-        this.toastService.showSuccess('Imagen eliminada con exito', 'Aceptar');
+        this.toastService.showSuccess('Imagen eliminada con éxito', 'Aceptar');
       }
     });
   }

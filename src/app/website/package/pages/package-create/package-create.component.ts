@@ -16,6 +16,7 @@ import { Observable, map, startWith, switchMap } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { PrinterService } from 'src/app/website/printer/services/printer.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-package-create',
@@ -23,14 +24,24 @@ import { Printer } from 'src/app/website/interfaces/printer.interface';
   styleUrls: ['./package-create.component.scss'],
 })
 export class PackageCreateComponent implements OnInit {
-  public createPackageForm!: FormGroup;
+  createPackageForm!: FormGroup;
   printerControl = new FormControl();
-  printerPrice: number = 0;
-  isSubmitting = false;
-  selectedPrinter!: Printer;
-
+  customOptionControl: FormControl = new FormControl();
   printerNameControl = new FormControl();
+  printerPrice: number = 0;
+  selectedPrinter!: Printer;
   filteredPrinterNames: Observable<string[]> | undefined;
+  isSubmitting = false;
+  showCustomOptionInput: boolean = false;
+  predefinedOptions: string[] = [
+    'Tóner, consumibles y refacciones',
+    'Servicios preventivos',
+    'Servicios correctivos ilimitados',
+    'Tiempo de respuesta 6 hrs. máximo',
+    'Capacitación de uso del equipo',
+    'Servicio técnico certificado por la marca'];
+
+
 
   constructor(
     private toastService: ToastService,
@@ -39,7 +50,7 @@ export class PackageCreateComponent implements OnInit {
     private validatorsService: ValidatorsService,
     private packageService: PackageService,
     private printerService: PrinterService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initalizeForm();
@@ -77,6 +88,7 @@ export class PackageCreateComponent implements OnInit {
       packageExtraClickPriceBw: [null],
       packageExtraClickPriceColor: [null],
       packageIncludes: this.fb.array([]),
+      customOption: this.customOptionControl,
     });
   }
 
@@ -128,29 +140,46 @@ export class PackageCreateComponent implements OnInit {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
     );
   }
 
-  get packageIncludesControls() {
-    return (this.createPackageForm.get('packageIncludes') as FormArray)
-      .controls;
+  get packageIncludes() {
+    return this.createPackageForm.get('packageIncludes') as FormArray;
   }
 
-  addInclude() {
-    (this.createPackageForm.get('packageIncludes') as FormArray).push(
-      new FormControl(''),
-    );
+  onCheckboxChange(event: MatCheckboxChange, option: string): void {
+    if (event.checked) {
+      this.packageIncludes.push(this.fb.control(option));
+    } else {
+      const index = this.packageIncludes.controls.findIndex(x => x.value === option);
+      this.packageIncludes.removeAt(index);
+    }
   }
 
-  removeInclude(index: number) {
-    (this.createPackageForm.get('packageIncludes') as FormArray).removeAt(
-      index,
-    );
+  addCustomOption(): void {
+    const customOption = this.customOptionControl.value;
+    if (customOption && !this.predefinedOptions.includes(customOption)) {
+      this.predefinedOptions.push(customOption);
+      this.packageIncludes.push(this.fb.control(customOption));
+      this.customOptionControl.setValue(''); // Reset the input field
+      this.showCustomOptionInput = false; // Hide the input field
+    }
+  }
+
+  isChecked(option: string): boolean {
+    return this.packageIncludes.controls.some(x => x.value === option);
+  }
+
+  toggleCustomOptionInput(): void {
+    this.showCustomOptionInput = !this.showCustomOptionInput;
+    if (!this.showCustomOptionInput) {
+      this.customOptionControl.setValue(''); // Reset the input field if hiding
+    }
   }
 
   submitForm(): void {
@@ -163,11 +192,11 @@ export class PackageCreateComponent implements OnInit {
       Object.keys(this.createPackageForm.controls).forEach((key) => {
         console.log(
           'Key = ' +
-            key +
-            ', Value = ' +
-            this.createPackageForm.controls[key].value +
-            ', Valid = ' +
-            this.createPackageForm.controls[key].valid,
+          key +
+          ', Value = ' +
+          this.createPackageForm.controls[key].value +
+          ', Valid = ' +
+          this.createPackageForm.controls[key].valid,
         );
       });
       console.log('invalid form');
@@ -182,6 +211,12 @@ export class PackageCreateComponent implements OnInit {
       this.createPackageForm.markAllAsTouched();
       return;
     }
+
+    // Remove customOption control if it exists
+    if (this.createPackageForm.contains('customOption')) {
+      this.createPackageForm.removeControl('customOption');
+    }
+
     const formData = this.createPackageForm.value;
 
     this.isSubmitting = true;
@@ -190,11 +225,10 @@ export class PackageCreateComponent implements OnInit {
       (id) => {
         console.log(id);
         formData.printer = id;
-        // this.createPackage(formData);
         console.log(formData);
         this.packageService.createPackage(formData).subscribe(
           (response) => {
-            this.toastService.showSuccess('Package created successfully', 'OK');
+            this.toastService.showSuccess('Paquete de renta creado con éxito', 'OK');
             this.isSubmitting = false;
             this.router.navigate(['/website/packages']);
           },
@@ -202,9 +236,9 @@ export class PackageCreateComponent implements OnInit {
             console.log(error);
             this.isSubmitting = false;
             this.toastService.showError(
-              'There was an error: ' +
-                error.error.message +
-                '. Please try again.',
+              'Hubo un error: ' +
+              error.error.message +
+              '. Por favor, intenta de nuevo.',
               'error-snackbar',
             );
           },
@@ -214,8 +248,8 @@ export class PackageCreateComponent implements OnInit {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-            error.error.message +
-            '. Por favor, intenta de nuevo.',
+          error.error.message +
+          '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },

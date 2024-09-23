@@ -12,7 +12,7 @@ export class ToastService {
   showSuccess(message: string, buttonText: string) {
     this.snackBar.openFromComponent(ToastComponent, {
       data: {
-        title: 'Exito',
+        title: 'Éxito',
         message: message,
         buttonText: buttonText,
         buttonColor: 'button-icon-success',
@@ -20,10 +20,11 @@ export class ToastService {
         borderColor: 'success-border',
         icon: 'done',
       },
-      duration: 8000, 
-      horizontalPosition: 'center', 
+      duration: 8000,
+      horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['success-toast']});
+      panelClass: ['success-toast']
+    });
   }
 
   showError(message: string, buttonText: string) {
@@ -37,10 +38,11 @@ export class ToastService {
         borderColor: 'error-border',
         icon: 'error',
       },
-      duration: 8000, 
-      horizontalPosition: 'center', 
+      duration: 8000,
+      horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['error-toast']});
+      panelClass: ['error-toast']
+    });
   }
 
   showWarning(message: string, buttonText: string) {
@@ -54,10 +56,11 @@ export class ToastService {
         borderColor: 'warning-border',
         icon: 'warning',
       },
-      duration: 8000, 
-      horizontalPosition: 'center', 
+      duration: 8000,
+      horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['warning-toast']});
+      panelClass: ['warning-toast']
+    });
   }
 
   showInfo(message: string, buttonText: string) {
@@ -71,10 +74,11 @@ export class ToastService {
         borderColor: 'info-border',
         icon: 'info',
       },
-      duration: 8000, 
-      horizontalPosition: 'center', 
+      duration: 8000,
+      horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['info-toast']});
+      panelClass: ['info-toast']
+    });
   }
 
   showHelp(message: string, buttonText: string) {
@@ -88,9 +92,10 @@ export class ToastService {
         borderColor: 'help-border',
         icon: 'info',
       },
-      duration: 8000, 
-      horizontalPosition: 'center', 
+      duration: 8000,
+      horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['help-toast']});
+      panelClass: ['help-toast']
+    });
   }
 }

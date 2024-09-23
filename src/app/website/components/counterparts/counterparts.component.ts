@@ -18,7 +18,7 @@ export class CounterpartsComponent implements OnInit {
     private toastService: ToastService,
     private dialog: MatDialog,
     private consumiblesService: ConsumiblesService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log(this.product);
@@ -35,7 +35,7 @@ export class CounterpartsComponent implements OnInit {
   navigateToEditConsumible(id: string) {
     this.router.navigate([`/website/consumibles/${id}/edit`]);
   }
-  
+
   openConfirmDialog(consumableId: string): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -63,12 +63,12 @@ export class CounterpartsComponent implements OnInit {
     this.consumiblesService.deleteConsumible(id).subscribe(
       (response) => {
         this.product.consumibles = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
-        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+        this.toastService.showSuccess('Consumible eliminado con éxito', 'Aceptar');
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
-    
+
   }
 }

@@ -17,7 +17,7 @@ export class PackageCardComponent {
     private dialog: MatDialog,
     private packageService: PackageService,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   @Input() product: any;
 
@@ -78,7 +78,7 @@ export class PackageCardComponent {
           (packages: Package) => packages.id !== numericId
         );
         this.toastService.showSuccess(
-          'Consumible eliminado con exito',
+          'Consumible eliminado con éxito',
           'Aceptar'
         );
       },

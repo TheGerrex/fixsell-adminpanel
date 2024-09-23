@@ -127,13 +127,14 @@
             <div class="deal-data-item">
               <!-- <h5>Fecha Inicial</h5> -->
               <p>
-                <b>Fecha Inicial: </b>{{ deal.dealStartDate | date : 'medium' }}
+                <b>Fecha Inicial: </b
+                >{{ deal.dealStartDate | date : 'd MMM yyyy' }}
               </p>
             </div>
             <div class="deal-data-item">
               <!-- <h5>Fecha Final</h5> -->
               <p>
-                <b>Fecha Final: </b>{{ deal.dealEndDate | date : 'medium' }}
+                <b>Fecha Final: </b>{{ deal.dealEndDate | date : 'd MMM yyyy' }}
               </p>
             </div>
           </div>

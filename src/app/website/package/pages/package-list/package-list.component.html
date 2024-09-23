@@ -1,68 +1,115 @@
 <app-loading-spinner *ngIf="isLoadingData"></app-loading-spinner>
-<div class="table-header">
-    <h2>Paquetes de Renta</h2>
-    <div class="table-action-buttons">
-        <div class="search-box">
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
-                    <mat-icon>search</mat-icon>
-                </span>
-                <input class="form-control" type="text" placeholder="Buscar" (input)="applyFilter($event)" />
-            </div>
-        </div>
-        <website-export [data]="packageData" [ignoreFields]="['id']"></website-export>
-        <button class="button button-primary button-raised button-icon-text" (click)="addPackage()">
-      <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-    </button>
+<div [hidden]="isLoadingData">
+  <div class="table-header">
+    <div class="table-header-container">
+      <h3 class="table-title">Paquetes de Renta</h3>
+      <div class="table-actions">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+          <input
+            matInput
+            type="text"
+            placeholder="Buscar Paquetes"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilter($event)"
+        /></mat-form-field>
+        <website-export
+          [data]="packageData"
+          [ignoreFields]="['id']"
+        ></website-export>
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="addPackage()"
+        >
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Paquete</span>
+        </button>
+      </div>
     </div>
-</div>
+    <div class="table-search">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar Paquetes"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter($event)"
+      /></mat-form-field>
+    </div>
+  </div>
 
-<div class="responsive-table">
-    <table mat-table matSort [dataSource]="dataSource" class="package-list-table">
-        <!-- <ng-container matColumnDef="brand">
-            <th mat-header-cell *matHeaderCellDef>Marca</th>
-            <th></th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.printer.brand }}</td>
-        </ng-container> -->
-
+  <div class="responsive-table">
+    <div class="table-container">
+      <table
+        mat-table
+        matSort
+        [dataSource]="dataSource"
+        class="package-list-table dense-theme"
+      >
         <ng-container matColumnDef="model">
-            <th mat-header-cell *matHeaderCellDef>Modelo</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.printer.model }}</td>
+          <th mat-header-cell *matHeaderCellDef>Modelo</th>
+          <td mat-cell *matCellDef="let pkg">{{ pkg.printer.model }}</td>
         </ng-container>
         <ng-container matColumnDef="deposit">
-            <th mat-header-cell *matHeaderCellDef>Deposito Inicial</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packageDepositPrice | currency:'$' : 'symbol' : '1.2-3' }} {{ pkg.packageCurrency }} </td>
+          <th mat-header-cell *matHeaderCellDef>Deposito Inicial</th>
+          <td mat-cell *matCellDef="let pkg">
+            {{ pkg.packageDepositPrice | currency : '$' : 'symbol' : '1.2-3' }}
+            {{ pkg.packageCurrency }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="monthlyPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Pago Mensual</th>
-            <td mat-cell *matCellDef="let pkg">
-                ${{ pkg.packageMonthlyPrice}} {{ pkg.packageCurrency }} ({{ pkg.packageDiscountPercentage }}% de descuento)
-            </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Pago Mensual
+          </th>
+          <td mat-cell *matCellDef="let pkg">
+            ${{ pkg.packageMonthlyPrice }} {{ pkg.packageCurrency }} ({{
+              pkg.packageDiscountPercentage
+            }}% de descuento)
+          </td>
         </ng-container>
 
         <!-- packageStartDate-->
-        <ng-container matColumnDef="bwPrints">
-            <th mat-header-cell *matHeaderCellDef>Impresiónes B/N</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packagePrintsBw | currency:' ' : 'symbol' : '1.0-2' }}</td>
+        <ng-container matColumnDef="prints">
+          <th mat-header-cell *matHeaderCellDef>Impresiónes</th>
+          <td mat-cell *matCellDef="let pkg">
+            <div style="display: flex; flex-direction: column">
+              <div class="print-item">
+                {{ pkg.packagePrintsBw | currency : ' ' : 'symbol' : '1.0-2' }}
+                <span>B/N</span>
+              </div>
+              <div class="print-item">
+                {{
+                  pkg.packagePrintsColor | currency : ' ' : 'symbol' : '1.0-2'
+                }}
+                <span>Color</span>
+              </div>
+            </div>
+          </td>
         </ng-container>
 
         <!-- packageStartDate-->
-        <ng-container matColumnDef="colorPrints">
-            <th mat-header-cell *matHeaderCellDef>Impresiónes Color</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packagePrintsColor | currency:' ' : 'symbol' : '1.0-2' }}</td>
-        </ng-container>
+        <!-- <ng-container matColumnDef="colorPrints">
+          <th mat-header-cell *matHeaderCellDef>Impresiónes Color</th>
+          <td mat-cell *matCellDef="let pkg"></td>
+        </ng-container> -->
 
         <!-- packageEndDate-->
         <ng-container matColumnDef="packageEndDate">
-            <th mat-header-cell *matHeaderCellDef>Terminacion de paquete</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packageEndDate | date: "longDate" }}</td>
+          <th mat-header-cell *matHeaderCellDef>Terminacion de paquete</th>
+          <td mat-cell *matCellDef="let pkg">
+            {{ pkg.packageEndDate | date : 'longDate' }}
+          </td>
         </ng-container>
 
         <!-- packageDuration-->
         <ng-container matColumnDef="packageDuration">
-            <th mat-header-cell *matHeaderCellDef>Duración de Contrato</th>
-            <td mat-cell *matCellDef="let pkg">{{ pkg.packageDuration }} meses</td>
+          <th mat-header-cell *matHeaderCellDef>Duración de Contrato</th>
+          <td mat-cell *matCellDef="let pkg">
+            {{ pkg.packageDuration }} meses
+          </td>
         </ng-container>
 
         <!-- packageDiscountPercentage -->
@@ -74,23 +121,46 @@
             </ng-container> -->
 
         <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let pkg">
-                <button mat-icon-button color="basic" *ngIf="isAdmin" (click)="seePackage(pkg)">
-          <mat-icon>visibility</mat-icon>
-        </button>
-                <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editPackage(pkg)">
-          <mat-icon>edit</mat-icon>
-        </button>
-                <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="openConfirmDialog(pkg)">
-          <mat-icon>delete</mat-icon>
-        </button>
-            </td>
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let pkg">
+            <button
+              mat-icon-button
+              class="see-icon"
+              *ngIf="isAdmin"
+              (click)="seePackage(pkg)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="edit-icon"
+              *ngIf="isAdmin"
+              (click)="editPackage(pkg)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="delete-icon"
+              *ngIf="isAdmin"
+              (click)="openConfirmDialog(pkg)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="8" showFirstLastButtons class="table-paginator"></mat-paginator>
+      </table>
+    </div>
+    <div>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        [pageSize]="8"
+        showFirstLastButtons
+        class="table-paginator"
+      ></mat-paginator>
+    </div>
+  </div>
 </div>

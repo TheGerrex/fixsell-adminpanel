@@ -19,7 +19,7 @@ export class ConsumableComponent {
     private toastService: ToastService,
     private dialog: MatDialog,
     private consumiblesService: ConsumiblesService
-  ) {}
+  ) { }
 
   @Input() product: any;
 
@@ -32,7 +32,7 @@ export class ConsumableComponent {
   navigateToEditConsumible(id: string) {
     this.router.navigate([`/website/consumibles/${id}/edit`]);
   }
-  
+
   openConfirmDialog(consumableId: string): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -60,12 +60,12 @@ export class ConsumableComponent {
     this.consumiblesService.deleteConsumible(id).subscribe(
       (response) => {
         this.product.consumibles = this.product.consumibles.filter((consumible: Consumible) => consumible.id !== id);
-        this.toastService.showSuccess('Consumible eliminado con exito', 'Aceptar');
+        this.toastService.showSuccess('Consumible eliminado con éxito', 'Aceptar');
       },
       (error) => {
         this.toastService.showError(error.error.message, 'Cerrar');
       }
     );
-    
+
   }
 }

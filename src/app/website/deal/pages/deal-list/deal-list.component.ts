@@ -151,7 +151,7 @@ export class DealListComponent implements OnInit {
         (response) => {
           this.dealData = this.dealData.filter((d) => d.id !== deal.id);
           this.dataSource.data = this.dealData;
-          this.toastService.showSuccess('Promoción eliminado con exito', 'Aceptar');
+          this.toastService.showSuccess('Promoción eliminado con éxito', 'Aceptar');
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');

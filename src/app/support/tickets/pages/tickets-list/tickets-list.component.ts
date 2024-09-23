@@ -124,7 +124,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private dialog: MatDialog,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -155,7 +155,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
       if (sortHeaderId === 'priority') {
         return this.priorityMapping[data.priority];
       } else {
-        return data[sortHeaderId  as keyof Ticket];
+        return data[sortHeaderId as keyof Ticket];
       }
     };
   }
@@ -272,7 +272,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
           this.TicketData = this.TicketData.filter((t) => t.id !== ticket.id);
           this.dataSource.data = this.TicketData;
           this.toastService.showSuccess(
-            'Ticket eliminado con exito',
+            'Ticket eliminado con éxito',
             'Aceptar'
           );
         },

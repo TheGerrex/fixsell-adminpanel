@@ -1,17 +1,34 @@
-<div class="file-drop-area" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
-    <p *ngIf="!isUploading">
-        Arrastre y suelte un archivo .png, .jpg o .jpeg
-    </p>
+<div
+  class="file-drop-area"
+  [class.dragging]="isDragging"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  <div *ngIf="isUploading" class="uploading-container">
+    <p>Cargando...</p>
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+  <div class="file-drop-body" *ngIf="!isUploading">
     <div class="icon-container">
-        <mat-icon>image</mat-icon>
+      <mat-icon>image</mat-icon>
     </div>
-    <div *ngIf="isUploading" class="uploading-container">
-        <p>Cargando...</p>
-        <mat-spinner class="spinner"></mat-spinner>
+    <p>Arrastre y suelte un archivo .png, .jpg o .jpeg</p>
+    <div class="separator">
+      <span>o</span>
     </div>
-
-    <button class="button button-secondary button-raised" type="button" (click)="fileInput.click()">
+    <button
+      class="button button-secondary button-raised"
+      type="button"
+      (click)="fileInput.click()"
+    >
       <span class="button-label">Selecciona archivo</span>
     </button>
-    <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
+    <input
+      type="file"
+      #fileInput
+      style="display: none"
+      (change)="onFileSelected($event)"
+    />
+  </div>
 </div>

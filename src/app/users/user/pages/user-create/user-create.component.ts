@@ -207,7 +207,7 @@ export class UserCreateComponent implements OnInit {
     this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
       next: (response) => {
         this.isLoadingForm = false;
-        this.toastService.showSuccess('Usuario creado con exito', 'Close');
+        this.toastService.showSuccess('Usuario creado con éxito', 'Close');
         // Navigate to the user detail page
         this.router.navigate(['/users/user']);
         // Reset the form

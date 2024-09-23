@@ -1,199 +1,304 @@
-<div>
-    <form [formGroup]="editPackageForm" class="packages-container" *ngIf="editPackageForm">
-        <div class="packages-header">
-            <h2>Editar Paquete de Renta</h2>
-            <button class="button button-primary button-raised button-icon-text" (click)="submitForm()">
-              <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
-            </button>
-        </div>
-        <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
-        <div class="packages-info">
-            <div class="packages-form-container">
-                <div class="packages-data">
-                    <!-- Printer -->
-                    <div class="packages-data-item full-row">
-                        <h5>Multifuncional</h5>
-                        <div class="packages-data-item">
-                            <input formControlName="printer" class="form-control" rows="5" [class.is-invalid]="
-                              editPackageForm.controls['printer'].invalid &&
-                              editPackageForm.controls['printer'].touched" />
-                        </div>
-                        <span *ngIf="isValidField('printer')" class="form-text text-danger">
-                              {{ getFieldError("printer") }}
-                        </span>
-                    </div>
+<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
+<div *ngIf="!isLoadingData">
+  <form [formGroup]="editPackageForm" class="section-card">
+    <div class="section-card-header">
+      <div class="section-card-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="header-title">Editar Paquete de Renta</h3>
+      </div>
+      <div class="button-actions">
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="submitForm()"
+        >
+          <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
+        </button>
+      </div>
+    </div>
+    <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
+    <div class="section-card-body">
+      <div class="form-container">
+        <div class="form-grid">
+          <!-- Printer -->
+          <div class="form-item full-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Multifuncional</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Agrega una multifuncional..."
+                formControlName="printer"
+              />
+              <mat-error *ngIf="isValidField('printer')">{{
+                getFieldError('printer')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <div class="packages-data-item">
-                        <h5>Fecha inicial</h5>
-                        <input formControlName="packageStartDate" class="form-control" type="date" [class.is-invalid]="
-                              editPackageForm.controls['packageStartDate'].invalid &&
-                              editPackageForm.controls['packageStartDate'].touched
-                            " />
-                        <span *ngIf="isValidField('packageStartDate')" class="form-text text-danger">
-                              {{ getFieldError("packageStartDate") }}
-                            </span>
-                    </div>
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Inicio</mat-label>
+              <input
+                matInput
+                [matDatepicker]="ticketStartDatepicker"
+                id="packageStartDate"
+                formControlName="packageStartDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="ticketStartDatepicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #ticketStartDatepicker>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+              <mat-error *ngIf="isValidField('packageStartDate')">{{
+                getFieldError('packageStartDate')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <div class="packages-data-item">
-                        <h5>Fecha final</h5>
-                        <input formControlName="packageEndDate" class="form-control" type="date" [class.is-invalid]="
-                              editPackageForm.controls['packageEndDate'].invalid &&
-                              editPackageForm.controls['packageEndDate'].touched" />
-                        <span *ngIf="isValidField('packageEndDate')" class="form-text text-danger">
-                              {{ getFieldError("packageEndDate") }}
-                            </span>
-                    </div>
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Finalización</mat-label>
+              <input
+                matInput
+                [matDatepicker]="ticketEndDatepicker"
+                id="packageEndDate"
+                formControlName="packageEndDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="ticketEndDatepicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #ticketEndDatepicker>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+              <mat-error *ngIf="isValidField('packageEndDate')">{{
+                getFieldError('packageEndDate')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <!-- package price -->
-                    <div class="packages-data-item">
-                        <h5>Deposito Inicial</h5>
-                        <div class="package-price-item input-group">
-                            <div class="input-group-text">$</div>
-                            <input formControlName="packageDepositPrice" class="form-control" type="number" step="0.01" placeholder="2000" [class.is-invalid]="
-                                  editPackageForm.controls['packageDepositPrice'].invalid &&
-                                  editPackageForm.controls['packageDepositPrice'].touched" />
-                            <div class="input-group-text">
-                                <select class="currency-select" formControlName="packageCurrency">
-                                      <option value="MXN">MXN</option>
-                                      <option value="USD">USD</option>
-                                </select>
-                            </div>
-                        </div>
-                        <span *ngIf="isValidField('packageDepositPrice')" class="form-text text-danger">
-                              {{ getFieldError("packageDepositPrice") }}
-                            </span>
-                    </div>
+          <!-- package price -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Deposito Inicial</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                placeholder="2000"
+                formControlName="packageDepositPrice"
+              />
+              <mat-select matTextSuffix formControlName="packageCurrency">
+                <mat-option value="MXN">MXN</mat-option>
+                <mat-option value="USD">USD</mat-option>
+              </mat-select>
 
-                    <!-- package monthly price -->
-                    <div class="packages-data-item">
-                        <h5>Pago mensual</h5>
-                        <div class="package-price-item input-group">
-                            <div class="input-group-text">$</div>
-                            <input formControlName="packageMonthlyPrice" class="form-control" type="number" step="0.01" placeholder="250" [class.is-invalid]="
-                                  editPackageForm.controls['packageMonthlyPrice'].invalid &&
-                                  editPackageForm.controls['packageMonthlyPrice'].touched" />
-                            <div class="input-group-text">
-                                <select class="currency-select" formControlName="packageCurrency">
-                                      <option value="MXN">MXN</option>
-                                      <option value="USD">USD</option>
-                                </select>
-                            </div>
-                        </div>
-                        <span *ngIf="isValidField('packageMonthlyPrice')" class="form-text text-danger">
-                          {{ getFieldError("packageMonthlyPrice") }}
-                        </span>
-                    </div>
+              <mat-error *ngIf="isValidField('packageDepositPrice')">{{
+                getFieldError('packageDepositPrice')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <div class="packages-data-item">
-                        <h5>Mensualidades</h5>
-                        <div class="input-group">
-                            <input formControlName="packageDuration" class="form-control" type="number" placeholder="2" [class.is-invalid]="
-                                  editPackageForm.controls['packageDuration'].invalid &&
-                                  editPackageForm.controls['packageDuration'].touched" />
-                            <div class="input-group-text">meses</div>
-                        </div>
-                        <span *ngIf="isValidField('packageDuration')" class="form-text text-danger">
-                              {{ getFieldError("packageDuration") }}
-                            </span>
-                    </div>
+          <!-- package price -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Pago mensual</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                placeholder="250"
+                formControlName="packageMonthlyPrice"
+              />
+              <mat-select matTextSuffix formControlName="packageCurrency">
+                <mat-option value="MXN">MXN</mat-option>
+                <mat-option value="USD">USD</mat-option>
+              </mat-select>
 
-                    <!-- package discount percentage -->
-                    <div class="packages-data-item">
-                        <h5>Descuento</h5>
-                        <div class="package-price-item input-group">
-                            <input formControlName="packageDiscountPercentage" class="form-control" type="number" step="0.01" placeholder="20" [class.is-invalid]="
-                              editPackageForm.controls['packageDiscountPercentage'].invalid &&
-                              editPackageForm.controls['packageDiscountPercentage'].touched" />
-                            <div class="input-group-text">%</div>
-                        </div>
-                        <span *ngIf="isValidField('packageDiscountPercentage')" class="form-text text-danger">
-                          {{ getFieldError("packageDiscountPercentage") }}
-                        </span>
-                    </div>
+              <mat-error *ngIf="isValidField('packageMonthlyPrice')">{{
+                getFieldError('packageMonthlyPrice')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <!-- package description -->
-                    <div class="packages-data-item">
-                        <h5>Descripción</h5>
-                        <textarea formControlName="packageDescription" class="form-control" rows="5" [class.is-invalid]="
-                          editPackageForm.controls['packageDescription'].invalid &&
-                          editPackageForm.controls['packageDescription'].touched">
-                        </textarea>
-                        <span *ngIf="isValidField('packageDescription')" class="form-text text-danger">
-                          {{ getFieldError("packageDescription") }}
-                        </span>
-                    </div>
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Mensualidades</mat-label>
+              <input
+                matInput
+                type="number"
+                step="6"
+                placeholder="2"
+                formControlName="packageDuration"
+              />
+              <span matTextSuffix>meses</span>
 
-                    <!-- Package Includes Field -->
-                    <div class="packages-data-item">
-                        <h5>Paquete incluye</h5>
-                        <div class="tag-inputs-container" formArrayName="packageIncludes">
-                            <div *ngFor="let include of packageIncludesControls; let i = index">
-                                <div class="tag-inputs">
-                                    <input [formControlName]="i" class="form-control" />
-                                    <button class="button button-danger button-icon" (click)="removeInclude(i)">
-                                      <mat-icon>delete</mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-                            <button class="button button-secondary button-icon" (click)="addInclude()">
-                              <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
-                    </div>
+              <mat-error *ngIf="isValidField('packageDuration')">{{
+                getFieldError('packageDuration')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <div class="packages-data-item">
-                        <h5>Impresiónes incluidas de B/N</h5>
-                        <div class="input-group">
-                            <input formControlName="packagePrintsBw" class="form-control" type="number" placeholder="5000" [class.is-invalid]="
-                              editPackageForm.controls['packagePrintsBw'].invalid &&
-                              editPackageForm.controls['packagePrintsBw'].touched" />
-                            <div class="input-group-text">impresiónes</div>
-                            <span *ngIf="isValidField('packagePrintsBw')" class="form-text text-danger">
-                              {{ getFieldError("packagePrintsBw") }}
-                            </span>
-                        </div>
-                    </div>
+          <!-- package discount percentage -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descuento</mat-label>
+              <input
+                matInput
+                type="number"
+                step="1"
+                placeholder="20"
+                formControlName="packageDiscountPercentage"
+              />
+              <span matTextSuffix>%</span>
 
-                    <div class="packages-data-item">
-                        <h5>Costo por click extra de B/N</h5>
-                        <div class="input-group">
-                            <div class="input-group-text">$</div>
-                            <input formControlName="packageExtraClickPriceBw" class="form-control" type="number" step="0.01" placeholder=".12" [class.is-invalid]="
-                              editPackageForm.controls['packageExtraClickPriceBw'].invalid &&
-                              editPackageForm.controls['packageExtraClickPriceBw'].touched" />
-                            <span *ngIf="isValidField('packageExtraClickPriceBw')" class="form-text text-danger">
-                              {{ getFieldError("packageExtraClickPriceBw") }}
-                            </span>
-                        </div>
-                    </div>
+              <mat-error *ngIf="isValidField('packageDiscountPercentage')">{{
+                getFieldError('packageDiscountPercentage')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-                    <div *ngIf="selectedPrinter?.color" class="packages-data-item">
-                        <h5>Impresiónes incluidas de Color</h5>
-                        <div class="input-group">
-                            <input formControlName="packagePrintsColor" class="form-control" type="number" placeholder="3500" [class.is-invalid]="
-                              editPackageForm.controls['packagePrintsColor'].invalid &&
-                              editPackageForm.controls['packagePrintsColor'].touched" />
-                            <div class="input-group-text">impresiónes</div>
-                            <span *ngIf="isValidField('packagePrintsColor')" class="form-text text-danger">
-                              {{ getFieldError("packagePrintsColor") }}
-                            </span>
-                        </div>
-                    </div>
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Impresiónes incluidas de B/N</mat-label>
+              <input
+                matInput
+                type="number"
+                step="100"
+                placeholder="5000"
+                formControlName="packagePrintsBw"
+              />
+              <span matTextSuffix>impresiónes</span>
 
-                    <div *ngIf="selectedPrinter?.color" class="packages-data-item">
-                        <h5>Costo por click extra de Color</h5>
-                        <div class="input-group">
-                            <div class="input-group-text">$</div>
-                            <input formControlName="packageExtraClickPriceColor" class="form-control" type="number" step="0.01" placeholder=".25" [class.is-invalid]="
-                              editPackageForm.controls['packageExtraClickPriceColor'].invalid &&
-                              editPackageForm.controls['packageExtraClickPriceColor'].touched" />
-                            <span *ngIf="isValidField('packageExtraClickPriceColor')" class="form-text text-danger">
-                              {{ getFieldError("packageExtraClickPriceColor") }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+              <mat-error *ngIf="isValidField('packagePrintsBw')">{{
+                getFieldError('packagePrintsBw')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Costo por click extra de B/N</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                placeholder=".12"
+                formControlName="packageExtraClickPriceBw"
+              />
+
+              <mat-error *ngIf="isValidField('packageExtraClickPriceBw')">{{
+                getFieldError('packageExtraClickPriceBw')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="selectedPrinter?.color" class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Impresiónes incluidas de Color</mat-label>
+              <input
+                matInput
+                type="number"
+                step="100"
+                placeholder="3500"
+                formControlName="packagePrintsColor"
+              />
+              <span matTextSuffix>impresiónes</span>
+
+              <mat-error *ngIf="isValidField('packagePrintsColor')">{{
+                getFieldError('packagePrintsColor')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="selectedPrinter?.color" class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Costo por click extra de Color</mat-label>
+              <span matTextPrefix>$&nbsp;</span>
+              <input
+                matInput
+                type="number"
+                step="0.01"
+                placeholder=".25"
+                formControlName="packageExtraClickPriceColor"
+              />
+
+              <mat-error *ngIf="isValidField('packageExtraClickPriceColor')">{{
+                getFieldError('packageExtraClickPriceColor')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- package description -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                placeholder="Descripción corta del paquete de renta..."
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="2"
+                formControlName="packageDescription"
+              ></textarea>
+              <mat-error *ngIf="isValidField('packageDescription')">{{
+                getFieldError('packageDescription')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Package Includes Field -->
+          <div class="form-item half-row">
+            <h5>Condiciones del paquete incluye</h5>
+            <div *ngFor="let option of allOptions">
+              <mat-checkbox
+                [checked]="isChecked(option)"
+                (change)="onCheckboxChange($event, option)"
+              >
+                {{ option }}
+              </mat-checkbox>
             </div>
+            <mat-checkbox
+              *ngIf="!showCustomOptionInput"
+              (change)="toggleCustomOptionInput()"
+            >
+              Agrega Otro
+            </mat-checkbox>
+            <div *ngIf="showCustomOptionInput" style="margin-top: 0.5rem">
+              <mat-form-field appearance="outline">
+                <mat-label>Nueva condición</mat-label>
+                <input
+                  matInput
+                  [formControl]="customOptionControl"
+                  (keydown.enter)="addCustomOption()"
+                  placeholder="Escribe condición del paquete..."
+                />
+              </mat-form-field>
+              <button
+                type="button"
+                class="button button-outline-primary"
+                style="margin-top: 0.5rem"
+                (click)="addCustomOption()"
+              >
+                <span class="button-label">Agregar</span>
+              </button>
+            </div>
+          </div>
         </div>
-    </form>
+      </div>
+    </div>
+  </form>
 </div>

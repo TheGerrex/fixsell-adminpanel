@@ -35,7 +35,7 @@ export class DealDetailComponent implements OnInit {
     private dialog: MatDialog,
     private dealService: DealService,
     private toastService: ToastService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isLoadingData = true;
@@ -90,25 +90,25 @@ export class DealDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (deal.id){
-            this.deleteDeal(deal)
+        if (deal.id) {
+          this.deleteDeal(deal)
         }
-        
+
       }
     });
   }
 
   deleteDeal(deal: Deal) {
-  if (deal.id){
-    this.dealService.deleteDealById(deal.id).subscribe(
-      (response) => {
-        this.toastService.showSuccess('Promoción eliminado con exito', 'Aceptar');
-        this.router.navigateByUrl('website/deals');
-      },
-      (error) => {
-        this.toastService.showError(error.error.message, 'Cerrar');
-      }
-      ); 
+    if (deal.id) {
+      this.dealService.deleteDealById(deal.id).subscribe(
+        (response) => {
+          this.toastService.showSuccess('Promoción eliminado con éxito', 'Aceptar');
+          this.router.navigateByUrl('website/deals');
+        },
+        (error) => {
+          this.toastService.showError(error.error.message, 'Cerrar');
+        }
+      );
     }
   }
 }

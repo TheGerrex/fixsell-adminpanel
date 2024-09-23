@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Agregar Categoria</h2>
+<!-- <h2 mat-dialog-title>Agregar Categoria</h2>
 <mat-dialog-content>
   <mat-form-field>
     <mat-label>Nombre</mat-label>
@@ -22,4 +22,37 @@
   >
     Agregar Categoria
   </button>
-</mat-dialog-actions>
+</mat-dialog-actions> -->
+<div class="dialog">
+  <div class="title-container">
+    <h4 class="title">Nueva Categoria</h4>
+  </div>
+  <div class="content">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Plotter UV, Foil, Impresión Textil, etc."
+        [formControl]="categoryName"
+        [class.is-invalid]="categoryName.invalid"
+      />
+      <mat-error *ngIf="categoryName.invalid">{{
+        categoryNameError
+      }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="button-actions">
+    <button class="button button-outline-secondary w-100" (click)="onNoClick()">
+      <span class="button-label">Cancelar</span>
+    </button>
+    <button
+      class="button button-primary button-icon-text button-raised w-100"
+      [disabled]="categoryName.invalid"
+      (click)="onSubmit()"
+    >
+      <mat-icon>add</mat-icon>
+      <span class="button-label">Crear Categoria</span>
+    </button>
+  </div>
+</div>

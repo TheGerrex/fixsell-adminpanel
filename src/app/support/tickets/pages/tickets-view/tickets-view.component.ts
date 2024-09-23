@@ -65,6 +65,8 @@ export class TicketsViewComponent implements OnInit {
     { value: Status.COMPLETED, label: 'Completado' },
   ];
   ticketStatus = Status.OPEN; // Default status
+  timeValues: { value: string; display: string }[] = [];
+
 
   clientForm!: FormGroup;
   eventForm!: FormGroup;
@@ -131,6 +133,37 @@ export class TicketsViewComponent implements OnInit {
     });
     this.getUsers();
     this.getCurrentUser();
+    this.initializeTimeValues();
+  }
+
+  private initializeTimeValues(): void {
+    // Populate timeValues with 24-hour time values in 15-minute increments
+    this.timeValues = []; // Ensure timeValues is initialized as an empty array
+
+    for (let i = 0; i < 24; i++) {
+      for (let j = 0; j < 60; j += 15) {
+        let hour = i;
+        let displayHour = i;
+        let amPm = 'am';
+
+        if (displayHour >= 12) {
+          amPm = 'pm';
+          if (displayHour > 12) displayHour -= 12;
+        } else if (displayHour === 0) {
+          displayHour = 12;
+        }
+
+        const hourString = hour < 10 ? `0${hour}` : `${hour}`;
+        const minuteString = j < 10 ? `0${j}` : `${j}`;
+        const displayHourString = displayHour < 10 ? `${displayHour}` : `${displayHour}`;
+        const displayMinuteString = minuteString;
+
+        this.timeValues.push({
+          value: `${hourString}:${minuteString}`,
+          display: `${displayHourString}:${displayMinuteString} ${amPm}`
+        });
+      }
+    }
   }
 
   initializeAllForms() {

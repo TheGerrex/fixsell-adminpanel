@@ -1,4 +1,4 @@
-@import "_variables.scss";
+@import '_variables.scss';
 .sidenav {
   background: $white;
   transition: all 0.5s ease;
@@ -343,4 +343,10 @@
 
 .rotate {
   transform: rotate(90deg);
+}
+
+.sidenav-item-theme {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
 }

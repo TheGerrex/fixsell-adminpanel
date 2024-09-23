@@ -3,7 +3,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 // Note: Color palettes are generated from primary: #3b82f6, secondary: #64748B, tertiary: #6366f1
-$_palettes: (
+$palettes: (
   primary: (
     0: #000000,
     10: #001a42,
@@ -125,13 +125,13 @@ $_palettes: (
   ),
 );
 $_rest: (
-  secondary: map.get($_palettes, secondary),
-  neutral: map.get($_palettes, neutral),
-  neutral-variant: map.get($_palettes, neutral-variant),
-  error: map.get($_palettes, error),
+  secondary: map.get($palettes, secondary),
+  neutral: map.get($palettes, neutral),
+  neutral-variant: map.get($palettes, neutral-variant),
+  error: map.get($palettes, error),
 );
-$_primary: map.merge(map.get($_palettes, primary), $_rest);
-$_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
+$_primary: map.merge(map.get($palettes, primary), $_rest);
+$_tertiary: map.merge(map.get($palettes, tertiary), $_rest);
 $light-theme: mat.define-theme(
   (
     color: (
@@ -148,16 +148,49 @@ $light-theme: mat.define-theme(
     ),
   )
 );
-$dark-theme: mat.define-theme(
+$light-dense-theme: mat.define-theme(
   (
     color: (
-      theme-type: dark,
+      theme-type: light,
       primary: $_primary,
       tertiary: $_tertiary,
       use-system-variables: true,
     ),
     typography: (
       use-system-variables: true,
+    ),
+    density: (
+      scale: 0,
+    ),
+  )
+);
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: $_primary,
+      tertiary: $_tertiary,
+    ),
+    typography: (
+      use-system-variables: true,
+    ),
+    density: (
+      scale: -2,
+    ),
+  )
+);
+$dark-dense-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: $_primary,
+      tertiary: $_tertiary,
+    ),
+    typography: (
+      use-system-variables: true,
+    ),
+    density: (
+      scale: 0,
     ),
   )
 );

@@ -120,7 +120,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
           const data = this.dataSource.data;
           this.dataSource.data = data.filter((u) => u.id !== user.id);
 
-          this.toastService.showSuccess('Usuario eliminado con exito', 'Aceptar');
+          this.toastService.showSuccess('Usuario eliminado con éxito', 'Aceptar');
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');

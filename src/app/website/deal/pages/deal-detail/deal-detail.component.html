@@ -1,90 +1,125 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
-<div class="deal-container" *ngIf="deal && !isLoadingData">
-  <div class="deal-header">
-      <h2>Promoción</h2>
-      <div class="button-actions">
-          <button class="button button-danger button-raised button-icon-text" *ngIf="deal.id" (click)="openConfirmDialog(deal)">
-              <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
-          </button>
-          <button class="button button-primary button-raised button-icon-text" *ngIf="deal.id" (click)="navigateToEditDeal(deal)">
-              <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
-          </button>
-      </div>
+<div class="section-card" *ngIf="deal && !isLoadingData">
+  <div class="section-card-header">
+    <div class="section-card-header-wrapper">
+      <app-breadcrumb></app-breadcrumb>
+      <h3 class="header-title">Promoción</h3>
+    </div>
+    <div class="button-actions">
+      <button
+        ButtonResize
+        class="button button-danger button-raised button-icon-text"
+        *ngIf="deal.id"
+        (click)="openConfirmDialog(deal)"
+      >
+        <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
+      </button>
+      <button
+        ButtonResize
+        class="button button-primary button-raised button-icon-text"
+        *ngIf="deal.id"
+        (click)="navigateToEditDeal(deal)"
+      >
+        <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
+      </button>
+    </div>
   </div>
   <div class="deal-info">
     <div class="deal-info-container">
       <div class="deal-data-container">
         <div class="deal-card">
           <div class="deal-card-header">
-              <div class="deal-card-title">
-                  <h4 *ngIf="deal.printer">{{ deal.printer.model }}</h4>
-                  <h4 *ngIf="deal.consumible">{{ deal.consumible.name }}</h4>
-              </div>
-              <button class="button-icon-option" [matMenuTriggerFor]="menu">
-                <mat-icon>more_vert</mat-icon>
+            <div class="deal-card-title">
+              <h4 *ngIf="deal.printer">{{ deal.printer.model }}</h4>
+              <h4 *ngIf="deal.consumible">{{ deal.consumible.name }}</h4>
+            </div>
+            <button class="button-icon-option" [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" class="export-menu">
+              <button mat-menu-item *ngIf="deal.printer">
+                <div
+                  class="menu-button-item see-icon"
+                  (click)="navigateToSeeItem(deal.printer.id)"
+                >
+                  <mat-icon>visibility</mat-icon>Ver
+                </div>
               </button>
-              <mat-menu #menu="matMenu" class="export-menu">
-                  <button mat-menu-item *ngIf="deal.printer">
-                    <div class="menu-button-item" (click)="navigateToSeeItem(deal.printer.id)">
-                      <mat-icon>visibility</mat-icon>Ver
-                    </div>
-                  </button>
-                  <button mat-menu-item *ngIf="deal.printer">
-                    <div class="menu-button-item" (click)="navigateToEditItem(deal.printer.id)">
-                      <mat-icon style="color: #3c81f6">edit</mat-icon>
-                      Editar
-                    </div>
-                  </button>
-                  <button mat-menu-item *ngIf="deal.consumible">
-                    <div class="menu-button-item" (click)="navigateToSeeItem(deal.consumible.id)">
-                      <mat-icon>visibility</mat-icon>Ver
-                    </div>
-                  </button>
-                  <button mat-menu-item *ngIf="deal.consumible">
-                    <div class="menu-button-item" (click)="navigateToEditItem(deal.consumible.id)">
-                      <mat-icon style="color: #3c81f6">edit</mat-icon>
-                      Editar
-                    </div>
-                  </button>
-                  <!-- <button mat-menu-item>
-                    <div class="menu-button-item">
-                      <mat-icon style="color: #ef4444">delete</mat-icon>
-                      Eliminar
-                    </div>
-                  </button> -->
-              </mat-menu>
+              <button mat-menu-item *ngIf="deal.printer">
+                <div
+                  class="menu-button-item"
+                  (click)="navigateToEditItem(deal.printer.id)"
+                >
+                  <mat-icon class="edit-icon">edit</mat-icon>
+                  Editar
+                </div>
+              </button>
+              <button mat-menu-item *ngIf="deal.consumible">
+                <div
+                  class="menu-button-item see-icon"
+                  (click)="navigateToSeeItem(deal.consumible.id)"
+                >
+                  <mat-icon>visibility</mat-icon>Ver
+                </div>
+              </button>
+              <button mat-menu-item *ngIf="deal.consumible">
+                <div
+                  class="menu-button-item"
+                  (click)="navigateToEditItem(deal.consumible.id)"
+                >
+                  <mat-icon class="edit-icon">edit</mat-icon>
+                  Editar
+                </div>
+              </button>
+            </mat-menu>
           </div>
           <div class="deal-card-body">
             <div class="deal-card-body-content">
               <div class="printer-image" *ngIf="deal.printer">
-                  <div class="default-image" *ngIf="deal.printer.img_url.length == 0">
-                      <mat-icon>image</mat-icon>
-                  </div>
-                  <img [src]="deal.printer.img_url[0]" alt="printer-image" />
+                <div
+                  class="default-image"
+                  *ngIf="deal.printer.img_url.length == 0"
+                >
+                  <mat-icon>image</mat-icon>
+                </div>
+                <img [src]="deal.printer.img_url[0]" alt="printer-image" />
               </div>
               <div class="printer-image" *ngIf="deal.consumible">
-                  <div class="default-image" *ngIf="deal.consumible.img_url.length == 0">
-                      <mat-icon>image</mat-icon>
-                  </div>
-                  <img *ngIf="deal.consumible.img_url.length > 0" [src]="deal.consumible.img_url[0]" alt="consumible-image" />
+                <div
+                  class="default-image"
+                  *ngIf="deal.consumible.img_url.length == 0"
+                >
+                  <mat-icon>image</mat-icon>
+                </div>
+                <img
+                  *ngIf="deal.consumible.img_url.length > 0"
+                  [src]="deal.consumible.img_url[0]"
+                  alt="consumible-image"
+                />
               </div>
-              <div class="printer-data">
-                  <div class="deal-data-item">
-                      <h5>Precio</h5>
-                      <p *ngIf="deal.printer">${{ deal.printer.price }} {{ deal.printer.currency }}</p>
-                      <p *ngIf="deal.consumible">${{ deal.consumible.price }} {{ deal.consumible.currency }}</p>
-                  </div>
-                  <div class="deal-data-item">
-                      <h5>Precio Promoción</h5>
-                      <p>
-                          ${{ deal.dealPrice }} {{ deal.dealCurrency }}
-                          <span class="deal-percentage">{{ deal.dealDiscountPercentage }}% de descuento</span>
-                      </p>
-                  </div>
-                  <div class="deal-data-item full-row">
-                    <h5>Descripción</h5>
-                    <p>{{ deal.dealDescription }}</p>
-                  </div>
+              <div class="deal-data">
+                <div class="deal-data-item">
+                  <h5>Precio</h5>
+                  <p *ngIf="deal.printer">
+                    ${{ deal.printer.price }} {{ deal.printer.currency }}
+                  </p>
+                  <p *ngIf="deal.consumible">
+                    ${{ deal.consumible.price }} {{ deal.consumible.currency }}
+                  </p>
+                </div>
+                <div class="deal-data-item">
+                  <h5>Precio Promoción</h5>
+                  <p>
+                    ${{ deal.dealPrice }} {{ deal.dealCurrency }}
+                    <span class="deal-percentage"
+                      >{{ deal.dealDiscountPercentage }}% de descuento</span
+                    >
+                  </p>
+                </div>
+                <div class="deal-data-item full-row">
+                  <h5>Descripción</h5>
+                  <p>{{ deal.dealDescription }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -92,13 +127,14 @@
             <div class="deal-data-item">
               <!-- <h5>Fecha Inicial</h5> -->
               <p>
-                <b>Fecha Inicial: </b>{{ deal.dealStartDate | date : "medium" }}
+                <b>Fecha Inicial: </b
+                >{{ deal.dealStartDate | date : 'd MMM yyyy' }}
               </p>
             </div>
             <div class="deal-data-item">
               <!-- <h5>Fecha Final</h5> -->
               <p>
-                <b>Fecha Final: </b>{{ deal.dealEndDate | date : "medium" }}
+                <b>Fecha Final: </b>{{ deal.dealEndDate | date : 'd MMM yyyy' }}
               </p>
             </div>
           </div>

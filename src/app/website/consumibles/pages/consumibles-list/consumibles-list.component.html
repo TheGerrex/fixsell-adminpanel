@@ -1,82 +1,131 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div [hidden]="isLoadingData">
-    <div class="table-header">
-        <h2>Consumibles</h2>
-        <div class="table-action-buttons">
-            <div class="search-box">
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                    <mat-icon>search</mat-icon>
-                </span>
-                    <input class="form-control" type="text" placeholder="Buscar" (input)="applyFilter($event)" />
-                </div>
-            </div>
-            <website-export [data]="consumibleData" [ignoreFields]="['id']"></website-export>
-            <button class="button button-primary button-raised button-icon-text" (click)="addConsumible()">
-      <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-    </button>
-        </div>
+  <div class="table-header">
+    <div class="table-header-container">
+      <h3 class="table-title">Consumibles</h3>
+      <div class="table-actions">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+          <input
+            matInput
+            type="text"
+            placeholder="Buscar Consumibles"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilter($event)"
+        /></mat-form-field>
+        <website-export
+          [data]="consumibleData"
+          [ignoreFields]="['id']"
+        ></website-export>
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="addConsumible()"
+        >
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Consumible</span>
+        </button>
+      </div>
     </div>
-    <div class="responsive-table">
-        <div class="table-container">
-            <table mat-table matSort [dataSource]="dataSource" class="consumibles-list-table">
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                    <td mat-cell *matCellDef="let consumible">{{ consumible.name }}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="sku">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>SKU</th>
-                    <td mat-cell *matCellDef="let consumible">
-                        {{ consumible.sku }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="brand">
-                    <th mat-header-cell *matHeaderCellDef>Fabricante</th>
-                    <td mat-cell *matCellDef="let consumible">{{ consumible.brand }}</td>
-                </ng-container>
-                <ng-container matColumnDef="yield">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Vida Util</th>
-                    <td mat-cell *matCellDef="let consumible">
-                        <span *ngIf="consumible.yield">{{ consumible.yield }} paginas</span>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="price">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
-                    <td mat-cell *matCellDef="let consumible">
-                        {{ consumible.price }} {{ consumible.currency }}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="category">
-                    <th mat-header-cell *matHeaderCellDef>Categoria</th>
-                    <td mat-cell *matCellDef="let consumible">{{ consumible.category }}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="origen">
-                    <th mat-header-cell *matHeaderCellDef>Origen</th>
-                    <td mat-cell *matCellDef="let consumible">{{ consumible.origen }}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                    <td mat-cell *matCellDef="let consumible">
-                        <button mat-icon-button color="basic" *ngIf="isAdmin" (click)="seeConsumible(consumible)">
-          <mat-icon>visibility</mat-icon>
-        </button>
-                        <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editConsumible(consumible)">
-          <mat-icon>edit</mat-icon>
-        </button>
-                        <button mat-icon-button color="warn" *ngIf="isAdmin" (click)="openConfirmDialog(consumible)">
-          <mat-icon>delete</mat-icon>
-        </button>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
-        </div>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="8" showFirstLastButtons class="table-paginator"></mat-paginator>
+    <div class="table-search">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar Consumibles"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter($event)"
+      /></mat-form-field>
     </div>
+  </div>
+  <div class="responsive-table">
+    <div class="table-container">
+      <table
+        mat-table
+        matSort
+        [dataSource]="dataSource"
+        class="consumibles-list-table dense-theme"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let consumible">{{ consumible.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="sku">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>SKU</th>
+          <td mat-cell *matCellDef="let consumible">
+            {{ consumible.sku }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="brand">
+          <th mat-header-cell *matHeaderCellDef>Fabricante</th>
+          <td mat-cell *matCellDef="let consumible">{{ consumible.brand }}</td>
+        </ng-container>
+        <ng-container matColumnDef="yield">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Vida Util</th>
+          <td mat-cell *matCellDef="let consumible">
+            <span *ngIf="consumible.yield">{{ consumible.yield }} paginas</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+          <td mat-cell *matCellDef="let consumible">
+            {{ consumible.price }} {{ consumible.currency }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Categoria</th>
+          <td mat-cell *matCellDef="let consumible">
+            {{ consumible.category }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="origen">
+          <th mat-header-cell *matHeaderCellDef>Origen</th>
+          <td mat-cell *matCellDef="let consumible">{{ consumible.origen }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let consumible">
+            <button
+              mat-icon-button
+              class="see-icon"
+              *ngIf="isAdmin"
+              (click)="seeConsumible(consumible)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="edit-icon"
+              *ngIf="isAdmin"
+              (click)="editConsumible(consumible)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="delete-icon"
+              *ngIf="isAdmin"
+              (click)="openConfirmDialog(consumible)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSize]="8"
+      showFirstLastButtons
+      class="table-paginator"
+    ></mat-paginator>
+  </div>
 </div>

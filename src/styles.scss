@@ -22,6 +22,10 @@
   @include mat.system-level-typography(m3-theme.$light-theme);
 }
 
+.dense-theme {
+  @include mat.all-component-themes(m3-theme.$light-dense-theme);
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -38,7 +42,10 @@ html {
 }
 
 body {
-  background-color: $gray-100 !important;
+  background-color: map-get(
+    map-get(m3-theme.$palettes, neutral-variant),
+    70
+  ) !important;
 }
 
 /*----------------------[ Links ]-------------------------------*/
@@ -522,7 +529,7 @@ input:focus {
       0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
   &-icon {
-    padding: 0.5em;
+    padding: 0.625em;
     &-success {
       color: $success-color;
       border-color: $success-color;
@@ -611,7 +618,7 @@ input:focus {
     }
   }
   &-icon-text {
-    padding: 0.5em 20px 0.5em 16px;
+    padding: 0.625rem 20px 0.625rem 16px;
     mat-icon {
       font-size: 1.4rem;
     }
@@ -911,17 +918,23 @@ button.delete-icon mat-icon {
   padding: 1rem;
   gap: 1rem;
   row-gap: 0.5rem;
-  h3,
-  .header-title {
-    color: $text;
-    margin: 0;
-  }
   .button-actions {
     display: flex;
     gap: 0.5rem;
     button {
       flex-shrink: 0;
     }
+  }
+}
+
+.section-card-header-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  h3,
+  .header-title {
+    color: $text;
+    margin: 0;
   }
 }
 
@@ -981,6 +994,29 @@ button.delete-icon mat-icon {
   }
 }
 
+.data-card-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 0 0 $border-radius $border-radius;
+  background-color: $white;
+  padding: 0rem 1rem 1rem 1rem;
+  h3,
+  .header-title {
+    color: $text;
+    margin: 0;
+  }
+  .button-actions {
+    display: flex;
+    gap: 0.5rem;
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
 /*----------------------[ Table ]-------------------------------*/
 .table-header {
   display: flex;
@@ -1011,13 +1047,16 @@ button.delete-icon mat-icon {
       display: flex;
       flex-wrap: wrap-reverse;
       justify-content: flex-end;
+      align-items: center;
       gap: 0.5em;
       .action-buttons {
         display: flex;
         gap: 0.5em;
       }
-      .search-box {
+      .search-box,
+      mat-form-field {
         display: flex;
+        min-width: 250px;
         @media (max-width: 768px) {
           display: none;
         }
@@ -1111,60 +1150,64 @@ button.delete-icon mat-icon {
     color: $text;
     margin-bottom: 1rem;
   }
-  .form-section {
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(120px, 1fr));
-      row-gap: 1rem;
-      column-gap: 1rem;
-      .form-item {
-        min-height: 50px;
 
-        .item-label {
-          font-weight: 500;
-          color: $text;
-          margin-bottom: 0.25rem;
-        }
-        .item-value {
-          color: $text;
-          word-break: break-word; // Ensures long words break and wrap to the next line
-          white-space: normal; // Allows the text to wrap normally
-        }
-        textarea {
-          min-height: 8em !important;
-        }
-        mat-form-field {
-          width: 100%;
-        }
-        @media (max-width: 600px) {
-          grid-column: 1 / -1;
-          gap: 1rem;
-          row-gap: 1rem;
-        }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    row-gap: 1rem;
+    column-gap: 1rem;
+    .form-item {
+      min-height: 50px;
+
+      .item-label {
+        font-weight: 500;
+        color: $text;
+        margin-bottom: 0.25rem;
       }
-      .full-row {
-        grid-column: 1 / -1; // This will make the description item span the entire row
+      .item-value {
+        color: $text;
+        word-break: break-word; // Ensures long words break and wrap to the next line
+        white-space: normal; // Allows the text to wrap normally
       }
-      .three-quarter-row {
-        grid-column: span 3; // This will make the description item span half row
+      textarea {
+        min-height: 8em !important;
       }
-      .half-row {
-        grid-column: span 2; // This will make the description item span half row
-      }
-      .quarter-row {
-        grid-column: span 1; // This will make the description item span half row
+      mat-form-field {
+        width: 100%;
       }
       @media (max-width: 600px) {
-        grid-template-columns: 1fr;
+        grid-column: 1 / -1;
+        gap: 1rem;
         row-gap: 1rem;
-        column-gap: 1rem;
-        .three-quarter-row,
-        .half-row,
-        .quarter-row {
-          grid-column: 1 / -1;
-        }
       }
     }
+    .full-row {
+      grid-column: 1 / -1; // This will make the description item span the entire row
+    }
+    .three-quarter-row {
+      grid-column: span 3; // This will make the description item span half row
+    }
+    .half-row {
+      grid-column: span 2; // This will make the description item span half row
+    }
+    .quarter-row {
+      grid-column: span 1; // This will make the description item span half row
+    }
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      row-gap: 1rem;
+      column-gap: 1rem;
+      .three-quarter-row,
+      .half-row,
+      .quarter-row {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+  .form-section {
   }
 }
 /*----------------------[ Snackbar/Toast ]-------------------------------*/

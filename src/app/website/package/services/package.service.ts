@@ -4,13 +4,12 @@ import { Observable, throwError } from 'rxjs';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
-import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PackageService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
   //get all printer names
   getAllPrinterNames(rentable?: boolean, sellable?: boolean): Observable<string[]> {
     let params = new HttpParams();

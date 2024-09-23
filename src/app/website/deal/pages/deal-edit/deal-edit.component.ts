@@ -139,8 +139,8 @@ export class DealEditComponent implements OnInit {
         ?.setValue(
           (
             Number(this.editDealForm.get(priceControl)?.value) - discount
-          ).toString(),
-        ); // Convert the calculated price to a string
+          ).toFixed(2),
+        );
     }
   }
 
@@ -190,13 +190,13 @@ export class DealEditComponent implements OnInit {
     this.dealService.submitDealEditForm(formData, dealId).subscribe(
       (response) => {
         console.log('Response:', response);
-        this.toastService.showSuccess('Deal updated successfully', 'OK'); // Show success toast
+        this.toastService.showSuccess('Promoción actualizado con éxito', 'OK'); // Show success toast
         this.router.navigate(['/website/deals']);
         this.isSubmitting = false;
       },
       (error) => {
         console.error('Error:', error);
-        this.toastService.showError('Error updating deal', 'OK'); // Show error toast
+        this.toastService.showError('Error al actualizar promoción', 'OK'); // Show error toast
         this.isSubmitting = false;
       },
     );

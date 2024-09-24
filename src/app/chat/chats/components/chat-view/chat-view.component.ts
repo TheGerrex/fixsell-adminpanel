@@ -13,6 +13,7 @@ import { CommunicationService } from '../../services/communication.service';
 import { ChatHistoryService } from '../../services/chat-history.service';
 import { BehaviorSubject } from 'rxjs';
 import { NgZone } from '@angular/core';
+
 interface Message {
   content: string;
   timestamp: string;
@@ -52,7 +53,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   userName: string = '';
   userEmail: string = '';
   messages$ = new BehaviorSubject<Message[]>([]);
-  socket: Socket | null = null;
+  private socket: Socket | undefined;
   isConnected: boolean = false;
   CurrentroomId: string | null = null;
 
@@ -61,11 +62,13 @@ export class ChatViewComponent implements OnInit, OnDestroy {
       this.CurrentroomId = roomId;
       this.loadChatHistory(roomId);
       this.connectToServer(roomId);
+      this.connectAsAdmin(roomId);
     });
 
     if (this.CurrentroomId) {
       this.loadChatHistory(this.CurrentroomId);
       this.connectToServer(this.CurrentroomId);
+      this.connectAsAdmin(this.CurrentroomId);
     }
   }
 
@@ -78,12 +81,30 @@ export class ChatViewComponent implements OnInit, OnDestroy {
       const updatedMessage: Message = {
         content: message.Message,
         timestamp: this.getCurrentTime(),
-        isUser: message.FullName === 'You',
-        senderId: message.FullName,
+        isUser: message.senderId === this.socket?.id,
+        senderId: message.senderId,
       };
       const currentMessages = this.messages$.getValue();
       this.messages$.next([...currentMessages, updatedMessage]);
+      this.cdr.detectChanges(); // Trigger change detection
     });
+  }
+
+  connectAsAdmin(roomName: string, event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault(); // Prevent the default anchor action
+    }
+
+    if (!this.socket) {
+      this.socket = ChatService.connectToServerAsAdmin(roomName);
+      if (this.socket) {
+        ChatService.addListeners(
+          this.socket,
+          this.updateRoomName.bind(this),
+          this.handleChatHistory.bind(this),
+        );
+      }
+    }
   }
   connectToServer(roomId: string) {
     console.log(`Connecting to server with roomId: ${roomId}`);
@@ -91,63 +112,51 @@ export class ChatViewComponent implements OnInit, OnDestroy {
       this.disconnectFromServer();
     }
 
-    this.socket = ChatService.connectToServerAsAdmin(roomId) || null;
-
-    this.socket?.on('message-from-server', (payload) => {
-      this.handleIncomingMessage(payload);
-    });
+    this.socket = ChatService.connectToServerAsAdmin(roomId);
 
     if (this.socket) {
+      console.log('socket connected');
+      this.socket.emit('getChatHistory', roomId);
       ChatService.addListeners(
         this.socket,
         this.updateRoomName.bind(this),
         this.handleChatHistory.bind(this),
       );
 
-      this.socket.on('message-from-server', (message: any) => {
-        console.log('Received message from server:', message);
-        const updatedMessage: Message = {
-          content: message.Message,
-          timestamp: this.getCurrentTime(),
-          isUser: message.senderId === this.socket?.id,
-          senderId:
-            message.senderId === this.socket?.id ? 'You' : message.senderId,
-        };
-        this.messages.push(updatedMessage);
-        this.cdr.detectChanges(); // Trigger change detection
-      });
-
       this.socket.on('connect', () => {
+        console.log('Connected to server');
         this.isConnected = true;
         this.addSystemMessage('Connected to server.');
+        const serverStatusLabel = document.querySelector('#server-status');
+        if (serverStatusLabel) {
+          serverStatusLabel.textContent = 'En Linea';
+        }
+        this.cdr.detectChanges();
       });
 
       this.socket.on('disconnect', () => {
+        console.log('Disconnected from server');
         this.isConnected = false;
         this.addSystemMessage('Disconnected from server.');
+        const serverStatusLabel = document.querySelector('#server-status');
+        if (serverStatusLabel) {
+          serverStatusLabel.textContent = 'Desconectado';
+        }
+        this.cdr.detectChanges();
+      });
+
+      // Listen for messages from the server
+      this.socket.on('message-from-server', (message: any) => {
+        console.log('Received message from server:', message);
+        const updatedMessage = {
+          ...message,
+          senderId:
+            message.senderId === this.socket?.id ? 'You' : message.senderId,
+        };
+        this.handleIncomingMessage(updatedMessage);
       });
     }
   }
-
-  // handleIncomingMessage(payload: {
-  //   FullName: string;
-  //   Message: string;
-  //   RoomName: string;
-  // }) {
-  //   console.log('Handling incoming message:', payload);
-  //   if (payload.RoomName === this.CurrentroomId) {
-  //     this.messages.push({
-  //       content: payload.Message,
-  //       timestamp: new Date().toLocaleTimeString([], {
-  //         hour: '2-digit',
-  //         minute: '2-digit',
-  //       }),
-  //       isUser: payload.FullName === this.userInfo.name,
-  //       isSystem: false,
-  //     });
-  //     this.cdr.detectChanges(); // Trigger change detection
-  //   }
-  // }
 
   updateRoomName(roomName: string) {
     console.log(`Joined room: ${roomName}`);
@@ -180,15 +189,21 @@ export class ChatViewComponent implements OnInit, OnDestroy {
       isUser: message.senderId === this.userInfo.name,
       isSystem: false,
     }));
+    this.messages$.next(this.messages); // Update BehaviorSubject
     this.cdr.detectChanges(); // Trigger change detection
   }
 
   disconnectFromServer() {
     if (this.isConnected && this.socket) {
       this.socket.disconnect();
-      this.socket = null;
+      this.socket = undefined;
       this.isConnected = false;
       this.addSystemMessage('Disconnected from server.');
+      const serverStatusLabel = document.querySelector('#server-status');
+      if (serverStatusLabel) {
+        serverStatusLabel.textContent = 'Desconectado';
+      }
+      this.cdr.detectChanges();
     }
   }
 
@@ -205,20 +220,27 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   }
 
   addSystemMessage(content: string) {
-    this.messages.push({
+    const systemMessage: Message = {
       content,
       timestamp: this.getCurrentTime(),
       isUser: false,
       isSystem: true,
-    });
+    };
+    const currentMessages = this.messages$.getValue();
+    this.messages$.next([...currentMessages, systemMessage]);
+    this.cdr.detectChanges(); // Trigger change detection
   }
 
   addUserMessage(content: string) {
-    this.messages.push({
+    const userMessage: Message = {
       content,
       timestamp: this.getCurrentTime(),
       isUser: true,
-    });
+      senderId: this.socket?.id,
+    };
+    const currentMessages = this.messages$.getValue();
+    this.messages$.next([...currentMessages, userMessage]);
+    this.cdr.detectChanges(); // Trigger change detection
   }
 
   getCurrentTime(): string {

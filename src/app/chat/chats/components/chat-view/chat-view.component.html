@@ -23,23 +23,19 @@
   </div>
 
   <div class="chat-messages">
-    <ul id="messages-ul">
-      <li *ngFor="let message of messages$ | async">
-        <div
-          class="message"
-          [ngClass]="{
-            'user-message': message.isUser,
-            'system-message': message.isSystem
-          }"
-        >
-          <span class="message-timestamp">{{ message.timestamp }}</span>
-          <span class="message-content">{{ message.content }}</span>
-        </div>
-      </li>
-    </ul>
+    <div *ngFor="let message of messages$ | async">
+      <div
+        [ngClass]="{
+          'user-message': message.isUser,
+          'system-message': message.isSystem
+        }"
+      >
+        <span>{{ message.senderId }}: </span>
+        <span>{{ message.content }}</span>
+        <span>{{ message.timestamp }}</span>
+      </div>
+    </div>
   </div>
-
-  <ul id="messages-ul"></ul>
 
   <div class="chat-input">
     <div class="input-actions">
@@ -61,7 +57,7 @@
   </div>
 
   <!-- New elements added below -->
-  <ul id="messages-ul"></ul>
+  <!-- <ul id="messages-ul"></ul> -->
   <!-- <form id="message-form">
     <input
       id="message-input"

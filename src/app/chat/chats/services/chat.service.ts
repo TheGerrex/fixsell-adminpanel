@@ -155,16 +155,14 @@ export class ChatService {
     socket.on(
       'message-from-server',
       (payload: { FullName: string; Message: string; RoomName: string }) => {
-        console.log('recievd message from server');
+        console.log('received message from server');
         console.log(`message from server: ${JSON.stringify(payload)}`);
-        // Only display messages from the current room
-        console.log('payload roomname:', payload.RoomName);
-        console.log('roomstate.currentroomname:', roomState.currentRoomName);
-        console.log('payload:', payload);
         if (payload.RoomName === roomState.currentRoomName) {
           console.log(`message from server: ${JSON.stringify(payload)}`);
           const li = document.createElement('li');
-          li.textContent = `${payload.FullName}: ${payload.Message}`;
+          const displayName =
+            payload.FullName === socket.id ? 'You' : payload.FullName;
+          li.textContent = `${displayName}: ${payload.Message}`;
           messagesUl.appendChild(li);
         }
       },

@@ -16,10 +16,11 @@ import { NgZone } from '@angular/core';
 
 interface Message {
   content: string;
-  timestamp: string;
+  timestamp: string | Date; // Allow both string and Date
   isUser: boolean;
   isSystem?: boolean;
   senderId?: string;
+  isAdmin?: boolean;
 }
 
 interface UserInfo {
@@ -56,6 +57,8 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   private socket: Socket | undefined;
   isConnected: boolean = false;
   CurrentroomId: string | null = null;
+  private lastSentMessage: string | null = null;
+  private lastSentTimestamp: number | null = null;
 
   ngOnInit() {
     this.communicationService.chatRoomSelected.subscribe((roomId: string) => {
@@ -78,16 +81,34 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
   handleIncomingMessage(message: any) {
     this.ngZone.run(() => {
+      // Process the received message
       const updatedMessage: Message = {
         content: message.Message,
-        timestamp: this.getCurrentTime(),
-        isUser: message.senderId === this.socket?.id,
-        senderId: message.senderId,
+        timestamp: new Date(),
+        isUser: !message.isAdmin, // If not admin, it's a user message
+        isAdmin: message.isAdmin,
+        senderId: message.FullName,
       };
+
+      // Push the message into the messages array
       const currentMessages = this.messages$.getValue();
       this.messages$.next([...currentMessages, updatedMessage]);
-      this.cdr.detectChanges(); // Trigger change detection
+
+      // Trigger change detection
+      this.cdr.detectChanges();
     });
+  }
+
+  isRecentlySentMessage(content: string): boolean {
+    const currentTime = Date.now();
+    if (
+      this.lastSentMessage === content &&
+      this.lastSentTimestamp &&
+      currentTime - this.lastSentTimestamp < 1000 // Within 1 second
+    ) {
+      return true;
+    }
+    return false;
   }
 
   connectAsAdmin(roomName: string, event?: MouseEvent): void {
@@ -182,10 +203,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     console.log('Processing chat history:', chatHistory);
     this.messages = chatHistory.map((message) => ({
       content: message.message,
-      timestamp: new Date(message.timestamp).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: new Date(message.timestamp), // Ensure this is a Date object
       isUser: message.senderId === this.userInfo.name,
       isSystem: false,
     }));
@@ -222,7 +240,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   addSystemMessage(content: string) {
     const systemMessage: Message = {
       content,
-      timestamp: this.getCurrentTime(),
+      timestamp: new Date(),
       isUser: false,
       isSystem: true,
     };
@@ -231,12 +249,13 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges(); // Trigger change detection
   }
 
-  addUserMessage(content: string) {
+  addUserMessage(content: string, isAdmin: boolean = false) {
     const userMessage: Message = {
       content,
-      timestamp: this.getCurrentTime(),
-      isUser: true,
-      senderId: this.socket?.id,
+      timestamp: new Date(), // Ensure this is a Date object
+      isUser: !isAdmin,
+      isAdmin: isAdmin,
+      senderId: this.userInfo.name, // Use the userInfo.name for messages sent by this.client/admin
     };
     const currentMessages = this.messages$.getValue();
     this.messages$.next([...currentMessages, userMessage]);
@@ -252,17 +271,19 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
   onSendMessage() {
     if (this.newMessage.trim()) {
-      this.addUserMessage(this.newMessage);
       if (this.socket) {
         this.socket.emit('message-from-client', {
           id: this.socket.id,
           message: this.newMessage,
           timestamp: new Date(),
           roomName: this.CurrentroomId,
+          isAdmin: true,
         });
       }
+      this.lastSentMessage = this.newMessage;
+      this.lastSentTimestamp = Date.now();
       this.newMessage = '';
-      this.cdr.detectChanges(); // Trigger change detection
+      this.cdr.detectChanges();
     }
   }
 

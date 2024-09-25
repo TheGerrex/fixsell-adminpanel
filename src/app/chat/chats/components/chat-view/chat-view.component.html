@@ -22,51 +22,42 @@
     </div>
   </div>
 
-  <div class="chat-messages">
-    <div *ngFor="let message of messages$ | async">
+  <div class="chat-container">
+    <div class="chat-messages">
       <div
+        *ngFor="let message of messages$ | async"
+        class="message"
         [ngClass]="{
-          'user-message': message.isUser,
-          'system-message': message.isSystem
+          'admin-message': message.isAdmin,
+          'user-message': !message.isAdmin
         }"
       >
-        <span>{{ message.senderId }}: </span>
-        <span>{{ message.content }}</span>
-        <span>{{ message.timestamp }}</span>
+        <div class="message-content">
+          <p>{{ message.content }}</p>
+        </div>
+        <span class="timestamp">{{
+          message.timestamp | date : 'shortTime'
+        }}</span>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <div class="input-actions">
+        <button><mat-icon>format_bold</mat-icon></button>
+        <button><mat-icon>format_italic</mat-icon></button>
+        <button><mat-icon>format_underlined</mat-icon></button>
+        <button><mat-icon>more_vert</mat-icon></button>
+        <button><mat-icon>link</mat-icon></button>
+      </div>
+      <div class="input-text-chat">
+        <textarea
+          [(ngModel)]="newMessage"
+          placeholder="Escribe tu mensaje aquí..."
+        ></textarea>
+        <button class="send-message" (click)="onSendMessage()">
+          <mat-icon>send</mat-icon>
+        </button>
       </div>
     </div>
   </div>
-
-  <div class="chat-input">
-    <div class="input-actions">
-      <button><mat-icon>format_bold</mat-icon></button>
-      <button><mat-icon>format_italic</mat-icon></button>
-      <button><mat-icon>format_underlined</mat-icon></button>
-      <button><mat-icon>more_vert</mat-icon></button>
-      <button><mat-icon>link</mat-icon></button>
-    </div>
-    <div class="input-text-chat">
-      <textarea
-        [(ngModel)]="newMessage"
-        placeholder="Escribe tu mensaje aquí..."
-      ></textarea>
-      <button class="send-message" (click)="onSendMessage()">
-        <mat-icon>send</mat-icon>
-      </button>
-    </div>
-  </div>
-
-  <!-- New elements added below -->
-  <!-- <ul id="messages-ul"></ul> -->
-  <!-- <form id="message-form">
-    <input
-      id="message-input"
-      type="text"
-      [(ngModel)]="newMessage"
-      placeholder="Type your message..."
-    />
-    <button type="submit">Send</button>
-  </form>
-  <ul id="messages-ul"></ul>
-  <ul id="clients-ul"></ul> -->
 </div>

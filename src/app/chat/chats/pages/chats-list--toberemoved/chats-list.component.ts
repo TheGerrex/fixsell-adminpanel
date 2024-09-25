@@ -36,7 +36,7 @@ export class ChatsListComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (clients) => {
-          console.log('Updating clients:', clients);
+          // console.log('Updating clients:', clients);
           this.clients = clients;
         },
         (error) => console.error('Error fetching connected clients:', error),

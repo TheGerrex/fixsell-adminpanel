@@ -83,7 +83,7 @@ export class ChatListsComponent implements OnInit {
       )
       .subscribe(
         (clients) => {
-          console.log('Updating clients:', clients);
+          // console.log('Updating clients:', clients);
           this.connectedClients = clients;
           this.updateChatItems(); // Update chat items when connected clients are updated
           this.cdr.detectChanges(); // Manually trigger change detection

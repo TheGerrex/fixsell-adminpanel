@@ -14,14 +14,14 @@ export class ClientService {
   getConnectedClients(): Observable<{ id: string; roomName: string }[]> {
     return this.http
       .get<{ id: string; roomName: string }[]>(
-        `${this.apiUrl}/connected-clients`
+        `${this.apiUrl}/connected-clients`,
       )
       .pipe(
-        tap((clients) => console.log('Received clients:', clients)),
+        // tap((clients) => console.log('Received clients:', clients)),
         catchError((error) => {
           console.error('Error fetching connected clients:', error);
           return [];
-        })
+        }),
       );
   }
 }

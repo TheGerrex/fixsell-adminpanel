@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { BrandService } from 'src/app/website/config/services/brand.service';
+import { ToastService } from '../../services/toast.service';
+import { NewBrand } from 'src/app/website/config/components/printer-tab/brand-crud/brand.interface';
 
 @Component({
   selector: 'app-add-printer-brand-dialog',
@@ -13,7 +14,8 @@ export class AddPrinterBrandDialogComponent {
   brandName = new FormControl('', Validators.required);
 
   constructor(
-    private http: HttpClient,
+    private brandService: BrandService,
+    private toastService: ToastService,
     public dialogRef: MatDialogRef<AddPrinterBrandDialogComponent>
   ) { }
 
@@ -26,14 +28,19 @@ export class AddPrinterBrandDialogComponent {
   }
 
   onSubmit(): void {
-    if (this.brandName.valid) {
-      this.http
-        .post(`${environment.baseUrl}/brands/printers`, {
-          name: this.brandName.value,
-        })
-        .subscribe(() => {
-          this.dialogRef.close(this.brandName.value);
-        });
+    if (this.brandName.valid && this.brandName.value !== null) {
+      const brand: NewBrand = {
+        name: this.brandName.value
+      }
+      this.brandService.createBrand(brand).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Marca creada con éxito', 'Close');
+          this.dialogRef.close();
+        },
+        error: (error) => {
+          this.brandName.setErrors({ serverError: error.error.message });
+        }
+      });
     }
   }
 }

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, switchMap, tap, catchError } from 'rxjs/operators';
-import { Printer } from '../../interfaces/printer.interface';
-import { Brand } from '../components/printer-tab/brand-crud/brand.interface';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Brand, NewBrand } from '../components/printer-tab/brand-crud/brand.interface';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 
@@ -11,7 +10,7 @@ import { of } from 'rxjs';
   providedIn: 'root',
 })
 export class BrandService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // get brands
   getBrands(): Observable<Brand[]> {
@@ -21,20 +20,24 @@ export class BrandService {
   }
 
   // create brand
-  createBrand(brand: Brand): Observable<any> {
+  createBrand(brand: NewBrand): Observable<any> {
     return this.http.post(`${environment.baseUrl}/brands/printers`, brand).pipe(
       catchError((error) => {
-        console.error('Error occurred:', error);
+        console.error('Ocurrio Error:', error);
         return of(error);
       })
     );
   }
 
   // update brand
-  updateBrand(brand: Brand, id: string): Observable<any> {
-    return this.http.patch(
-      `${environment.baseUrl}/brands/printers/${id}`,
-      brand
+  updateBrand(brand: Brand, id: number): Observable<any> {
+    console.log('brand', brand);
+    console.log('id', id);
+    return this.http.patch(`${environment.baseUrl}/brands/printers/${id}`, { name: brand.name }).pipe(
+      catchError((error) => {
+        console.error('Ocurrio Error:', error);
+        return throwError(error);
+      })
     );
   }
 

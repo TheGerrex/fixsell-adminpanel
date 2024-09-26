@@ -1,14 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-//src\app\website\config\services\brand.service.ts
-import { BrandService } from 'src/app/website/config/services/brand.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { ToastService } from 'src/app/shared/services/toast.service';
 import { AddPrinterCategoryDialogComponent } from 'src/app/shared/components/add-printer-category-dialog/add-printer-category-dialog.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { Category } from './categories.interface';
@@ -19,24 +14,21 @@ import { CategoryService } from '../../../services/category.service';
   styleUrls: ['./categories-crud.component.scss'],
 })
 export class CategoriesCrudComponent {
-  CategoriesDataSource = new MatTableDataSource<Category>();
   CategoriesDisplayedColumns: string[] = ['name', 'action'];
   dataSource = new MatTableDataSource<Category>();
-  filterValue = '';
+  searchTerm = '';
   isAdmin = false;
+  isLoadingData = false;
   categoryData: Category[] = [];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
     private authService: AuthService,
     private categoryService: CategoryService,
-    private toastService: ToastService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getCategory();
@@ -50,13 +42,20 @@ export class CategoriesCrudComponent {
 
   getCategory() {
     this.categoryService.getCategory().subscribe((category: Category[]) => {
-      this.CategoriesDataSource.data = category;
+      this.categoryData = category;
+      this.dataSource = new MatTableDataSource(category);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.isLoadingData = false;
+    }, (error) => {
+      console.error('Error:', error);
+      this.isLoadingData = false;
     });
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.CategoriesDataSource.filter = filterValue.trim().toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   deleteCategory(id: number, category: Category) {
@@ -65,7 +64,7 @@ export class CategoriesCrudComponent {
       data: {
         title: 'Eliminar categoria',
         message: `Seguro que quieres eliminar la categoria ${category}?`,
-        buttonText: { cancel: 'Cancelar', ok: 'Si' },
+        buttonText: { cancel: 'Cancelar', ok: 'Eliminar' },
       },
     });
 
@@ -78,7 +77,7 @@ export class CategoriesCrudComponent {
     });
   }
 
-  editCategory(category: Category) {}
+  editCategory(category: Category) { }
 
   addCategory() {
     //open dialog

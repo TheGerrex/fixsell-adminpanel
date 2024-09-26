@@ -1080,12 +1080,21 @@ button.delete-icon mat-icon {
 }
 
 .table-container {
+  box-sizing: border-box;
   overflow-y: scroll;
   width: 100%;
   border-top: 1px solid $gray-200;
   border-bottom: 1px solid $gray-200;
   border-left: 1px solid $gray-300;
   border-right: 1px solid $gray-300;
+  padding: 0;
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .responsive-table {

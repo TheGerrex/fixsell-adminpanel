@@ -1,8 +1,10 @@
-<app-breadcrumb></app-breadcrumb>
 <div *ngIf="communication && !isLoadingData">
   <form class="section-card">
     <div class="section-card-header">
-      <h3>Comunicación #{{ communication.id }}</h3>
+      <div class="section-card-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="header-title">Comunicación #{{ communication.id }}</h3>
+      </div>
       <div class="button-actions">
         <button
           ButtonResize

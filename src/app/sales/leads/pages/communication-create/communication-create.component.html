@@ -1,8 +1,10 @@
-<app-breadcrumb></app-breadcrumb>
 <div>
   <form [formGroup]="createCommunicationForm" class="section-card">
     <div class="section-card-header">
-      <h3>Nueva Comunicación</h3>
+      <div class="section-card-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="header-title">Nueva Comunicación</h3>
+      </div>
       <div class="button-actions">
         <button
           ButtonResize
@@ -23,7 +25,7 @@
           <h4 class="form-section-subheader">Datos del Cliente</h4>
           <div class="form-grid">
             <!-- client -->
-            <div class="form-item half-row">
+            <div class="form-item full-row">
               <mat-form-field appearance="outline">
                 <mat-label>Cliente</mat-label>
                 <input
@@ -34,21 +36,6 @@
                 />
                 <mat-error *ngIf="isValidField('client')">{{
                   getFieldError('client')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-            <!-- email -->
-            <div class="form-item three-quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Mensaje</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="ejemplo@email.com"
-                  formControlName="message"
-                />
-                <mat-error *ngIf="isValidField('message')">{{
-                  getFieldError('message')
                 }}</mat-error>
               </mat-form-field>
             </div>
@@ -68,6 +55,23 @@
                 }}</mat-error>
               </mat-form-field>
             </div>
+
+            <!-- message -->
+            <div class="form-item three-quarter-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Mensaje</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="De que trato en general?"
+                  formControlName="message"
+                />
+                <mat-error *ngIf="isValidField('message')">{{
+                  getFieldError('message')
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+
             <!-- email -->
             <div class="form-item full-row">
               <mat-form-field appearance="outline">
@@ -76,6 +80,7 @@
                   matInput
                   cdkTextareaAutosize
                   #autosize="cdkTextareaAutosize"
+                  placeholder="Más detalles/notas en específico"
                   cdkAutosizeMinRows="1"
                   cdkAutosizeMaxRows="5"
                   formControlName="notes"

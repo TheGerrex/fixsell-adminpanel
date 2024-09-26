@@ -24,12 +24,13 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./leads-edit.component.scss'],
 })
 export class LeadsEditComponent {
-  public editLeadForm!: FormGroup;
+  editLeadForm!: FormGroup;
   lead: Lead | null = null;
   isLoading = false;
-  selectedType = new BehaviorSubject<string>('multifuncional');
-  filteredProductNames: Observable<string[]> | undefined;
+  isSubmitting = false;
+  selectedType = new BehaviorSubject<string>('printer');
   productControl = new FormControl();
+  filteredProductNames: Observable<string[]> | undefined;
 
   // filter printers
   printerControl = new FormControl();
@@ -40,24 +41,24 @@ export class LeadsEditComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private sharedService: SharedService,
     private dealService: DealService,
     private leadsService: LeadsService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
+    this.initializeForm();
     this.route.params.subscribe((params) => {
       const id = params['id'];
       this.leadsService.getLead(id).subscribe((lead) => {
         this.lead = lead;
         this.populateForm(lead);
+        this.isLoading = false;
       });
     });
-    this.initializeForm();
 
     this.filteredPrinterNames = this.printerControl.valueChanges.pipe(
       startWith(''),
@@ -71,7 +72,7 @@ export class LeadsEditComponent {
     this.filteredProductNames = this.productControl.valueChanges.pipe(
       startWith(''),
       switchMap((value) =>
-        this.selectedType.getValue() === 'multifuncional'
+        this.selectedType.getValue() === 'printer'
           ? this.dealService
             .getAllPrinterNames()
             .pipe(map((productNames) => this._filter(value, productNames)))
@@ -93,7 +94,9 @@ export class LeadsEditComponent {
       selectedType: lead.type_of_product,
     });
     this.productControl.patchValue(lead.product_interested);
+    console.log('Lead:', lead);
     this.selectedType.next(lead.type_of_product);
+    console.log('editForm:', this.editLeadForm.value);
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
@@ -112,8 +115,8 @@ export class LeadsEditComponent {
     // Clear the productControl value
     this.productControl.reset();
 
-    //if multifuncional
-    if (value === 'multifuncional') {
+    //if printer
+    if (value === 'printer') {
       this.filteredProductNames = this.productControl.valueChanges.pipe(
         startWith(''),
         switchMap((value) =>
@@ -138,7 +141,7 @@ export class LeadsEditComponent {
   addProductFromAutocomplete(event: MatAutocompleteSelectedEvent) {
     const value = event.option.viewValue;
     this.selectedType.subscribe((type) => {
-      if (type === 'multifuncional') {
+      if (type === 'printer') {
         // Add selected printer
         this.addPrinter(value);
       } else {
@@ -239,7 +242,7 @@ export class LeadsEditComponent {
   }
 
   async submitForm() {
-    this.isLoading = true;
+    this.isSubmitting = true;
 
     console.log('Form unprepared:', this.editLeadForm.value);
 
@@ -248,14 +251,11 @@ export class LeadsEditComponent {
 
     // Prepare the data
     const type_of_product =
-      this.selectedType.getValue() === 'multifuncional'
+      this.selectedType.getValue() === 'printer'
         ? 'printer'
         : 'consumible';
     this.editLeadForm.controls['type_of_product'].setValue(type_of_product);
     console.log('Form:', this.editLeadForm.value);
-
-    // update lead without communication
-    this.isLoading = true;
 
     // Prepare the data
     const data = {
@@ -280,11 +280,11 @@ export class LeadsEditComponent {
               'Cliente potencial actualizado con éxito',
               'ok',
             );
-            this.isLoading = false;
+            this.isSubmitting = false;
             this.router.navigate(['../'], { relativeTo: this.route });
           },
           (error) => {
-            this.isLoading = false;
+            this.isSubmitting = false;
             this.toastService.showError(
               'Error al actualizar el cliente potencial', error.message,
             );

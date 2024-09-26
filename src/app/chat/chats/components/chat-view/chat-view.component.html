@@ -34,10 +34,10 @@
       >
         <div class="message-content">
           <p>{{ message.content }}</p>
+          <span class="timestamp">{{
+            message.timestamp | date : 'shortTime'
+          }}</span>
         </div>
-        <span class="timestamp">{{
-          message.timestamp | date : 'shortTime'
-        }}</span>
       </div>
     </div>
 

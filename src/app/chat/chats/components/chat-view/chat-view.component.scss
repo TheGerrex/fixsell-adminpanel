@@ -91,31 +91,56 @@
 
 .message-content {
   max-width: 80%;
-  padding: 10px 15px;
+  padding: 10px 10px; // Adjust padding for better spacing
   border-radius: 18px;
   font-size: 16px;
   line-height: 1.4;
+}
+
+.admin-message .message-content,
+.user-message .message-content {
+  position: relative; // Add relative positioning to the message content
+  padding: 10px 10px 30px 10px; // Adjust padding for better spacing, including bottom padding for timestamp
+  border-radius: 8px; // Rounded corners for chat bubbles
+  min-width: 150px; // Set a minimum width for chat bubbles
+
+  .timestamp {
+    position: absolute; // Position the timestamp absolutely within the message content
+    bottom: 5px; // Position inside the message content
+    font-size: 0.8em;
+    color: #dddbdb;
+  }
 }
 
 .admin-message .message-content {
   background-color: #1a8cff;
   color: white;
   align-self: flex-end; // Align admin message to right
+
+  .timestamp {
+    right: 10px; // Align to the right for admin messages
+  }
 }
 
 .user-message .message-content {
   background-color: #f0f0f0;
   color: black;
   align-self: flex-start; // Align user message to left
+
+  .timestamp {
+    left: 10px; // Align to the left for user messages
+  }
 }
 
-.timestamp {
-  font-size: 0.8em;
-  color: #999;
-  margin-top: 5px;
-  display: block;
-}
+.user-message .message-content {
+  background-color: #f0f0f0;
+  color: black;
+  align-self: flex-start; // Align user message to left
 
+  .timestamp {
+    left: 10px; // Align to the left for user messages
+  }
+}
 .chat-input {
   display: flex;
   flex-direction: column;

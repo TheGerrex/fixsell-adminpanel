@@ -20,11 +20,11 @@ export class EditPrinterBrandDialogComponent {
     public dialogRef: MatDialogRef<EditPrinterBrandDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('data', data);
     this.brandName.setValue(data.brandName);
   }
 
   get brandNameError() {
+    console.log(this.brandName);
     return this.brandName.errors?.["serverError"];
   }
 

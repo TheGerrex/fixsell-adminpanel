@@ -1,1 +1,33 @@
-<p>edit-printer-category-dialog works!</p>
+<div class="dialog">
+  <div class="title-container">
+    <h4 class="title">Editar Categoria</h4>
+  </div>
+  <div class="content">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Plotter UV, Foil, Impresión Textil, etc."
+        [formControl]="categoryName"
+        [class.is-invalid]="categoryName.invalid"
+      />
+      <mat-error *ngIf="categoryName.invalid">{{
+        categoryNameError
+      }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="button-actions">
+    <button class="button button-outline-secondary w-100" (click)="onNoClick()">
+      <span class="button-label">Cancelar</span>
+    </button>
+    <button
+      class="button button-primary button-icon-text button-raised w-100"
+      [disabled]="categoryName.invalid"
+      (click)="onSubmit()"
+    >
+      <mat-icon>save</mat-icon>
+      <span class="button-label">Guardar</span>
+    </button>
+  </div>
+</div>

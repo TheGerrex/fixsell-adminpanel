@@ -10,9 +10,8 @@
         type="text"
         placeholder="Epson, HP, Canon, etc."
         [formControl]="brandName"
-        [class.is-invalid]="brandName.invalid"
       />
-      <mat-error *ngIf="brandName.invalid">{{ brandNameError }}</mat-error>
+      <mat-error *ngIf="brandName.invalid">El nombre es requerido</mat-error>
     </mat-form-field>
   </div>
   <div class="button-actions">

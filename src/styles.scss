@@ -240,7 +240,7 @@ input:focus {
     box-shadow 0.2s;
   height: fit-content;
   border-radius: $border-radius;
-  // min-height: 42px;
+  min-height: 48px;
   &:not(:disabled) {
     cursor: pointer;
   }

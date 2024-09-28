@@ -3,47 +3,44 @@
     <div class="table-header-container">
       <h3 class="table-title">Roles</h3>
       <div class="table-actions">
-        <div class="search-box">
-          <div class="search-box-container">
-            <mat-icon *ngIf="!searchTerm">search</mat-icon>
-            <input
-              class="search-input"
-              type="text"
-              placeholder="Buscar Roles"
-              [(ngModel)]="searchTerm"
-              (input)="applyFilter($event)"
-            />
-          </div>
-        </div>
-        <div class="action-buttons">
-          <button
-            ButtonResize
-            class="button button-primary button-raised button-icon-text"
-            (click)="addRole()"
-          >
-            <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="table-search">
-      <div class="search-box">
-        <div class="search-box-container">
-          <mat-icon *ngIf="!searchTerm">search</mat-icon>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
           <input
-            class="search-input"
+            matInput
             type="text"
             placeholder="Buscar Roles"
             [(ngModel)]="searchTerm"
             (input)="applyFilter($event)"
-          />
-        </div>
+        /></mat-form-field>
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="addRole()"
+        >
+          <mat-icon>add</mat-icon><span class="button-label">Crear Rol</span>
+        </button>
       </div>
+    </div>
+    <div class="table-search">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar Roles"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter($event)"
+      /></mat-form-field>
     </div>
   </div>
   <div class="responsive-table">
     <div class="table-container">
-      <table mat-table matSort [dataSource]="rolesDataSource">
+      <table
+        mat-table
+        matSort
+        [dataSource]="rolesDataSource"
+        class="dense-theme"
+      >
         <h2>Marcas</h2>
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>

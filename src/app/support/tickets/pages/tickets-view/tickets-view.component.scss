@@ -1,45 +1,12 @@
 @import '_variables.scss';
-.ticket-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-radius: $border-radius;
-  border: 1px solid $gray-300;
-  padding-bottom: 1em;
-  justify-content: center;
-}
 
-.ticket-header {
+.ticket-actions {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 0.5rem;
   row-gap: 1rem;
-  border-bottom: 1px solid $gray-300;
-  border-radius: $border-radius $border-radius 0 0;
-  background-color: $white;
-  padding: 1em;
-  .ticket-header-title {
-    margin: 0;
-  }
-  .button-actions {
-    display: flex;
-    gap: 0.5em;
-    button {
-      flex-shrink: 0;
-    }
-  }
   .ticket-data-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5em;
-    .ticket-data-item-name {
-      margin: 0;
-      font-weight: 500;
-      white-space: nowrap;
-    }
+    flex-grow: 1;
   }
 }
 

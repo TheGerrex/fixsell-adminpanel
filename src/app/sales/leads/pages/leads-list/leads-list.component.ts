@@ -21,7 +21,7 @@ export class LeadsListComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Lead>();
   filterValue = '';
-  isLoadingData = false;
+  isLoading = false;
   leadData: Lead[] = [];
   displayedColumns: string[] = [
     'status',
@@ -34,7 +34,6 @@ export class LeadsListComponent implements OnInit {
   ];
   searchTerm = '';
   constructor(
-    private http: HttpClient,
     private router: Router,
     private authService: AuthService,
     private leadsService: LeadsService,
@@ -67,10 +66,14 @@ export class LeadsListComponent implements OnInit {
                 lastCommunicationB.getTime() - lastCommunicationA.getTime()
               );
             });
-            this.dataSource.data = this.leadData; // Assign the data to the dataSource
+            this.dataSource = new MatTableDataSource(leads);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.isLoading = false;
             console.log(this.leadData);
           },
           (error) => {
+            this.isLoading = false;
             console.log(error);
           }
         );

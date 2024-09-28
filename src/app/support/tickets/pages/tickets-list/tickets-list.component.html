@@ -4,47 +4,38 @@
     <div class="table-header-container">
       <h3 class="table-title">Tickets</h3>
       <div class="table-actions">
-        <div class="search-box">
-          <div class="search-box-container">
-            <mat-icon *ngIf="!searchTerm">search</mat-icon>
-            <input
-              class="search-input"
-              type="text"
-              placeholder="Buscar Tickets"
-              [(ngModel)]="searchTerm"
-              (input)="applyFilter($event)"
-            />
-          </div>
-        </div>
-        <div class="action-buttons">
-          <website-export
-            [data]="TicketData"
-            [ignoreFields]="['id']"
-          ></website-export>
-          <button
-            ButtonResize
-            class="button button-primary button-raised button-icon-text"
-            (click)="addTicket()"
-          >
-            <mat-icon>add</mat-icon
-            ><span class="button-label">Crear Ticket</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="table-search">
-      <div class="search-box">
-        <div class="search-box-container">
-          <mat-icon *ngIf="!searchTerm">search</mat-icon>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
           <input
-            class="search-input"
+            matInput
             type="text"
             placeholder="Buscar Tickets"
             [(ngModel)]="searchTerm"
             (input)="applyFilter($event)"
-          />
-        </div>
+        /></mat-form-field>
+        <website-export
+          [data]="TicketData"
+          [ignoreFields]="['id']"
+        ></website-export>
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="addTicket()"
+        >
+          <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
+        </button>
       </div>
+    </div>
+    <div class="table-search">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar Tickets"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter($event)"
+      /></mat-form-field>
     </div>
   </div>
   <div class="responsive-table">
@@ -53,7 +44,7 @@
         mat-table
         [dataSource]="dataSource"
         matSort
-        class="ticket-list-table"
+        class="ticket-list-table dense-theme"
       >
         <!-- id Column, Not visible -->
         <ng-container matColumnDef="id">

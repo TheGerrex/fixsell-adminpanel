@@ -1,18 +1,18 @@
-<app-breadcrumb></app-breadcrumb>
 <div class="section-card" *ngIf="user">
   <div class="section-card-header">
-    <h3 class="header-title">Usuario</h3>
+    <div class="section-card-header-wrapper">
+      <app-breadcrumb></app-breadcrumb>
+      <h3 class="header-title">Usuario</h3>
+    </div>
     <div class="button-actions">
       <button
-        ButtonResize
-        class="button button-danger button-icon-text button-raised"
+        class="button button-danger button-raised button-icon-text"
         (click)="openConfirmDialog(user)"
       >
         <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
       </button>
       <button
-        ButtonResize
-        class="button button-primary button-icon-text button-raised"
+        class="button button-primary button-raised button-icon-text"
         (click)="navigateToEditUser(user)"
       >
         <mat-icon>edit</mat-icon><span class="button-label">Editar</span>

@@ -17,6 +17,7 @@ type Breadcrumb = { label: string; url: string };
           <div class="breadcrumb-route">
             <a
               [routerLink]="breadcrumb.url"
+(click)="onBreadcrumbClick(breadcrumb.url)"
               [class.active]="i === breadcrumbs.length - 1"
             >
               {{ breadcrumb.label }}
@@ -75,10 +76,8 @@ export class BreadcrumbComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private ngZone: NgZone,
     private sharedService: SharedService,
-    private printerService: PrinterService,
     private itemNameService: ItemNameService
   ) { }
 
@@ -192,5 +191,14 @@ export class BreadcrumbComponent implements OnInit {
       return this.buildBreadCrumb(route.firstChild, nextUrl, newBreadcrumbs);
     }
     return newBreadcrumbs.reverse();
+  }
+
+  onBreadcrumbClick(url: string): void {
+    console.log('Navigating to:', url);
+    if (url === '//sales/leads/communication') {
+      this.router.navigate(['/sales/leads']);
+    } else {
+      this.router.navigate([url]);
+    }
   }
 }

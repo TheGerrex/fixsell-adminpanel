@@ -27,7 +27,7 @@ export class LeadsCreateComponent implements OnInit {
   lead: Lead | null = null;
   isLoading = false;
   isSubmitting = false;
-  selectedType = new BehaviorSubject<string>('multifuncional');
+  selectedType = new BehaviorSubject<string>('printer');
   filteredProductNames: Observable<string[]> | undefined;
   productControl = new FormControl();
 
@@ -50,7 +50,9 @@ export class LeadsCreateComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.initializeForm();
+    this.isLoading = false;
 
     this.filteredPrinterNames = this.printerControl.valueChanges.pipe(
       startWith(''),
@@ -67,7 +69,7 @@ export class LeadsCreateComponent implements OnInit {
     this.filteredProductNames = this.productControl.valueChanges.pipe(
       startWith(''),
       switchMap((value) =>
-        this.selectedType.getValue() === 'multifuncional'
+        this.selectedType.getValue() === 'printer'
           ? this.dealService
             .getAllPrinterNames()
             .pipe(map((productNames) => this._filter(value, productNames)))
@@ -94,8 +96,8 @@ export class LeadsCreateComponent implements OnInit {
     // Clear the productControl value
     this.productControl.reset();
 
-    //if multifuncional
-    if (value === 'multifuncional') {
+    //if printer
+    if (value === 'printer') {
       this.filteredProductNames = this.productControl.valueChanges.pipe(
         startWith(''),
         switchMap((value) =>
@@ -118,7 +120,7 @@ export class LeadsCreateComponent implements OnInit {
   }
 
   addProductFromAutocomplete(event: MatAutocompleteSelectedEvent) {
-    if (this.selectedType.getValue() === 'multifuncional') {
+    if (this.selectedType.getValue() === 'printer') {
       // Add selected printer
       this.addPrinter(event.option.viewValue);
     } else {
@@ -183,7 +185,7 @@ export class LeadsCreateComponent implements OnInit {
 
   initializeForm(): void {
     this.createLeadForm = this.fb.group({
-      selectedType: ['multifuncional'],
+      selectedType: ['printer'],
       client: new FormControl('', [Validators.required]),
       status: new FormControl('prospect', [Validators.required]),
       product_interested: new FormControl('', [Validators.required]),
@@ -232,14 +234,13 @@ export class LeadsCreateComponent implements OnInit {
     delete this.createLeadForm.value.selectedType;
     // Prepare the data
     const type_of_product =
-      this.selectedType.getValue() === 'multifuncional'
+      this.selectedType.getValue() === 'printer'
         ? 'printer'
         : 'consumible';
     this.createLeadForm.controls['type_of_product'].setValue(type_of_product);
     console.log('Form:', this.createLeadForm.value);
 
     // create lead without communcation first
-    this.isLoading = true;
     // Prepare the data
     const data = {
       client: this.createLeadForm.controls['client'].value,
@@ -284,8 +285,8 @@ export class LeadsCreateComponent implements OnInit {
             console.error('Error creating sales communication:', salesError);
           },
         });
-      this.isLoading = false;
-      this.router.navigate(['../'], { relativeTo: this.route });
+      this.isSubmitting = false;
+      this.router.navigate([`/sales/leads/${this.lead?.id}`]);
     });
   }
 }

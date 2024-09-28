@@ -13,7 +13,6 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivityService } from 'src/app/support/services/activity.service';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -136,6 +135,17 @@ export class TicketsViewComponent implements OnInit {
     this.initializeTimeValues();
   }
 
+  private adjustDate(date: Date): string {
+    const dateObj = new Date(date);
+    const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(dateObj.getTime() - userTimezoneOffset);
+
+    // Add one day to the adjusted date
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
+
+    return format(adjustedDate, 'yyyy-MM-dd');
+  }
+
   private initializeTimeValues(): void {
     // Populate timeValues with 24-hour time values in 15-minute increments
     this.timeValues = []; // Ensure timeValues is initialized as an empty array
@@ -205,11 +215,11 @@ export class TicketsViewComponent implements OnInit {
       title: [this.ticketTitle || '', Validators.required],
       type: [this.ticketType || '', Validators.required],
       dateStart: [
-        format(this.ticketAppointmentDateStart, 'yyyy-MM-dd') || '',
+        this.adjustDate(this.ticketAppointmentDateStart) || '',
         Validators.required,
       ],
       dateEnd: [
-        format(this.ticketAppointmentDateEnd, 'yyyy-MM-dd') || '',
+        format(this.adjustDate(this.ticketAppointmentDateEnd), 'yyyy-MM-dd') || '',
         Validators.required,
       ],
       timeStart: [

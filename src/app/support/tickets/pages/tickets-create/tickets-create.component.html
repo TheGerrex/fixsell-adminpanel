@@ -1,8 +1,10 @@
-<app-breadcrumb></app-breadcrumb>
 <div>
   <form [formGroup]="createTicketForm" class="section-card">
     <div class="section-card-header">
-      <h3 class="header-title">Nuevo Ticket de Soporte</h3>
+      <div class="section-card-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="header-title">Nuevo Ticket de Soporte</h3>
+      </div>
       <div class="button-actions">
         <button
           ButtonResize

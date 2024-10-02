@@ -26,6 +26,8 @@ import { ButtonResizeDirective } from './directives/button-resize.directive';
 import { EditUserRoleDialogComponent } from './components/edit-user-role-dialog/edit-user-role-dialog.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
 import { DeleteUserRoleDialogComponent } from './components/delete-user-role-dialog/delete-user-role-dialog.component';
+import { EditPrinterBrandDialogComponent } from './components/edit-printer-brand-dialog/edit-printer-brand-dialog.component';
+import { EditPrinterCategoryDialogComponent } from './components/edit-printer-category-dialog/edit-printer-category-dialog.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -45,6 +47,8 @@ import { DeleteUserRoleDialogComponent } from './components/delete-user-role-dia
     DropdownComponent,
     ButtonResizeDirective,
     EditUserRoleDialogComponent,
+    EditPrinterBrandDialogComponent,
+    EditPrinterCategoryDialogComponent,
     RichTextEditorComponent,
     DeleteUserRoleDialogComponent,
   ],
@@ -75,6 +79,8 @@ import { DeleteUserRoleDialogComponent } from './components/delete-user-role-dia
     DropdownComponent,
     ButtonResizeDirective,
     EditUserRoleDialogComponent,
+    EditPrinterBrandDialogComponent,
+    EditPrinterCategoryDialogComponent,
     RichTextEditorComponent,
     DeleteUserRoleDialogComponent,
   ],

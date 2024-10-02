@@ -44,6 +44,7 @@ export class CommunicationEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.route.params.subscribe((params) => {
       const id = params['id'];
       this.leadsService.getCommunicationById(id).subscribe((communication) => {
@@ -53,6 +54,7 @@ export class CommunicationEditComponent implements OnInit {
       });
     });
     this.initializeForm();
+    this.isLoading = false;
   }
 
   populateForm(communication: Communication): void {

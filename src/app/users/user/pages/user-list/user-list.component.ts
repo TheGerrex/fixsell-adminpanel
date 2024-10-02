@@ -24,6 +24,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   userData: User[] = [];
   token: string = '';
   searchTerm = '';
+  isLoading = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +38,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.token = this.userService.getToken();
     this.getAllUsersData()
     const userRoles = this.authService.getCurrentUserRoles();
@@ -44,6 +46,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     if (!this.isAdmin) {
       this.displayedColumns = ['name', 'email', 'isActive'];
     }
+    this.isLoading = false;
   }
 
   ngAfterViewInit() {

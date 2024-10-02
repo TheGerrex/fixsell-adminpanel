@@ -13,7 +13,6 @@ import { ToastService } from '../../services/toast.service';
 export class EditUserRoleDialogComponent {
   roleName = new FormControl('', Validators.required);
 
-
   constructor(
     private rolService: RoleService,
     private toastService: ToastService,

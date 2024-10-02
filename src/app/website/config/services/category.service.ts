@@ -5,13 +5,13 @@ import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
-import { Category } from '../components/printer-tab/categories-crud/categories.interface';
+import { Category, NewCategory } from '../components/printer-tab/categories-crud/categories.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // get Category
   getCategory(): Observable<Category[]> {
@@ -21,7 +21,7 @@ export class CategoryService {
   }
 
   // create Category
-  createCategory(category: Category): Observable<any> {
+  createCategory(category: NewCategory): Observable<any> {
     return this.http
       .post(`${environment.baseUrl}/categories/printers`, category)
       .pipe(
@@ -33,7 +33,7 @@ export class CategoryService {
   }
 
   // update Category
-  updateCategory(category: Category, id: string): Observable<any> {
+  updateCategory(category: NewCategory, id: string): Observable<any> {
     return this.http.patch(
       `${environment.baseUrl}/categories/printers/${id}`,
       category

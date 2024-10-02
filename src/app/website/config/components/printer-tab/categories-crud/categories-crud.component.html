@@ -1,68 +1,83 @@
 <div class="table-header">
-  <h2>Categorias</h2>
-  <div class="search-box">
-    <div class="input-group">
-      <span class="input-group-text" id="basic-addon1">
-        <mat-icon>search</mat-icon>
-      </span>
-      <input
-        class="form-control"
-        type="text"
-        placeholder="Buscar"
-        (input)="applyFilter($event)"
-      />
+  <div class="table-header-container">
+    <h3 class="table-title">Categorias</h3>
+    <div class="table-actions">
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar Categorias"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter($event)"
+      /></mat-form-field>
+      <button
+        ButtonResize
+        class="button button-primary button-raised button-icon-text"
+        (click)="addCategory()"
+      >
+        <mat-icon>add</mat-icon
+        ><span class="button-label">Crear Categoria</span>
+      </button>
     </div>
   </div>
-  <div class="table-action-buttons">
-    <button
-      class="button button-primary button-raised button-icon-text"
-      (click)="addCategory()"
-    >
-      <mat-icon>add</mat-icon><span class="button-label">Agregar</span>
-    </button>
+  <div class="table-search">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+      <input
+        matInput
+        type="text"
+        placeholder="Buscar Categorias"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter($event)"
+    /></mat-form-field>
   </div>
 </div>
 <div class="responsive-table">
-  <table
-    mat-table
-    matSort
-    [dataSource]="CategoriesDataSource"
-    class="category-list-table"
-  >
-    <h2>Marcas</h2>
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Nombre</th>
-      <td mat-cell *matCellDef="let category" data-column="name">
-        {{ category.name }}
-      </td>
-    </ng-container>
+  <div class="table-container">
+    <table
+      mat-table
+      matSort
+      [dataSource]="dataSource"
+      class="category-list-table dense-theme"
+    >
+      <h2>Marcas</h2>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let category" data-column="name">
+          {{ category.name }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Acciones</th>
-      <td mat-cell *matCellDef="let category" data-column="actions">
-        <button
-          mat-icon-button
-          color="primary"
-          *ngIf="isAdmin"
-          (click)="editCategory(category)"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          color="warn"
-          *ngIf="isAdmin"
-          (click)="deleteCategory(category.id, category.name)"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let category" data-column="actions">
+          <button
+            mat-icon-button
+            class="edit-icon"
+            *ngIf="isAdmin"
+            (click)="editCategory(category.id, category)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="delete-icon"
+            *ngIf="isAdmin"
+            (click)="deleteCategory(category.id, category.name)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="CategoriesDisplayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: CategoriesDisplayedColumns"></tr>
-  </table>
-
+      <tr mat-header-row *matHeaderRowDef="CategoriesDisplayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: CategoriesDisplayedColumns"
+      ></tr>
+    </table>
+  </div>
   <mat-paginator
     [pageSizeOptions]="[5, 10, 25, 100]"
     [pageSize]="8"

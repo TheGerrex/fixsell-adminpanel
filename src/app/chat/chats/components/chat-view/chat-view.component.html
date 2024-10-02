@@ -3,61 +3,67 @@
     <div class="user-info">
       <div class="user-avatar">G</div>
       <div class="user-details">
-        <span class="user-name">Gerardo Garcia</span>
-        <span class="user-status">Web</span>
+        <span class="user-name">{{ userInfo.name }}</span>
+        <span class="user-status">{{ userInfo.status }}</span>
       </div>
     </div>
+
     <div class="connection-status">
-      <div id="server-status"></div>
+      <span id="server-status"></span>
       <button (click)="toggleConnection()">
         {{ isConnected ? 'Disconnect' : 'Connect' }}
       </button>
     </div>
+
     <div class="chat-actions">
-      <span class="chat-time">18:40 hrs</span>
-      <select class="transfer-button">
-        <option>Transferir</option>
-      </select>
-      <button class="finish-chat">Finalizar Chat</button>
+      <span class="chat-time">{{ currentTime }}</span>
+      <button (click)="onTransferChat()">Transferir</button>
+      <button (click)="onFinishChat()">Finalizar Chat</button>
     </div>
   </div>
 
-  <div class="chat-container">
-    <div class="chat-messages">
-      <div
-        *ngFor="let message of messages$ | async"
-        class="message"
-        [ngClass]="{
-          'admin-message': message.isAdmin,
-          'user-message': !message.isAdmin
-        }"
-      >
-        <div class="message-content">
-          <p>{{ message.content }}</p>
+  <div class="chat-messages">
+    <div
+      *ngFor="let message of messages$ | async"
+      class="message"
+      [ngClass]="{
+        'admin-message': message.isAdmin,
+        'bot-message': !message.isAdmin && !message.isUser,
+        'user-message': message.isUser
+      }"
+    >
+      <div class="message-content">
+        <div class="message-header">
+          <span class="sender">{{ message.senderId }}</span>
           <span class="timestamp">{{
             message.timestamp | date : 'shortTime'
           }}</span>
         </div>
+        <div class="message-text">
+          {{ message.content }}
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="chat-input">
-      <div class="input-actions">
-        <button><mat-icon>format_bold</mat-icon></button>
-        <button><mat-icon>format_italic</mat-icon></button>
-        <button><mat-icon>format_underlined</mat-icon></button>
-        <button><mat-icon>more_vert</mat-icon></button>
-        <button><mat-icon>link</mat-icon></button>
-      </div>
-      <div class="input-text-chat">
-        <textarea
-          [(ngModel)]="newMessage"
-          placeholder="Escribe tu mensaje aquí..."
-        ></textarea>
-        <button class="send-message" (click)="onSendMessage()">
-          <mat-icon>send</mat-icon>
-        </button>
-      </div>
+  <div class="chat-input">
+    <div class="input-actions">
+      <button><i class="material-icons">format_bold</i></button>
+      <button><i class="material-icons">format_italic</i></button>
+      <button><i class="material-icons">format_underlined</i></button>
+      <button><i class="material-icons">link</i></button>
+      <button><i class="material-icons">more_vert</i></button>
+    </div>
+    <div class="input-text-chat">
+      <input
+        type="text"
+        [(ngModel)]="newMessage"
+        (keyup.enter)="onSendMessage()"
+        placeholder="Type a message..."
+      />
+      <button (click)="onSendMessage()">
+        <i class="material-icons">send</i>
+      </button>
     </div>
   </div>
 </div>

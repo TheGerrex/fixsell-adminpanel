@@ -59,7 +59,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   CurrentroomId: string | null = null;
   private lastSentMessage: string | null = null;
   private lastSentTimestamp: number | null = null;
-
+  isAdminConnected = false;
   ngOnInit() {
     this.communicationService.chatRoomSelected.subscribe((roomId: string) => {
       this.CurrentroomId = roomId;
@@ -81,24 +81,24 @@ export class ChatViewComponent implements OnInit, OnDestroy {
 
   handleIncomingMessage(message: any) {
     this.ngZone.run(() => {
-      // Process the received message
+      if (message.Message.includes('ha abandonado la conversación')) {
+        this.isAdminConnected = false;
+      } else if (message.Message.includes('se ha unido a la conversación')) {
+        this.isAdminConnected = true;
+      }
+
       const updatedMessage: Message = {
         content: message.Message,
         timestamp: new Date(),
-        isUser: !message.isAdmin, // If not admin, it's a user message
+        isUser: !message.isAdmin,
         isAdmin: message.isAdmin,
         senderId: message.FullName,
       };
 
-      // Push the message into the messages array
       const currentMessages = this.messages$.getValue();
       this.messages$.next([...currentMessages, updatedMessage]);
-
-      // Trigger change detection
-      this.cdr.detectChanges();
     });
   }
-
   isRecentlySentMessage(content: string): boolean {
     const currentTime = Date.now();
     if (

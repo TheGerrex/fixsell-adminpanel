@@ -1,4 +1,7 @@
 [build]
+  command = "ng build --configuration production"
+  publish = "dist/fixsell-adminpanel-front"
+
   [build.budgets]
     [build.budgets.CSS]
       maximumBudget = 12

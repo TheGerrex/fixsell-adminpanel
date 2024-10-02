@@ -1,6 +1,6 @@
 [build]
   command = "ng build --configuration production"
-  publish = "/dist/fixsell-adminpanel-front"
+  publish = "fixsell-adminpanel/dist/fixsell-adminpanel-front"
   base = "/"
 
   [build.budgets]

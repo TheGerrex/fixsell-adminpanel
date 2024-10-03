@@ -48,7 +48,7 @@ export class TicketsCreateComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) { }
+  ) {}
 
   translatePriority(priority: Priority): string {
     switch (priority) {
@@ -102,7 +102,6 @@ export class TicketsCreateComponent implements OnInit {
 
     // Initial call to set validators based on the default type
     this.updateValidators(this.createTicketForm.get('type')?.value);
-
   }
 
   private initializeTimeValues(): void {
@@ -124,12 +123,13 @@ export class TicketsCreateComponent implements OnInit {
 
         const hourString = hour < 10 ? `0${hour}` : `${hour}`;
         const minuteString = j < 10 ? `0${j}` : `${j}`;
-        const displayHourString = displayHour < 10 ? `${displayHour}` : `${displayHour}`;
+        const displayHourString =
+          displayHour < 10 ? `${displayHour}` : `${displayHour}`;
         const displayMinuteString = minuteString;
 
         this.timeValues.push({
           value: `${hourString}:${minuteString}`,
-          display: `${displayHourString}:${displayMinuteString} ${amPm}`
+          display: `${displayHourString}:${displayMinuteString} ${amPm}`,
         });
       }
     }
@@ -150,7 +150,8 @@ export class TicketsCreateComponent implements OnInit {
     const startHour = next15Minutes.getHours();
     const startMinute = next15Minutes.getMinutes();
     const startHourString = startHour < 10 ? `0${startHour}` : `${startHour}`;
-    const startMinuteString = startMinute < 10 ? `0${startMinute}` : `${startMinute}`;
+    const startMinuteString =
+      startMinute < 10 ? `0${startMinute}` : `${startMinute}`;
     const startTimeValue = `${startHourString}:${startMinuteString}`;
 
     // Calculate the end time (1 hour after the start time)
@@ -167,9 +168,11 @@ export class TicketsCreateComponent implements OnInit {
 
     // Update endTime whenever startTime changes
     this.createTicketForm.get('startTime')?.valueChanges.subscribe((value) => {
-      const index = this.timeValues.findIndex(time => time.value === value);
+      const index = this.timeValues.findIndex((time) => time.value === value);
       if (index !== -1 && index + 4 < this.timeValues.length) {
-        this.createTicketForm.get('endTime')?.setValue(this.timeValues[index + 4].value);
+        this.createTicketForm
+          .get('endTime')
+          ?.setValue(this.timeValues[index + 4].value);
       }
     });
   }
@@ -303,7 +306,9 @@ export class TicketsCreateComponent implements OnInit {
 
       // Combine date and time values into Date objects
       const startDate = new Date(formData.appointmentStartTime);
-      const [startHour, startMinute] = formData.startTime.split(':').map(Number);
+      const [startHour, startMinute] = formData.startTime
+        .split(':')
+        .map(Number);
       startDate.setHours(startHour, startMinute);
 
       const endDate = new Date(formData.appointmentEndTime);

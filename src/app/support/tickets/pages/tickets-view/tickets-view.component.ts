@@ -11,11 +11,7 @@ import { User } from 'src/app/auth/interfaces';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivityService } from 'src/app/support/services/activity.service';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { format } from 'date-fns';
@@ -44,8 +40,8 @@ export class TicketsViewComponent implements OnInit {
   clientPhoneMask = '';
   ticketPriority = '';
   clientAddress = '';
-  assignedUser: string = ''; // Initialize the 'assignedUser' property
-  assignee: string = ''; // Initialize the 'assignee' property
+  assignedUser: User | null = null;
+  assignee: User | null = null;
   users: User[] = [];
   currentUser: User | null = null;
 
@@ -65,7 +61,6 @@ export class TicketsViewComponent implements OnInit {
   ];
   ticketStatus = Status.OPEN; // Default status
   timeValues: { value: string; display: string }[] = [];
-
 
   clientForm!: FormGroup;
   eventForm!: FormGroup;
@@ -165,12 +160,13 @@ export class TicketsViewComponent implements OnInit {
 
         const hourString = hour < 10 ? `0${hour}` : `${hour}`;
         const minuteString = j < 10 ? `0${j}` : `${j}`;
-        const displayHourString = displayHour < 10 ? `${displayHour}` : `${displayHour}`;
+        const displayHourString =
+          displayHour < 10 ? `${displayHour}` : `${displayHour}`;
         const displayMinuteString = minuteString;
 
         this.timeValues.push({
           value: `${hourString}:${minuteString}`,
-          display: `${displayHourString}:${displayMinuteString} ${amPm}`
+          display: `${displayHourString}:${displayMinuteString} ${amPm}`,
         });
       }
     }
@@ -219,7 +215,8 @@ export class TicketsViewComponent implements OnInit {
         Validators.required,
       ],
       dateEnd: [
-        format(this.adjustDate(this.ticketAppointmentDateEnd), 'yyyy-MM-dd') || '',
+        format(this.adjustDate(this.ticketAppointmentDateEnd), 'yyyy-MM-dd') ||
+          '',
         Validators.required,
       ],
       timeStart: [
@@ -258,10 +255,8 @@ export class TicketsViewComponent implements OnInit {
       this.clientEmail = ticket.clientEmail;
       this.clientPhone = ticket.clientPhone;
       this.ticketPriority = ticket.priority;
-      this.assignedUser =
-        ticket.assigned && ticket.assigned.name ? ticket.assigned.name : '';
-      this.assignee =
-        ticket.assignee && ticket.assignee.name ? ticket.assignee.name : '';
+      this.assignedUser = ticket.assigned || null;
+      this.assignee = ticket.assignee || null;
       this.ticket.createdDate = this.convertToLocalDate(
         this.ticket.createdDate,
       );
@@ -357,33 +352,32 @@ export class TicketsViewComponent implements OnInit {
       console.error('Selected user not found');
       return;
     }
-    const selectedUserId = selectedUser.id;
 
     // Check if the selected user is different from the current assigned user
-    if (this.ticket.assigned && this.ticket.assigned.id === selectedUserId) {
+    if (this.ticket.assigned && this.ticket.assigned.id === selectedUser.id) {
       console.log('The selected user is already the assigned user');
       return;
     }
 
-    this.ticketsService
-      .updateTicket(this.ticket.id, { assigned: selectedUserId }) // Pass the selected user ID
-      .subscribe(
-        (response) => {
-          console.log('Ticket transferred successfully:', response);
-          this.ticket.assigned.name = selectedUser.name; // Update the assignedUser property with the username
-          this.toastService.showSuccess(
-            'Ticket transferred successfully',
-            'OK',
-          );
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.toastService.showError(
-            'Error transferring ticket',
-            error.message,
-          );
-        },
-      );
+    // Just send the user ID as a string
+    const updatePayload = {
+      assigned: selectedUser.id,
+    };
+
+    this.ticketsService.updateTicket(this.ticket.id, updatePayload).subscribe(
+      (response) => {
+        console.log('Ticket transferred successfully:', response);
+
+        // Update the local ticket's assigned user with the full user object
+        this.ticket.assigned = selectedUser;
+
+        this.toastService.showSuccess('Ticket transferred successfully', 'OK');
+      },
+      (error) => {
+        console.error('Error transferring ticket:', error);
+        this.toastService.showError('Error transferring ticket', error.message);
+      },
+    );
   }
 
   toggleIssueEdit() {

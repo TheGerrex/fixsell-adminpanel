@@ -34,8 +34,8 @@ export class UserCreateComponent implements OnInit {
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private http: HttpClient,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit() {
     this.initializeForm();
@@ -50,17 +50,25 @@ export class UserCreateComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching roles', error);
-      }
+      },
     );
   }
-
 
   initializeForm() {
     this.createUserForm = this.fb.group(
       {
-        email: ['', [Validators.required, Validators.email]],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(this.validatorsService.emailPattern),
+          ],
+        ],
         name: ['', Validators.required],
-        password: ['', [Validators.required, this.validatorsService.isStrongPassword()]],
+        password: [
+          '',
+          [Validators.required, this.validatorsService.isStrongPassword()],
+        ],
         repeatPassword: ['', Validators.required],
         isActive: [true],
         roles: [['user'], Validators.required],
@@ -68,9 +76,9 @@ export class UserCreateComponent implements OnInit {
       {
         validators: this.validatorsService.passwordsMatch(
           'password',
-          'repeatPassword'
+          'repeatPassword',
         ),
-      }
+      },
     );
   }
 
@@ -113,7 +121,7 @@ export class UserCreateComponent implements OnInit {
       const hasLowerCase = /[a-z]/.test(value);
       const hasNumeric = /[0-9]/.test(value);
       const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-        value
+        value,
       );
 
       const passwordValid =
@@ -217,7 +225,7 @@ export class UserCreateComponent implements OnInit {
         this.isLoadingForm = false;
         this.toastService.showError(
           `Error creando usuario: ${error.error.message}`,
-          'Close'
+          'Close',
         );
         console.error('Error creando usuario:', error.error.message);
       },

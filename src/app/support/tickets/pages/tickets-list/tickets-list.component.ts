@@ -41,9 +41,9 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
   ];
 
   priorityMapping: { [key: string]: number } = {
-    'high': 3,
-    'medium': 2,
-    'low': 1
+    high: 3,
+    medium: 2,
+    low: 1,
   };
 
   statusTranslations: { [key in Status]: string } = {
@@ -116,15 +116,14 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   constructor(
     private router: Router,
     private ticketsService: TicketsService,
     private authService: AuthService,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -163,30 +162,35 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
   loadData(statuses?: string) {
     this.isLoadingData = true;
     let ticketsObservable: Observable<Ticket[]>;
+    const user = this.authService.getCurrentUser();
+    const userRoles = this.authService.getCurrentUserRoles();
+    this.isAdmin = userRoles.includes('admin');
+
     if (this.isAdmin) {
       ticketsObservable = this.ticketsService.getAllTickets();
       console.log('loadData Admin:', ticketsObservable);
     } else {
-      const user = this.authService.getCurrentUser();
       if (user && user.id) {
         ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
         console.log('loadData User:', ticketsObservable);
       } else {
         // Handle the case where there is no current user
         console.error('No current user');
+        this.isLoadingData = false;
         return;
       }
     }
+
     ticketsObservable.subscribe(
       (tickets) => {
         console.log('Received tickets list:', tickets);
         if (statuses !== undefined) {
           const statusArray = statuses.split(','); // Split the statuses string into an array
           tickets = tickets.filter((ticket) =>
-            statusArray.includes(ticket.status)
+            statusArray.includes(ticket.status),
           );
         }
-        tickets = tickets.map(ticket => {
+        tickets = tickets.map((ticket) => {
           ticket.updatedDate = this.convertToLocalDate(ticket.updatedDate);
           return ticket;
         });
@@ -195,12 +199,11 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.isLoadingData = false;
-
       },
       (error) => {
         console.error('Error:', error);
         this.isLoadingData = false;
-      }
+      },
     );
   }
 
@@ -235,7 +238,9 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
       console.log('Invalid date string');
       return dateString;
     } else {
-      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000,
+      );
       return localDate;
     }
   }
@@ -273,12 +278,12 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
           this.dataSource.data = this.TicketData;
           this.toastService.showSuccess(
             'Ticket eliminado con éxito',
-            'Aceptar'
+            'Aceptar',
           );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

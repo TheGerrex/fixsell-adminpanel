@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -33,8 +29,7 @@ export class DealListComponent implements OnInit {
     'model',
     'price',
     'dealPrice',
-    'dealStartDate',
-    'dealEndDate',
+    'dealDateRange',
     'action',
   ];
 
@@ -44,8 +39,8 @@ export class DealListComponent implements OnInit {
     private dialog: MatDialog,
     private dialogService: DialogService,
     private toastService: ToastService,
-    private dealService: DealService
-  ) { }
+    private dealService: DealService,
+  ) {}
 
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
@@ -69,7 +64,7 @@ export class DealListComponent implements OnInit {
       console.log('all deals:', deals);
       this.dealData = deals.filter(
         (deal: { printer: null; consumible: null }) =>
-          deal.printer !== null || deal.consumible !== null
+          deal.printer !== null || deal.consumible !== null,
       );
       console.log(this.dealData);
       this.dataSource = new MatTableDataSource(this.dealData);
@@ -80,9 +75,7 @@ export class DealListComponent implements OnInit {
         let dataStr = '';
         if (data.printer) {
           dataStr +=
-            data.printer.brand +
-            data.printer.model +
-            data.printer.price;
+            data.printer.brand + data.printer.model + data.printer.price;
         }
         if (data.consumible) {
           dataStr += data.consumible.name;
@@ -91,8 +84,13 @@ export class DealListComponent implements OnInit {
           data.dealPrice +
           data.dealCurrency +
           data.dealDiscountPercentage +
-          data.dealEndDate +
-          data.dealStartDate;
+          (data.dealStartDate
+            ? data.dealStartDate.toLocaleDateString('es-ES')
+            : '') +
+          ' - ' +
+          (data.dealEndDate
+            ? data.dealEndDate.toLocaleDateString('es-ES')
+            : '');
         return dataStr.trim().toLowerCase().indexOf(filter) != -1;
       };
     });
@@ -138,9 +136,8 @@ export class DealListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         if (deal.id) {
-          this.deleteDeal(deal)
+          this.deleteDeal(deal);
         }
-
       }
     });
   }
@@ -151,11 +148,14 @@ export class DealListComponent implements OnInit {
         (response) => {
           this.dealData = this.dealData.filter((d) => d.id !== deal.id);
           this.dataSource.data = this.dealData;
-          this.toastService.showSuccess('Promoción eliminado con éxito', 'Aceptar');
+          this.toastService.showSuccess(
+            'Promoción eliminado con éxito',
+            'Aceptar',
+          );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

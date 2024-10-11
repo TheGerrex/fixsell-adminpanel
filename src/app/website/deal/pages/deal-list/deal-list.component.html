@@ -92,7 +92,16 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="dealStartDate">
+        <!-- Deal Date Range Column -->
+        <ng-container matColumnDef="dealDateRange">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+          <td mat-cell *matCellDef="let deal" data-column="dealDateRange">
+            {{ deal.dealStartDate | date : 'dd/MM/yy' }} -
+            {{ deal.dealEndDate | date : 'dd/MM/yy' }}
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="dealStartDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Fecha Inicial
           </th>
@@ -106,7 +115,7 @@
           <td mat-cell *matCellDef="let deal" data-column="dealEndDate">
             {{ deal.dealEndDate | date : 'longDate' }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="dealDiscountPercentage">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>

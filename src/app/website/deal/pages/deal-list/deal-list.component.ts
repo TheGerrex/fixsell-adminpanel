@@ -96,6 +96,12 @@ export class DealListComponent implements OnInit {
     });
   }
 
+  isWithinDateRange(startDate: Date, endDate: Date): boolean {
+    const currentDate = new Date();
+    return (
+      currentDate >= new Date(startDate) && currentDate <= new Date(endDate)
+    );
+  }
   seeDeal(deal: Deal) {
     this.router.navigate([`/website/deals/${deal.id}`], {
       state: { deal },

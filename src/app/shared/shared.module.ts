@@ -28,6 +28,7 @@ import { RichTextEditorComponent } from './components/rich-text-editor/rich-text
 import { DeleteUserRoleDialogComponent } from './components/delete-user-role-dialog/delete-user-role-dialog.component';
 import { EditPrinterBrandDialogComponent } from './components/edit-printer-brand-dialog/edit-printer-brand-dialog.component';
 import { EditPrinterCategoryDialogComponent } from './components/edit-printer-category-dialog/edit-printer-category-dialog.component';
+import { CapitalizeDatePipe } from './pipes/capitalize-month.pipe';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -51,6 +52,7 @@ import { EditPrinterCategoryDialogComponent } from './components/edit-printer-ca
     EditPrinterCategoryDialogComponent,
     RichTextEditorComponent,
     DeleteUserRoleDialogComponent,
+    CapitalizeDatePipe,
   ],
   imports: [
     CommonModule,
@@ -83,6 +85,7 @@ import { EditPrinterCategoryDialogComponent } from './components/edit-printer-ca
     EditPrinterCategoryDialogComponent,
     RichTextEditorComponent,
     DeleteUserRoleDialogComponent,
+    CapitalizeDatePipe,
   ],
 })
-export class SharedModule { }
+export class SharedModule {}

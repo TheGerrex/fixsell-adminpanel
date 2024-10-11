@@ -107,7 +107,7 @@
                 'past-deal': !isWithinDateRange(pkg.packageEndDate)
               }"
             ></span>
-            {{ pkg.packageEndDate | date : 'dd MMM yyyy' : 'es-ES' }}
+            {{ pkg.packageEndDate | capitalizeDate }}
           </td>
         </ng-container>
 

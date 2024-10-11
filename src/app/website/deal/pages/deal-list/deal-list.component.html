@@ -92,25 +92,20 @@
           </td>
         </ng-container>
 
-        <!-- Deal Date Range Column -->
-        <ng-container matColumnDef="dealDateRange">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
-          <td mat-cell *matCellDef="let deal" data-column="dealDateRange">
+        <!-- Deal End Date Column -->
+        <ng-container matColumnDef="dealEndDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Terminacion de promocion
+          </th>
+          <td mat-cell *matCellDef="let deal" data-column="dealEndDate">
             <span
               class="status-icon"
               [ngClass]="{
-                'within-date-range': isWithinDateRange(
-                  deal.dealStartDate,
-                  deal.dealEndDate
-                ),
-                'past-deal': !isWithinDateRange(
-                  deal.dealStartDate,
-                  deal.dealEndDate
-                )
+                'within-date-range': isWithinDateRange(deal.dealEndDate),
+                'past-deal': !isWithinDateRange(deal.dealEndDate)
               }"
             ></span>
-            {{ deal.dealStartDate | date : 'dd/MM/yy' }} -
-            {{ deal.dealEndDate | date : 'dd/MM/yy' }}
+            {{ deal.dealEndDate | date : 'dd MMM yyyy' : 'es-ES' }}
           </td>
         </ng-container>
 

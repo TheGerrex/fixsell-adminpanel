@@ -29,7 +29,7 @@ export class DealListComponent implements OnInit {
     'model',
     'price',
     'dealPrice',
-    'dealDateRange',
+    'dealEndDate',
     'action',
   ];
 
@@ -84,10 +84,6 @@ export class DealListComponent implements OnInit {
           data.dealPrice +
           data.dealCurrency +
           data.dealDiscountPercentage +
-          (data.dealStartDate
-            ? data.dealStartDate.toLocaleDateString('es-ES')
-            : '') +
-          ' - ' +
           (data.dealEndDate
             ? data.dealEndDate.toLocaleDateString('es-ES')
             : '');
@@ -96,12 +92,11 @@ export class DealListComponent implements OnInit {
     });
   }
 
-  isWithinDateRange(startDate: Date, endDate: Date): boolean {
+  isWithinDateRange(endDate: Date): boolean {
     const currentDate = new Date();
-    return (
-      currentDate >= new Date(startDate) && currentDate <= new Date(endDate)
-    );
+    return currentDate <= new Date(endDate);
   }
+
   seeDeal(deal: Deal) {
     this.router.navigate([`/website/deals/${deal.id}`], {
       state: { deal },

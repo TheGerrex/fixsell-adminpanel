@@ -2,7 +2,23 @@
 
 .print-item {
   display: flex;
-  span {
-    // font-weight: 500;
-  }
+  // span {
+  //   // font-weight: 500;
+  // }
+}
+
+.status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.within-date-range {
+  background-color: $green-500;
+}
+
+.past-deal {
+  background-color: $red-400;
 }

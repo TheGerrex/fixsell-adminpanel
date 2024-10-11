@@ -38,8 +38,8 @@ export class PackageListComponent implements OnInit {
     private authService: AuthService,
     private packageService: PackageService,
     private dialog: MatDialog,
-    private toastService: ToastService
-  ) { }
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
@@ -58,17 +58,25 @@ export class PackageListComponent implements OnInit {
 
   loadData() {
     this.isLoadingData = true;
-    this.packageService.getAllPackages().subscribe((data) => {
-      console.log(data);
-      this.packageData = data;
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.isLoadingData = false;
-    }, (error) => {
-      console.error('Error:', error);
-      this.isLoadingData = false;
-    });
+    this.packageService.getAllPackages().subscribe(
+      (data) => {
+        console.log(data);
+        this.packageData = data;
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.isLoadingData = false;
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.isLoadingData = false;
+      },
+    );
+  }
+
+  isWithinDateRange(endDate: Date): boolean {
+    const currentDate = new Date();
+    return currentDate <= new Date(endDate);
   }
 
   addPackage() {
@@ -108,9 +116,8 @@ export class PackageListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         if (packages.id) {
-          this.deletePackage(packages)
+          this.deletePackage(packages);
         }
-
       }
     });
   }
@@ -120,14 +127,19 @@ export class PackageListComponent implements OnInit {
       this.packageService.deletePackageById(packages.id).subscribe(
         (response) => {
           // Update consumibleData
-          this.packageData = this.packageData.filter((c) => c.id !== packages.id);
+          this.packageData = this.packageData.filter(
+            (c) => c.id !== packages.id,
+          );
           // Update dataSource
           this.dataSource.data = this.packageData;
-          this.toastService.showSuccess('Paquete de renta eliminado con éxito', 'Aceptar');
+          this.toastService.showSuccess(
+            'Paquete de renta eliminado con éxito',
+            'Aceptar',
+          );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

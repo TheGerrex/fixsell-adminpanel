@@ -51,7 +51,7 @@ export class AuthService {
       }),
       catchError((err) => {
         return throwError(() => err.error.message);
-      })
+      }),
     );
   }
 
@@ -77,7 +77,7 @@ export class AuthService {
         this._authStatus.set(AuthStatus.notAuthenticated);
         localStorage.removeItem('authStatus');
         return of(false);
-      })
+      }),
     );
   }
 
@@ -101,6 +101,8 @@ export class AuthService {
 
   getCurrentUserRoles(): string[] {
     const user = this.getCurrentUser();
-    return user && user.roles ? user.roles.map((role) => role.name).filter((name): name is string => Boolean(name)) : [];
+    return user && user.role
+      ? [user.role.name].filter((name): name is string => Boolean(name))
+      : [];
   }
 }

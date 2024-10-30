@@ -44,9 +44,7 @@
             <div class="item-label">Roles</div>
             <div class="item-value">
               <div class="roles">
-                <span class="role" *ngFor="let role of user.roles">{{
-                  role.name
-                }}</span>
+                <span class="role">{{ user.role?.name }}</span>
               </div>
             </div>
           </div>

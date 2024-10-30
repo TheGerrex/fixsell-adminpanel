@@ -21,21 +21,13 @@ import { AddUserRoleDialogComponent } from '../../../../shared/components/add-us
   styleUrls: ['./user-edit.component.scss'],
 })
 export class UserEditComponent implements OnInit {
-  // public editUserForm = this.fb.group({
-  //   email: ['', [Validators.required, Validators.email]],
-  //   name: ['', Validators.required],
-  //   password: ['', [this.validatorsService.isStrongPassword()]],
-  //   repeatPassword: [''],
-  //   isActive: [false],
-  //   roles: [this.fb.array([]), Validators.required],
-  // });
   public editUserForm!: FormGroup;
   user: User | null = null;
   hide = true;
   roles = ['user', 'admin', 'vendor'];
   isLoadingForm = false;
-  selectedRoles: string[] = [];
   passwordFieldFocused = false;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -44,7 +36,7 @@ export class UserEditComponent implements OnInit {
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private dialog: MatDialog,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getUser();
@@ -79,26 +71,28 @@ export class UserEditComponent implements OnInit {
     );
   }
 
-  isRoleSelected(roleName: string): boolean {
-    return this.user?.roles?.some((role) => role.name === roleName) || false;
-  }
-
   initializeForm() {
     this.editUserForm = this.fb.group(
       {
-        email: [this.user?.email || '', [Validators.required, Validators.email]],
+        email: [
+          this.user?.email || '',
+          [Validators.required, Validators.email],
+        ],
         name: [this.user?.name || '', Validators.required],
-        password: [this.user?.password || '', [this.validatorsService.isStrongPassword()]],
+        password: [
+          this.user?.password || '',
+          [this.validatorsService.isStrongPassword()],
+        ],
         repeatPassword: [''],
         isActive: [this.user?.isActive || false],
-        roles: [this.user?.roles?.map((role) => role.name) ?? null, Validators.required],
+        role: [this.user?.role?.name || '', Validators.required],
       },
       {
         validators: this.validatorsService.passwordsMatch(
           'password',
-          'repeatPassword'
+          'repeatPassword',
         ),
-      }
+      },
     );
   }
 

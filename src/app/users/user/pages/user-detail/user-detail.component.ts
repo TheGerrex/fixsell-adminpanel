@@ -22,11 +22,10 @@ export class UserDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private userService: UsersService,
     private dialog: MatDialog,
-    private toastService: ToastService
-  ) { }
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
-
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -74,11 +73,14 @@ export class UserDetailComponent implements OnInit {
       this.userService.deleteUser(user, this.token).subscribe(
         (response) => {
           this.router.navigate(['/users/user']);
-          this.toastService.showSuccess('Usuario eliminado con éxito', 'Aceptar');
+          this.toastService.showSuccess(
+            'Usuario eliminado con éxito',
+            'Aceptar',
+          );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

@@ -203,13 +203,13 @@
               </mat-form-field>
             </div>
 
-            <!-- Roles -->
+            <!-- Role -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
-                <mat-label>Roles</mat-label>
-                <mat-select formControlName="roles" multiple>
-                  <mat-option *ngFor="let rol of roles" [value]="rol">{{
-                    rol
+                <mat-label>Rol</mat-label>
+                <mat-select formControlName="role">
+                  <mat-option *ngFor="let role of roles" [value]="role">{{
+                    role
                   }}</mat-option>
                 </mat-select>
               </mat-form-field>

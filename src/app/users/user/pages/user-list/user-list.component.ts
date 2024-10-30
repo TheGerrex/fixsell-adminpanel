@@ -17,7 +17,7 @@ import { UsersService } from 'src/app/users/services/users.service';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['name', 'email', 'roles', 'isActive', 'action'];
+  displayedColumns: string[] = ['name', 'email', 'role', 'isActive', 'action'];
   dataSource = new MatTableDataSource<User>();
   filterValue = '';
   isAdmin = false;
@@ -34,13 +34,13 @@ export class UserListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private userService: UsersService,
-    private toastService: ToastService
-  ) { }
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit() {
     this.isLoading = true;
     this.token = this.userService.getToken();
-    this.getAllUsersData()
+    this.getAllUsersData();
     const userRoles = this.authService.getCurrentUserRoles();
     this.isAdmin = userRoles.includes('admin');
     if (!this.isAdmin) {
@@ -59,11 +59,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getRoleNames(roles: Role[]): string {
-    return roles
-      .map((role) => role.name!.toLowerCase())
-      .sort()
-      .join(', ');
+  getRoleName(role: Role): string {
+    return role.name ? role.name.toLowerCase() : '';
   }
 
   getAllUsersData() {
@@ -80,8 +77,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
         const dataStr =
           (data.name ?? '') +
           data.email +
-          (data.isActive ? 'activo' : 'inactive') +
-          (data.roles?.map((role) => role.name).join(' ') ?? '');
+          (data.isActive ? 'activo' : 'inactivo') +
+          (data.role?.name ?? '');
         return dataStr.toLowerCase().includes(filter);
       };
 
@@ -123,11 +120,14 @@ export class UserListComponent implements OnInit, AfterViewInit {
           const data = this.dataSource.data;
           this.dataSource.data = data.filter((u) => u.id !== user.id);
 
-          this.toastService.showSuccess('Usuario eliminado con éxito', 'Aceptar');
+          this.toastService.showSuccess(
+            'Usuario eliminado con éxito',
+            'Aceptar',
+          );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

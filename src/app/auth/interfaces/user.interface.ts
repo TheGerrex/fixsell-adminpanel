@@ -35,4 +35,21 @@ export interface Permission {
   canDeletePackage?: boolean;
   canUpdatePackage?: boolean;
   canViewPackage?: boolean;
+  canCreateLead?: boolean;
+  canDeleteLead?: boolean;
+  canUpdateLead?: boolean;
+  canViewLead?: boolean;
+  canCreateUser?: boolean;
+  canDeleteUser?: boolean;
+  canUpdateUser?: boolean;
+  canViewUser?: boolean;
+  canCreateTicket?: boolean;
+  canDeleteTicket?: boolean;
+  canUpdateTicket?: boolean;
+  canViewTicket?: boolean;
+  canManageUserConfig?: boolean;
+  canCreateChat?: boolean;
+  canDeleteChat?: boolean;
+  canUpdateChat?: boolean;
+  canViewChat?: boolean;
 }

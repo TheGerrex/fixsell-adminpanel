@@ -1,3 +1,4 @@
+// auth.service.ts
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
@@ -9,6 +10,7 @@ import {
   CheckTokenResponse,
   LoginResponse,
   User,
+  Permission,
 } from '../interfaces/index';
 
 @Injectable({
@@ -42,11 +44,9 @@ export class AuthService {
     const body = { email, password };
 
     return this.http.post<LoginResponse>(url, body).pipe(
-      tap(() => console.log('Login method called')), // Add console log here
+      tap(() => console.log('Login method called')),
       map(({ user, token }) => {
-        // Store the authentication state in localStorage
         localStorage.setItem('authStatus', AuthStatus.authenticated);
-        // redirect to the dashboard
         return this.setAuthentication(user, token);
       }),
       catchError((err) => {
@@ -68,11 +68,9 @@ export class AuthService {
 
     return this.http.get<CheckTokenResponse>(url, { headers }).pipe(
       map(({ user, token }) => {
-        // Store the authentication state in localStorage
         localStorage.setItem('authStatus', AuthStatus.authenticated);
         return this.setAuthentication(user, token);
       }),
-      //error
       catchError(() => {
         this._authStatus.set(AuthStatus.notAuthenticated);
         localStorage.removeItem('authStatus');
@@ -104,5 +102,16 @@ export class AuthService {
     return user && user.role
       ? [user.role.name].filter((name): name is string => Boolean(name))
       : [];
+  }
+
+  getCurrentUserPermissions(): string[] {
+    const user: User | null = this.getCurrentUser();
+    if (user?.role?.permission) {
+      const permissions = user.role.permission;
+      return (Object.keys(permissions) as Array<keyof Permission>).filter(
+        (key) => permissions[key],
+      );
+    }
+    return [];
   }
 }

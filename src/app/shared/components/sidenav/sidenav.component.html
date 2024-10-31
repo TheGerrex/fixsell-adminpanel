@@ -1,3 +1,4 @@
+<!-- sidenav.component.html -->
 <!-- Desktop layout -->
 <div
   class="sidenav"
@@ -44,7 +45,7 @@
         [routerLink]="
           data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null
         "
-        *ngIf="isAllowed(data.allowedRoles)"
+        *ngIf="isAllowed(data.allowedPermissions)"
         (click)="data.isExpanded = !data.isExpanded; openDesktopSidenav()"
       >
         <div
@@ -129,7 +130,7 @@
         [routerLink]="
           data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null
         "
-        *ngIf="isAllowed(data.allowedRoles)"
+        *ngIf="isAllowed(data.allowedPermissions)"
         (click)="data.isExpanded = !data.isExpanded; openDesktopSidenav()"
       >
         <div

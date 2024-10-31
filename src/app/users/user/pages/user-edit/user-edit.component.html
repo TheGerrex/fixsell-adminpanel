@@ -1,3 +1,5 @@
+<!-- src/app/users/user/pages/user-edit/user-edit.component.html -->
+
 <div>
   <form
     [formGroup]="editUserForm"
@@ -25,9 +27,8 @@
     <div class="section-card-body">
       <div class="form-container">
         <div class="form-section">
-          <!-- <h5 class="form-section-subheader">Datos del Cliente</h5> -->
           <div class="form-grid">
-            <!-- name -->
+            <!-- Nombre -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
                 <mat-label>Nombre</mat-label>
@@ -43,13 +44,13 @@
               </mat-form-field>
             </div>
 
-            <!-- email -->
+            <!-- Email -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
                 <input
                   matInput
-                  type="text"
+                  type="email"
                   placeholder="ejemplo@email.com"
                   formControlName="email"
                 />
@@ -59,7 +60,7 @@
               </mat-form-field>
             </div>
 
-            <!-- password -->
+            <!-- Contraseña -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
                 <mat-label>Contraseña</mat-label>
@@ -81,105 +82,95 @@
               <div
                 class="password-suggestions"
                 *ngIf="
-                  passwordFieldFocused ||
-                  editUserForm.controls['password'].touched
+                  passwordFieldFocused || editUserForm.get('password')?.touched
                 "
               >
-                <span class="password-feedback"
-                  >La contraseña debe contener:</span
-                >
+                <span class="password-feedback">
+                  La contraseña debe contener:
+                </span>
                 <ul class="password-suggestions-list">
                   <li class="suggestion">
                     <mat-icon
                       [class.valid]="
-                        editUserForm.controls['password'].value.length >= 8
+                        editUserForm.get('password')?.value.length >= 8
                       "
-                      *ngIf="
-                        editUserForm.controls['password']?.value?.length >= 8
-                      "
+                      *ngIf="editUserForm.get('password')?.value.length >= 8"
                       [inline]="true"
                       class="green-check"
-                      >check_circle</mat-icon
                     >
+                      check_circle
+                    </mat-icon>
                     Al menos 8 caracteres
                   </li>
                   <li class="suggestion">
                     <mat-icon
                       [class.valid]="
-                        hasUpperCase(
-                          editUserForm.controls['password'].value || ''
-                        )
+                        hasUpperCase(editUserForm.get('password')?.value || '')
                       "
                       *ngIf="
-                        hasUpperCase(
-                          editUserForm.controls['password'].value || ''
-                        )
+                        hasUpperCase(editUserForm.get('password')?.value || '')
                       "
                       [inline]="true"
                       class="green-check"
-                      >check_circle</mat-icon
                     >
+                      check_circle
+                    </mat-icon>
                     Al menos una letra mayúscula
                   </li>
                   <li class="suggestion">
                     <mat-icon
                       [class.valid]="
-                        hasLowerCase(
-                          editUserForm.controls['password'].value || ''
-                        )
+                        hasLowerCase(editUserForm.get('password')?.value || '')
                       "
                       *ngIf="
-                        hasLowerCase(
-                          editUserForm.controls['password'].value || ''
-                        )
+                        hasLowerCase(editUserForm.get('password')?.value || '')
                       "
                       [inline]="true"
                       class="green-check"
-                      >check_circle</mat-icon
                     >
+                      check_circle
+                    </mat-icon>
                     Al menos una letra minúscula
                   </li>
                   <li class="suggestion">
                     <mat-icon
                       [class.valid]="
-                        hasNumeric(
-                          editUserForm.controls['password'].value || ''
-                        )
+                        hasNumeric(editUserForm.get('password')?.value || '')
                       "
                       *ngIf="
-                        hasNumeric(
-                          editUserForm.controls['password'].value || ''
-                        )
+                        hasNumeric(editUserForm.get('password')?.value || '')
                       "
                       [inline]="true"
                       class="green-check"
-                      >check_circle</mat-icon
                     >
+                      check_circle
+                    </mat-icon>
                     Al menos un número
                   </li>
                   <li class="suggestion">
                     <mat-icon
                       [class.valid]="
                         hasSpecialChar(
-                          editUserForm.controls['password'].value || ''
+                          editUserForm.get('password')?.value || ''
                         )
                       "
                       *ngIf="
                         hasSpecialChar(
-                          editUserForm.controls['password'].value || ''
+                          editUserForm.get('password')?.value || ''
                         )
                       "
                       [inline]="true"
                       class="green-check"
-                      >check_circle</mat-icon
                     >
+                      check_circle
+                    </mat-icon>
                     Al menos un carácter especial
                   </li>
                 </ul>
               </div>
             </div>
 
-            <!-- repeat password -->
+            <!-- Repetir Contraseña -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
                 <mat-label>Repetir Contraseña</mat-label>
@@ -189,13 +180,19 @@
                   formControlName="repeatPassword"
                 />
                 <mat-error
-                  *ngIf="editUserForm.controls['repeatPassword'].errors?.['required'] && editUserForm.controls['repeatPassword'].touched"
+                  *ngIf="
+                    editUserForm.get('repeatPassword')?.hasError('required') &&
+                    editUserForm.get('repeatPassword')?.touched
+                  "
                   class="invalid-feedback"
                 >
                   La contraseña es requerida
                 </mat-error>
                 <mat-error
-                  *ngIf="editUserForm.controls['repeatPassword'].errors?.['notMatch'] && editUserForm.controls['repeatPassword'].touched"
+                  *ngIf="
+                    editUserForm.get('repeatPassword')?.hasError('notMatch') &&
+                    editUserForm.get('repeatPassword')?.touched
+                  "
                   class="invalid-feedback"
                 >
                   Las contraseñas no coinciden
@@ -203,15 +200,18 @@
               </mat-form-field>
             </div>
 
-            <!-- Role -->
+            <!-- Rol -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
                 <mat-label>Rol</mat-label>
                 <mat-select formControlName="role">
-                  <mat-option *ngFor="let role of roles" [value]="role">{{
-                    role
-                  }}</mat-option>
+                  <mat-option *ngFor="let role of roles" [value]="role.id">
+                    {{ role.name }}
+                  </mat-option>
                 </mat-select>
+                <mat-error *ngIf="isValidField('role')">
+                  {{ getFieldError('role') }}
+                </mat-error>
               </mat-form-field>
               <button
                 type="button"
@@ -224,12 +224,14 @@
               </button>
             </div>
 
-            <!-- Activo -->
+            <!-- Estado de Usuario -->
             <div class="form-item half-row">
               <p class="item-label">Estado de Usuario</p>
-              <mat-slide-toggle formControlName="isActive">{{
-                editUserForm.get('isActive')?.value ? 'Activo' : 'Inactivo'
-              }}</mat-slide-toggle>
+              <mat-slide-toggle formControlName="isActive">
+                {{
+                  editUserForm.get('isActive')?.value ? 'Activo' : 'Inactivo'
+                }}
+              </mat-slide-toggle>
             </div>
           </div>
         </div>

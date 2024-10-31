@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { User } from '../interfaces/users.interface';
+import { User, Role } from '../interfaces/users.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -33,14 +33,14 @@ export class UsersService {
   // add user role
   // remove user role
   // get roles names
-  getRoles(): Observable<string[]> {
-    return this.http
-      .get<{ id: string; name: string }[]>(`${environment.baseUrl}/roles`)
-      .pipe(
-        map((roles: { id: string; name: string }[]) =>
-          roles.map((role) => role.name)
-        )
-      );
+  // Updated getRoles method to return Role[]
+  getRoles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`${environment.baseUrl}/roles`);
+  }
+
+  // Optionally, add a getRole method to fetch a single Role by ID
+  getRole(id: string): Observable<Role> {
+    return this.http.get<Role>(`${environment.baseUrl}/roles/${id}`);
   }
 
   // get user name
@@ -69,7 +69,7 @@ export class UsersService {
     console.log('userId:', userId); // Log the userId
     console.log('user:', user); // Log the user object
 
-    return this.http.delete(`${environment.baseUrl}/auth/${userId}`,{
+    return this.http.delete(`${environment.baseUrl}/auth/${userId}`, {
       headers,
     });
   }

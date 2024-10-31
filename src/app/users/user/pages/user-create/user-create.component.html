@@ -192,15 +192,18 @@
               </mat-form-field>
             </div>
 
-            <!-- Roles -->
+            <!-- Rol -->
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
-                <mat-label>Roles</mat-label>
-                <mat-select formControlName="roles" multiple>
-                  <mat-option *ngFor="let rol of roles" [value]="rol">{{
-                    rol
-                  }}</mat-option>
+                <mat-label>Rol</mat-label>
+                <mat-select formControlName="role">
+                  <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                    {{ rol.name }}
+                  </mat-option>
                 </mat-select>
+                <mat-error *ngIf="isValidField('role')">{{
+                  getFieldError('role')
+                }}</mat-error>
               </mat-form-field>
               <button
                 type="button"

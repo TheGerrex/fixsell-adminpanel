@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/users/interfaces/users.interface';
+import { User, Role } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AddUserRoleDialogComponent } from '../../../../shared/components/add-user-role-dialog/add-user-role-dialog.component';
+
 @Component({
   selector: 'app-user-create',
   templateUrl: './user-create.component.html',
@@ -21,12 +22,11 @@ import { AddUserRoleDialogComponent } from '../../../../shared/components/add-us
 })
 export class UserCreateComponent implements OnInit {
   public createUserForm!: FormGroup;
-  user: User | null = null;
   hide = true;
-  roles = ['user', 'admin', 'vendor'];
+  roles: Role[] = [];
   isLoadingForm = false;
-  selectedRoles: string[] = [];
   passwordFieldFocused = false;
+
   constructor(
     private router: Router,
     private usersService: UsersService,
@@ -44,9 +44,9 @@ export class UserCreateComponent implements OnInit {
 
   getRoles(): void {
     this.usersService.getRoles().subscribe(
-      (roles: string[]) => {
+      (roles: Role[]) => {
         this.roles = roles;
-        console.log('roles:', this.roles);
+        console.log('Roles:', this.roles);
       },
       (error) => {
         console.error('Error fetching roles', error);
@@ -71,7 +71,7 @@ export class UserCreateComponent implements OnInit {
         ],
         repeatPassword: ['', Validators.required],
         isActive: [true],
-        roles: [['user'], Validators.required],
+        role: ['', Validators.required], // Changed from 'roles' to 'role'
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -103,7 +103,7 @@ export class UserCreateComponent implements OnInit {
         case 'required':
           return 'Este campo es requerido';
         case 'pattern':
-          return 'Este campo esta en formato incorrecto';
+          return 'Este campo está en formato incorrecto';
         case 'maxlength':
           return `Máximo ${errors['maxlength'].requiredLength} caracteres`;
         default:
@@ -139,19 +139,19 @@ export class UserCreateComponent implements OnInit {
     };
   }
 
-  hasUpperCase(value: string) {
+  hasUpperCase(value: string): boolean {
     return /[A-Z]/.test(value);
   }
 
-  hasLowerCase(value: string) {
+  hasLowerCase(value: string): boolean {
     return /[a-z]/.test(value);
   }
 
-  hasNumeric(value: string) {
+  hasNumeric(value: string): boolean {
     return /[0-9]/.test(value);
   }
 
-  hasSpecialChar(value: string) {
+  hasSpecialChar(value: string): boolean {
     return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
   }
 
@@ -163,26 +163,8 @@ export class UserCreateComponent implements OnInit {
     this.openAddUserRoleDialog();
   }
 
-  handleItemsChange(selectedItems: string[]) {
-    this.selectedRoles = selectedItems;
-    this.createUserForm.controls['roles'].setValue(selectedItems);
-  }
-
-  removeRole(role: string): void {
-    const index = this.selectedRoles.indexOf(role);
-
-    if (index >= 0) {
-      this.selectedRoles.splice(index, 1);
-    }
-  }
-
   openAddUserRoleDialog() {
     const dialogRef = this.dialog.open(AddUserRoleDialogComponent);
-
-    dialogRef.afterClosed().subscribe(() => {
-      // Refresh the roles here
-      this.getRoles();
-    });
 
     dialogRef.afterClosed().subscribe((newRole) => {
       if (newRole) {
@@ -190,12 +172,12 @@ export class UserCreateComponent implements OnInit {
         // Add the new role to the roles array
         this.roles.push(newRole);
 
-        // Check if the 'roles' control exists before trying to set its value
-        const rolesControl = this.createUserForm.get('roles');
+        // Set the new role as the selected role
+        const rolesControl = this.createUserForm.get('role');
         if (rolesControl) {
-          rolesControl.setValue([newRole]);
+          rolesControl.setValue(newRole.id); // Assuming 'id' is used as the value
         } else {
-          console.warn('The form does not have a "roles" control.');
+          console.warn('The form does not have a "role" control.');
         }
       }
     });
@@ -209,8 +191,8 @@ export class UserCreateComponent implements OnInit {
     }
     this.isLoadingForm = true;
 
-    const user = this.createUserForm.value;
-    delete user.repeatPassword; // Delete the repeat field
+    const user = { ...this.createUserForm.value };
+    delete user.repeatPassword; // Remove the repeat password field
     console.log('user:', user);
     this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
       next: (response) => {

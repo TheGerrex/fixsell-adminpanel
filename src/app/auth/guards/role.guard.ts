@@ -1,48 +1,51 @@
 import { Injectable } from '@angular/core';
 import {
+  CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
   Router,
 } from '@angular/router';
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { RoleService } from 'src/app/shared/services/role.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RoleGuard {
+export class RoleGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private roleService: RoleService
+    private roleService: RoleService,
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ): boolean | UrlTree | Observable<boolean | UrlTree> {
-    const allowedRoles = this.roleService.getAllowedRoles(state.url); // Get the allowed roles from the RoleService
-    console.log('allowedRoles', allowedRoles);
-    // log url and allowed roles to the console
+    const requiredPermissions = this.roleService.getRequiredPermissions(
+      state.url,
+    );
+    console.log('requiredPermissions', requiredPermissions);
     console.log('url', state.url);
-    console.log('allowedRoles', allowedRoles);
     localStorage.setItem('lastVisitedRoute', state.url);
+
     if (this.authService.checkAuthStatus()) {
-      const userRoles = this.authService.getCurrentUserRoles();
-      const hasRequiredRole = allowedRoles.some((role) =>
-        userRoles.includes(role)
+      const userPermissions = this.authService.getCurrentUserPermissions();
+      const hasRequiredPermission = requiredPermissions.every((permission) =>
+        userPermissions.includes(permission),
       );
-      if (hasRequiredRole) {
+      if (hasRequiredPermission) {
         return true;
       } else {
-        console.log('RoleGuard: user does not have required role');
-        // return this.router.createUrlTree(['/dashboard']);
+        console.log('RoleGuard: user does not have required permissions');
+        // Redirect or handle unauthorized access
+        // redirect user to /dashboard or handle unauthorized access
+        return this.router.createUrlTree(['/dashboard']);
       }
     }
 
-    // Redirect to login page if user is not authenticated
     return this.router.createUrlTree(['/auth/login']);
   }
 }

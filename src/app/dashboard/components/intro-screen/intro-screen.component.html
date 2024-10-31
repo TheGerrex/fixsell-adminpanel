@@ -1,3 +1,4 @@
+<!-- intro-screen.component.html -->
 <h1>Hello, {{ user()?.name }}</h1>
 
 <div class="row">
@@ -5,7 +6,6 @@
     <div class="card">
       <div class="card-head"><i class="fas fa-print"></i> Printers</div>
       <div class="card-body">
-        <!-- Add content for printers card here -->
         <h2>{{ printerCount }}</h2>
         <p>diferente impresoras en venta</p>
       </div>
@@ -15,7 +15,6 @@
     <div class="card">
       <div class="card-head"><i class="fas fa-users"></i> Users</div>
       <div class="card-body">
-        <!-- Add content for users card here -->
         <h2>{{ userCount }}</h2>
         <p>usuarios en el sistema</p>
       </div>
@@ -25,7 +24,6 @@
     <div class="card">
       <div class="card-head"><i class="fas fa-shopping-cart"></i> Ventas</div>
       <div class="card-body">
-        <!-- Add content for ventas card here -->
         <h2>20</h2>
         <p>ventas este mes</p>
       </div>
@@ -42,8 +40,37 @@
   </div>
 </div>
 
-<!-- mission, vision and valores -->
-<div class="card">
+<!-- El Tipo de Cambio Hoy -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-head">
+        <i class="fas fa-dollar-sign"></i> El Tipo de Cambio Hoy
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Moneda</th>
+              <th>Tipo de Cambio</th>
+              <th>Última Actualización</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let currency of currencyData">
+              <td>{{ currency.name }}</td>
+              <td>{{ currency.exchangeRate }}</td>
+              <td>{{ currency.lastUpdated | date : 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mission, Vision and Valores -->
+<div class="card mt-4">
   <div class="card-head">Misión</div>
   <div class="card-body">
     <p>
@@ -55,7 +82,7 @@
   </div>
 </div>
 
-<div class="card">
+<div class="card mt-3">
   <div class="card-head">Visión</div>
   <div class="card-body">
     <p>

@@ -1,3 +1,4 @@
+// sidenav.component.ts
 import {
   Component,
   EventEmitter,
@@ -8,7 +9,13 @@ import {
   inject,
 } from '@angular/core';
 import { navbarData } from './nav-data';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -38,11 +45,8 @@ interface SideNavToggle {
         style({ height: '0px', minHeight: '0' }),
         animate('350ms ease-in'),
       ]),
-      transition(':leave', [
-        style({ height: '*' }),
-        animate('350ms ease-in'),
-      ]),
-    ])
+      transition(':leave', [style({ height: '*' }), animate('350ms ease-in')]),
+    ]),
   ],
 })
 export class SidenavComponent implements OnInit {
@@ -54,21 +58,20 @@ export class SidenavComponent implements OnInit {
   user = this.authService.currentUser();
 
   constructor(
-  private router: Router, 
-  private route: ActivatedRoute,
-  private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
   ) {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
     this.screenWidth = window.innerWidth;
-    this.collapsed = this.screenWidth <= 768 ? true : false;
+    this.collapsed = this.screenWidth <= 768;
   }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
-    this.collapsed = false; // like why???
-    this.collapsed = this.screenWidth <= 768 ? true : false; //so stupid but it works
+    this.collapsed = this.screenWidth <= 768;
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -79,7 +82,6 @@ export class SidenavComponent implements OnInit {
   handleClick(data: any) {
     data.isExpanded = !data.isExpanded;
     if (!data.subRoutes) {
-      console.log('Navigating to:', data.routeLink); // Add this line
       this.toggleCollapse();
     }
   }
@@ -110,21 +112,31 @@ export class SidenavComponent implements OnInit {
 
   toggleDesktopSidenav(): void {
     this.sidenavOpen = !this.sidenavOpen;
-    // Set isExpanded to false for all items
-    this.navData.forEach(item => item.isExpanded = false);
+    this.navData.forEach((item) => (item.isExpanded = false));
   }
 
   openDesktopSidenav(): void {
     this.sidenavOpen = true;
-  
   }
 
   isSubrouteActive(subRoutes: { routeLink: string }[]): boolean {
-    return subRoutes.some(subRoute => this.route.snapshot.firstChild && this.router.isActive(this.route.snapshot.firstChild.url.join('/'), false));
+    return subRoutes.some(
+      (subRoute) =>
+        this.route.snapshot.firstChild &&
+        this.router.isActive(
+          this.route.snapshot.firstChild.url.join('/'),
+          false,
+        ),
+    );
   }
 
-  isAllowed(allowedRoles: string[]): boolean {
-    const userRole = this.authService.getCurrentUserRoles();
-    return allowedRoles.some((role) => userRole.includes(role));
+  isAllowed(allowedPermissions: string[]): boolean {
+    if (allowedPermissions.length === 0) {
+      return true; // Allow access if no permissions are required
+    }
+    const userPermissions = this.authService.getCurrentUserPermissions();
+    return allowedPermissions.some((permission) =>
+      userPermissions.includes(permission),
+    );
   }
 }

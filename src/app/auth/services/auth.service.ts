@@ -114,4 +114,14 @@ export class AuthService {
     }
     return [];
   }
+
+  /**
+   * Checks if the current user has the specified permission.
+   * @param permission The permission to check.
+   * @returns `true` if the user has the permission, otherwise `false`.
+   */
+  /* used in the HasPermissionPipe */
+  hasPermission(permission: string): boolean {
+    return this.getCurrentUserPermissions().includes(permission);
+  }
 }

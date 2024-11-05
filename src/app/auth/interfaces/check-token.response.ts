@@ -1,6 +1,6 @@
-import { User } from './user.interface';
+import { User } from 'src/app/users/interfaces/users.interface';
 
 export interface CheckTokenResponse {
-    user: User;
-    token: string;
+  user: User;
+  token: string;
 }

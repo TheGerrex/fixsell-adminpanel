@@ -1,8 +1,6 @@
-import { User } from "./user.interface";
-
+import { User } from 'src/app/users/interfaces/users.interface';
 
 export interface LoginResponse {
-    user:  User;
-    token: string;
+  user: User;
+  token: string;
 }
-

@@ -216,22 +216,6 @@
               </button>
             </div>
 
-            <!-- Permissions Card -->
-            <div class="permissions-card section-card">
-              <div class="section-card-header">
-                <h3 class="header-title">
-                  Permisos de {{ selectedRoleName || 'Rol no seleccionado' }}
-                </h3>
-              </div>
-              <div class="section-card-body">
-                <!-- Pass permissionId to PermissionsComponent -->
-                <app-permissions
-                  [permissionId]="selectedPermissionId"
-                  (permissionsChange)="onPermissionsChange($event)"
-                ></app-permissions>
-              </div>
-            </div>
-
             <!-- Activo -->
             <div class="form-item half-row">
               <p class="item-label">Estado de Usuario</p>
@@ -244,4 +228,20 @@
       </div>
     </div>
   </form>
+</div>
+
+<!-- Permissions Card -->
+<div class="permissions-card section-card">
+  <div class="section-card-header">
+    <h3 class="header-title">
+      Permisos de {{ selectedRoleName || 'Rol no seleccionado' }}
+    </h3>
+  </div>
+  <div class="section-card-body">
+    <!-- Pass permissionId to PermissionsComponent -->
+    <app-permissions
+      [permissionId]="selectedPermissionId"
+      (permissionsChange)="onPermissionsChange($event)"
+    ></app-permissions>
+  </div>
 </div>

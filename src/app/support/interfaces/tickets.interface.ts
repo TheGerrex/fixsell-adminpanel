@@ -1,4 +1,4 @@
-import { User } from 'src/app/auth/interfaces';
+import { User } from 'src/app/users/interfaces/users.interface';
 
 export interface Ticket {
   title: string;

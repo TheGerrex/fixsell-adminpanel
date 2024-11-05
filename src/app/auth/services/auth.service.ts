@@ -9,9 +9,8 @@ import {
   AuthStatus,
   CheckTokenResponse,
   LoginResponse,
-  User,
-  Permission,
 } from '../interfaces/index';
+import { User, Permission } from 'src/app/users/interfaces/users.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -108,8 +107,8 @@ export class AuthService {
     const user: User | null = this.getCurrentUser();
     if (user?.role?.permission) {
       const permissions = user.role.permission;
-      return (Object.keys(permissions) as Array<keyof Permission>).filter(
-        (key) => permissions[key],
+      return Object.keys(permissions).filter(
+        (key) => permissions[key as keyof Permission] === true,
       );
     }
     return [];

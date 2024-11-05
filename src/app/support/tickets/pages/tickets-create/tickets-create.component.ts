@@ -10,7 +10,7 @@ import {
   Status,
 } from 'src/app/support/interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
-import { User } from '../../../../auth/interfaces/user.interface';
+import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from 'src/app/users/services/users.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { format, toZonedTime } from 'date-fns-tz';

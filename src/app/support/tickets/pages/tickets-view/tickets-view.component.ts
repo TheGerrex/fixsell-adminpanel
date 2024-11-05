@@ -7,7 +7,7 @@ import {
 } from 'src/app/support/interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { Priority } from 'src/app/support/interfaces/tickets.interface';
-import { User } from 'src/app/auth/interfaces';
+import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ActivityService } from 'src/app/support/services/activity.service';

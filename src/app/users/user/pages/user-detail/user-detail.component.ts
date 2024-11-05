@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/auth/interfaces';
+import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';

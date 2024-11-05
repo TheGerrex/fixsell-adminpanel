@@ -11,6 +11,7 @@ import { Permission } from 'src/app/users/interfaces/users.interface';
 import { RoleService } from 'src/app/shared/services/role.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 interface PermissionItem {
   key: keyof Permission;
@@ -35,7 +36,11 @@ export class PermissionsComponent implements OnInit, OnChanges {
   permissions: Permission = { id: '', name: '' };
   permissionCategories: PermissionCategory[] = [];
 
-  constructor(private roleService: RoleService, private http: HttpClient) {}
+  constructor(
+    private roleService: RoleService,
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.initializePermissionCategories();
@@ -72,62 +77,7 @@ export class PermissionsComponent implements OnInit, OnChanges {
       this.updatePermissionCategories();
     }
   }
-  /*
-{
-    "id": "870b4e8b-25bc-4216-a33d-4c0bc21e556e",
-    "name": "admin_Permissions",
-    "canCreatePrinter": true,
-    "canDeletePrinter": true,
-    "canUpdatePrinter": true,
-    "canViewPrinter": true,
-    "canManagePrinterCRUD": true,
-    "canCreateCategory": true,
-    "canDeleteCategory": true,
-    "canUpdateCategory": true,
-    "canViewCategory": true,
-    "canCreateBrand": true,
-    "canDeleteBrand": true,
-    "canUpdateBrand": true,
-    "canViewBrand": true,
-    "canCreateConsumable": true,
-    "canDeleteConsumable": true,
-    "canUpdateConsumable": true,
-    "canViewConsumable": true,
-    "canCreateDeal": true,
-    "canDeleteDeal": true,
-    "canUpdateDeal": true,
-    "canViewDeal": true,
-    "canCreatePackage": true,
-    "canDeletePackage": true,
-    "canUpdatePackage": true,
-    "canViewPackage": true,
-    "canCreateLead": true,
-    "canDeleteLead": true,
-    "canUpdateLead": true,
-    "canViewLead": true,
-    "canCreateUser": true,
-    "canDeleteUser": true,
-    "canUpdateUser": true,
-    "canViewUser": true,
-    "canCreateTicket": true,
-    "canDeleteTicket": true,
-    "canUpdateTicket": true,
-    "canViewTicket": true,
-    "canManageUserConfig": true,
-    "canViewAllTickets": true,
-    "canCreateChat": true,
-    "canDeleteChat": true,
-    "canUpdateChat": true,
-    "canViewChat": true,
-    "canCreateLeadCommunication": true,
-    "canDeleteLeadCommunication": true,
-    "canUpdateLeadCommunication": true,
-    "canViewLeadCommunication": true,
-    "canConfigureWebsite": true
-}
 
-
-*/
   initializePermissionCategories(): void {
     this.permissionCategories = [
       {
@@ -321,16 +271,22 @@ export class PermissionsComponent implements OnInit, OnChanges {
 
   submitPermissions(): void {
     if (this.permissionId) {
+      const { id, ...permissionsWithoutId } = this.permissions;
       this.http
         .patch(
           `${environment.baseUrl}/permissions?id=${this.permissionId}`,
-          this.permissions,
+          permissionsWithoutId,
         )
         .subscribe(
           (response) => {
+            this.toastService.showSuccess(
+              'Permissions updated successfully',
+              'Close',
+            );
             console.log('Permissions updated successfully:', response);
           },
           (error) => {
+            this.toastService.showError('Error updating permissions', 'Close');
             console.error('Error updating permissions:', error);
           },
         );

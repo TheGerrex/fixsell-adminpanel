@@ -1,3 +1,4 @@
+// tickets-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventEmitter } from '@angular/core';
@@ -8,6 +9,7 @@ import { Ticket, Priority } from '../../../interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-tickets-dashboard',
   templateUrl: './tickets-dashboard.component.html',
@@ -16,10 +18,11 @@ import { Observable } from 'rxjs';
 export class TicketsDashboardComponent implements OnInit {
   public loadTicketsEvent = new EventEmitter<Status>();
   view: CalendarView = CalendarView.Week;
+
   constructor(
     private router: Router,
     private authService: AuthService,
-    private ticketsService: TicketsService
+    private ticketsService: TicketsService,
   ) {
     /*...*/
   }
@@ -56,22 +59,34 @@ export class TicketsDashboardComponent implements OnInit {
   loadUserTickets() {
     const user = this.authService.getCurrentUser();
     if (user && user.id) {
-      const userRoles = this.authService.getCurrentUserRoles();
-      const isAdmin = userRoles.includes('admin');
+      const canViewAllTickets =
+        this.authService.hasPermission('canViewAllTickets');
       let ticketsObservable: Observable<Ticket[]>;
-      if (isAdmin) {
+
+      if (canViewAllTickets) {
         ticketsObservable = this.ticketsService.getAllTickets();
       } else {
         ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
       }
+
       ticketsObservable.subscribe(
         (tickets) => {
-          this.allTickets = tickets.filter(ticket => ticket.status !== Status.COMPLETED);
-          this.closedTickets = tickets.filter(ticket => ticket.status === Status.COMPLETED);
+          this.allTickets = tickets.filter(
+            (ticket) => ticket.status !== Status.COMPLETED,
+          );
+          this.closedTickets = tickets.filter(
+            (ticket) => ticket.status === Status.COMPLETED,
+          );
           console.log('Tickets:', this.allTickets); // Log tickets data to inspect it
-          this.highPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.HIGH);
-          this.mediumPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.MEDIUM);
-          this.lowPriorityTickets = this.allTickets.filter(ticket => ticket.priority === Priority.LOW);
+          this.highPriorityTickets = this.allTickets.filter(
+            (ticket) => ticket.priority === Priority.HIGH,
+          );
+          this.mediumPriorityTickets = this.allTickets.filter(
+            (ticket) => ticket.priority === Priority.MEDIUM,
+          );
+          this.lowPriorityTickets = this.allTickets.filter(
+            (ticket) => ticket.priority === Priority.LOW,
+          );
           this.highPriorityTicketsCount = this.highPriorityTickets.length;
           this.mediumPriorityTicketsCount = this.mediumPriorityTickets.length;
           this.lowPriorityTicketsCount = this.lowPriorityTickets.length;
@@ -81,15 +96,15 @@ export class TicketsDashboardComponent implements OnInit {
               Status.OPEN,
               Status.IN_PROGRESS,
               Status.WITHOUT_RESOLUTION,
-            ].includes(ticket.status)
+            ].includes(ticket.status),
           ).length;
           this.closedTicketsCount = tickets.filter(
-            (ticket) => ticket.status === Status.COMPLETED
+            (ticket) => ticket.status === Status.COMPLETED,
           ).length;
         },
         (error) => {
           console.error('Error:', error);
-        }
+        },
       );
     } else {
       console.error('No current user');

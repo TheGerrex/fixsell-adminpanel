@@ -21,6 +21,7 @@
           ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="addTicket()"
+          *ngIf="'canCreateTicket' | hasPermission"
         >
           <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
         </button>
@@ -176,18 +177,16 @@
             <button
               mat-icon-button
               class="see-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canViewTicket' | hasPermission"
               (click)="seeTicket(ticket)"
             >
               <mat-icon>visibility</mat-icon>
             </button>
-            <!-- <button mat-icon-button color="primary" *ngIf="isAdmin" (click)="editTicket(ticket)">
-                            <mat-icon>edit</mat-icon>
-                        </button> -->
+            <!-- no edit button as is edited in ticket view -->
             <button
               mat-icon-button
               class="delete-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canDeleteTicket' | hasPermission"
               (click)="openConfirmDialog(ticket)"
             >
               <mat-icon>delete</mat-icon>

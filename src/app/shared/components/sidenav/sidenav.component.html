@@ -5,7 +5,9 @@
   *ngIf="screenWidth > 768"
   [ngClass]="{ 'sidenav-close': !sidenavOpen }"
 >
+  <!-- Sidenav Header -->
   <div class="sidenav-header">
+    <!-- Logo for Collapsed State -->
     <div class="logo-container" *ngIf="!sidenavOpen">
       <div class="icon-sidenav">
         <span
@@ -16,6 +18,7 @@
         </span>
       </div>
     </div>
+    <!-- Logo for Expanded State -->
     <div class="logo-container" *ngIf="sidenavOpen">
       <img
         src="../../../../assets/logo/fixsell-logo-small.svg"
@@ -23,6 +26,7 @@
         (click)="toggleDesktopSidenav()"
       />
     </div>
+    <!-- Company Info -->
     <div class="sidenav-header-container" *ngIf="sidenavOpen">
       <div class="sidenav-company">
         <span class="sidenav-company-name" @fadeInOut>Fixsell del Norte</span>
@@ -38,16 +42,20 @@
       </div>
     </div>
   </div>
+
+  <!-- Navigation Items -->
   <div class="sidenav-nav">
     <div class="sidenav-nav-item" *ngFor="let data of navData">
+      <!-- Parent Route -->
       <div
         class="sidenav-nav-link"
         [routerLink]="
           data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null
         "
-        *ngIf="isAllowed(data.allowedPermissions)"
-        (click)="data.isExpanded = !data.isExpanded; openDesktopSidenav()"
+        *ngIf="isRouteAllowed(data)"
+        (click)="handleClick(data)"
       >
+        <!-- Icon -->
         <div
           class="sidenav-link-icon-container"
           routerLinkActive="active"
@@ -57,6 +65,7 @@
             data.icon
           }}</span>
         </div>
+        <!-- Label and Expander -->
         <div class="sidenav-link-items-container" *ngIf="sidenavOpen">
           <div class="sidenav-link-item-header">
             <span class="sidenav-link-text" @fadeInOut>{{ data.label }}</span>
@@ -69,22 +78,28 @@
           </div>
         </div>
       </div>
+
+      <!-- Subroutes -->
       <div
         class="sidenav-link-item-body"
         [ngClass]="{
           'sidenav-open-subroutes': data.isExpanded && data.subRoutes
         }"
       >
-        <p
-          *ngFor="let subRoute of data.subRoutes"
-          [routerLink]="['/' + subRoute.routeLink]"
-          routerLinkActive="subroute-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          {{ subRoute.label }}
-        </p>
+        <ng-container *ngFor="let subRoute of data.subRoutes">
+          <p
+            *ngIf="isRouteAllowed(subRoute)"
+            [routerLink]="['/' + subRoute.routeLink]"
+            routerLinkActive="subroute-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            {{ subRoute.label }}
+          </p>
+        </ng-container>
       </div>
     </div>
+
+    <!-- User Information -->
     <div class="sidenav-item-user" routerLink="/dashboard/settings">
       <div class="sidenav-user-icon-container">
         <div class="avatar">
@@ -110,6 +125,7 @@
   [ngClass]="collapsed ? 'collapsed' : ''"
   *ngIf="screenWidth <= 768"
 >
+  <!-- Mobile Sidenav Header -->
   <div class="sidenav-mobile-header">
     <div class="logo-container">
       <img
@@ -125,14 +141,16 @@
   <div class="backdrop" *ngIf="!collapsed" (click)="collapseMobileNav()"></div>
   <div class="sidenav-nav" (click)="$event.stopPropagation()">
     <div class="sidenav-nav-item" *ngFor="let data of navData">
+      <!-- Parent Route -->
       <div
         class="sidenav-nav-link"
         [routerLink]="
           data.routeLink && !data.subRoutes ? ['/' + data.routeLink] : null
         "
-        *ngIf="isAllowed(data.allowedPermissions)"
-        (click)="data.isExpanded = !data.isExpanded; openDesktopSidenav()"
+        *ngIf="isRouteAllowed(data)"
+        (click)="handleClick(data)"
       >
+        <!-- Icon -->
         <div
           class="sidenav-link-icon-container"
           routerLinkActive="active"
@@ -142,6 +160,7 @@
             data.icon
           }}</span>
         </div>
+        <!-- Label and Expander -->
         <div class="sidenav-link-items-container" *ngIf="sidenavOpen">
           <div class="sidenav-link-item-header">
             <span class="sidenav-link-text" @fadeInOut>{{ data.label }}</span>
@@ -154,22 +173,28 @@
           </div>
         </div>
       </div>
+
+      <!-- Subroutes -->
       <div
         class="sidenav-link-item-body"
         [ngClass]="{
           'sidenav-open-subroutes': data.isExpanded && data.subRoutes
         }"
       >
-        <p
-          *ngFor="let subRoute of data.subRoutes"
-          [routerLink]="['/' + subRoute.routeLink]"
-          routerLinkActive="subroute-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          {{ subRoute.label }}
-        </p>
+        <ng-container *ngFor="let subRoute of data.subRoutes">
+          <p
+            *ngIf="isRouteAllowed(subRoute)"
+            [routerLink]="['/' + subRoute.routeLink]"
+            routerLinkActive="subroute-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            {{ subRoute.label }}
+          </p>
+        </ng-container>
       </div>
     </div>
+
+    <!-- User Information -->
     <div class="sidenav-item-user" routerLink="/dashboard/settings">
       <div class="sidenav-user-icon-container">
         <div class="avatar">

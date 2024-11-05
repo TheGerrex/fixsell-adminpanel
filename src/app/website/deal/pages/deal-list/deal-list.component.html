@@ -21,6 +21,7 @@
           ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="addDeal()"
+          *ngIf="'canCreateDeal' | hasPermission"
         >
           <mat-icon>add</mat-icon
           ><span class="button-label">Crear Promoción</span>
@@ -147,7 +148,7 @@
             <button
               mat-icon-button
               class="see-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canViewDeal' | hasPermission"
               (click)="seeDeal(deal)"
             >
               <mat-icon>visibility</mat-icon>
@@ -155,7 +156,7 @@
             <button
               mat-icon-button
               class="edit-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canUpdateDeal' | hasPermission"
               (click)="editDeal(deal)"
             >
               <mat-icon>edit</mat-icon>
@@ -163,7 +164,7 @@
             <button
               mat-icon-button
               class="delete-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canDeleteDeal' | hasPermission"
               (click)="openConfirmDialog(deal)"
             >
               <mat-icon>delete</mat-icon>

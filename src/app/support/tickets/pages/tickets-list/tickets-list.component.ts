@@ -26,7 +26,6 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Ticket>();
   filterValue = '';
   searchTerm = '';
-  isAdmin = false;
   TicketData: Ticket[] = [];
   isLoadingData = false;
   displayedColumns: string[] = [
@@ -131,9 +130,10 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
       // Use the status to filter the tickets
       this.loadData(status);
     });
-    const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
-    if (!this.isAdmin) {
+    const canViewAllTickets =
+      this.authService.hasPermission('canViewAllTickets');
+    if (canViewAllTickets) {
+      // If the user can view all tickets, ensure all relevant columns are displayed
       this.displayedColumns = [
         'Client',
         'Title',
@@ -141,9 +141,23 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         'status',
         'priority',
         'updatedDate',
-        'createdDate',
+        // 'createdDate',
+        'action',
+      ];
+    } else {
+      // If the user can only view their own tickets, adjust columns accordingly
+      this.displayedColumns = [
+        'Client',
+        'Title',
+        'Type',
+        'status',
+        'priority',
+        'updatedDate',
+        // 'createdDate',
+        'action',
       ];
     }
+
     this.dataSource.sort = this.sort;
   }
 
@@ -163,16 +177,16 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     this.isLoadingData = true;
     let ticketsObservable: Observable<Ticket[]>;
     const user = this.authService.getCurrentUser();
-    const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
+    const canViewAllTickets =
+      this.authService.hasPermission('canViewAllTickets');
 
-    if (this.isAdmin) {
+    if (canViewAllTickets) {
       ticketsObservable = this.ticketsService.getAllTickets();
-      console.log('loadData Admin:', ticketsObservable);
+      console.log('loadData - User can view all tickets:', ticketsObservable);
     } else {
       if (user && user.id) {
         ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
-        console.log('loadData User:', ticketsObservable);
+        console.log('loadData - User can view own tickets:', ticketsObservable);
       } else {
         // Handle the case where there is no current user
         console.error('No current user');

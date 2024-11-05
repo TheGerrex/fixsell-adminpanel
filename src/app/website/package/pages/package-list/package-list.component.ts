@@ -20,7 +20,6 @@ export class PackageListComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Package>();
   searchTerm = '';
-  isAdmin = false;
   packageData: Package[] = [];
   isLoadingData = false;
   displayedColumns: string[] = [
@@ -44,16 +43,6 @@ export class PackageListComponent implements OnInit {
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
     const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
-    if (!this.isAdmin) {
-      this.displayedColumns = [
-        'brand',
-        'model',
-        'packageDuration',
-        'packageDiscountPercentage',
-        'price',
-      ];
-    }
   }
 
   loadData() {

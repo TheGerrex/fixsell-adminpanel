@@ -15,6 +15,7 @@
         ButtonResize
         class="button button-primary button-raised button-icon-text"
         (click)="addCategory()"
+        *ngIf="'canCreateCategory' | hasPermission"
       >
         <mat-icon>add</mat-icon
         ><span class="button-label">Crear Categoria</span>
@@ -55,7 +56,7 @@
           <button
             mat-icon-button
             class="edit-icon"
-            *ngIf="isAdmin"
+            *ngIf="'canUpdateCategory' | hasPermission"
             (click)="editCategory(category.id, category)"
           >
             <mat-icon>edit</mat-icon>
@@ -63,7 +64,7 @@
           <button
             mat-icon-button
             class="delete-icon"
-            *ngIf="isAdmin"
+            *ngIf="'canDeleteCategory' | hasPermission"
             (click)="deleteCategory(category.id, category.name)"
           >
             <mat-icon>delete</mat-icon>

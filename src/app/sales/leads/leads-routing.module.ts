@@ -1,3 +1,4 @@
+// leads-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
@@ -14,54 +15,67 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutPageComponent,
-    data: { allowedRoles: ['admin', 'user'] },
+    // Accessible by all authenticated users; no specific permissions required.
+    data: { allowedPermissions: [] },
     children: [
       {
         path: '',
         component: LeadsListComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'leads' },
+        data: { allowedPermissions: ['canViewLead'], breadcrumb: 'Leads' },
       },
       {
         path: 'create',
         component: LeadsCreateComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Crear' },
+        data: {
+          allowedPermissions: ['canCreateLead'],
+          breadcrumb: 'Crear Lead',
+        },
       },
       {
         path: ':id',
         component: LeadsDetailComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'leads' },
+        data: {
+          allowedPermissions: ['canViewLead'],
+          breadcrumb: 'Detalle de Lead',
+        },
       },
       {
         path: ':id/edit',
         component: LeadsEditComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Editar' },
+        data: {
+          allowedPermissions: ['canUpdateLead'],
+          breadcrumb: 'Editar Lead',
+        },
       },
+      // Lead Communications Routes
       {
         path: 'communication/:id',
         component: CommunicationDetailComponent,
         canActivate: [RoleGuard],
-        data: { allowedRoles: ['admin', 'user'], breadcrumb: 'Comunicación' },
+        data: {
+          allowedPermissions: ['canViewLeadCommunication'],
+          breadcrumb: 'Detalle de Comunicación',
+        },
       },
       {
         path: ':id/communication/create',
         component: CommunicationCreateComponent,
         canActivate: [RoleGuard],
         data: {
-          allowedRoles: ['admin', 'user'],
+          allowedPermissions: ['canCreateLeadCommunication'],
           breadcrumb: 'Crear Comunicación',
         },
       },
-
       {
         path: 'communication/:id/edit',
         component: CommunicationEditComponent,
         canActivate: [RoleGuard],
         data: {
-          allowedRoles: ['admin', 'user'],
+          allowedPermissions: ['canUpdateLeadCommunication'],
           breadcrumb: 'Editar Comunicación',
         },
       },

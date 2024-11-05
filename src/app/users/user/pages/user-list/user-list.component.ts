@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+// user-list.component.ts
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,10 +17,9 @@ import { UsersService } from 'src/app/users/services/users.service';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['name', 'email', 'role', 'isActive', 'action'];
+  displayedColumns: string[] = ['name', 'email', 'role', 'isActive'];
   dataSource = new MatTableDataSource<User>();
   filterValue = '';
-  isAdmin = false;
   userData: User[] = [];
   token: string = '';
   searchTerm = '';
@@ -28,6 +27,12 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  // Permission flags
+  canEditUser: boolean = false;
+  canDeleteUser: boolean = false;
+  canAddUser: boolean = false;
+  canViewUserDetails: boolean = false;
 
   constructor(
     private router: Router,
@@ -41,11 +46,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.token = this.userService.getToken();
     this.getAllUsersData();
-    const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
-    if (!this.isAdmin) {
-      this.displayedColumns = ['name', 'email', 'isActive'];
-    }
+    this.initializePermissions();
     this.isLoading = false;
   }
 
@@ -54,46 +55,86 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
+  /**
+   * Initializes user permissions by checking with AuthService.
+   */
+  initializePermissions(): void {
+    this.canEditUser = this.authService.hasPermission('canUpdateUser');
+    this.canDeleteUser = this.authService.hasPermission('canDeleteUser');
+    this.canAddUser = this.authService.hasPermission('canCreateUser');
+    this.canViewUserDetails = this.authService.hasPermission('canViewUser');
+
+    // Conditionally add 'action' column based on permissions
+    if (this.canEditUser || this.canDeleteUser) {
+      if (!this.displayedColumns.includes('action')) {
+        this.displayedColumns.push('action');
+      }
+    }
+  }
+
+  /**
+   * Applies filter to the data table based on user input.
+   * @param event The input event containing the filter value.
+   */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  /**
+   * Retrieves the role name in lowercase.
+   * @param role The Role object.
+   * @returns The role name in lowercase.
+   */
   getRoleName(role: Role): string {
     return role.name ? role.name.toLowerCase() : '';
   }
 
+  /**
+   * Fetches all users data from the server.
+   */
   getAllUsersData() {
-    this.userService.getUsers(this.token).subscribe((data) => {
-      console.log(data);
-      // save to userData
-      this.userData = data;
+    this.userService.getUsers(this.token).subscribe(
+      (data) => {
+        console.log(data);
+        // Save to userData
+        this.userData = data;
 
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
 
-      this.dataSource.filterPredicate = (data: User, filter: string) => {
-        const dataStr =
-          (data.name ?? '') +
-          data.email +
-          (data.isActive ? 'activo' : 'inactivo') +
-          (data.role?.name ?? '');
-        return dataStr.toLowerCase().includes(filter);
-      };
+        this.dataSource.filterPredicate = (data: User, filter: string) => {
+          const dataStr =
+            (data.name ?? '') +
+            data.email +
+            (data.isActive ? 'activo' : 'inactivo') +
+            (data.role?.name ?? '');
+          return dataStr.toLowerCase().includes(filter);
+        };
 
-      // Apply the filter
-      this.dataSource.filter = this.filterValue.trim().toLowerCase();
-    });
+        // Apply the filter
+        this.dataSource.filter = this.filterValue.trim().toLowerCase();
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+        this.toastService.showError('Error al obtener usuarios', 'Cerrar');
+        this.isLoading = false;
+      },
+    );
   }
 
+  /**
+   * Opens a confirmation dialog before deleting a user.
+   * @param user The user to be deleted.
+   */
   openConfirmDialog(user: User): void {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-      title: 'Estas seguro de eliminar este usuario?',
+      title: '¿Estás seguro de eliminar este usuario?',
       message: 'El usuario será eliminado permanentemente.',
       buttonText: {
         ok: 'Eliminar',
@@ -112,6 +153,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Deletes a user and updates the data table.
+   * @param user The user to be deleted.
+   */
   deleteUser(user: User) {
     if (user.id) {
       this.userService.deleteUser(user, this.token).subscribe(
@@ -132,15 +177,47 @@ export class UserListComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Navigates to the edit user page.
+   * @param id The ID of the user to edit.
+   */
   editUser(id: string) {
-    this.router.navigate([`/users/user/${id}/edit`]);
+    if (this.canEditUser) {
+      this.router.navigate([`/users/user/${id}/edit`]);
+    } else {
+      this.toastService.showError(
+        'No tienes permisos para editar usuarios',
+        'Cerrar',
+      );
+    }
   }
 
+  /**
+   * Navigates to the user details page.
+   * @param id The ID of the user to view.
+   */
   seeUser(id: string) {
-    this.router.navigate([`/users/user/${id}/`]);
+    if (this.canViewUserDetails) {
+      this.router.navigate([`/users/user/${id}/`]);
+    } else {
+      this.toastService.showError(
+        'No tienes permisos para ver detalles de usuarios',
+        'Cerrar',
+      );
+    }
   }
 
+  /**
+   * Navigates to the add user page.
+   */
   addUser() {
-    this.router.navigate(['/users/user/create']);
+    if (this.canAddUser) {
+      this.router.navigate(['/users/user/create']);
+    } else {
+      this.toastService.showError(
+        'No tienes permisos para agregar usuarios',
+        'Cerrar',
+      );
+    }
   }
 }

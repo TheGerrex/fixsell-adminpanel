@@ -22,6 +22,7 @@
           ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="addUser()"
+          *ngIf="'canCreateUser' | hasPermission"
         >
           <mat-icon>add</mat-icon
           ><span class="button-label">Crear Usuario</span>
@@ -86,7 +87,7 @@
             <button
               mat-icon-button
               class="see-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canViewUser' | hasPermission"
               (click)="seeUser(user.id)"
             >
               <mat-icon>visibility</mat-icon>
@@ -94,7 +95,7 @@
             <button
               mat-icon-button
               class="edit-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canUpdateUser' | hasPermission"
               (click)="editUser(user.id)"
             >
               <mat-icon>edit</mat-icon>
@@ -102,7 +103,7 @@
             <button
               mat-icon-button
               class="delete-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canDeleteUser' | hasPermission"
               (click)="openConfirmDialog(user)"
             >
               <mat-icon>delete</mat-icon>

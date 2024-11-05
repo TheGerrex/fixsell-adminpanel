@@ -21,6 +21,7 @@
           ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="addConsumible()"
+          *ngIf="'canCreateConsumible' | hasPermission"
         >
           <mat-icon>add</mat-icon
           ><span class="button-label">Crear Consumible</span>
@@ -93,7 +94,7 @@
             <button
               mat-icon-button
               class="see-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canViewConsumable' | hasPermission"
               (click)="seeConsumible(consumible)"
             >
               <mat-icon>visibility</mat-icon>
@@ -101,7 +102,7 @@
             <button
               mat-icon-button
               class="edit-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canUpdateConsumable' | hasPermission"
               (click)="editConsumible(consumible)"
             >
               <mat-icon>edit</mat-icon>
@@ -109,7 +110,7 @@
             <button
               mat-icon-button
               class="delete-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canDeleteConsumable' | hasPermission"
               (click)="openConfirmDialog(consumible)"
             >
               <mat-icon>delete</mat-icon>

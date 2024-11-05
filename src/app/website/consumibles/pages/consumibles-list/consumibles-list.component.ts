@@ -29,7 +29,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Consumible>();
   searchTerm = '';
-  isAdmin = false;
+
   consumibleData: Consumible[] = [];
   isLoadingData = false;
   displayedColumns: string[] = [
@@ -51,24 +51,11 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private toastService: ToastService,
     private consumiblesService: ConsumiblesService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
     const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
-    if (!this.isAdmin) {
-      this.displayedColumns = [
-        'name',
-        'sku',
-        'brand',
-        'yield',
-        'origen',
-        'price',
-        // 'currency',
-        'category',
-      ];
-    }
   }
 
   ngAfterViewInit() {
@@ -77,18 +64,20 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
 
   loadData() {
     this.isLoadingData = true;
-    this.consumiblesService.getAllConsumibles().subscribe((consumibles) => {
-      this.consumibleData = consumibles;
-      this.dataSource = new MatTableDataSource(consumibles);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.isLoadingData = false;
-    }, (error) => {
-      console.error('Error:', error);
-      this.isLoadingData = false;
-    });
+    this.consumiblesService.getAllConsumibles().subscribe(
+      (consumibles) => {
+        this.consumibleData = consumibles;
+        this.dataSource = new MatTableDataSource(consumibles);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.isLoadingData = false;
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.isLoadingData = false;
+      },
+    );
   }
-
 
   addConsumible() {
     this.router.navigateByUrl('website/consumibles/create');
@@ -126,9 +115,8 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         if (consumible.id) {
-          this.deleteConsumible(consumible)
+          this.deleteConsumible(consumible);
         }
-
       }
     });
   }
@@ -138,16 +126,21 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
       this.consumiblesService.deleteConsumible(consumible.id).subscribe(
         (response) => {
           // Update consumibleData
-          this.consumibleData = this.consumibleData.filter((c) => c.id !== consumible.id);
+          this.consumibleData = this.consumibleData.filter(
+            (c) => c.id !== consumible.id,
+          );
 
           // Update dataSource
           this.dataSource.data = this.consumibleData;
 
-          this.toastService.showSuccess('Consumible eliminado con éxito', 'Aceptar');
+          this.toastService.showSuccess(
+            'Consumible eliminado con éxito',
+            'Aceptar',
+          );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

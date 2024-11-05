@@ -15,6 +15,7 @@
         ButtonResize
         class="button button-primary button-raised button-icon-text"
         (click)="addBrand()"
+        *ngIf="'canCreateBrand' | hasPermission"
       >
         <mat-icon>add</mat-icon><span class="button-label">Crear Marca</span>
       </button>
@@ -54,7 +55,7 @@
           <button
             mat-icon-button
             class="edit-icon"
-            *ngIf="isAdmin"
+            *ngIf="'canUpdateBrand' | hasPermission"
             (click)="editBrand(brand.id, brand)"
           >
             <mat-icon>edit</mat-icon>
@@ -62,7 +63,7 @@
           <button
             mat-icon-button
             class="delete-icon"
-            *ngIf="isAdmin"
+            *ngIf="'canDeleteBrand' | hasPermission"
             (click)="deleteBrand(brand.id, brand.name)"
           >
             <mat-icon>delete</mat-icon>

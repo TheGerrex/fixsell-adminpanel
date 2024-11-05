@@ -22,6 +22,7 @@
             ButtonResize
             class="button button-primary button-raised button-icon-text"
             (click)="addLead()"
+            *ngIf="'canCreateLead' | hasPermission"
           >
             <mat-icon>add</mat-icon
             ><span class="button-label">Crear Cliente</span>
@@ -121,16 +122,27 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let lead" data-column="actions">
-            <button mat-icon-button class="see-icon" (click)="seeLead(lead)">
+            <button
+              mat-icon-button
+              class="see-icon"
+              (click)="seeLead(lead)"
+              *ngIf="'canViewLead' | hasPermission"
+            >
               <mat-icon>visibility</mat-icon>
             </button>
-            <button mat-icon-button class="edit-icon" (click)="editLead(lead)">
+            <button
+              mat-icon-button
+              class="edit-icon"
+              (click)="editLead(lead)"
+              *ngIf="'canUpdateLead' | hasPermission"
+            >
               <mat-icon>edit</mat-icon>
             </button>
             <button
               mat-icon-button
               class="delete-icon"
               (click)="openConfirmDialog(lead)"
+              *ngIf="'canDeleteLead' | hasPermission"
             >
               <mat-icon>delete</mat-icon>
             </button>

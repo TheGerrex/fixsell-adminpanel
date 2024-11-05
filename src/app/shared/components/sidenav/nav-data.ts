@@ -36,7 +36,7 @@ export const navbarData = [
       {
         label: 'Configuracion',
         routeLink: 'website/config',
-        allowedPermissions: ['canManageConfig'],
+        allowedPermissions: ['canConfigureWebsite'],
       },
     ],
   },

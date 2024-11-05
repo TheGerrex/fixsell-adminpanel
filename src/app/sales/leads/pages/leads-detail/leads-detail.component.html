@@ -11,6 +11,7 @@
           ButtonResize
           class="button button-danger button-raised button-icon-text"
           (click)="openConfirmDialogLead(this.lead)"
+          *ngIf="'canDeleteLead' | hasPermission"
         >
           <mat-icon>delete</mat-icon
           ><span class="button-label">Borrar Cliente</span>
@@ -19,6 +20,7 @@
           ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="editLead(this.leadId)"
+          *ngIf="'canUpdateLead' | hasPermission"
         >
           <mat-icon>edit</mat-icon
           ><span class="button-label">Editar Cliente</span>
@@ -77,6 +79,7 @@
                       ButtonResize
                       class="button button-primary button-raised button-icon-text"
                       (click)="addCommunication()"
+                      *ngIf="'canCreateLeadCommunication' | hasPermission"
                     >
                       <mat-icon>add</mat-icon
                       ><span class="button-label">Nueva Comunicacion</span>
@@ -144,6 +147,7 @@
                         mat-icon-button
                         class="see-icon"
                         (click)="viewCommunication(communication)"
+                        *ngIf="'canViewLeadCommunication' | hasPermission"
                       >
                         <mat-icon>visibility</mat-icon>
                       </button>
@@ -151,6 +155,7 @@
                         mat-icon-button
                         class="edit-icon"
                         (click)="editCommunication(communication)"
+                        *ngIf="'canUpdateLeadCommunication' | hasPermission"
                       >
                         <mat-icon>edit</mat-icon>
                       </button>
@@ -158,6 +163,7 @@
                         mat-icon-button
                         class="delete-icon"
                         (click)="openConfirmDialogComunication(communication)"
+                        *ngIf="'canDeleteLeadCommunication' | hasPermission"
                       >
                         <mat-icon>delete</mat-icon>
                       </button>

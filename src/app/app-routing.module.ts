@@ -1,3 +1,4 @@
+// app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { isNotAuthenticatedGuard, isAuthenticatedGuard } from './auth/guards';
@@ -6,7 +7,7 @@ import { NavigationGuard } from './auth/guards/navigation.guard';
 const routes: Routes = [
   {
     path: 'dashboard',
-    canActivate: [NavigationGuard],
+    canActivate: [NavigationGuard, isAuthenticatedGuard],
     loadChildren: () =>
       import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
@@ -24,24 +25,28 @@ const routes: Routes = [
   {
     path: 'sales',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
+    data: { allowedPermissions: ['canViewLead'] },
     loadChildren: () =>
       import('./sales/sales.module').then((m) => m.SalesModule),
   },
   {
     path: 'support',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
+    data: { allowedPermissions: ['canViewTicket'] },
     loadChildren: () =>
       import('./support/support.module').then((m) => m.SupportModule),
   },
   {
     path: 'users',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
+    data: { allowedPermissions: ['canViewUser'] },
     loadChildren: () =>
       import('./users/users.module').then((m) => m.UsersModule),
   },
   {
     path: 'chat',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
+    data: { allowedPermissions: ['canViewChat'] },
     loadChildren: () => import('./chat/chat.module').then((m) => m.ChatModule),
   },
   {

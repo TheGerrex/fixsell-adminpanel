@@ -139,4 +139,16 @@ export class SidenavComponent implements OnInit {
       userPermissions.includes(permission),
     );
   }
+
+  isRouteAllowed(route: any): boolean {
+    if (this.isAllowed(route.allowedPermissions)) {
+      return true;
+    }
+    if (route.subRoutes) {
+      return route.subRoutes.some((subRoute: any) =>
+        this.isRouteAllowed(subRoute),
+      );
+    }
+    return false;
+  }
 }

@@ -21,6 +21,7 @@
           ButtonResize
           class="button button-primary button-raised button-icon-text"
           (click)="addPackage()"
+          *ngIf="'canCreatePackage' | hasPermission"
         >
           <mat-icon>add</mat-icon
           ><span class="button-label">Crear Paquete</span>
@@ -133,7 +134,7 @@
             <button
               mat-icon-button
               class="see-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canViewPackage' | hasPermission"
               (click)="seePackage(pkg)"
             >
               <mat-icon>visibility</mat-icon>
@@ -141,7 +142,7 @@
             <button
               mat-icon-button
               class="edit-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canUpdatePackage' | hasPermission"
               (click)="editPackage(pkg)"
             >
               <mat-icon>edit</mat-icon>
@@ -149,7 +150,7 @@
             <button
               mat-icon-button
               class="delete-icon"
-              *ngIf="isAdmin"
+              *ngIf="'canDeletePackage' | hasPermission"
               (click)="openConfirmDialog(pkg)"
             >
               <mat-icon>delete</mat-icon>

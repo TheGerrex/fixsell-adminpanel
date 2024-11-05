@@ -21,7 +21,6 @@ export class DealListComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Deal>();
   searchTerm = '';
-  isAdmin = false;
   dealData: Deal[] = [];
   isLoadingData = false;
   displayedColumns: string[] = [
@@ -45,17 +44,6 @@ export class DealListComponent implements OnInit {
   ngOnInit() {
     Promise.resolve().then(() => this.loadData());
     const userRoles = this.authService.getCurrentUserRoles();
-    this.isAdmin = userRoles.includes('admin');
-    if (!this.isAdmin) {
-      this.displayedColumns = [
-        'brand',
-        'model',
-        'price',
-        'dealPrice',
-        'dealCurrency',
-        'dealDiscountPercentage',
-      ];
-    }
   }
 
   loadData() {

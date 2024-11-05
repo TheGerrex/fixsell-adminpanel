@@ -7,6 +7,7 @@
       <button
         class="button button-primary button-raised button-icon-text"
         (click)="addTicket()"
+        *ngIf="'canCreateTicket' | hasPermission"
       >
         <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
       </button>
@@ -25,6 +26,7 @@
             <button
               class="button button-outline-primary button-full"
               (click)="navigateOpenTickets()"
+              *ngIf="'canViewTicket' | hasPermission"
             >
               <span class="button-label">Ver Todos</span>
             </button>
@@ -75,6 +77,7 @@
                         <button
                           class="button button-outline-primary"
                           (click)="seeTicket(ticket)"
+                          *ngIf="'canViewTicket' | hasPermission"
                         >
                           <span class="button-label">Ver Ticket</span>
                         </button>
@@ -154,6 +157,7 @@
                         <button
                           class="button button-outline-primary"
                           (click)="seeTicket(ticket)"
+                          *ngIf="'canViewTicket' | hasPermission"
                         >
                           <span class="button-label">Ver Ticket</span>
                         </button>
@@ -229,6 +233,7 @@
                         <button
                           class="button button-outline-primary"
                           (click)="seeTicket(ticket)"
+                          *ngIf="'canViewTicket' | hasPermission"
                         >
                           <span class="button-label">Ver Ticket</span>
                         </button>

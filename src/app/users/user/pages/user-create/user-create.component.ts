@@ -6,7 +6,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User, Role } from 'src/app/users/interfaces/users.interface';
+import {
+  User,
+  Role,
+  Permission,
+} from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
@@ -26,7 +30,8 @@ export class UserCreateComponent implements OnInit {
   roles: Role[] = [];
   isLoadingForm = false;
   passwordFieldFocused = false;
-
+  selectedRoleName: string = '';
+  selectedPermissionId: string | null = null;
   constructor(
     private router: Router,
     private usersService: UsersService,
@@ -40,6 +45,13 @@ export class UserCreateComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.getRoles();
+
+    // Subscribe to role changes to update selectedRoleName and permissionId
+    this.createUserForm
+      .get('role')
+      ?.valueChanges.subscribe((roleId: string) => {
+        this.onRoleChange(roleId);
+      });
   }
 
   getRoles(): void {
@@ -72,6 +84,7 @@ export class UserCreateComponent implements OnInit {
         repeatPassword: ['', Validators.required],
         isActive: [true],
         role: ['', Validators.required], // Changed from 'roles' to 'role'
+        permissions: [{} as Permission], // Add permissions control
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -80,6 +93,21 @@ export class UserCreateComponent implements OnInit {
         ),
       },
     );
+  }
+
+  onRoleChange(roleId: string): void {
+    const selectedRole = this.roles.find((role) => role.id === roleId);
+    if (selectedRole) {
+      this.selectedRoleName = selectedRole.name || '';
+      this.selectedPermissionId = selectedRole.permission?.id || null;
+    } else {
+      this.selectedRoleName = '';
+      this.selectedPermissionId = null;
+    }
+  }
+
+  onPermissionsChange(updatedPermissions: Permission): void {
+    this.createUserForm.controls['permissions'].setValue(updatedPermissions);
   }
 
   onIsActiveChange(event: Event) {

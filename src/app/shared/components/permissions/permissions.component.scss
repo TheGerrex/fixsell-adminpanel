@@ -1,0 +1,16 @@
+.permission-category {
+  margin-bottom: 16px;
+
+  h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .permission-item {
+    margin-left: 16px;
+
+    mat-checkbox {
+      margin-bottom: 4px;
+    }
+  }
+}

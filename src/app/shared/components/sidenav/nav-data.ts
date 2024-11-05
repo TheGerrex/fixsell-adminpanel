@@ -117,7 +117,7 @@ export const navbarData = [
       {
         label: 'Configuracion',
         routeLink: 'users/config',
-        allowedPermissions: ['canManageUserConfig'],
+        allowedPermissions: ['canUpdateUser', 'canDeleteUser'],
       },
     ],
   },

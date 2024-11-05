@@ -1,0 +1,16 @@
+<div class="permission-category" *ngFor="let category of permissionCategories">
+  <h3>{{ category.name }}</h3>
+  <div class="permission-item" *ngFor="let item of category.items">
+    <mat-checkbox [(ngModel)]="item.checked" (change)="onPermissionChange()">
+      {{ item.label }}
+    </mat-checkbox>
+  </div>
+</div>
+<div class="button-actions">
+  <button
+    class="button button-primary button-raised"
+    (click)="submitPermissions()"
+  >
+    <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
+  </button>
+</div>

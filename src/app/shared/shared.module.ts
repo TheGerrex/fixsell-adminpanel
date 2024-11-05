@@ -30,6 +30,7 @@ import { EditPrinterBrandDialogComponent } from './components/edit-printer-brand
 import { EditPrinterCategoryDialogComponent } from './components/edit-printer-category-dialog/edit-printer-category-dialog.component';
 import { CapitalizeDatePipe } from './pipes/capitalize-month.pipe';
 import { HasPermissionPipe } from './pipes/has-permission.pipe';
+import { PermissionsComponent } from './components/permissions/permissions.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -55,6 +56,7 @@ import { HasPermissionPipe } from './pipes/has-permission.pipe';
     DeleteUserRoleDialogComponent,
     CapitalizeDatePipe,
     HasPermissionPipe,
+    PermissionsComponent,
   ],
   imports: [
     CommonModule,
@@ -89,6 +91,7 @@ import { HasPermissionPipe } from './pipes/has-permission.pipe';
     DeleteUserRoleDialogComponent,
     CapitalizeDatePipe,
     HasPermissionPipe,
+    PermissionsComponent,
   ],
 })
 export class SharedModule {}

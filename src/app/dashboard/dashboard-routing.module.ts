@@ -11,12 +11,6 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     children: [
       { path: '', component: IntroScreenComponent },
-      // {
-      //   path: 'users',
-      //   component: UsersComponent,
-      //   canActivate: [RoleGuard],
-      //   data: { allowedRoles: ['admin'] },
-      // },
       { path: 'settings', component: SettingsComponent },
     ],
   },

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Role } from 'src/app/auth/interfaces';
-
+import { Permission } from 'src/app/users/interfaces/users.interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -128,6 +128,13 @@ export class RoleService {
         console.error('Error deleting role:', error);
         return throwError(error);
       }),
+    );
+  }
+
+  // Get permissions by permissionId
+  getPermissionsById(permissionId: string): Observable<Permission> {
+    return this.http.get<Permission>(
+      `${environment.baseUrl}/permissions/${permissionId}`,
     );
   }
 }

@@ -17,12 +17,22 @@ export interface Role {
 }
 
 export interface Permission {
-  id?: string;
-  name?: string;
+  id: string;
+  name: string;
+  [key: string]: boolean | string | undefined;
   canCreatePrinter?: boolean;
   canDeletePrinter?: boolean;
   canUpdatePrinter?: boolean;
   canViewPrinter?: boolean;
+  canManagePrinterCRUD?: boolean;
+  canCreateCategory?: boolean;
+  canDeleteCategory?: boolean;
+  canUpdateCategory?: boolean;
+  canViewCategory?: boolean;
+  canCreateBrand?: boolean;
+  canDeleteBrand?: boolean;
+  canUpdateBrand?: boolean;
+  canViewBrand?: boolean;
   canCreateConsumable?: boolean;
   canDeleteConsumable?: boolean;
   canUpdateConsumable?: boolean;
@@ -48,8 +58,14 @@ export interface Permission {
   canUpdateTicket?: boolean;
   canViewTicket?: boolean;
   canManageUserConfig?: boolean;
+  canViewAllTickets?: boolean;
   canCreateChat?: boolean;
   canDeleteChat?: boolean;
   canUpdateChat?: boolean;
   canViewChat?: boolean;
+  canCreateLeadCommunication?: boolean;
+  canDeleteLeadCommunication?: boolean;
+  canUpdateLeadCommunication?: boolean;
+  canViewLeadCommunication?: boolean;
+  canConfigureWebsite?: boolean;
 }

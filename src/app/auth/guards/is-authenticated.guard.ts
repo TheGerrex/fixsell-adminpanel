@@ -28,7 +28,8 @@ export const isAuthenticatedGuard: CanActivateFn = (route, state) => {
           state.url
         }. Missing permissions: ${missingPermissions.join(', ')}`,
       );
-      router.navigateByUrl('/auth/login');
+      // Redirect to dashboard instead of login
+      router.navigateByUrl('/dashboard');
       return false;
     }
   }

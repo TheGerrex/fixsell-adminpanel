@@ -6,9 +6,14 @@ import { UsersModule } from '../users.module';
 import { ConfigRoutingModule } from './config-routing.module';
 import { ConfigTabsComponent } from './components/config-tabs/config-tabs.component';
 import { RolesCrudComponent } from './components/roles-tab/roles-crud/roles-crud.component';
-
+import { PermissionsTabComponent } from './components/permissions-tab/permissions-tab.component';
 @NgModule({
-  declarations: [LayoutPageComponent, ConfigTabsComponent, RolesCrudComponent],
+  declarations: [
+    LayoutPageComponent,
+    ConfigTabsComponent,
+    RolesCrudComponent,
+    PermissionsTabComponent,
+  ],
   imports: [CommonModule, SharedModule, UsersModule, ConfigRoutingModule],
 })
 export class ConfigModule {}

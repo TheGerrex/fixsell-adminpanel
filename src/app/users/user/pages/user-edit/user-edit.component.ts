@@ -1,5 +1,3 @@
-// src/app/users/user/pages/user-edit/user-edit.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -7,11 +5,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { User, Role } from 'src/app/users/interfaces/users.interface';
+import { Router, ActivatedRoute } from '@angular/router';
+import {
+  User,
+  Role,
+  Permission,
+} from 'src/app/users/interfaces/users.interface';
 import { UsersService } from '../../../services/users.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AddUserRoleDialogComponent } from '../../../../shared/components/add-user-role-dialog/add-user-role-dialog.component';
 
@@ -27,6 +30,8 @@ export class UserEditComponent implements OnInit {
   roles: Role[] = [];
   isLoadingForm = false;
   passwordFieldFocused = false;
+  selectedRoleName: string = '';
+  selectedPermissionId: string | null = null;
 
   constructor(
     private router: Router,
@@ -36,8 +41,8 @@ export class UserEditComponent implements OnInit {
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private dialog: MatDialog,
+    private http: HttpClient,
   ) {
-    // Initialize the form with default empty controls to avoid undefined FormGroup errors
     this.editUserForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -46,6 +51,7 @@ export class UserEditComponent implements OnInit {
         repeatPassword: [''],
         isActive: [false],
         role: ['', Validators.required],
+        permissions: [{} as Permission],
       },
       {
         validators: this.validatorsService.passwordsMatch(
@@ -58,61 +64,70 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit() {
     this.getUser();
+    this.getRoles();
+
+    // Subscribe to role changes to update selectedRoleName and permissionId
+    this.editUserForm.get('role')?.valueChanges.subscribe((roleId: string) => {
+      this.onRoleChange(roleId);
+    });
   }
 
-  /**
-   * Fetch the user data based on route parameters.
-   */
   getUser(): void {
     const token = this.usersService.getToken();
     this.route.params.subscribe((params) => {
-      this.usersService.getUser(params['id'], token).subscribe(
+      const userId = params['id']; // Assuming the route parameter is 'id'
+      this.usersService.getUser(userId, token).subscribe(
         (user: User) => {
           this.user = user;
           this.initializeForm();
-          // It's better to fetch roles before setting the role in the form
-          this.getRoles();
+          // Set selectedRoleName and selectedPermissionId
+          this.selectedRoleName = user.role?.name || '';
+          this.selectedPermissionId = user.role?.permission?.id || null;
         },
         (error) => {
-          console.error('Error fetching user:', error);
+          console.error('Error fetching user', error);
         },
       );
     });
   }
 
-  /**
-   * Fetch all available roles from the backend.
-   */
   getRoles(): void {
     this.usersService.getRoles().subscribe(
       (roles: Role[]) => {
         this.roles = roles;
         console.log('Roles:', this.roles);
-        // After fetching roles, set the user's role if available
-        if (this.user && this.user.role) {
-          this.editUserForm.patchValue({
-            role: this.user.role.id,
-          });
-        }
       },
       (error) => {
-        console.error('Error fetching roles:', error);
+        console.error('Error fetching roles', error);
       },
     );
   }
 
-  /**
-   * Initialize the form with the fetched user data.
-   */
   initializeForm() {
     if (this.user) {
       this.editUserForm.patchValue({
-        email: this.user.email || '',
-        name: this.user.name || '',
-        isActive: this.user.isActive || false,
-        // Role is set after fetching roles in getRoles()
+        email: this.user.email,
+        name: this.user.name,
+        isActive: this.user.isActive,
+        role: this.user.role?.id || '',
+        permissions: this.user.role?.permission || {},
       });
     }
+  }
+
+  onRoleChange(roleId: string): void {
+    const selectedRole = this.roles.find((role) => role.id === roleId);
+    if (selectedRole) {
+      this.selectedRoleName = selectedRole.name || '';
+      this.selectedPermissionId = selectedRole.permission?.id || null;
+    } else {
+      this.selectedRoleName = '';
+      this.selectedPermissionId = null;
+    }
+  }
+
+  onPermissionsChange(updatedPermissions: Permission): void {
+    this.editUserForm.controls['permissions'].setValue(updatedPermissions);
   }
 
   /**
@@ -236,20 +251,20 @@ export class UserEditComponent implements OnInit {
       email: this.editUserForm.value.email,
       name: this.editUserForm.value.name,
       isActive: this.editUserForm.value.isActive,
-      // Do not assign role here
+      role: { id: selectedRoleId } as Role,
     };
 
     if (this.editUserForm.value.password) {
       updatedUser.password = this.editUserForm.value.password;
     }
 
-    // Create a separate object for the API request with role as string and include id
+    // Create a separate object for the API request, excluding permissions
     const userToSubmit = {
-      id: updatedUser.id, // Include user ID
+      id: updatedUser.id,
       email: updatedUser.email,
       name: updatedUser.name,
       isActive: updatedUser.isActive,
-      role: selectedRoleId, // role ID as string
+      role: selectedRoleId,
       password: updatedUser.password,
     };
 

@@ -19,3 +19,21 @@
   margin-top: 0.25rem;
   font-size: 0.875rem;
 }
+
+.permissions-card {
+  margin-top: 16px;
+
+  .section-card-header {
+    background-color: #f5f5f5;
+    padding: 8px 16px;
+
+    .header-title {
+      font-size: 20px;
+      margin: 0;
+    }
+  }
+
+  .section-card-body {
+    padding: 16px;
+  }
+}

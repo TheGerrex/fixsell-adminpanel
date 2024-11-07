@@ -221,6 +221,8 @@ export class UserCreateComponent implements OnInit {
 
     const user = { ...this.createUserForm.value };
     delete user.repeatPassword; // Remove the repeat password field
+    delete user.permissions; // Remove the permissions field
+
     console.log('user:', user);
     this.http.post(`${environment.baseUrl}/auth/register`, user).subscribe({
       next: (response) => {

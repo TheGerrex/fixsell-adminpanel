@@ -174,6 +174,16 @@ export class PermissionsComponent implements OnInit, OnChanges {
           { key: 'canCreateLead', label: 'Create Lead', checked: false },
           { key: 'canUpdateLead', label: 'Update Lead', checked: false },
           { key: 'canDeleteLead', label: 'Delete Lead', checked: false },
+          {
+            key: 'canViewAllLeads',
+            label: 'View All Leads',
+            checked: false,
+          },
+          {
+            key: 'canBeAssignedToLead',
+            label: 'Be Assigned to Lead',
+            checked: false,
+          },
         ],
       },
       {

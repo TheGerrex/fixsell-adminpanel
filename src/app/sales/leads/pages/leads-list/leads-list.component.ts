@@ -38,79 +38,68 @@ export class LeadsListComponent implements OnInit {
     private authService: AuthService,
     private leadsService: LeadsService,
     private toastService: ToastService,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit() {
     this.loadData();
   }
 
   loadData() {
-    const currentUserRoles = this.authService.getCurrentUserRoles();
-    if (currentUserRoles) {
-      if (currentUserRoles.includes('admin')) {
-        this.leadsService.getAllLeads().subscribe(
-          (leads) => {
-            this.leadData = leads;
-            this.leadData.sort((a, b) => {
-              const lastCommunicationA =
-                a.communications && a.communications.length > 0
-                  ? new Date(a.communications[a.communications.length - 1].date)
-                  : new Date(0);
-              const lastCommunicationB =
-                b.communications && b.communications.length > 0
-                  ? new Date(b.communications[b.communications.length - 1].date)
-                  : new Date(0);
+    this.isLoading = true;
 
-              return (
-                lastCommunicationB.getTime() - lastCommunicationA.getTime()
-              );
-            });
-            this.dataSource = new MatTableDataSource(leads);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-            this.isLoading = false;
-            console.log(this.leadData);
+    const currentUserPermissions = this.authService.getCurrentUserPermissions();
+
+    if (currentUserPermissions.includes('canViewAllLeads')) {
+      // User can view all leads
+      this.leadsService.getAllLeads().subscribe(
+        (leads) => {
+          this.processLeads(leads);
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error(error);
+        },
+      );
+    } else {
+      // User can only view their own leads
+      const currentUser = this.authService.getCurrentUser();
+      if (currentUser && currentUser.id) {
+        this.leadsService.getLeadsbyVendor(currentUser.id).subscribe(
+          (leads) => {
+            this.processLeads(leads);
           },
           (error) => {
             this.isLoading = false;
-            console.log(error);
-          }
+            console.error(error);
+          },
         );
-      } else if (currentUserRoles.includes('vendor')) {
-        const currentUser = this.authService.getCurrentUser();
-        if (currentUser && currentUser.id) {
-          this.leadsService.getLeadsbyVendor(currentUser.id).subscribe(
-            (leads) => {
-              this.leadData = leads;
-              this.leadData.sort((a, b) => {
-                const lastCommunicationA =
-                  a.communications && a.communications.length > 0
-                    ? new Date(
-                      a.communications[a.communications.length - 1].date
-                    )
-                    : new Date(0);
-                const lastCommunicationB =
-                  b.communications && b.communications.length > 0
-                    ? new Date(
-                      b.communications[b.communications.length - 1].date
-                    )
-                    : new Date(0);
-
-                return (
-                  lastCommunicationB.getTime() - lastCommunicationA.getTime()
-                );
-              });
-              this.dataSource.data = this.leadData; // Assign the data to the dataSource
-              console.log(this.leadData);
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-        }
+      } else {
+        this.isLoading = false;
+        console.error('Current user not found');
       }
     }
+  }
+
+  processLeads(leads: Lead[]) {
+    this.leadData = leads;
+    // Sort leads by last communication date
+    this.leadData.sort((a, b) => {
+      const lastCommunicationA =
+        a.communications && a.communications.length > 0
+          ? new Date(a.communications[a.communications.length - 1].date)
+          : new Date(0);
+      const lastCommunicationB =
+        b.communications && b.communications.length > 0
+          ? new Date(b.communications[b.communications.length - 1].date)
+          : new Date(0);
+
+      return lastCommunicationB.getTime() - lastCommunicationA.getTime();
+    });
+    this.dataSource = new MatTableDataSource(this.leadData);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.isLoading = false;
   }
 
   ngAfterViewInit() {
@@ -120,8 +109,8 @@ export class LeadsListComponent implements OnInit {
         case 'last_contacted':
           return item.communications && item.communications.length > 0
             ? new Date(
-              item.communications[item.communications.length - 1].date
-            ).getTime()
+                item.communications[item.communications.length - 1].date,
+              ).getTime()
             : 0;
         default:
           return String(item[property as keyof Lead]);
@@ -137,7 +126,7 @@ export class LeadsListComponent implements OnInit {
   getLastCommunicationTime(lead: Lead): string {
     if (lead.communications && lead.communications.length > 0) {
       const sortedCommunications = lead.communications.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
       const lastCommunicationDate = new Date(sortedCommunications[0].date);
       const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
@@ -146,10 +135,14 @@ export class LeadsListComponent implements OnInit {
       if (diffInHours < 1) {
         return 'Menos de una hora';
       } else if (diffInHours < 24) {
-        return Math.floor(diffInHours) === 1 ? '1 hora' : `${Math.floor(diffInHours)} horas`;
+        return Math.floor(diffInHours) === 1
+          ? '1 hora'
+          : `${Math.floor(diffInHours)} horas`;
       } else {
         const diffInDays = diffInHours / 24;
-        return Math.floor(diffInDays) === 1 ? '1 día' : `${Math.floor(diffInDays)} días`;
+        return Math.floor(diffInDays) === 1
+          ? '1 día'
+          : `${Math.floor(diffInDays)} días`;
       }
     }
     return 'Sin comunicaciones';
@@ -158,7 +151,7 @@ export class LeadsListComponent implements OnInit {
   getCommunicationClass(lead: Lead): string {
     if (lead.communications && lead.communications.length > 0) {
       const sortedCommunications = lead.communications.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
       const lastCommunicationDate = new Date(sortedCommunications[0].date);
       const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
@@ -229,7 +222,6 @@ export class LeadsListComponent implements OnInit {
 
   deleteLead(lead: Lead) {
     if (lead.id) {
-
       this.leadsService.deleteLead(String(lead.id)).subscribe(
         (response) => {
           // Update consumibleData
@@ -239,12 +231,12 @@ export class LeadsListComponent implements OnInit {
           this.dataSource.data = this.leadData;
           this.toastService.showSuccess(
             'Cliente potencial eliminado con éxito',
-            'Aceptar'
+            'Aceptar',
           );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }

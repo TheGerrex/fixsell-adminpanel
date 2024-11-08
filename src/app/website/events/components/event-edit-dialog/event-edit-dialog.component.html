@@ -1,0 +1,104 @@
+<div class="dialog">
+  <div class="title-container">
+    <h4 class="title">Editar Evento</h4>
+  </div>
+  <div class="content">
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+      <!-- Title -->
+      <mat-form-field appearance="outline">
+        <mat-label>Título</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error *ngIf="isValidField('title')">
+          {{ getFieldError('title') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Start Date -->
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Inicio</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startDatePicker"
+          formControlName="startDate"
+          type="text"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+        <mat-error *ngIf="isValidField('startDate')">
+          {{ getFieldError('startDate') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- End Date -->
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Finalización</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endDatePicker"
+          formControlName="endDate"
+          type="text"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+        <mat-error *ngIf="isValidField('endDate')">
+          {{ getFieldError('endDate') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width-field">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+        <mat-error *ngIf="isValidField('description')">
+          {{ getFieldError('description') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Image Upload -->
+      <div class="form-item full-row">
+        <app-file-upload
+          (fileUpload)="onFileUploaded($event)"
+        ></app-file-upload>
+      </div>
+
+      <!-- Single Image Preview -->
+      <div *ngIf="eventForm.get('image')?.value" class="image-preview">
+        <img
+          [src]="eventForm.get('image')?.value"
+          alt="Imagen de Previsualización"
+        />
+        <button class="remove-button" type="button" (click)="onRemoveImage()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Button Actions -->
+      <div class="button-actions">
+        <button
+          mat-button
+          class="button button-outline-secondary w-100"
+          (click)="onCancel()"
+          type="button"
+        >
+          <span class="button-label">Cancelar</span>
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="button button-primary button-icon-text button-raised w-100"
+          [disabled]="eventForm.invalid || isSubmitting"
+          type="submit"
+        >
+          <mat-icon>save</mat-icon>
+          <span class="button-label">Guardar Cambios</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

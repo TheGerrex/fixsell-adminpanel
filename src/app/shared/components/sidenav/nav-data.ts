@@ -34,6 +34,11 @@ export const navbarData = [
         allowedPermissions: ['canViewPackage'],
       },
       {
+        label: 'Eventos',
+        routeLink: 'website/events',
+        allowedPermissions: ['canViewEvent'],
+      },
+      {
         label: 'Configuracion',
         routeLink: 'website/config',
         allowedPermissions: ['canConfigureWebsite'],

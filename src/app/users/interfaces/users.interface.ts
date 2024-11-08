@@ -68,4 +68,8 @@ export interface Permission {
   canUpdateLeadCommunication?: boolean;
   canViewLeadCommunication?: boolean;
   canConfigureWebsite?: boolean;
+  canViewEvents?: boolean;
+  canCreateEvent?: boolean;
+  canDeleteEvent?: boolean;
+  canUpdateEvent?: boolean;
 }

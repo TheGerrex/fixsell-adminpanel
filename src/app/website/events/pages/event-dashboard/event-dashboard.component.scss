@@ -1,0 +1,146 @@
+@import '_variables.scss';
+
+/* Section Card Styles */
+.section-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  margin-bottom: 2rem;
+}
+
+/* Header Styles */
+.section-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gray-300;
+  border-radius: $border-radius $border-radius 0 0;
+  background-color: $gray-50;
+  padding: 1em;
+
+  .section-card-header-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .header-title {
+      margin: 0;
+    }
+  }
+
+  .button-actions {
+    display: flex;
+    align-items: center;
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* Form Container Styles */
+.section-card-body {
+  padding: 1em;
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1em;
+
+      .form-item {
+        display: flex;
+        flex-direction: column;
+
+        &.full-row {
+          grid-column: 1 / -1;
+        }
+
+        &.half-row {
+          grid-column: span 1;
+        }
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1em;
+
+        button {
+          align-self: flex-end;
+        }
+      }
+    }
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+
+  th.mat-header-cell,
+  td.mat-cell {
+    text-align: left;
+    padding: 1rem;
+  }
+
+  .mat-column-action {
+    width: 100px;
+  }
+}
+
+/* Action Buttons */
+.edit-icon {
+  color: $primary-color;
+}
+
+.delete-icon {
+  color: $danger-color; // Replaced $error-color with $danger-color
+}
+
+/* Button Styles */
+button {
+  &.mat-raised-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  mat-icon {
+    vertical-align: middle;
+  }
+}
+
+/* Image Preview Styles */
+.image-preview {
+  position: fixed; /* Changed from absolute to fixed */
+  z-index: 1000;
+  border: 1px solid $gray-300;
+  background-color: #fff;
+  padding: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: $border-radius;
+
+  img {
+    max-width: 300px;
+    max-height: 300px;
+  }
+}

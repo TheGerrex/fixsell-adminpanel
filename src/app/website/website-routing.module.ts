@@ -15,13 +15,18 @@ const routes: Routes = [
     path: 'consumibles',
     loadChildren: () =>
       import('./consumibles/consumibles.module').then(
-        (m) => m.ConsumiblesModule
+        (m) => m.ConsumiblesModule,
       ),
   },
   {
     path: 'packages',
     loadChildren: () =>
       import('./package/package.module').then((m) => m.PackageModule),
+  },
+  {
+    path: 'events',
+    loadChildren: () =>
+      import('./events/events.module').then((m) => m.EventsModule),
   },
   {
     path: 'config',

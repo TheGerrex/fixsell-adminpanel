@@ -249,6 +249,15 @@ export class PermissionsComponent implements OnInit, OnChanges {
         ],
       },
       {
+        name: 'Events',
+        items: [
+          { key: 'canViewEvent', label: 'View Event', checked: false },
+          { key: 'canCreateEvent', label: 'Create Event', checked: false },
+          { key: 'canUpdateEvent', label: 'Update Event', checked: false },
+          { key: 'canDeleteEvent', label: 'Delete Event', checked: false },
+        ],
+      },
+      {
         name: 'Website Configuration',
         items: [
           {

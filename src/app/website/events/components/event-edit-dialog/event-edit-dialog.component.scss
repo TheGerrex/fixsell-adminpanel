@@ -1,0 +1,181 @@
+@import '_variables.scss';
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    min-width: 400px;
+    max-width: 800px; // Increased width for edit dialog
+  }
+
+  .title-container {
+    margin-bottom: 1rem;
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $text;
+      margin: 0;
+    }
+  }
+
+  .content {
+    flex: 1 1 auto;
+    overflow: hidden;
+    padding: 1rem;
+
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-item.full-row {
+      margin-bottom: 1.5rem;
+    }
+
+    .image-preview {
+      position: relative;
+      background-color: #f8fafc;
+      border: 1px solid $gray-300;
+      text-align: center;
+      border-radius: $border-radius;
+      min-height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+
+      img {
+        width: 200px;
+        height: auto;
+        border-radius: $border-radius;
+      }
+
+      .remove-button {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 5px;
+        right: 5px;
+        color: $gray-500;
+        background-color: $gray-100;
+        border-radius: 50%;
+        height: 32px;
+        width: 32px;
+        transition: all 0.2s ease-out;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+          color: $red-500;
+          background-color: $red-100;
+        }
+
+        mat-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .button-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .button-outline-secondary,
+    .button-primary {
+      flex: 1 1 auto;
+      max-width: 200px;
+    }
+  }
+}
+
+/* Global Dialog Styles */
+::ng-deep .mat-dialog-container {
+  padding: 0;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+::ng-deep .mat-dialog-content {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Full-Width Utility Class */
+.w-100 {
+  width: 100%;
+}
+
+/* Button Styles */
+.button-outline-secondary {
+  border: 1px solid $primary-color;
+  color: $primary-color;
+  background-color: transparent;
+  border-radius: $border-radius;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: $primary-color;
+    color: $white;
+  }
+}
+
+.button-primary {
+  background-color: $primary-color;
+  color: $white;
+  border: none;
+  border-radius: $border-radius;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+.button-icon-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button-raised {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

@@ -1,4 +1,3 @@
-// src/app/website/interfaces/event.interface.ts
 export interface EventData {
   id: string;
   image: string;
@@ -6,4 +5,5 @@ export interface EventData {
   startDate: Date;
   endDate: Date;
   description: string;
+  deals: string[]; // Array of Deal IDs
 }

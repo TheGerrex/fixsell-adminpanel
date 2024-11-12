@@ -21,6 +21,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+// mat stepper
+import { MatStepperModule } from '@angular/material/stepper';
+// divider
+import { MatDividerModule } from '@angular/material/divider';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 @NgModule({
@@ -50,6 +54,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatSlideToggleModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatStepperModule,
+    MatDividerModule,
   ],
 })
 export class AngularMaterialModule {}

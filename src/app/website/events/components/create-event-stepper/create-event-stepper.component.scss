@@ -1,0 +1,236 @@
+@import '_variables.scss';
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: 48%;
+  margin-right: 2%;
+  &:nth-child(2n) {
+    margin-right: 0;
+  }
+}
+
+.full-row {
+  width: 100%;
+}
+
+.deal-form-group {
+  border: 1px solid $gray-300;
+  padding: 1rem;
+  border-radius: $border-radius;
+  margin-bottom: 1rem;
+}
+
+.summary-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: $border-radius;
+  margin-bottom: 1rem;
+}
+
+.button-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 767px) {
+  .half-width {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .button-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.form-container {
+  padding: 1.5rem; // Increased padding for better spacing
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem; // Increased gap for more space between form fields
+}
+
+.form-item {
+  &.quarter-row {
+    grid-column: span 1;
+  }
+
+  &.half-row {
+    grid-column: span 1;
+  }
+
+  &.three-quarter-row {
+    grid-column: span 1;
+  }
+
+  &.full-row {
+    grid-column: 1 / -1;
+  }
+}
+
+.section-card {
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem; // Increased margin for better separation
+}
+
+.section-card-header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $gray-300;
+  background-color: $gray-50;
+  border-radius: $border-radius $border-radius 0 0;
+}
+
+.section-card-body {
+  padding: 1.5rem; // Increased padding for better spacing inside the card
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1.5rem; // Added margin-bottom for spacing between fields
+}
+
+.image-preview {
+  position: relative;
+  background-color: #f8fafc;
+  border: 1px solid $gray-300;
+  text-align: center;
+  border-radius: $border-radius;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem; // Increased margin for better spacing
+
+  img {
+    width: 200px;
+    height: auto;
+    border-radius: $border-radius;
+  }
+
+  .remove-button {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 5px;
+    right: 5px;
+    color: $gray-500;
+    background-color: $gray-100;
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+    transition: all 0.2s ease-out;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $red-500;
+      background-color: $red-100;
+    }
+
+    mat-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Global Dialog Styles */
+::ng-deep .mat-dialog-container {
+  padding: 1rem;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+::ng-deep .mat-dialog-content {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Full-Width Utility Class */
+.w-100 {
+  width: 100%;
+}
+
+/* Button Styles */
+.button-outline-secondary {
+  border: 1px solid $primary-color;
+  color: $primary-color;
+  background-color: transparent;
+  border-radius: $border-radius;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: $primary-color;
+    color: $white;
+  }
+}
+
+.button-primary {
+  background-color: $primary-color;
+  color: $white;
+  border: none;
+  border-radius: $border-radius;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+.button-icon-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button-raised {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Add padding to the mat-horizontal-content-container */
+::ng-deep .mat-horizontal-content-container {
+  padding: 2.5rem; // Increased padding for top and bottom
+}

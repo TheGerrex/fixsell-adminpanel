@@ -21,9 +21,8 @@
         </mat-form-field>
         <!-- Add Event Button -->
         <button
-          ButtonResize
           class="button button-primary button-raised button-icon-text"
-          (click)="openCreateDialog()"
+          (click)="navigateToCreateEvent()"
           *ngIf="'canCreateEvent' | hasPermission"
         >
           <mat-icon>add</mat-icon>

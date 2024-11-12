@@ -9,6 +9,7 @@ import { EventsRoutingModule } from './events-routing.module';
 import { EventDashboardComponent } from './pages/event-dashboard/event-dashboard.component';
 import { EventCreateDialogComponent } from './components/event-create-dialog/event-create-dialog.component';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
+import { CreateEventStepperComponent } from './components/create-event-stepper/create-event-stepper.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { EventEditDialogComponent } from './components/event-edit-dialog/event-e
     EventDashboardComponent,
     EventCreateDialogComponent,
     EventEditDialogComponent,
+    CreateEventStepperComponent,
   ],
   imports: [
     CommonModule,

@@ -64,6 +64,11 @@ export class RoleService {
     '/chat/chats': ['canViewChat'],
     '/chat/live-chat': ['canManageLiveChat'],
     '/chat/config': ['canManageChatConfig'],
+    // events
+    '/events': ['canViewEvents'],
+    '/events/create': ['canCreateEvent'],
+    '/events/edit/*': ['canUpdateEvent'],
+    '/events/view/*': ['canViewEvent'],
   };
 
   getRequiredPermissions(path: string): string[] {

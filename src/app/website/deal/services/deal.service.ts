@@ -25,7 +25,7 @@ export class DealService {
     return this.http
       .get<Printer[]>(`${environment.baseUrl}/printers`)
       .pipe(
-        map((printers: Printer[]) => printers.map((printer) => printer.model))
+        map((printers: Printer[]) => printers.map((printer) => printer.model)),
       );
   }
 
@@ -35,8 +35,8 @@ export class DealService {
       .get<Consumible[]>(`${environment.baseUrl}/consumibles`)
       .pipe(
         map((consumibles: Consumible[]) =>
-          consumibles.map((consumible) => consumible.name)
-        )
+          consumibles.map((consumible) => consumible.name),
+        ),
       );
   }
 
@@ -46,7 +46,7 @@ export class DealService {
       map((printers: Printer[]) => {
         const printer = printers.find((printer) => printer.model === name);
         return printer ? printer.id : '';
-      })
+      }),
     );
   }
 
@@ -57,11 +57,11 @@ export class DealService {
       .pipe(
         map((consumibles: Consumible[]) => {
           const consumible = consumibles.find(
-            (consumible) => consumible.name === name
+            (consumible) => consumible.name === name,
           );
           return consumible ? consumible.id : '';
         }),
-        map((id: string | undefined) => id || '') // handle undefined case and return empty string
+        map((id: string | undefined) => id || ''), // handle undefined case and return empty string
       );
   }
 
@@ -78,7 +78,7 @@ export class DealService {
       catchError((error) => {
         console.error(`Error fetching price for printer: ${name}`, error); // log the error
         return of(0); // return a default price of 0 in case of error
-      })
+      }),
     );
   }
   //create deal for printer by name
@@ -91,7 +91,7 @@ export class DealService {
         } else {
           throw new Error('Printer not found');
         }
-      })
+      }),
     );
   }
 
@@ -100,13 +100,13 @@ export class DealService {
       switchMap((id) => {
         if (id) {
           return this.http.get<Printer>(
-            `${environment.baseUrl}/printers/${id}`
+            `${environment.baseUrl}/printers/${id}`,
           );
         } else {
           throw new Error('Printer not found');
         }
       }),
-      map((printer: Printer) => printer.price)
+      map((printer: Printer) => printer.price),
     );
   }
 
@@ -117,10 +117,10 @@ export class DealService {
       .pipe(
         map((consumibles: Consumible[]) => {
           const consumible = consumibles.find(
-            (consumible) => consumible.name === name
+            (consumible) => consumible.name === name,
           );
           return consumible ? consumible.price : 0;
-        })
+        }),
       );
   }
   // delete deal by id

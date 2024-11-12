@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { EventService } from '../../../events/services/event.service';
 import { EventData } from '../../../interfaces/event.interface';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { EventCreateDialogComponent } from '../../components/event-create-dialog/event-create-dialog.component';
-import { EventEditDialogComponent } from '../../components/event-edit-dialog/event-edit-dialog.component';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-event-dashboard',
   templateUrl: './event-dashboard.component.html',
@@ -33,7 +32,7 @@ export class EventDashboardComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private toastService: ToastService,
-    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -65,42 +64,19 @@ export class EventDashboardComponent implements OnInit {
   }
 
   /**
-   * Opens the create event dialog.
+   * Navigates to the Create Event page.
    */
-  openCreateDialog(): void {
-    const dialogRef = this.dialog.open(EventCreateDialogComponent);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.events.push(result);
-        this.dataSource.data = this.events;
-      }
-    });
+  navigateToCreateEvent(): void {
+    this.router.navigate(['website/events/create']);
   }
 
   /**
-   * Opens the edit event dialog.
+   * Navigates to the Edit Event page.
    * @param event The event to be edited.
    */
-  openEditDialog(event: EventData): void {
-    const dialogRef = this.dialog.open(EventEditDialogComponent, {
-      data: { id: event.id },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.events.forEach((e, i) => {
-          if (e.id === result.id) {
-            this.events[i] = result;
-          }
-        });
-        this.dataSource.data = this.events;
-      }
-    });
-  }
-
   editEvent(event: EventData) {
-    this.openEditDialog(event);
+    // Update this method to navigate to an edit page if you have one
+    this.router.navigate(['/events/edit', event.id]);
   }
 
   deleteEvent(event: EventData) {

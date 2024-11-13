@@ -1,3 +1,4 @@
+<!-- create-event-stepper.component.html -->
 <mat-horizontal-stepper
   [linear]="isLinear"
   [orientation]="(stepperOrientation | async) || 'horizontal'"
@@ -5,11 +6,11 @@
 >
   <!-- Step 1: Create Event -->
   <mat-step [stepControl]="eventDetailsForm">
-    <form [formGroup]="eventDetailsForm">
+    <form [formGroup]="eventDetailsForm" class="step-content">
       <ng-template matStepLabel>Crear Evento</ng-template>
 
       <!-- Title -->
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="full-width form-field">
         <mat-label>Título</mat-label>
         <input matInput formControlName="title" />
         <mat-error *ngIf="isValidField(eventDetailsForm, 'title')">
@@ -18,7 +19,7 @@
       </mat-form-field>
 
       <!-- Start Date -->
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="full-width form-field">
         <mat-label>Fecha de Inicio</mat-label>
         <input
           matInput
@@ -36,7 +37,7 @@
       </mat-form-field>
 
       <!-- End Date -->
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="full-width form-field">
         <mat-label>Fecha de Finalización</mat-label>
         <input
           matInput
@@ -54,7 +55,7 @@
       </mat-form-field>
 
       <!-- Description -->
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="full-width form-field">
         <mat-label>Descripción</mat-label>
         <textarea matInput formControlName="description"></textarea>
         <mat-error *ngIf="isValidField(eventDetailsForm, 'description')">

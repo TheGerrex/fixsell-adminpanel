@@ -1,5 +1,8 @@
+/* create-event-stepper.component.scss */
+
 @import '_variables.scss';
 
+/* Utility Classes */
 .full-width {
   width: 100%;
 }
@@ -16,6 +19,7 @@
   width: 100%;
 }
 
+/* Deal Form Group */
 .deal-form-group {
   border: 1px solid $gray-300;
   padding: 1rem;
@@ -23,6 +27,7 @@
   margin-bottom: 1rem;
 }
 
+/* Summary Image */
 .summary-image {
   width: 100%;
   max-width: 300px;
@@ -31,6 +36,7 @@
   margin-bottom: 1rem;
 }
 
+/* Button Actions */
 .button-actions {
   display: flex;
   justify-content: flex-end;
@@ -54,6 +60,7 @@
   }
 }
 
+/* Form Container */
 .form-container {
   padding: 1.5rem; // Increased padding for better spacing
 }
@@ -82,6 +89,7 @@
   }
 }
 
+/* Section Card */
 .section-card {
   background: white;
   border-radius: $border-radius;
@@ -103,11 +111,33 @@
   padding: 1.5rem; // Increased padding for better spacing inside the card
 }
 
+/* Mat-Form-Field Styles */
 mat-form-field {
   width: 100%;
   margin-bottom: 1.5rem; // Added margin-bottom for spacing between fields
+
+  .mat-form-field-wrapper {
+    padding-top: 0.5rem; // Adjust padding to accommodate floating labels
+  }
+
+  .mat-form-field-flex {
+    align-items: baseline; // Ensure label and input align properly
+  }
+
+  .mat-form-field-infix {
+    padding: 0.5rem 0; // Adjust input padding
+  }
+
+  .mat-form-field-label-wrapper {
+    transform: translateY(0); // Prevent unwanted label shifts
+  }
+
+  &.form-field {
+    margin-bottom: 1.5rem;
+  }
 }
 
+/* Image Preview */
 .image-preview {
   position: relative;
   background-color: #f8fafc;
@@ -153,30 +183,53 @@ mat-form-field {
   }
 }
 
-/* Global Dialog Styles */
-::ng-deep .mat-dialog-container {
-  padding: 1rem;
-  max-height: 90vh;
-  overflow: hidden;
-}
+/* Step Content */
+.step-content {
+  padding: 2rem; // Increased padding for better spacing
 
-::ng-deep .mat-dialog-content {
-  padding: 1.5rem;
-  overflow: hidden;
-}
+  .form-field {
+    margin-bottom: 1.5rem;
+  }
 
-/* Scrollbar Styles */
-::-webkit-scrollbar {
-  width: 6px;
-}
+  .form-item {
+    margin-bottom: 1.5rem;
+  }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
+  .image-preview {
+    position: relative;
+    margin-bottom: 1.5rem;
 
-::-webkit-scrollbar-track {
-  background-color: transparent;
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .remove-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 4px;
+
+      mat-icon {
+        color: #f44336;
+      }
+    }
+  }
+
+  .button-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+
+    button {
+      min-width: 150px;
+    }
+  }
 }
 
 /* Full-Width Utility Class */
@@ -233,4 +286,42 @@ mat-form-field {
 /* Add padding to the mat-horizontal-content-container */
 ::ng-deep .mat-horizontal-content-container {
   padding: 2.5rem; // Increased padding for top and bottom
+}
+
+/* Global Dialog Styles */
+::ng-deep .mat-dialog-container {
+  padding: 1rem;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+::ng-deep .mat-dialog-content {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .half-width {
+    width: 100%;
+    margin-right: 0;
+  }
 }

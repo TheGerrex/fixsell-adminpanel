@@ -1,3 +1,4 @@
+<!-- deal-detail.component.html -->
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div class="section-card" *ngIf="deal && !isLoadingData">
   <div class="section-card-header">
@@ -111,10 +112,15 @@
                   <h5>Precio Promoción</h5>
                   <p>
                     ${{ deal.dealPrice }} {{ deal.dealCurrency }}
-                    <span class="deal-percentage"
-                      >{{ deal.dealDiscountPercentage }}% de descuento</span
-                    >
+                    <span class="deal-percentage">
+                      {{ deal.dealDiscountPercentage }}% de descuento
+                    </span>
                   </p>
+                </div>
+                <!-- Updated Event Title Structure -->
+                <div class="deal-data-item full-row" *ngIf="deal.event">
+                  <h5>Evento de</h5>
+                  <p>{{ deal.event.title }}</p>
                 </div>
                 <div class="deal-data-item full-row">
                   <h5>Descripción</h5>
@@ -125,14 +131,12 @@
           </div>
           <div class="deal-card-footer">
             <div class="deal-data-item">
-              <!-- <h5>Fecha Inicial</h5> -->
               <p>
                 <b>Fecha Inicial: </b
                 >{{ deal.dealStartDate | date : 'd MMM yyyy' }}
               </p>
             </div>
             <div class="deal-data-item">
-              <!-- <h5>Fecha Final</h5> -->
               <p>
                 <b>Fecha Final: </b>{{ deal.dealEndDate | date : 'd MMM yyyy' }}
               </p>

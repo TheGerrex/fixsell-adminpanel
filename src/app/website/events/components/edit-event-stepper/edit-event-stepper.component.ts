@@ -662,6 +662,20 @@ export class EditEventStepperComponent implements OnInit {
           .filter((id) => id !== null)
           .map((id) => id.toString()); // Ensure all IDs are strings
 
+        // **Check for Failed Deal Operations**
+        const failedDeals = results
+          .slice(0, dealObservables.length)
+          .filter((id) => id === null);
+        if (failedDeals.length > 0) {
+          console.error('Some deals failed to process.');
+          this.isSubmitting = false;
+          this.toastService.showError(
+            'Algunas ofertas fallaron al procesarse. Por favor, revisa los errores y vuelve a intentarlo.',
+            'Cerrar',
+          );
+          return; // Do not proceed to updateEvent
+        }
+
         // **Log Final Deal IDs**
         console.log('Deal IDs after operations:', dealIds);
 
@@ -679,7 +693,10 @@ export class EditEventStepperComponent implements OnInit {
       (error) => {
         console.error('Error handling deals:', error);
         this.isSubmitting = false;
-        this.toastService.showError('Error updating deals', 'Close');
+        this.toastService.showError(
+          'Error actualizando las ofertas.',
+          'Cerrar',
+        );
       },
     );
   }
@@ -693,13 +710,16 @@ export class EditEventStepperComponent implements OnInit {
     this.eventService.update(this.eventId, submissionData).subscribe(
       () => {
         this.isSubmitting = false;
-        this.toastService.showSuccess('Event updated successfully', 'Close');
+        this.toastService.showSuccess(
+          'Evento actualizado exitosamente',
+          'Cerrar',
+        );
         this.router.navigate(['/website/events']);
       },
       (error) => {
         console.error('Error updating event:', error);
         this.isSubmitting = false;
-        this.toastService.showError('Error updating the event', 'Close');
+        this.toastService.showError('Error actualizando el evento', 'Cerrar');
       },
     );
   }

@@ -7,7 +7,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 @Component({
-  selector: 'app-event-dashboard',
+  selector: 'app-event-edit-dashboard',
   templateUrl: './event-dashboard.component.html',
   styleUrls: ['./event-dashboard.component.scss'],
 })
@@ -75,8 +75,7 @@ export class EventDashboardComponent implements OnInit {
    * @param event The event to be edited.
    */
   editEvent(event: EventData) {
-    // Update this method to navigate to an edit page if you have one
-    this.router.navigate(['/events/edit', event.id]);
+    this.router.navigate(['website/events/edit', event.id]);
   }
 
   deleteEvent(event: EventData) {

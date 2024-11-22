@@ -5,6 +5,7 @@ import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 import { EventDashboardComponent } from './pages/event-dashboard/event-dashboard.component';
 import { CreateEventStepperComponent } from './components/create-event-stepper/create-event-stepper.component'; // Import the component
 import { RoleGuard } from 'src/app/auth/guards/role.guard';
+import { EditEventStepperComponent } from './components/edit-event-stepper/edit-event-stepper.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,15 @@ const routes: Routes = [
         data: {
           allowedPermissions: ['canCreateEvent'],
           breadcrumb: 'Crear Evento',
+        },
+      },
+      {
+        path: 'edit/:id',
+        component: EditEventStepperComponent,
+        canActivate: [RoleGuard],
+        data: {
+          allowedPermissions: ['canUpdateEvent'],
+          breadcrumb: 'Editar Evento',
         },
       },
     ],

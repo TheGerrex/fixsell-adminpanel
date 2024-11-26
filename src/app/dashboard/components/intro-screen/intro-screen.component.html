@@ -39,13 +39,15 @@
     </div>
   </div>
 </div>
-
 <!-- El Tipo de Cambio Hoy -->
 <div class="row mt-4">
   <div class="col-12">
     <div class="card">
-      <div class="card-head">
-        <i class="fas fa-dollar-sign"></i> El Tipo de Cambio Hoy
+      <div class="card-head d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-dollar-sign"></i> El Tipo de Cambio Hoy</span>
+        <button mat-icon-button color="primary" (click)="updateCurrency()">
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
       <div class="card-body">
         <table class="table table-striped">

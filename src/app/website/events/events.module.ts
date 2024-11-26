@@ -10,7 +10,7 @@ import { EventDashboardComponent } from './pages/event-dashboard/event-dashboard
 import { EventCreateDialogComponent } from './components/event-create-dialog/event-create-dialog.component';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { CreateEventStepperComponent } from './components/create-event-stepper/create-event-stepper.component';
-
+import { EditEventStepperComponent } from './components/edit-event-stepper/edit-event-stepper.component';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -18,6 +18,7 @@ import { CreateEventStepperComponent } from './components/create-event-stepper/c
     EventCreateDialogComponent,
     EventEditDialogComponent,
     CreateEventStepperComponent,
+    EditEventStepperComponent,
   ],
   imports: [
     CommonModule,

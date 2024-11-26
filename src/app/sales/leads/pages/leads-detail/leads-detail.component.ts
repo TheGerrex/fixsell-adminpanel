@@ -11,8 +11,10 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Software } from 'src/app/website/interfaces/software.iterface';
 export interface Product {
   // other properties...
+  softwares?: Software[];
   consumibles?: Consumible[]; // consumibles is optional and is an array of Consumible objects
 }
 
@@ -69,7 +71,7 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
       if (this.typeOfProduct) {
         this.leadsService
           .getProductByName(this.typeOfProduct, productInterested)
-          .subscribe((product: Consumible) => {
+          .subscribe((product: any) => {
             console.log(product);
             if (this.typeOfProduct === 'consumible') {
               this.product = { consumibles: [product] };
@@ -99,6 +101,22 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
                     counterparts: [],
                     counterpart: {} as Consumible,
                     deals: [],
+                  },
+                ],
+              };
+            }
+            if (this.typeOfProduct === 'software') {
+              this.product = {
+                softwares: [
+                  {
+                    id: product.id,
+                    name: product.name,
+                    img_url: product.img_url,
+                    description: product.description,
+                    price: product.price,
+                    currency: product.currency,
+                    category: product.category,
+                    tags: product.tags,
                   },
                 ],
               };

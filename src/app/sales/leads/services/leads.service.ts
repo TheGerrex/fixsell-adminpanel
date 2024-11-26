@@ -5,6 +5,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ConsumiblesService } from '../../../website/consumibles/services/consumibles.service';
 import { PrinterService } from 'src/app/website/printer/services/printer.service';
+import { SoftwareService } from 'src/app/website/software/services/software.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,7 +13,8 @@ export class LeadsService {
   constructor(
     private http: HttpClient,
     private consumiblesService: ConsumiblesService,
-    private printerService: PrinterService
+    private printerService: PrinterService,
+    private softwareService: SoftwareService,
   ) { }
   // Get all leads by vendor
   getLeadsbyVendor(vendorId: string): Observable<any> {
@@ -86,31 +88,43 @@ export class LeadsService {
   //"type_of_product": "consumible",
   //search for product and get product details by name
   getProductByName(productType: string, productName: string): Observable<any> {
-    //if product type is consumible
+    // if product type is consumible
     if (productType === 'consumible') {
       return this.consumiblesService.getConsumibleIdByName(productName).pipe(
         switchMap((id: string) => {
           if (id) {
             return this.consumiblesService.getConsumible(id);
           } else {
-            throw new Error('Consumible not found');
+            throw new Error('Consumible no encontrado');
           }
         })
       );
     }
-    //if product type is multifuncional
+    // if product type is printer
     else if (productType === 'printer') {
       return this.printerService.getPrinterIdByName(productName).pipe(
         switchMap((id: string) => {
           if (id) {
             return this.printerService.getPrinter(id);
           } else {
-            throw new Error('Printer not found');
+            throw new Error('Multifuncional no encontrado');
           }
         })
       );
     }
-    //if product type is neither consumible nor multifuncional
+    // if product type is software
+    else if (productType === 'software') {
+      return this.softwareService.getSoftwareIdByName(productName).pipe(
+        switchMap((id: string) => {
+          if (id) {
+            return this.softwareService.getSoftware(id);
+          } else {
+            throw new Error('Software no encontrado');
+          }
+        })
+      );
+    }
+    // if product type is neither consumible, printer, nor software
     else {
       throw new Error(`Invalid product type: ${productType}`);
     }

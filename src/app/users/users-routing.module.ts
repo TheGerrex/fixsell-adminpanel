@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
   },
   {
+    path: 'logs',
+    loadChildren: () => import('./logs/logs.module').then((m) => m.LogsModule),
+  },
+  {
     path: 'config',
     loadChildren: () =>
       import('./config/config.module').then((m) => m.ConfigModule),

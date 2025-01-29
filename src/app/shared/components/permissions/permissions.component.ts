@@ -267,6 +267,16 @@ export class PermissionsComponent implements OnInit, OnChanges {
           },
         ],
       },
+      {
+        name: 'logs',
+        items: [
+          {
+            key: 'canViewLogs',
+            label: 'View Logs',
+            checked: false,
+          },
+        ],
+      },
     ];
   }
 

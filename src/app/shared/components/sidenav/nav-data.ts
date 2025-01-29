@@ -120,6 +120,11 @@ export const navbarData = [
         allowedPermissions: ['canViewUser'],
       },
       {
+        label: 'Logs',
+        routeLink: 'users/logs',
+        allowedPermissions: ['canViewLogs'],
+      },
+      {
         label: 'Configuracion',
         routeLink: 'users/config',
         allowedPermissions: ['canUpdateUser', 'canDeleteUser'],

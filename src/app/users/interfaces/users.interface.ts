@@ -72,4 +72,5 @@ export interface Permission {
   canCreateEvent?: boolean;
   canDeleteEvent?: boolean;
   canUpdateEvent?: boolean;
+  canViewLogs?: boolean;
 }

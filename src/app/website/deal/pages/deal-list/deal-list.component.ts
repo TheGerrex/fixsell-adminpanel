@@ -50,10 +50,15 @@ export class DealListComponent implements OnInit {
     this.isLoadingData = true;
     this.dealService.getAllDeals().subscribe((deals) => {
       console.log('all deals:', deals);
-      this.dealData = deals.filter(
-        (deal: { printer: null; consumible: null }) =>
-          deal.printer !== null || deal.consumible !== null,
-      );
+      this.dealData = deals
+        .filter(
+          (deal: { printer: null; consumible: null }) =>
+            deal.printer !== null || deal.consumible !== null,
+        )
+        .map((deal: { dealEndDate: string | number | Date }) => ({
+          ...deal,
+          dealEndDate: deal.dealEndDate ? new Date(deal.dealEndDate) : null,
+        }));
       console.log(this.dealData);
       this.dataSource = new MatTableDataSource(this.dealData);
       this.dataSource.sort = this.sort;

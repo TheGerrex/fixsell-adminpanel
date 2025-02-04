@@ -15,27 +15,26 @@ export class AddUserRoleDialogComponent {
   constructor(
     private rolService: RoleService,
     private toastService: ToastService,
-    public dialogRef: MatDialogRef<AddUserRoleDialogComponent>
-  ) { }
+    public dialogRef: MatDialogRef<AddUserRoleDialogComponent>,
+  ) {}
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   get roleNameError() {
-    return this.roleName.errors?.["serverError"];
+    return this.roleName.errors?.['serverError'];
   }
-
   onSubmit(): void {
     if (this.roleName.valid) {
       this.rolService.createRole(this.roleName.value).subscribe({
-        next: () => {
+        next: (newRole) => {
           this.toastService.showSuccess('Rol creado con éxito', 'Close');
-          this.dialogRef.close();
+          this.dialogRef.close(newRole); // Pass the new role back to the parent component
         },
         error: (error) => {
           this.roleName.setErrors({ serverError: error.error.message });
-        }
+        },
       });
     }
   }

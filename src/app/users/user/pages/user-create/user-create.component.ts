@@ -196,14 +196,10 @@ export class UserCreateComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((newRole) => {
       if (newRole) {
-        this.getRoles();
-        // Add the new role to the roles array
-        this.roles.push(newRole);
-
-        // Set the new role as the selected role
+        this.roles.push(newRole); // Add the new role to the roles array
         const rolesControl = this.createUserForm.get('role');
         if (rolesControl) {
-          rolesControl.setValue(newRole.id); // Assuming 'id' is used as the value
+          rolesControl.setValue(newRole.id); // Set the new role as the selected role
         } else {
           console.warn('The form does not have a "role" control.');
         }

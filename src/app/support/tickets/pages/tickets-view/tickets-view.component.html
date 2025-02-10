@@ -371,23 +371,25 @@
                   <div class="form-item half-row" *ngIf="clientPhone">
                     <ng-container *ngIf="clientReadOnly">
                       <p class="item-label">Teléfono</p>
-                      <p class="item-value" *ngIf="clientReadOnly">
-                        {{ clientPhone | mask : '(000) 000-0000' }}
+                      <p class="item-value">
+                        <span>+52&nbsp;</span
+                        >{{ clientPhone | mask : '0 00 0000 0000' }}
                       </p>
                     </ng-container>
                     <ng-container *ngIf="!clientReadOnly">
                       <mat-form-field appearance="outline">
                         <mat-label>Teléfono</mat-label>
+                        <span matPrefix>+52&nbsp;</span>
                         <input
                           matInput
                           type="text"
-                          mask="000-000-0000"
-                          placeholder="811-111-1111"
+                          mask="0 00 0000 0000"
+                          placeholder="1 81 1061 1265"
                           formControlName="phone"
                         />
-                        <mat-error *ngIf="isValidFieldClientForm('phone')">{{
-                          getFieldErrorClientForm('phone')
-                        }}</mat-error>
+                        <mat-error *ngIf="isValidFieldClientForm('phone')">
+                          {{ getFieldErrorClientForm('phone') }}
+                        </mat-error>
                       </mat-form-field>
                     </ng-container>
                   </div>

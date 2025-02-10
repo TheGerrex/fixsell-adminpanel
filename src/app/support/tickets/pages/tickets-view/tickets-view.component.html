@@ -371,20 +371,15 @@
                   <div class="form-item half-row" *ngIf="clientPhone">
                     <ng-container *ngIf="clientReadOnly">
                       <p class="item-label">Teléfono</p>
-                      <p class="item-value">
-                        <span>+52&nbsp;</span
-                        >{{ clientPhone | mask : '0 00 0000 0000' }}
-                      </p>
+                      <p class="item-value">{{ clientPhone }}</p>
                     </ng-container>
                     <ng-container *ngIf="!clientReadOnly">
                       <mat-form-field appearance="outline">
                         <mat-label>Teléfono</mat-label>
-                        <span matPrefix>+52&nbsp;</span>
                         <input
                           matInput
                           type="text"
-                          mask="0 00 0000 0000"
-                          placeholder="1 81 1061 1265"
+                          placeholder="Ingrese el teléfono"
                           formControlName="phone"
                         />
                         <mat-error *ngIf="isValidFieldClientForm('phone')">

@@ -153,12 +153,10 @@
             <div class="form-item half-row">
               <mat-form-field appearance="outline">
                 <mat-label>Teléfono</mat-label>
-                <span matPrefix> +52 &nbsp;</span>
                 <input
                   matInput
                   type="text"
-                  mask="0 00 0000 0000"
-                  placeholder="1 81 1061 1265"
+                  placeholder="Ingrese el teléfono"
                   formControlName="clientPhone"
                 />
                 <mat-error *ngIf="isValidField('clientPhone')">

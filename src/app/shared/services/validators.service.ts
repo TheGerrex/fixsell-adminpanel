@@ -8,7 +8,7 @@ export class ValidatorsService {
   public firstNameAndLastnamePattern: string = '([a-zA-Z]+) ([a-zA-Z]+)';
   public emailPattern: string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
   public numberPattern: string =
-    '^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$';
+    '^(?:\\+\\d{1,3}\\s*)?(?=(?:\\D*\\d){10,13}\\D*$)[\\d\\s]+$';
   public floatNumberPattern: string = '^[0-9]*.?[0-9]+$';
 
   constructor() {}

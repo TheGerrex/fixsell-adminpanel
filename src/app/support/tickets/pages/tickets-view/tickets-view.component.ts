@@ -307,22 +307,6 @@ export class TicketsViewComponent implements OnInit {
     }
   }
 
-  convertToLocalDate(dateString: Date): Date {
-    console.log('Date string:', dateString);
-    const date = new Date(dateString);
-    console.log('Date:', date);
-    if (isNaN(date.getTime())) {
-      // The date string is not valid
-      console.log('Invalid date string');
-      return dateString;
-    } else {
-      const localDate = new Date(
-        date.getTime() - date.getTimezoneOffset() * 60000,
-      );
-      return localDate;
-    }
-  }
-
   getUsers() {
     const token = localStorage.getItem('token');
     if (token !== null) {

@@ -205,7 +205,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
           );
         }
         tickets = tickets.map((ticket) => {
-          ticket.updatedDate = this.convertToLocalDate(ticket.updatedDate);
+          ticket.updatedDate = new Date(ticket.updatedDate);
           return ticket;
         });
         this.TicketData = tickets;
@@ -241,22 +241,6 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     console.log('Edit ticket:', ticket);
     console.log('routing to: /support/tickets/' + ticket.id + '/edit');
     this.router.navigate(['/support/tickets/' + ticket.id + '/edit']);
-  }
-
-  convertToLocalDate(dateString: Date): Date {
-    console.log('Date string:', dateString);
-    const date = new Date(dateString);
-    console.log('Date:', date);
-    if (isNaN(date.getTime())) {
-      // The date string is not valid
-      console.log('Invalid date string');
-      return dateString;
-    } else {
-      const localDate = new Date(
-        date.getTime() - date.getTimezoneOffset() * 60000,
-      );
-      return localDate;
-    }
   }
 
   openConfirmDialog(ticket: Ticket): void {

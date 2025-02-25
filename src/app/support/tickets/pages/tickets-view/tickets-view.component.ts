@@ -135,9 +135,6 @@ export class TicketsViewComponent implements OnInit {
     const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
     const adjustedDate = new Date(dateObj.getTime() - userTimezoneOffset);
 
-    // Add one day to the adjusted date
-    adjustedDate.setDate(adjustedDate.getDate() + 1);
-
     return format(adjustedDate, 'yyyy-MM-dd');
   }
 

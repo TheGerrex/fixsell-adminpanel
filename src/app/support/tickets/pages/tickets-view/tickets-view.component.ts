@@ -254,12 +254,8 @@ export class TicketsViewComponent implements OnInit {
       this.ticketPriority = ticket.priority;
       this.assignedUser = ticket.assigned || null;
       this.assignee = ticket.assignee || null;
-      this.ticket.createdDate = this.convertToLocalDate(
-        this.ticket.createdDate,
-      );
-      this.ticket.updatedDate = this.convertToLocalDate(
-        this.ticket.updatedDate,
-      );
+      this.ticket.createdDate = new Date(this.ticket.createdDate);
+      this.ticket.updatedDate = new Date(this.ticket.updatedDate);
       this.activities = this.ticket.activities;
       console.log('Activities:', this.activities);
       // Reinitialize forms with the fetched ticket data

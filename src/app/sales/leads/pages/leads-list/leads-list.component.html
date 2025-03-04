@@ -88,9 +88,11 @@
         </ng-container>
 
         <ng-container matColumnDef="product_interested">
-          <th mat-header-cell *matHeaderCellDef>Producto Interesado</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Producto Interesado
+          </th>
           <td mat-cell *matCellDef="let lead" data-column="product_interested">
-            {{ lead.product_interested }}
+            {{ getProductName(lead) }}
           </td>
         </ng-container>
 

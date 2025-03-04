@@ -9,6 +9,7 @@ import { CarouselImagesComponent } from './components/carousel-images/carousel-i
 import { PrinterComponent } from './components/printer/printer.component';
 import { CounterpartsComponent } from './components/counterparts/counterparts.component';
 import { PackageCardComponent } from './components/package-card/package-card.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,12 @@ import { PackageCardComponent } from './components/package-card/package-card.com
     CounterpartsComponent,
     PackageCardComponent,
   ],
-  imports: [CommonModule, WebsiteRoutingModule, AngularMaterialModule],
+  imports: [
+    CommonModule,
+    WebsiteRoutingModule,
+    AngularMaterialModule,
+    SharedModule,
+  ],
   exports: [
     ProductImageGridComponent,
     DealsComponent,

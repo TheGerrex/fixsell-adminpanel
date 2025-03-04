@@ -47,42 +47,70 @@ export class LeadsListComponent implements OnInit {
 
   loadData() {
     this.isLoading = true;
+    console.log('Loading leads data...');
 
     const currentUserPermissions = this.authService.getCurrentUserPermissions();
+    console.log('User permissions:', currentUserPermissions);
 
     if (currentUserPermissions.includes('canViewAllLeads')) {
+      console.log('User can view all leads, fetching all leads');
       // User can view all leads
       this.leadsService.getAllLeads().subscribe(
         (leads) => {
+          console.log('All leads loaded:', leads);
           this.processLeads(leads);
         },
         (error) => {
           this.isLoading = false;
-          console.error(error);
+          console.error('Error loading all leads:', error);
+          this.toastService.showError(
+            'Error al cargar los leads: ' +
+              (error.message || 'Error desconocido'),
+            'error-snackbar',
+          );
         },
       );
     } else {
       // User can only view their own leads
+      console.log('User can only view assigned leads');
       const currentUser = this.authService.getCurrentUser();
       if (currentUser && currentUser.id) {
+        console.log('Fetching leads for vendor ID:', currentUser.id);
         this.leadsService.getLeadsbyVendor(currentUser.id).subscribe(
           (leads) => {
+            console.log('Vendor leads loaded:', leads);
             this.processLeads(leads);
           },
           (error) => {
             this.isLoading = false;
-            console.error(error);
+            console.error('Error loading vendor leads:', error);
+            this.toastService.showError(
+              'Error al cargar los leads: ' +
+                (error.message || 'Error desconocido'),
+              'error-snackbar',
+            );
           },
         );
       } else {
         this.isLoading = false;
         console.error('Current user not found');
+        this.toastService.showError(
+          'No se pudo identificar al usuario actual',
+          'error-snackbar',
+        );
       }
     }
   }
-
   processLeads(leads: Lead[]) {
+    if (!leads || leads.length === 0) {
+      console.log('No leads found or empty leads array');
+      this.isLoading = false;
+      return;
+    }
+
+    console.log('Processing leads:', leads);
     this.leadData = leads;
+
     // Sort leads by last communication date
     this.leadData.sort((a, b) => {
       const lastCommunicationA =
@@ -96,12 +124,20 @@ export class LeadsListComponent implements OnInit {
 
       return lastCommunicationB.getTime() - lastCommunicationA.getTime();
     });
+
+    // Add debug logging to check the processed data
+    console.log('Processed lead data:', this.leadData);
+
     this.dataSource = new MatTableDataSource(this.leadData);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.isLoading = false;
   }
 
+  // Add a new method to handle potentially empty product_interested values
+  getProductName(lead: Lead): string {
+    return lead.product_interested || 'No especificado';
+  }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (item: Lead, property: string) => {

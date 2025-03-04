@@ -47,7 +47,7 @@ export class LeadsCreateComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -71,17 +71,17 @@ export class LeadsCreateComponent implements OnInit {
       switchMap((value) =>
         this.selectedType.getValue() === 'printer'
           ? this.dealService
-            .getAllPrinterNames()
-            .pipe(map((productNames) => this._filter(value, productNames)))
+              .getAllPrinterNames()
+              .pipe(map((productNames) => this._filter(value, productNames)))
           : this.dealService
-            .getAllConsumiblesNames()
-            .pipe(map((productNames) => this._filter(value, productNames))),
+              .getAllConsumiblesNames()
+              .pipe(map((productNames) => this._filter(value, productNames))),
       ),
     );
   }
 
   private _filter(value: string, printerNames: string[]): string[] {
-    const filterValue = value.toLowerCase();
+    const filterValue = value?.toLowerCase() || '';
     return printerNames.filter((printerName) =>
       printerName.toLowerCase().includes(filterValue),
     );
@@ -92,6 +92,10 @@ export class LeadsCreateComponent implements OnInit {
 
     // Update the BehaviorSubject with the new value
     this.selectedType.next(value);
+
+    // Set the type_of_product in the form
+    const productType = value === 'printer' ? 'printer' : 'consumible';
+    this.createLeadForm.get('type_of_product')?.setValue(productType);
 
     // Clear the productControl value
     this.productControl.reset();
@@ -125,7 +129,6 @@ export class LeadsCreateComponent implements OnInit {
       this.addPrinter(event.option.viewValue);
     } else {
       // Add selected consumible
-      // You need to implement a method similar to addPrinter for consumibles
       this.addConsumible(event.option.viewValue);
     }
   }
@@ -139,24 +142,26 @@ export class LeadsCreateComponent implements OnInit {
     if (printerName === '') {
       printerName = this.printerNameControl.value;
     }
-    this.dealService.getPrinterPrice(printerName).subscribe(
-      (price) => {
+    if (!printerName) {
+      return;
+    }
+
+    this.dealService.getPrinterPrice(printerName).subscribe({
+      next: (price) => {
         this.printerPrice = price;
         this.printerControl.setValue(printerName);
-        this.createLeadForm.controls['product_interested'].setValue(
-          printerName,
-        );
+        this.createLeadForm.get('product_interested')?.setValue(printerName);
       },
-      (error) => {
+      error: (error) => {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-          error.error.message +
-          '. Por favor, intenta de nuevo.',
+            (error.error?.message || 'Error desconocido') +
+            '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
-    );
+    });
   }
 
   addConsumible(consumibleName: string): void {
@@ -164,23 +169,25 @@ export class LeadsCreateComponent implements OnInit {
     if (consumibleName === '') {
       consumibleName = this.productControl.value;
     }
-    this.dealService.getConsumiblePrice(consumibleName).subscribe(
-      (price) => {
+    if (!consumibleName) {
+      return;
+    }
+
+    this.dealService.getConsumiblePrice(consumibleName).subscribe({
+      next: (price) => {
         console.log('Price:', price);
-        this.createLeadForm.controls['product_interested'].setValue(
-          consumibleName,
-        );
+        this.createLeadForm.get('product_interested')?.setValue(consumibleName);
       },
-      (error) => {
+      error: (error) => {
         console.error(error);
         this.toastService.showError(
           'Hubo un error: ' +
-          error.error.message +
-          '. Por favor, intenta de nuevo.',
+            (error.error?.message || 'Error desconocido') +
+            '. Por favor, intenta de nuevo.',
           'error-snackbar',
         );
       },
-    );
+    });
   }
 
   initializeForm(): void {
@@ -189,7 +196,7 @@ export class LeadsCreateComponent implements OnInit {
       client: new FormControl('', [Validators.required]),
       status: new FormControl('prospect', [Validators.required]),
       product_interested: new FormControl('', [Validators.required]),
-      type_of_product: new FormControl('', [Validators.required]),
+      type_of_product: new FormControl('printer', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl('', [
         Validators.required,
@@ -198,7 +205,8 @@ export class LeadsCreateComponent implements OnInit {
       communications: this.fb.array([
         this.fb.group({
           message: new FormControl(
-            `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
+            `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
+              this.productControl.value || ''
             }`,
             [Validators.required],
           ),
@@ -220,73 +228,167 @@ export class LeadsCreateComponent implements OnInit {
     return this.validatorsService.getFieldError(this.createLeadForm, field);
   }
 
+  private logFormValidity(): void {
+    console.log('Form validity check:');
+    console.log('Form valid:', this.createLeadForm.valid);
+    console.log('Form values:', this.createLeadForm.value);
+    console.log('Form errors:', this.createLeadForm.errors);
+
+    Object.keys(this.createLeadForm.controls).forEach((key) => {
+      const control = this.createLeadForm.get(key);
+      console.log(
+        `Field ${key}: valid=${control?.valid}, value=${control?.value}, errors=`,
+        control?.errors,
+      );
+    });
+  }
+
   async submitForm() {
+    this.logFormValidity();
+
+    // Check if product_interested is empty but there's a value in productControl
+    if (
+      !this.createLeadForm.get('product_interested')?.value &&
+      this.productControl.value
+    ) {
+      this.createLeadForm
+        .get('product_interested')
+        ?.setValue(this.productControl.value);
+    }
+
+    // Ensure type_of_product is set
+    if (!this.createLeadForm.get('type_of_product')?.value) {
+      const type =
+        this.selectedType.getValue() === 'printer' ? 'printer' : 'consumible';
+      this.createLeadForm.get('type_of_product')?.setValue(type);
+    }
+
+    // Log the state of every control in the form
+    Object.keys(this.createLeadForm.controls).forEach((key) => {
+      const control = this.createLeadForm.get(key);
+      console.log(
+        `Control: ${key}, Valid: ${control?.valid}, Value: ${control?.value}, Errors:`,
+        control?.errors,
+      );
+    });
+
+    if (this.createLeadForm.invalid) {
+      this.toastService.showError(
+        'Por favor complete todos los campos requeridos',
+        'error-snackbar',
+      );
+      this.createLeadForm.markAllAsTouched();
+      return;
+    }
+
     this.isSubmitting = true;
 
     console.log('Form unprepared:', this.createLeadForm.value);
-    //set communications.message to the value of the product interested
-    this.createLeadForm.controls[
-      'communications'
-    ].value[0].message = `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
-    }`;
 
-    //delete selected type from form
-    delete this.createLeadForm.value.selectedType;
-    // Prepare the data
     const type_of_product =
-      this.selectedType.getValue() === 'printer'
-        ? 'printer'
-        : 'consumible';
-    this.createLeadForm.controls['type_of_product'].setValue(type_of_product);
-    console.log('Form:', this.createLeadForm.value);
+      this.selectedType.getValue() === 'printer' ? 'printer' : 'consumible';
 
-    // create lead without communcation first
-    // Prepare the data
+    // create lead without communication first
     const data = {
-      client: this.createLeadForm.controls['client'].value,
-      status: this.createLeadForm.controls['status'].value,
-      product_interested:
-        this.createLeadForm.controls['product_interested'].value,
+      client: this.createLeadForm.get('client')?.value,
+      status: this.createLeadForm.get('status')?.value,
+      product_interested: this.createLeadForm.get('product_interested')?.value,
       type_of_product: type_of_product,
-      email: this.createLeadForm.controls['email'].value,
-      phone: this.createLeadForm.controls['phone'].value,
+      email: this.createLeadForm.get('email')?.value,
+      phone: this.createLeadForm.get('phone')?.value,
     };
+
     console.log('Data for lead:', data);
-    // Make the POST request to create lead
-    this.leadsService.createLead(data).subscribe((lead) => {
-      this.lead = lead;
-      this.toastService.showSuccess(
-        'Cliente potencial creado con éxito',
-        'success-snackbar',
-      );
 
-      // Prepare the sales communication data
-      const salesCommunicationData = {
-        message: `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${this.productControl.value
-          }`,
-        date: new Date().toISOString(),
-        type: 'manual',
-        leadId: this.lead?.id,
-        notes: 'generado automáticamente por el sistema',
-      };
-      console.log('Sales communication data:', salesCommunicationData);
+    try {
+      // Make the POST request to create lead
+      this.leadsService.createLead(data).subscribe({
+        next: (leadResponse) => {
+          console.log('Lead created response:', leadResponse);
 
-      // Make the POST request for sales communication
-      this.leadsService
-        .createSalesCommunication(salesCommunicationData)
-        .subscribe({
-          next: (salesResponse: any) => {
-            console.log(
-              'Sales communication created successfully:',
-              salesResponse,
+          // If no lead response, try to recover by looking up the lead
+          if (!leadResponse) {
+            this.toastService.showWarning(
+              'El lead fue creado pero hubo un error en la respuesta. Intentando recuperar datos...',
+              'warning-snackbar',
             );
-          },
-          error: (salesError) => {
-            console.error('Error creating sales communication:', salesError);
-          },
-        });
+
+            // Navigate to the leads list since we couldn't get the lead details
+            setTimeout(() => {
+              this.isSubmitting = false;
+              this.router.navigate(['/sales/leads']);
+            }, 1500);
+            return;
+          }
+
+          this.lead = leadResponse;
+
+          // If we have a lead but no ID (which should never happen with a proper backend)
+          if (!this.lead || !this.lead.id) {
+            this.toastService.showWarning(
+              'Lead creado pero falta información. Verifique en la lista de leads.',
+              'warning-snackbar',
+            );
+            this.isSubmitting = false;
+            this.router.navigate(['/sales/leads']);
+            return;
+          }
+
+          this.toastService.showSuccess(
+            'Cliente potencial creado con éxito',
+            'success-snackbar',
+          );
+          this.createSalesCommunication(this.lead.id);
+        },
+        error: (error) => {
+          console.error('Error creating lead:', error);
+          this.toastService.showError(
+            'Error al crear el cliente potencial: ' +
+              (error.error?.message || 'Error desconocido'),
+            'error-snackbar',
+          );
+          this.isSubmitting = false;
+        },
+      });
+    } catch (error) {
+      console.error('Exception in lead creation:', error);
+      this.toastService.showError(
+        'Error inesperado al crear el lead',
+        'error-snackbar',
+      );
       this.isSubmitting = false;
-      this.router.navigate([`/sales/leads/${this.lead?.id}`]);
-    });
+    }
+  }
+
+  private createSalesCommunication(leadId: number | string) {
+    const salesCommunicationData = {
+      message: `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
+        this.productControl.value ||
+        this.createLeadForm.get('product_interested')?.value ||
+        ''
+      }`,
+      date: new Date().toISOString(),
+      type: 'manual',
+      leadId: leadId,
+      notes: 'generado automáticamente por el sistema',
+    };
+
+    console.log('Sales communication data:', salesCommunicationData);
+
+    this.leadsService
+      .createSalesCommunication(salesCommunicationData)
+      .subscribe({
+        next: (response) => {
+          console.log('Communication created:', response);
+          this.isSubmitting = false;
+          this.router.navigate([`/sales/leads/${leadId}`]);
+        },
+        error: (error) => {
+          console.error('Error creating communication:', error);
+          this.isSubmitting = false;
+          // Still navigate to the lead since it was created successfully
+          this.router.navigate([`/sales/leads/${leadId}`]);
+        },
+      });
   }
 }

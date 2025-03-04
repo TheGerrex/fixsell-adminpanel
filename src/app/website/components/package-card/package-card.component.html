@@ -1,118 +1,159 @@
 <div class="printer-package-container">
-    <div class="printer-package-header">
-        <h4>Paquetes</h4>
-        <button class="button button-primary button-raised button-icon" (click)="navigateToCreatePackage(product.id)">
+  <div class="printer-package-header">
+    <h4>Paquetes</h4>
+    <button
+      class="button button-primary button-raised button-icon"
+      (click)="navigateToCreatePackage(product.id)"
+    >
       <mat-icon>add</mat-icon>
     </button>
-    </div>
-    <div class="printer-packages" *ngIf="product.packages.length > 0">
-        <div class="package" *ngFor="let packages of product.packages">
-            <div class="package-content">
-                <div class="package-header">
-                    <div class="package-items">
-                        <div class="package-title">
-                            <h5>Paquete</h5>
-                        </div>
-                        <p class="package-time-left" [ngClass]="
-                            {
-                                'green': getDaysLeft() > 10,
-                                'yellow': getDaysLeft() <= 10 && getDaysLeft() > 5,
-                                'orange': getDaysLeft() <= 5 && getDaysLeft() > 2,
-                                'red': getDaysLeft() <= 2
-                            }">
-                            {{ getDaysLeft() }} dias restantes
-                        </p>
-                    </div>
-                    <button class="button-icon-option" [matMenuTriggerFor]="menu">
-                      <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu" class="export-menu">
-                        <button mat-menu-item>
-                          <div
-                            class="menu-button-item"
-                            (click)="navigateToPackageEdit(packages.id)"
-                          >
-                            <mat-icon style="color: #3c81f6">edit</mat-icon>
-                            Editar paquete
-                          </div>
-                        </button>
-                        <button mat-menu-item>
-                          <div
-                            class="menu-button-item"
-                            (click)="openConfirmDialog(packages.id)"
-                          >
-                            <mat-icon style="color: #ef4444">delete</mat-icon>
-                            Eliminar paquete
-                          </div>
-                        </button>
-                    </mat-menu>
-                </div>
-                <div class="package-row">
-                    <div class="package-prices-container">
-                        <div class="package-item">
-                            <p class="item-title">Deposito Inicial</p>
-                            <div class="package-price-item">
-                                <h3 class="item-title">${{ packages.packageDepositPrice }} {{packages.packageCurrency}}</h3>
-                            </div>
-                        </div>
-                        <div class="package-item">
-                            <p class="item-title">Pago Mensual</p>
-                            <div class="package-price-item">
-                                <h3 class="item-title">${{ packages.packageMonthlyPrice}} {{packages.packageCurrency}}</h3>
-                                <p class="package-percentage">{{ packages.packageDiscountPercentage }}% de descuento</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="package-prints">
-                        <div class="package-prints-container">
-                            <div class="package-item">
-                                <p class="item-title">Impresiones B/N</p>
-                                <div class="package-price-item">
-                                    <p class="item-body">{{ packages.packagePrintsBw | currency:' ' : 'symbol' : '1.0-2' }} impresiones/mes</p>
-                                </div>
-                            </div>
-                            <div class="package-item">
-                                <p class="item-title">Click Extra de B/N</p>
-                                <div class="package-price-item">
-                                    <p class="item-body">{{ packages.packageExtraClickPriceBw | currency:'$' : 'symbol' : '1.0-2' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="package-prints-container" *ngIf="packages.packagePrintsColor">
-                            <div class="package-item">
-                                <p class="item-title">Impresiones Color</p>
-                                <div class="package-price-item">
-                                    <p class="item-body">{{ packages.packagePrintsColor | currency:' ' : 'symbol' : '1.0-2' }} impresiones/mes</p>
-                                </div>
-                            </div>
-                            <div class="package-item">
-                                <p class="item-title">Click Extra de Color</p>
-                                <div class="package-price-item">
-                                    <p class="item-body">{{ packages.packageExtraClickPriceColor | currency:'$' : 'symbol' : '1.0-2' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="package-item">
-                        <p class="item-title">Descripción</p>
-                        <p class="item-body">{{ packages.packageDescription }}</p>
-                    </div>
-                    <div class="package-item">
-                        <div class="package-item">
-                            <p class="item-title">Incluye</p>
-                            <ul style="margin: 0;">
-                                <li *ngFor="let item of packages.packageIncludes">
-                                    <p class="item-body">{{ item }}</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="package-item">
-                        <p class="item-title">Fecha</p>
-                        <p class="item-body">{{ packages.packageStartDate | date : "longDate" }} - {{ packages.packageEndDate | date : "longDate" }}</p>
-                    </div>
-                </div>
+  </div>
+  <div class="printer-packages" *ngIf="product.packages.length > 0">
+    <div class="package" *ngFor="let packages of product.packages">
+      <div class="package-content">
+        <div class="package-header">
+          <div class="package-items">
+            <div class="package-title">
+              <h5>Paquete</h5>
             </div>
+            <p
+              class="package-time-left"
+              [ngClass]="{
+                green: getDaysLeft() > 10,
+                yellow: getDaysLeft() <= 10 && getDaysLeft() > 5,
+                orange: getDaysLeft() <= 5 && getDaysLeft() > 2,
+                red: getDaysLeft() <= 2
+              }"
+            >
+              {{ getDaysLeft() }} dias restantes
+            </p>
+          </div>
+          <button class="button-icon-option" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="export-menu">
+            <button mat-menu-item *ngIf="'canUpdatePackage' | hasPermission">
+              <div
+                class="menu-button-item"
+                (click)="navigateToPackageEdit(packages.id)"
+              >
+                <mat-icon style="color: #3c81f6">edit</mat-icon>
+                Editar paquete
+              </div>
+            </button>
+            <button mat-menu-item *ngIf="'canDeletePackage' | hasPermission">
+              <div
+                class="menu-button-item"
+                (click)="openConfirmDialog(packages.id)"
+              >
+                <mat-icon style="color: #ef4444">delete</mat-icon>
+                Eliminar paquete
+              </div>
+            </button>
+          </mat-menu>
         </div>
+        <div class="package-row">
+          <div class="package-prices-container">
+            <div class="package-item">
+              <p class="item-title">Deposito Inicial</p>
+              <div class="package-price-item">
+                <h3 class="item-title">
+                  ${{ packages.packageDepositPrice }}
+                  {{ packages.packageCurrency }}
+                </h3>
+              </div>
+            </div>
+            <div class="package-item">
+              <p class="item-title">Pago Mensual</p>
+              <div class="package-price-item">
+                <h3 class="item-title">
+                  ${{ packages.packageMonthlyPrice }}
+                  {{ packages.packageCurrency }}
+                </h3>
+                <p class="package-percentage">
+                  {{ packages.packageDiscountPercentage }}% de descuento
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="package-prints">
+            <div class="package-prints-container">
+              <div class="package-item">
+                <p class="item-title">Impresiones B/N</p>
+                <div class="package-price-item">
+                  <p class="item-body">
+                    {{
+                      packages.packagePrintsBw
+                        | currency : ' ' : 'symbol' : '1.0-2'
+                    }}
+                    impresiones/mes
+                  </p>
+                </div>
+              </div>
+              <div class="package-item">
+                <p class="item-title">Click Extra de B/N</p>
+                <div class="package-price-item">
+                  <p class="item-body">
+                    {{
+                      packages.packageExtraClickPriceBw
+                        | currency : '$' : 'symbol' : '1.0-2'
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="package-prints-container"
+              *ngIf="packages.packagePrintsColor"
+            >
+              <div class="package-item">
+                <p class="item-title">Impresiones Color</p>
+                <div class="package-price-item">
+                  <p class="item-body">
+                    {{
+                      packages.packagePrintsColor
+                        | currency : ' ' : 'symbol' : '1.0-2'
+                    }}
+                    impresiones/mes
+                  </p>
+                </div>
+              </div>
+              <div class="package-item">
+                <p class="item-title">Click Extra de Color</p>
+                <div class="package-price-item">
+                  <p class="item-body">
+                    {{
+                      packages.packageExtraClickPriceColor
+                        | currency : '$' : 'symbol' : '1.0-2'
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="package-item">
+            <p class="item-title">Descripción</p>
+            <p class="item-body">{{ packages.packageDescription }}</p>
+          </div>
+          <div class="package-item">
+            <div class="package-item">
+              <p class="item-title">Incluye</p>
+              <ul style="margin: 0">
+                <li *ngFor="let item of packages.packageIncludes">
+                  <p class="item-body">{{ item }}</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="package-item">
+            <p class="item-title">Fecha</p>
+            <p class="item-body">
+              {{ packages.packageStartDate | date : 'longDate' }} -
+              {{ packages.packageEndDate | date : 'longDate' }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

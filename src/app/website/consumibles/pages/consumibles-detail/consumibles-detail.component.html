@@ -9,7 +9,7 @@
       <button
         ButtonResize
         class="button button-danger button-raised button-icon-text"
-        *ngIf="consumible.id"
+        *ngIf="consumible.id && ('canDeleteConsumible' | hasPermission)"
         (click)="openConfirmDialog(consumible)"
       >
         <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
@@ -17,7 +17,7 @@
       <button
         ButtonResize
         class="button button-primary button-raised button-icon-text"
-        *ngIf="consumible.id"
+        *ngIf="consumible.id && ('canUpdateConsumible' | hasPermission)"
         (click)="navigateToEdit(consumible.id)"
       >
         <mat-icon>edit</mat-icon><span class="button-label">Editar</span>

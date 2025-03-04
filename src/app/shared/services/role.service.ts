@@ -33,7 +33,7 @@ export class RoleService {
       'canUpdateConsumable',
       'canDeleteConsumable',
     ],
-    '/website/consumibles/*': ['canUpdateConsumable', 'canDeleteConsumable'],
+    '/website/consumibles/*': ['canViewConsumable'],
     '/website/consumibles/*/edit': ['canUpdateConsumable'],
     '/website/packages': ['canViewPackage'],
     '/website/packages/create': ['canCreatePackage'],

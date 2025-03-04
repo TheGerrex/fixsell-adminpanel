@@ -9,12 +9,14 @@
       <button
         class="button button-danger button-raised button-icon-text"
         (click)="openConfirmDialog(printer)"
+        *ngIf="'canDeletePrinter' | hasPermission"
       >
         <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
       </button>
       <button
         class="button button-primary button-raised button-icon-text"
         (click)="navigateToEdit(printer.id)"
+        *ngIf="'canUpdatePrinter' | hasPermission"
       >
         <mat-icon>edit</mat-icon><span class="button-label">Editar</span>
       </button>

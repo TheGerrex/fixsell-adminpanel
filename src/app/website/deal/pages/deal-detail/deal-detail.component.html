@@ -10,7 +10,7 @@
       <button
         ButtonResize
         class="button button-danger button-raised button-icon-text"
-        *ngIf="deal.id"
+        *ngIf="deal.id && ('canDeleteDeal' | hasPermission)"
         (click)="openConfirmDialog(deal)"
       >
         <mat-icon>delete</mat-icon><span class="button-label">Eliminar</span>
@@ -18,7 +18,7 @@
       <button
         ButtonResize
         class="button button-primary button-raised button-icon-text"
-        *ngIf="deal.id"
+        *ngIf="deal.id && ('canUpdateDeal' | hasPermission)"
         (click)="navigateToEditDeal(deal)"
       >
         <mat-icon>edit</mat-icon><span class="button-label">Editar</span>

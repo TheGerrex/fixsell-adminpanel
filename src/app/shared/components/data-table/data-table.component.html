@@ -26,6 +26,7 @@
 
         <!-- Add button -->
         <button
+          ButtonResize
           *ngIf="
             showAddButton &&
             (!addButtonPermission || (addButtonPermission | hasPermission))
@@ -57,113 +58,121 @@
   <!-- Table -->
   <div class="responsive-table">
     <div class="table-container">
-      <table
-        mat-table
-        matSort
-        [dataSource]="dataSource"
-        class="data-table dense-theme"
-      >
-        <!-- Dynamic Columns -->
-        <ng-container
-          *ngFor="let column of columns"
-          [matColumnDef]="column.name"
+      <div class="table-wrapper">
+        <table
+          mat-table
+          matSort
+          [dataSource]="dataSource"
+          class="data-table dense-theme"
         >
-          <!-- Column Header -->
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            [mat-sort-header]="column.sortable ? column.name : ''"
-            [style.text-align]="column.align || 'left'"
-            [style.width]="column.width || 'auto'"
+          <!-- Header Row -->
+          <tr
+            mat-header-row
+            class="sticky-header"
+            *matHeaderRowDef="displayedColumns"
+          ></tr>
+          <!-- Data Rows -->
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="onRowClick(row)"
+            [class.clickable-row]="rowClick.observed"
+          ></tr>
+          <!-- Column Definitions -->
+          <ng-container
+            *ngFor="let column of columns"
+            [matColumnDef]="column.name"
           >
-            {{ column.label }}
-          </th>
-
-          <!-- Column Cell -->
-          <td
-            mat-cell
-            *matCellDef="let element"
-            [attr.data-column]="column.name"
-            [style.text-align]="column.align || 'left'"
-            [ngClass]="getCellClass(column, element)"
-          >
-            <!-- If cell content is HTML, render it; otherwise, display text -->
-            <ng-container
-              *ngIf="
-                isHtmlContent(getCellContent(column, element));
-                else textContent
-              "
+            <!-- Column Header -->
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [mat-sort-header]="column.sortable ? column.name : ''"
+              [style.text-align]="column.align || 'left'"
+              [style.width]="column.width || 'auto'"
+              class="sticky-header"
             >
-              <span
-                [innerHTML]="
-                  getHtmlContent(getCellContent(column, element)) | safeHtml
+              {{ column.label }}
+            </th>
+
+            <!-- Column Cell -->
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [attr.data-column]="column.name"
+              [style.text-align]="column.align || 'left'"
+              [ngClass]="getCellClass(column, element)"
+            >
+              <!-- If cell content is HTML, render it; otherwise, display text -->
+              <ng-container
+                *ngIf="
+                  isHtmlContent(getCellContent(column, element));
+                  else textContent
                 "
-              ></span>
-            </ng-container>
-            <ng-template #textContent>
-              {{ getTextContent(getCellContent(column, element)) }}
-            </ng-template>
-          </td>
-        </ng-container>
+              >
+                <span
+                  [innerHTML]="
+                    getHtmlContent(getCellContent(column, element)) | safeHtml
+                  "
+                ></span>
+              </ng-container>
+              <ng-template #textContent>
+                {{ getTextContent(getCellContent(column, element)) }}
+              </ng-template>
+            </td>
+          </ng-container>
 
-        <!-- Actions Column -->
-        <ng-container
-          *ngIf="shouldShowActionsColumn()"
-          [matColumnDef]="actionsColumnName"
-        >
-          <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td
-            mat-cell
-            *matCellDef="let element"
-            [attr.data-column]="actionsColumnName"
+          <!-- Actions Column -->
+          <ng-container
+            *ngIf="shouldShowActionsColumn()"
+            [matColumnDef]="actionsColumnName"
           >
-            <button
-              mat-icon-button
-              class="see-icon"
-              *ngIf="
-                showViewAction &&
-                viewClick.observed &&
-                (viewActionPermission | hasPermission)
-              "
-              (click)="onViewClick(element, $event)"
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [attr.data-column]="actionsColumnName"
             >
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="edit-icon"
-              *ngIf="
-                showEditAction &&
-                editClick.observed &&
-                (editActionPermission | hasPermission)
-              "
-              (click)="onEditClick(element, $event)"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="delete-icon"
-              *ngIf="
-                showDeleteAction &&
-                deleteClick.observed &&
-                (deleteActionPermission | hasPermission)
-              "
-              (click)="onDeleteClick(element, $event)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumns"
-          (click)="onRowClick(row)"
-          [class.clickable-row]="rowClick.observed"
-        ></tr>
-      </table>
+              <button
+                mat-icon-button
+                class="see-icon"
+                *ngIf="
+                  showViewAction &&
+                  viewClick.observed &&
+                  (viewActionPermission | hasPermission)
+                "
+                (click)="onViewClick(element, $event)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="edit-icon"
+                *ngIf="
+                  showEditAction &&
+                  editClick.observed &&
+                  (editActionPermission | hasPermission)
+                "
+                (click)="onEditClick(element, $event)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="delete-icon"
+                *ngIf="
+                  showDeleteAction &&
+                  deleteClick.observed &&
+                  (deleteActionPermission | hasPermission)
+                "
+                (click)="onDeleteClick(element, $event)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+        </table>
+      </div>
     </div>
 
     <!-- Pagination -->

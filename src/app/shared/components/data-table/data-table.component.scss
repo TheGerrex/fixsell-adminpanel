@@ -1,147 +1,72 @@
 @import '_variables.scss';
 
-:host {
-  display: block;
-  // Optional: give the entire table container a unified background and border radius
-  background-color: $white;
-  border-radius: $border-radius;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-    0 1px 3px 0 rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-}
-
-/* Unified header & table container */
-.table-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
 .table-header {
   padding: 1rem;
-  border-bottom: 1px solid $light-300; // consistent separation line
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  background-color: inherit;
-}
-
-.table-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.table-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.table-actions {
-  display: flex;
   gap: 0.75rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
+  background-color: $white;
+  flex-shrink: 0;
+  .table-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    .table-title {
+      margin: 0;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.87);
+    }
 
-.table-search {
-  display: none;
+    .table-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+  .table-search {
+    display: none;
+  }
 }
 
 .responsive-table {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .table-container {
-  overflow-x: auto;
-  max-width: 100%;
+  flex-grow: 1;
+  overflow: auto;
+  position: relative;
+  min-height: 200px; /* Ensures the container has an initial height */
+  max-height: 800px; /* Allows growth */
+  display: flex;
+  flex-direction: column;
+}
+
+.table-wrapper {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: $box-shadow-1;
+  background-color: white; /* Ensure the header has a background color */
+}
+
+.table-paginator {
+  flex-shrink: 0;
+  background-color: $white;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-/* Row styling */
-.clickable-row {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
-}
-
-/* Icon colors */
-.see-icon {
-  color: $indigo-500;
-}
-.edit-icon {
-  color: $orange-500;
-}
-.delete-icon {
-  color: $red-500;
-}
-
-/* Last contact and status */
-.last-contact-container {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-}
-.status-icon {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-/* Status background colors */
-.within-one-days {
-  background-color: $green-500;
-}
-.within-three-days {
-  background-color: $green-400;
-}
-.within-five-days {
-  background-color: $yellow-300;
-}
-.within-seven-days {
-  background-color: $orange-400;
-}
-.more-than-seven-days {
-  background-color: $red-400;
-}
-.no-communications {
-  background-color: transparent;
-}
-
-/* Status text */
-.prospect-class {
-  color: $indigo-500;
-  font-weight: 500;
-}
-.client-class {
-  color: $green-500;
-  font-weight: 500;
-}
-.no-client-class {
-  color: $red-500;
-  font-weight: 500;
-}
-
-::ng-deep .status-icon {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-::ng-deep .no-communications {
-  background-color: transparent;
-  border: 1px solid $light-300;
 }
 
 @media (max-width: 768px) {
@@ -150,13 +75,85 @@
   }
   .table-search {
     display: block;
-    margin: 1rem;
   }
-  .data-table td::before {
-    content: attr(data-column);
-    font-weight: bold;
-    display: block;
-    margin-bottom: 0.5rem;
+
+  /* Row styling */
+  .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  /* Icon colors */
+  .see-icon {
+    color: $indigo-500;
+  }
+  .edit-icon {
+    color: $orange-500;
+  }
+  .delete-icon {
+    color: $red-500;
+  }
+
+  /* Last contact and status */
+  .last-contact-container {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+  }
+  .status-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  /* Status background colors */
+  .within-one-days {
+    background-color: $green-500;
+  }
+  .within-three-days {
+    background-color: $green-400;
+  }
+  .within-five-days {
+    background-color: $yellow-300;
+  }
+  .within-seven-days {
+    background-color: $orange-400;
+  }
+  .more-than-seven-days {
+    background-color: $red-400;
+  }
+  .no-communications {
+    background-color: transparent;
+  }
+
+  /* Status text */
+  .prospect-class {
+    color: $indigo-500;
+    font-weight: 500;
+  }
+  .client-class {
+    color: $green-500;
+    font-weight: 500;
+  }
+  .no-client-class {
+    color: $red-500;
+    font-weight: 500;
+  }
+
+  ::ng-deep .status-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  ::ng-deep .no-communications {
+    background-color: transparent;
+    border: 1px solid $light-300;
   }
 }
 

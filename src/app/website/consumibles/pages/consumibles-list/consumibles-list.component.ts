@@ -1,48 +1,73 @@
-import { HttpClient } from '@angular/common/http';
-import {
-  AfterViewInit,
-  Component,
-  Injectable,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
-import { environment } from 'src/environments/environment';
-import { DialogService } from 'src/app/shared/services/dialog.service';
-import { ToastService } from 'src/app/shared/services/toast.service';
-import { MatSort } from '@angular/material/sort';
 import { ConsumiblesService } from '../../services/consumibles.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
+import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-consumibles-list',
   templateUrl: './consumibles-list.component.html',
   styleUrls: ['./consumibles-list.component.scss'],
 })
-export class ConsumiblesListComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  dataSource = new MatTableDataSource<Consumible>();
-  searchTerm = '';
-
+export class ConsumiblesListComponent implements OnInit {
   consumibleData: Consumible[] = [];
   isLoadingData = false;
+
   displayedColumns: string[] = [
-    //consumibles columns
     'name',
     'sku',
     'brand',
     'yield',
     'origen',
     'price',
-    // 'currency',
     'category',
     'action',
+  ];
+
+  columns: TableColumn[] = [
+    {
+      name: 'name',
+      label: 'Nombre',
+      sortable: true,
+    },
+    {
+      name: 'sku',
+      label: 'SKU',
+      sortable: true,
+    },
+    {
+      name: 'brand',
+      label: 'Fabricante',
+      sortable: true,
+    },
+    {
+      name: 'yield',
+      label: 'Vida Util',
+      sortable: true,
+      formatter: (value: any, row: Consumible) =>
+        value ? `${value} paginas` : '',
+    },
+    {
+      name: 'origen',
+      label: 'Origen',
+      sortable: true,
+    },
+    {
+      name: 'price',
+      label: 'Precio',
+      sortable: true,
+      // align: 'right',
+      formatter: (value: any, row: Consumible) => `${value} ${row.currency}`,
+    },
+    {
+      name: 'category',
+      label: 'Categoria',
+      sortable: true,
+    },
   ];
 
   constructor(
@@ -54,12 +79,7 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    Promise.resolve().then(() => this.loadData());
-    const userRoles = this.authService.getCurrentUserRoles();
-  }
-
-  ngAfterViewInit() {
-    // this.loadData();
+    this.loadData();
   }
 
   loadData() {
@@ -67,9 +87,6 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     this.consumiblesService.getAllConsumibles().subscribe(
       (consumibles) => {
         this.consumibleData = consumibles;
-        this.dataSource = new MatTableDataSource(consumibles);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
         this.isLoadingData = false;
       },
       (error) => {
@@ -89,11 +106,6 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
 
   editConsumible(consumible: Consumible) {
     this.router.navigateByUrl(`website/consumibles/${consumible.id}/edit`);
-  }
-
-  applyFilter(event: Event) {
-    const searchTerm = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   openConfirmDialog(consumible: Consumible): void {
@@ -125,14 +137,9 @@ export class ConsumiblesListComponent implements OnInit, AfterViewInit {
     if (consumible.id) {
       this.consumiblesService.deleteConsumible(consumible.id).subscribe(
         (response) => {
-          // Update consumibleData
           this.consumibleData = this.consumibleData.filter(
             (c) => c.id !== consumible.id,
           );
-
-          // Update dataSource
-          this.dataSource.data = this.consumibleData;
-
           this.toastService.showSuccess(
             'Consumible eliminado con éxito',
             'Aceptar',

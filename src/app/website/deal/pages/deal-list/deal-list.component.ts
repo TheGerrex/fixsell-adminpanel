@@ -1,15 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { DealService } from '../../services/deal.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { MatSort } from '@angular/material/sort';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Deal } from 'src/app/website/interfaces/deal.interface';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-deal-list',
@@ -17,19 +15,84 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   styleUrls: ['./deal-list.component.scss'],
 })
 export class DealListComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  dataSource = new MatTableDataSource<Deal>();
-  searchTerm = '';
   dealData: Deal[] = [];
   isLoadingData = false;
+  searchTerm = '';
+
   displayedColumns: string[] = [
-    'brand',
-    'model',
-    'price',
+    'productType',
+    'productName',
+    'regularPrice',
     'dealPrice',
     'dealEndDate',
     'action',
+  ];
+
+  columns: TableColumn[] = [
+    {
+      name: 'productType',
+      label: 'Producto',
+      sortable: true,
+      formatter: (value: any, row: Deal) =>
+        row.printer ? 'Multifuncional' : 'Consumible',
+    },
+    {
+      name: 'productName',
+      label: 'Nombre',
+      sortable: true,
+      formatter: (value: any, row: Deal) =>
+        row.printer
+          ? row.printer.model
+          : row.consumible
+          ? row.consumible.name
+          : 'N/A',
+    },
+    {
+      name: 'regularPrice',
+      label: 'Precio',
+      sortable: true,
+      formatter: (value: any, row: Deal) => {
+        let price = '0';
+        let currency = 'MXN';
+
+        if (row.printer) {
+          price = row.printer.price.toString();
+          currency = row.printer.currency;
+        } else if (row.consumible) {
+          price = row.consumible.price.toString();
+          currency = row.consumible.currency;
+        }
+
+        return `$${price} ${currency}`;
+      },
+    },
+    {
+      name: 'dealPrice',
+      label: 'Precio Promoción',
+      sortable: true,
+      formatter: (value: any, row: Deal) =>
+        `$${row.dealPrice} ${row.dealCurrency} (${row.dealDiscountPercentage}% de descuento)`,
+    },
+    {
+      name: 'dealEndDate',
+      label: 'Terminación de promoción',
+      sortable: true,
+      formatter: (value: any, row: Deal) => {
+        if (!row.dealEndDate) return 'Sin fecha de terminación';
+
+        return {
+          html: true,
+          content: `<div class="end-date-container">
+                      <span class="status-icon ${
+                        this.isWithinDateRange(row.dealEndDate)
+                          ? 'within-date-range'
+                          : 'past-deal'
+                      }"></span>
+                      ${this.formatDate(row.dealEndDate)}
+                    </div>`,
+        };
+      },
+    },
   ];
 
   constructor(
@@ -42,52 +105,50 @@ export class DealListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    Promise.resolve().then(() => this.loadData());
-    const userRoles = this.authService.getCurrentUserRoles();
+    this.loadData();
   }
 
   loadData() {
     this.isLoadingData = true;
-    this.dealService.getAllDeals().subscribe((deals) => {
-      console.log('all deals:', deals);
-      this.dealData = deals
-        .filter(
-          (deal: { printer: null; consumible: null }) =>
-            deal.printer !== null || deal.consumible !== null,
-        )
-        .map((deal: { dealEndDate: string | number | Date }) => ({
-          ...deal,
-          dealEndDate: deal.dealEndDate ? new Date(deal.dealEndDate) : null,
-        }));
-      console.log(this.dealData);
-      this.dataSource = new MatTableDataSource(this.dealData);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.isLoadingData = false;
-      this.dataSource.filterPredicate = (data: Deal, filter: string) => {
-        let dataStr = '';
-        if (data.printer) {
-          dataStr +=
-            data.printer.brand + data.printer.model + data.printer.price;
-        }
-        if (data.consumible) {
-          dataStr += data.consumible.name;
-        }
-        dataStr +=
-          data.dealPrice +
-          data.dealCurrency +
-          data.dealDiscountPercentage +
-          (data.dealEndDate
-            ? data.dealEndDate.toLocaleDateString('es-ES')
-            : '');
-        return dataStr.trim().toLowerCase().indexOf(filter) != -1;
-      };
-    });
+    this.dealService.getAllDeals().subscribe(
+      (deals) => {
+        // Filter out deals without printer or consumible and format dates
+        this.dealData = deals
+          .filter(
+            (deal: Deal) => deal.printer !== null || deal.consumible !== null,
+          )
+          .map((deal: Deal) => ({
+            ...deal,
+            dealEndDate: deal.dealEndDate ? new Date(deal.dealEndDate) : null,
+          }));
+
+        this.isLoadingData = false;
+      },
+      (error) => {
+        console.error('Error loading deals:', error);
+        this.isLoadingData = false;
+      },
+    );
   }
 
-  isWithinDateRange(endDate: Date): boolean {
+  isWithinDateRange(endDate: Date | null): boolean {
+    if (!endDate) return false;
     const currentDate = new Date();
     return currentDate <= new Date(endDate);
+  }
+
+  formatDate(date: Date | null): string {
+    // Format the date in Spanish locale with capitalized first letter
+    if (!date) return '';
+
+    const dateString = new Date(date).toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    // Capitalize first letter
+    return dateString.charAt(0).toUpperCase() + dateString.slice(1);
   }
 
   seeDeal(deal: Deal) {
@@ -104,11 +165,6 @@ export class DealListComponent implements OnInit {
 
   addDeal() {
     this.router.navigate(['/website/deals/create']);
-  }
-
-  applyFilter(event: Event) {
-    const searchTerm = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   openConfirmDialog(deal: Deal): void {
@@ -141,7 +197,6 @@ export class DealListComponent implements OnInit {
       this.dealService.deleteDealById(deal.id).subscribe(
         (response) => {
           this.dealData = this.dealData.filter((d) => d.id !== deal.id);
-          this.dataSource.data = this.dealData;
           this.toastService.showSuccess(
             'Promoción eliminado con éxito',
             'Aceptar',
@@ -152,9 +207,5 @@ export class DealListComponent implements OnInit {
         },
       );
     }
-  }
-
-  addPaquete() {
-    this.router.navigate(['/website/paquete/create']);
   }
 }

@@ -1,8 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import {
   Ticket,
@@ -14,29 +11,130 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
+
 @Component({
   selector: 'app-tickets-list',
   templateUrl: './tickets-list.component.html',
   styleUrls: ['./tickets-list.component.scss'],
 })
-export class TicketsListComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  dataSource = new MatTableDataSource<Ticket>();
-  filterValue = '';
-  searchTerm = '';
+export class TicketsListComponent implements OnInit {
   TicketData: Ticket[] = [];
   isLoadingData = false;
+  searchTerm = '';
+
   displayedColumns: string[] = [
-    'Client',
-    'Title',
-    'Type',
+    'clientName',
+    'title',
+    'type',
     'status',
     'priority',
-    'updatedDate', //time since last update
-    // 'createdDate', //time since created
+    'updatedDate',
     'action',
+  ];
+
+  columns: TableColumn[] = [
+    {
+      name: 'clientName',
+      label: 'Cliente',
+      sortable: true,
+    },
+    {
+      name: 'title',
+      label: 'Tema',
+      sortable: true,
+    },
+    {
+      name: 'type',
+      label: 'Tipo',
+      sortable: true,
+      formatter: (value: any) => {
+        // Handle ticket type formatting
+        switch (value) {
+          case 'remote':
+            return 'Remoto';
+          case 'onsite':
+            return 'En sitio';
+          case 'phone':
+            return 'Teléfono';
+          case 'email':
+            return 'Email';
+          default:
+            return value;
+        }
+      },
+    },
+    {
+      name: 'status',
+      label: 'Estatus',
+      sortable: true,
+      formatter: (value: any, row: Ticket) => ({
+        html: true,
+        content: `<div class="ticket-status ${this.getStatusClass(row)}">
+                    ${this.getStatusTranslation(row.status)}
+                  </div>`,
+      }),
+    },
+    {
+      name: 'priority',
+      label: 'Prioridad',
+      sortable: true,
+      formatter: (value: any, row: Ticket) => {
+        const priorityClass = this.getPriorityClass(row);
+        let flagsHtml = '';
+
+        switch (row.priority) {
+          case 'high':
+            flagsHtml = `
+          <div class="priority-flags-container high-priority">
+            <i class="material-icons ${priorityClass}">flag</i>
+            <i class="material-icons ${priorityClass}">flag</i>
+            <i class="material-icons ${priorityClass}">flag</i>
+          </div>
+        `;
+            break;
+          case 'medium':
+            flagsHtml = `
+          <div class="priority-flags-container medium-priority">
+            <i class="material-icons ${priorityClass}">flag</i>
+            <i class="material-icons ${priorityClass}">flag</i>
+            <i class="material-icons ${priorityClass}">outlined_flag</i>
+          </div>
+        `;
+            break;
+          case 'low':
+          default:
+            flagsHtml = `
+          <div class="priority-flags-container low-priority">
+            <i class="material-icons ${priorityClass}">flag</i>
+            <i class="material-icons ${priorityClass}">outlined_flag</i>
+            <i class="material-icons ${priorityClass}">outlined_flag</i>
+          </div>
+        `;
+        }
+
+        return {
+          html: true,
+          content: flagsHtml,
+        };
+      },
+    },
+    {
+      name: 'updatedDate',
+      label: 'Ultima Actualización',
+      sortable: true,
+      formatter: (value: any) => {
+        if (!value) return '';
+        const date = new Date(value);
+        return date.toLocaleDateString('es-MX', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        });
+      },
+    },
   ];
 
   priorityMapping: { [key: string]: number } = {
@@ -71,50 +169,6 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
     [Priority.HIGH]: 'red',
   };
 
-  getStatusColor(status: Status): string {
-    return this.statusColors[status];
-  }
-
-  getStatusTranslation(status: Status): string {
-    return this.statusTranslations[status];
-  }
-
-  getPriorityColor(priority: Priority): string {
-    return this.priorityColors[priority];
-  }
-
-  getPriorityTranslation(priority: Priority): string {
-    return this.priorityTranslations[priority];
-  }
-
-  getStatusClass(ticket: Ticket): string {
-    switch (this.getStatusTranslation(ticket.status)) {
-      case 'ABIERTO':
-        return 'status-open';
-      case 'EN PROGRESO':
-        return 'status-in-progress';
-      case 'SIN RESOLUCIÓN':
-        return 'status-without-resolution';
-      case 'COMPLETADO':
-        return 'status-completed';
-      default:
-        return '';
-    }
-  }
-
-  getPriorityClass(ticket: Ticket): string {
-    switch (this.getPriorityTranslation(ticket.priority)) {
-      case 'bajo':
-        return 'priority-low';
-      case 'medio':
-        return 'priority-medium';
-      case 'alto':
-        return 'priority-high';
-      default:
-        return '';
-    }
-  }
-
   constructor(
     private router: Router,
     private ticketsService: TicketsService,
@@ -127,50 +181,69 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       const status = params['status'];
-      // Use the status to filter the tickets
       this.loadData(status);
     });
+
+    // Adjust columns based on permissions
     const canViewAllTickets =
       this.authService.hasPermission('canViewAllTickets');
     if (canViewAllTickets) {
-      // If the user can view all tickets, ensure all relevant columns are displayed
       this.displayedColumns = [
-        'Client',
-        'Title',
-        'Type',
+        'clientName',
+        'title',
+        'type',
         'status',
         'priority',
         'updatedDate',
-        // 'createdDate',
         'action',
       ];
     } else {
-      // If the user can only view their own tickets, adjust columns accordingly
       this.displayedColumns = [
-        'Client',
-        'Title',
-        'Type',
+        'clientName',
+        'title',
+        'type',
         'status',
         'priority',
         'updatedDate',
-        // 'createdDate',
         'action',
       ];
     }
-
-    this.dataSource.sort = this.sort;
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      console.log(`Sorting by ${sortHeaderId}`);
-      if (sortHeaderId === 'priority') {
-        return this.priorityMapping[data.priority];
-      } else {
-        return data[sortHeaderId as keyof Ticket];
-      }
-    };
+  getStatusTranslation(status: Status): string {
+    return this.statusTranslations[status];
+  }
+
+  getPriorityTranslation(priority: Priority): string {
+    return this.priorityTranslations[priority];
+  }
+
+  getStatusClass(ticket: Ticket): string {
+    switch (ticket.status) {
+      case Status.OPEN:
+        return 'status-open';
+      case Status.IN_PROGRESS:
+        return 'status-in-progress';
+      case Status.WITHOUT_RESOLUTION:
+        return 'status-without-resolution';
+      case Status.COMPLETED:
+        return 'status-completed';
+      default:
+        return '';
+    }
+  }
+
+  getPriorityClass(ticket: Ticket): string {
+    switch (ticket.priority) {
+      case Priority.LOW:
+        return 'priority-low';
+      case Priority.MEDIUM:
+        return 'priority-medium';
+      case Priority.HIGH:
+        return 'priority-high';
+      default:
+        return '';
+    }
   }
 
   loadData(statuses?: string) {
@@ -182,13 +255,10 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
 
     if (canViewAllTickets) {
       ticketsObservable = this.ticketsService.getAllTickets();
-      console.log('loadData - User can view all tickets:', ticketsObservable);
     } else {
       if (user && user.id) {
         ticketsObservable = this.ticketsService.getAllTicketsForUser(user.id);
-        console.log('loadData - User can view own tickets:', ticketsObservable);
       } else {
-        // Handle the case where there is no current user
         console.error('No current user');
         this.isLoadingData = false;
         return;
@@ -197,50 +267,37 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
 
     ticketsObservable.subscribe(
       (tickets) => {
-        console.log('Received tickets list:', tickets);
         if (statuses !== undefined) {
-          const statusArray = statuses.split(','); // Split the statuses string into an array
+          const statusArray = statuses.split(',');
           tickets = tickets.filter((ticket) =>
             statusArray.includes(ticket.status),
           );
         }
-        tickets = tickets.map((ticket) => {
-          ticket.updatedDate = new Date(ticket.updatedDate);
-          return ticket;
-        });
-        this.TicketData = tickets;
-        this.dataSource = new MatTableDataSource(tickets);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+
+        // Convert string dates to Date objects for sorting
+        // Using a default date instead of null to match Ticket interface
+        this.TicketData = tickets.map((ticket) => ({
+          ...ticket,
+          updatedDate: ticket.updatedDate
+            ? new Date(ticket.updatedDate)
+            : new Date(),
+        }));
+
         this.isLoadingData = false;
       },
       (error) => {
-        console.error('Error:', error);
+        console.error('Error loading tickets:', error);
         this.isLoadingData = false;
       },
     );
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
   addTicket() {
-    console.log('Add ticket');
     this.router.navigate(['/support/tickets/create']);
   }
 
   seeTicket(ticket: Ticket) {
-    console.log('See ticket:', ticket);
-    console.log('routing to: /support/tickets/' + ticket.id);
     this.router.navigate(['/support/tickets/' + ticket.id]);
-  }
-
-  editTicket(ticket: Ticket) {
-    console.log('Edit ticket:', ticket);
-    console.log('routing to: /support/tickets/' + ticket.id + '/edit');
-    this.router.navigate(['/support/tickets/' + ticket.id + '/edit']);
   }
 
   openConfirmDialog(ticket: Ticket): void {
@@ -261,9 +318,7 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (ticket.id) {
-          this.deleteTicket(ticket);
-        }
+        this.deleteTicket(ticket);
       }
     });
   }
@@ -273,7 +328,6 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
       this.ticketsService.deleteTicket(ticket.id).subscribe(
         (response) => {
           this.TicketData = this.TicketData.filter((t) => t.id !== ticket.id);
-          this.dataSource.data = this.TicketData;
           this.toastService.showSuccess(
             'Ticket eliminado con éxito',
             'Aceptar',
@@ -284,5 +338,10 @@ export class TicketsListComponent implements OnInit, AfterViewInit {
         },
       );
     }
+  }
+
+  // Method for DataTableComponent to handle row click
+  onRowClick(ticket: Ticket): void {
+    this.seeTicket(ticket);
   }
 }

@@ -31,6 +31,11 @@ import { EditPrinterCategoryDialogComponent } from './components/edit-printer-ca
 import { CapitalizeDatePipe } from './pipes/capitalize-month.pipe';
 import { HasPermissionPipe } from './pipes/has-permission.pipe';
 import { PermissionsComponent } from './components/permissions/permissions.component';
+
+// Import your dependencies that are used in the template
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+// Import any other needed modules/components
+import { DataTableComponent } from './components/data-table/data-table.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -57,6 +62,10 @@ import { PermissionsComponent } from './components/permissions/permissions.compo
     CapitalizeDatePipe,
     HasPermissionPipe,
     PermissionsComponent,
+    LoadingSpinnerComponent,
+    HasPermissionPipe,
+    SafeHtmlPipe,
+    DataTableComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +101,7 @@ import { PermissionsComponent } from './components/permissions/permissions.compo
     CapitalizeDatePipe,
     HasPermissionPipe,
     PermissionsComponent,
+    DataTableComponent,
   ],
 })
 export class SharedModule {}

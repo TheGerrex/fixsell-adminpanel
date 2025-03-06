@@ -1,157 +1,17 @@
-<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
-<div [hidden]="isLoadingData">
-  <div class="table-header">
-    <div class="table-header-container">
-      <h3 class="table-title">Multifuncionales</h3>
-      <div class="table-actions">
-        <mat-form-field appearance="outline">
-          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
-          <input
-            matInput
-            type="text"
-            placeholder="Buscar Multifuncionales"
-            [(ngModel)]="searchTerm"
-            (input)="applyFilter($event)"
-          />
-        </mat-form-field>
-        <website-export
-          [data]="printerData"
-          [ignoreFields]="['id']"
-        ></website-export>
-        <button
-          ButtonResize
-          class="button button-primary button-raised button-icon-text"
-          (click)="addPrinter()"
-          *ngIf="'canCreatePrinter' | hasPermission"
-        >
-          <mat-icon>add</mat-icon>
-          <span class="button-label">Crear Multifuncional</span>
-        </button>
-      </div>
-    </div>
-    <div class="table-search">
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
-        <input
-          matInput
-          type="text"
-          placeholder="Buscar Multifuncionales"
-          [(ngModel)]="searchTerm"
-          (input)="applyFilter($event)"
-        />
-      </mat-form-field>
-    </div>
-  </div>
-  <div class="responsive-table">
-    <div class="table-container">
-      <table
-        mat-table
-        matSort
-        [dataSource]="dataSource"
-        class="printer-list-table dense-theme"
-      >
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>id</th>
-          <td mat-cell *matCellDef="let printer" data-column="id">
-            {{ printer.id }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="brand">
-          <th mat-header-cell *matHeaderCellDef>Marca</th>
-          <td mat-cell *matCellDef="let printer" data-column="brand">
-            {{ printer.brand }}
-          </td>
-        </ng-container>
-
-        <!-- Model Column -->
-        <ng-container matColumnDef="model">
-          <th mat-header-cell *matHeaderCellDef>Modelo</th>
-          <td mat-cell *matCellDef="let printer" data-column="model">
-            {{ printer.model }}
-          </td>
-        </ng-container>
-
-        <!-- Category Column -->
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>Categoria</th>
-          <td mat-cell *matCellDef="let printer" data-column="category">
-            {{ printer.category }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="rentable">
-          <th mat-header-cell *matHeaderCellDef>Tipo</th>
-          <td mat-cell *matCellDef="let printer" data-column="rentable">
-            {{ printer.rentable ? 'Renta' : 'Venta' }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="color">
-          <th mat-header-cell *matHeaderCellDef>Modo de Impresión</th>
-          <td mat-cell *matCellDef="let printer" data-column="color">
-            {{ printer.color ? 'Color' : 'B&N' }}
-          </td>
-        </ng-container>
-
-        <!-- Price Column -->
-        <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
-          <td mat-cell *matCellDef="let printer" data-column="price">
-            ${{ printer.price }} {{ printer.currency }}
-          </td>
-        </ng-container>
-
-        <!-- Currency Column -->
-        <ng-container matColumnDef="currency">
-          <th mat-header-cell *matHeaderCellDef>Moneda</th>
-          <td mat-cell *matCellDef="let printer" data-column="currency">
-            {{ printer.currency }}
-          </td>
-        </ng-container>
-
-        <!-- Action Column -->
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td mat-cell *matCellDef="let printer" data-column="actions">
-            <button
-              mat-icon-button
-              class="see-icon"
-              *ngIf="'canViewPrinter' | hasPermission"
-              (click)="seePrinter(printer)"
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="edit-icon"
-              *ngIf="'canUpdatePrinter' | hasPermission"
-              (click)="editPrinter(printer)"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="delete-icon"
-              *ngIf="'canDeletePrinter' | hasPermission"
-              (click)="openConfirmDialog(printer)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-    </div>
-    <div>
-      <mat-paginator
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        [pageSize]="8"
-        showFirstLastButtons
-        class="table-paginator"
-      ></mat-paginator>
-    </div>
-  </div>
-</div>
+<app-data-table
+  [title]="'Multifuncionales'"
+  [data]="printerData"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoadingData"
+  [addButtonText]="'Crear Multifuncional'"
+  [addButtonPermission]="'canCreatePrinter'"
+  [viewActionPermission]="'canViewPrinter'"
+  [editActionPermission]="'canUpdatePrinter'"
+  [deleteActionPermission]="'canDeletePrinter'"
+  (rowClick)="onRowClick($event)"
+  (viewClick)="seePrinter($event)"
+  (editClick)="editPrinter($event)"
+  (deleteClick)="openConfirmDialog($event)"
+  (addClick)="addPrinter()"
+></app-data-table>

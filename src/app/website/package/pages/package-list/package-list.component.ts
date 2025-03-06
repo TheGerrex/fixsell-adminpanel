@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { PackageService } from '../../services/package.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { MatSort } from '@angular/material/sort';
 import { Package } from 'src/app/website/interfaces/package.interface';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-package-list',
@@ -16,12 +14,10 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   styleUrls: ['./package-list.component.scss'],
 })
 export class PackageListComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  dataSource = new MatTableDataSource<Package>();
-  searchTerm = '';
   packageData: Package[] = [];
   isLoadingData = false;
+  searchTerm = '';
+
   displayedColumns: string[] = [
     'model',
     'prints',
@@ -30,6 +26,65 @@ export class PackageListComponent implements OnInit {
     'packageDuration',
     'packageEndDate',
     'action',
+  ];
+
+  columns: TableColumn[] = [
+    {
+      name: 'model',
+      label: 'Modelo',
+      sortable: true,
+      formatter: (value: any, row: Package) => row.printer.model,
+    },
+    {
+      name: 'prints',
+      label: 'Impresiónes',
+      formatter: (value: any, row: Package) => ({
+        html: true,
+        content: `<div style="display: flex; flex-direction: column">
+                    <div class="print-item">${this.formatPrints(
+                      row.packagePrints,
+                    )} impresiones</div>
+                  </div>`,
+      }),
+    },
+    {
+      name: 'deposit',
+      label: 'Deposito Inicial',
+      sortable: true,
+      formatter: (value: any, row: Package) =>
+        `${this.formatCurrency(row.packageDepositPrice)} ${
+          row.packageCurrency
+        }`,
+    },
+    {
+      name: 'monthlyPrice',
+      label: 'Pago Mensual',
+      sortable: true,
+      formatter: (value: any, row: Package) =>
+        `$${row.packagePrice} ${row.packageCurrency} (${row.packageDiscountPercentage}% de descuento)`,
+    },
+    {
+      name: 'packageDuration',
+      label: 'Duración de Contrato',
+      sortable: true,
+      formatter: (value: any, row: Package) => `${row.packageDuration} meses`,
+    },
+    {
+      name: 'packageEndDate',
+      label: 'Terminacion de paquete',
+      sortable: true,
+      formatter: (value: any, row: Package) => ({
+        html: true,
+        content: `<div class="end-date-container">
+                    <span class="status-icon ${
+                      this.isWithinDateRange(row.packageEndDate)
+                        ? 'within-date-range'
+                        : 'past-deal'
+                    }"></span>
+                    ${this.formatDate(row.packageEndDate)}
+                  </div>`,
+      }),
+    },
   ];
 
   constructor(
@@ -41,19 +96,14 @@ export class PackageListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    Promise.resolve().then(() => this.loadData());
-    const userRoles = this.authService.getCurrentUserRoles();
+    this.loadData();
   }
 
   loadData() {
     this.isLoadingData = true;
     this.packageService.getAllPackages().subscribe(
       (data) => {
-        console.log(data);
         this.packageData = data;
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
         this.isLoadingData = false;
       },
       (error) => {
@@ -68,25 +118,46 @@ export class PackageListComponent implements OnInit {
     return currentDate <= new Date(endDate);
   }
 
+  formatPrints(value: number): string {
+    return new Intl.NumberFormat('es-MX', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
+
+  formatDate(date: Date): string {
+    // Convert to proper Date object if it's not already
+    const dateObj = new Date(date);
+    // Format the date - you can use a pipe in the template or format here
+    return dateObj.toLocaleDateString('es-MX', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  }
+
   addPackage() {
     this.router.navigate(['/website/packages/create']);
   }
 
-  seePackage(packages: Package) {
-    // Implement edit functionality here
-    this.router.navigateByUrl(`website/printers/${packages.printer.id}`);
+  seePackage(pkg: Package) {
+    this.router.navigateByUrl(`website/printers/${pkg.printer.id}`);
   }
 
-  editPackage(packages: Package) {
-    this.router.navigateByUrl(`/website/packages/${packages.id}/edit`);
+  editPackage(pkg: Package) {
+    this.router.navigateByUrl(`/website/packages/${pkg.id}/edit`);
   }
 
-  applyFilter(event: Event) {
-    const searchTerm = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = searchTerm.trim().toLowerCase();
-  }
-
-  openConfirmDialog(packages: Package): void {
+  openConfirmDialog(pkg: Package): void {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
@@ -104,23 +175,18 @@ export class PackageListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        if (packages.id) {
-          this.deletePackage(packages);
+        if (pkg.id) {
+          this.deletePackage(pkg);
         }
       }
     });
   }
 
-  deletePackage(packages: Package) {
-    if (packages.id) {
-      this.packageService.deletePackageById(packages.id).subscribe(
+  deletePackage(pkg: Package) {
+    if (pkg.id) {
+      this.packageService.deletePackageById(pkg.id).subscribe(
         (response) => {
-          // Update consumibleData
-          this.packageData = this.packageData.filter(
-            (c) => c.id !== packages.id,
-          );
-          // Update dataSource
-          this.dataSource.data = this.packageData;
+          this.packageData = this.packageData.filter((p) => p.id !== pkg.id);
           this.toastService.showSuccess(
             'Paquete de renta eliminado con éxito',
             'Aceptar',

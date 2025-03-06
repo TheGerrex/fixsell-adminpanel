@@ -1,64 +1,76 @@
-@import '_variables.scss';
+// @import '_variables.scss';
 
-.lead-status {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.25rem;
-  background-color: transparent;
-  border-radius: $border-radius;
-  color: $white;
-  padding: 0.25rem 0.5rem;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 400;
-  // width: fit-content;
-  min-height: 34px;
-}
+// .lead-status {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   gap: 0.25rem;
+//   background-color: transparent;
+//   border-radius: $border-radius;
+//   color: $white;
+//   padding: 0.25rem 0.5rem;
+//   font-family: 'Roboto Mono', monospace;
+//   font-size: 14px;
+//   line-height: 1;
+//   font-weight: 400;
+//   // width: fit-content;
+//   min-height: 34px;
+// }
 
-.prospect-class {
-  color: $indigo-500;
-  font-weight: 500;
-}
+// .prospect-class {
+//   color: $indigo-500;
+//   font-weight: 500;
+// }
 
-.last-contact-container {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-}
+// .last-contact-container {
+//   display: flex;
+//   align-items: baseline;
+//   gap: 0.25rem;
+// }
 
-.status-icon {
-  width: 12px;
-  height: 12px;
-  border-radius: 12px;
-}
+// .status-icon {
+//   width: 12px;
+//   height: 12px;
+//   border-radius: 12px;
+// }
 
-.wrap-text {
-  white-space: normal;
-  word-wrap: break-word;
-}
+// .wrap-text {
+//   white-space: normal;
+//   word-wrap: break-word;
+// }
 
-.within-one-days {
-  background-color: $green-500;
-}
+// .within-one-days {
+//   background-color: $green-500;
+// }
 
-.within-three-days {
-  background-color: $green-400;
-}
+// .within-three-days {
+//   background-color: $green-400;
+// }
 
-.within-five-days {
-  background-color: $yellow-300;
-}
+// .within-five-days {
+//   background-color: $yellow-300;
+// }
 
-.within-seven-days {
-  background-color: $orange-400;
-}
+// .within-seven-days {
+//   background-color: $orange-400;
+// }
 
-.more-than-seven-days {
-  background-color: $red-400;
-}
+// .more-than-seven-days {
+//   background-color: $red-400;
+// }
 
-.no-communications {
-  background-color: transparent;
-}
+// .no-communications {
+//   background-color: transparent;
+// }
+
+// .status-icon {
+//   width: 12px;
+//   height: 12px;
+//   border-radius: 50%;
+//   display: inline-block;
+// }
+
+// .no-communications {
+//   background-color: transparent;
+//   border: 1px solid $light-300; // add a border to indicate the icon even with no fill
+// }

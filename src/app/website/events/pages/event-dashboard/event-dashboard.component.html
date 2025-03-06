@@ -1,146 +1,21 @@
-<!-- Loading Spinner -->
-<app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
-
 <!-- Main Content -->
-<div [hidden]="isLoadingData">
-  <!-- Header and Actions -->
-  <div class="table-header">
-    <div class="table-header-container">
-      <h3 class="table-title">Eventos</h3>
-      <div class="table-actions">
-        <!-- Search Field -->
-        <mat-form-field appearance="outline">
-          <mat-icon matPrefix>search</mat-icon>
-          <input
-            matInput
-            type="text"
-            placeholder="Buscar Eventos"
-            [(ngModel)]="searchTerm"
-            (input)="applyFilter($event)"
-          />
-        </mat-form-field>
-        <!-- Add Event Button -->
-        <button
-          class="button button-primary button-raised button-icon-text"
-          (click)="navigateToCreateEvent()"
-          *ngIf="'canCreateEvent' | hasPermission"
-        >
-          <mat-icon>add</mat-icon>
-          <span class="button-label">Crear Evento</span>
-        </button>
-      </div>
-    </div>
-    <!-- Mobile Search Field -->
-    <div class="table-search">
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-icon matPrefix>search</mat-icon>
-        <input
-          matInput
-          type="text"
-          placeholder="Buscar Eventos"
-          [(ngModel)]="searchTerm"
-          (input)="applyFilter($event)"
-        />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <!-- Events Table -->
-  <div class="responsive-table">
-    <div class="table-container">
-      <table
-        mat-table
-        matSort
-        [dataSource]="dataSource"
-        class="event-list-table dense-theme"
-      >
-        <!-- Image Column -->
-        <ng-container matColumnDef="image">
-          <th mat-header-cell *matHeaderCellDef>Imagen</th>
-          <td
-            mat-cell
-            *matCellDef="let event"
-            data-column="image"
-            (mouseover)="showImagePreview($event, event.image)"
-            (mousemove)="moveImagePreview($event)"
-            (mouseleave)="hideImagePreview()"
-          >
-            <img [src]="event.image" alt="Event Image" width="100" />
-          </td>
-        </ng-container>
-
-        <!-- Title Column -->
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
-          <td mat-cell *matCellDef="let event" data-column="title">
-            {{ event.title }}
-          </td>
-        </ng-container>
-
-        <!-- Start Date Column -->
-        <ng-container matColumnDef="startDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Fecha de Inicio
-          </th>
-          <td mat-cell *matCellDef="let event" data-column="startDate">
-            {{ event.startDate | date : 'mediumDate' }}
-          </td>
-        </ng-container>
-
-        <!-- End Date Column -->
-        <ng-container matColumnDef="endDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Fecha de Finalización
-          </th>
-          <td mat-cell *matCellDef="let event" data-column="endDate">
-            {{ event.endDate | date : 'mediumDate' }}
-          </td>
-        </ng-container>
-
-        <!-- Description Column -->
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef>Descripción</th>
-          <td mat-cell *matCellDef="let event" data-column="description">
-            {{ event.description }}
-          </td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td mat-cell *matCellDef="let event" data-column="action">
-            <button
-              mat-icon-button
-              class="edit-icon"
-              (click)="editEvent(event)"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="delete-icon"
-              (click)="deleteEvent(event)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <!-- Table Rows -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-    </div>
-
-    <!-- Paginator -->
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      [pageSize]="5"
-      showFirstLastButtons
-      class="table-paginator"
-    ></mat-paginator>
-  </div>
-</div>
+<app-data-table
+  [title]="'Eventos'"
+  [data]="events"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoadingData"
+  [addButtonText]="'Crear Evento'"
+  [addButtonPermission]="'canCreateEvent'"
+  [viewActionPermission]="'canViewEvent'"
+  [editActionPermission]="'canUpdateEvent'"
+  [deleteActionPermission]="'canDeleteEvent'"
+  [showViewAction]="false"
+  (editClick)="editEvent($event)"
+  (deleteClick)="deleteEvent($event)"
+  (addClick)="navigateToCreateEvent()"
+  #eventTable
+></app-data-table>
 
 <!-- Image Preview -->
 <div

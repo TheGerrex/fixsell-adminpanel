@@ -1,0 +1,275 @@
+@import '_variables.scss';
+
+:host {
+  display: block;
+  // Optional: give the entire table container a unified background and border radius
+  background-color: $white;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+    0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* Unified header & table container */
+.table-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  padding: 1rem;
+  border-bottom: 1px solid $light-300; // consistent separation line
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: inherit;
+}
+
+.table-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.table-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.table-search {
+  display: none;
+}
+
+.responsive-table {
+  width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Row styling */
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* Icon colors */
+.see-icon {
+  color: $indigo-500;
+}
+.edit-icon {
+  color: $orange-500;
+}
+.delete-icon {
+  color: $red-500;
+}
+
+/* Last contact and status */
+.last-contact-container {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+.status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Status background colors */
+.within-one-days {
+  background-color: $green-500;
+}
+.within-three-days {
+  background-color: $green-400;
+}
+.within-five-days {
+  background-color: $yellow-300;
+}
+.within-seven-days {
+  background-color: $orange-400;
+}
+.more-than-seven-days {
+  background-color: $red-400;
+}
+.no-communications {
+  background-color: transparent;
+}
+
+/* Status text */
+.prospect-class {
+  color: $indigo-500;
+  font-weight: 500;
+}
+.client-class {
+  color: $green-500;
+  font-weight: 500;
+}
+.no-client-class {
+  color: $red-500;
+  font-weight: 500;
+}
+
+::ng-deep .status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+::ng-deep .no-communications {
+  background-color: transparent;
+  border: 1px solid $light-300;
+}
+
+@media (max-width: 768px) {
+  .table-actions mat-form-field {
+    display: none;
+  }
+  .table-search {
+    display: block;
+    margin: 1rem;
+  }
+  .data-table td::before {
+    content: attr(data-column);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.end-date-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.within-date-range {
+  background-color: $green-500;
+}
+
+.past-deal {
+  background-color: $red-500;
+}
+
+.print-item {
+  margin-bottom: 4px;
+}
+
+.end-date-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.within-date-range {
+  background-color: $green-500;
+}
+
+.past-deal {
+  background-color: $red-500;
+}
+
+.ticket-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: $border-radius;
+  color: $white;
+  padding: 0.25rem 0.5rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  min-height: 34px;
+}
+
+.status-open {
+  background-color: $indigo-500 !important;
+}
+
+.status-in-progress {
+  background-color: $yellow-500;
+}
+
+.status-without-resolution {
+  background-color: $orange-500;
+}
+
+.status-completed {
+  background-color: $green-500;
+}
+
+.priority-low {
+  color: $yellow-500;
+}
+
+.priority-medium {
+  color: $orange-500;
+}
+
+.priority-high {
+  color: $red-500;
+}
+
+.priority-flags-container {
+  display: flex;
+  align-items: center;
+  // gap: .25rem;
+}
+
+.active-user {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: $green-100;
+  color: $green-800;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+::ng-deep .inactive-user {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: $red-100;
+  color: $red-800;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}

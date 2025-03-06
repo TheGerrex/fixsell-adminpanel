@@ -1,15 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 import { LeadsService } from '../../services/leads.service';
 import { Lead } from 'src/app/sales/interfaces/leads.interface';
+import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-leads-list',
@@ -17,12 +13,10 @@ import { Lead } from 'src/app/sales/interfaces/leads.interface';
   styleUrls: ['./leads-list.component.scss'],
 })
 export class LeadsListComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  dataSource = new MatTableDataSource<Lead>();
-  filterValue = '';
-  isLoading = false;
   leadData: Lead[] = [];
+  isLoading = false;
+  searchTerm = '';
+  // Define the columns for the data table
   displayedColumns: string[] = [
     'status',
     'client',
@@ -32,140 +26,129 @@ export class LeadsListComponent implements OnInit {
     'assigned',
     'action',
   ];
-  searchTerm = '';
+
+  columns: TableColumn[] = [
+    {
+      name: 'status',
+      label: 'Estatus',
+      sortable: true,
+      formatter: (value: any, row: Lead) => ({
+        html: true,
+        content: `<div class="${this.getStatusClass(
+          row,
+        )}">${this.translateStatus(row.status)}</div>`,
+      }),
+    },
+    {
+      name: 'client',
+      label: 'Cliente',
+      sortable: true,
+    },
+    {
+      name: 'product_interested',
+      label: 'Producto Interesado',
+      sortable: true,
+      formatter: (value: any, row: Lead) => this.getProductName(row),
+    },
+    {
+      name: 'email',
+      label: 'Contacto',
+      sortable: true,
+      formatter: (value: any, row: Lead) => ({
+        html: true,
+        content: `${row.email}<br>${
+          row.phone ? this.formatPhone(row.phone) : ''
+        }`,
+      }),
+    },
+    {
+      name: 'last_contacted',
+      label: 'Último Contacto',
+      sortable: true,
+      formatter: (value: any, row: Lead) => ({
+        html: true,
+        content: `<div class="last-contact-container">
+                  <div class="status-icon ${this.getCommunicationClass(
+                    row,
+                  )}"></div>
+                  ${this.getLastCommunicationTime(row)}
+                </div>`,
+      }),
+    },
+    {
+      name: 'assigned',
+      label: 'Asignado',
+      formatter: (value: any, row: Lead) => row.assigned?.name || 'No asignado',
+    },
+  ];
   constructor(
-    private router: Router,
-    private authService: AuthService,
     private leadsService: LeadsService,
+    private router: Router,
     private toastService: ToastService,
     private dialog: MatDialog,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadData();
   }
 
-  loadData() {
+  loadData(): void {
     this.isLoading = true;
-    console.log('Loading leads data...');
-
-    const currentUserPermissions = this.authService.getCurrentUserPermissions();
-    console.log('User permissions:', currentUserPermissions);
-
-    if (currentUserPermissions.includes('canViewAllLeads')) {
-      console.log('User can view all leads, fetching all leads');
-      // User can view all leads
-      this.leadsService.getAllLeads().subscribe(
-        (leads) => {
-          console.log('All leads loaded:', leads);
-          this.processLeads(leads);
-        },
-        (error) => {
-          this.isLoading = false;
-          console.error('Error loading all leads:', error);
-          this.toastService.showError(
-            'Error al cargar los leads: ' +
-              (error.message || 'Error desconocido'),
-            'error-snackbar',
-          );
-        },
-      );
-    } else {
-      // User can only view their own leads
-      console.log('User can only view assigned leads');
-      const currentUser = this.authService.getCurrentUser();
-      if (currentUser && currentUser.id) {
-        console.log('Fetching leads for vendor ID:', currentUser.id);
-        this.leadsService.getLeadsbyVendor(currentUser.id).subscribe(
-          (leads) => {
-            console.log('Vendor leads loaded:', leads);
-            this.processLeads(leads);
-          },
-          (error) => {
-            this.isLoading = false;
-            console.error('Error loading vendor leads:', error);
-            this.toastService.showError(
-              'Error al cargar los leads: ' +
-                (error.message || 'Error desconocido'),
-              'error-snackbar',
-            );
-          },
-        );
-      } else {
+    this.leadsService.getAllLeads().subscribe(
+      (leads) => {
+        this.leadData = leads;
         this.isLoading = false;
-        console.error('Current user not found');
+      },
+      (error) => {
+        this.isLoading = false;
         this.toastService.showError(
-          'No se pudo identificar al usuario actual',
+          'Error al cargar los leads',
           'error-snackbar',
         );
-      }
+      },
+    );
+  }
+
+  translateStatus(status: string): string {
+    switch (status) {
+      case 'prospect':
+        return 'Prospecto';
+      case 'client':
+        return 'Cliente';
+      case 'no-client':
+        return 'No Cliente';
+      default:
+        return status;
     }
   }
-  processLeads(leads: Lead[]) {
-    if (!leads || leads.length === 0) {
-      console.log('No leads found or empty leads array');
-      this.isLoading = false;
-      return;
+
+  getStatusClass(row: Lead): string {
+    if (row.status === 'prospect') {
+      return 'prospect-class';
+    } else if (row.status === 'client') {
+      return 'client-class';
+    } else if (row.status === 'no-client') {
+      return 'no-client-class';
+    } else {
+      return '';
     }
-
-    console.log('Processing leads:', leads);
-    this.leadData = leads;
-
-    // Sort leads by last communication date
-    this.leadData.sort((a, b) => {
-      const lastCommunicationA =
-        a.communications && a.communications.length > 0
-          ? new Date(a.communications[a.communications.length - 1].date)
-          : new Date(0);
-      const lastCommunicationB =
-        b.communications && b.communications.length > 0
-          ? new Date(b.communications[b.communications.length - 1].date)
-          : new Date(0);
-
-      return lastCommunicationB.getTime() - lastCommunicationA.getTime();
-    });
-
-    // Add debug logging to check the processed data
-    console.log('Processed lead data:', this.leadData);
-
-    this.dataSource = new MatTableDataSource(this.leadData);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.isLoading = false;
   }
 
-  // Add a new method to handle potentially empty product_interested values
-  getProductName(lead: Lead): string {
-    return lead.product_interested || 'No especificado';
-  }
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (item: Lead, property: string) => {
-      switch (property) {
-        case 'last_contacted':
-          return item.communications && item.communications.length > 0
-            ? new Date(
-                item.communications[item.communications.length - 1].date,
-              ).getTime()
-            : 0;
-        default:
-          return String(item[property as keyof Lead]);
-      }
-    };
+  getProductName(row: Lead): string {
+    return row.product_interested || 'No especificado';
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  formatPhone(phone: string): string {
+    return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
   }
 
-  getLastCommunicationTime(lead: Lead): string {
-    if (lead.communications && lead.communications.length > 0) {
-      const sortedCommunications = lead.communications.sort(
+  getLastCommunicationTime(row: Lead): string {
+    if (row.communications && row.communications.length > 0) {
+      const sorted = row.communications.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
-      const lastCommunicationDate = new Date(sortedCommunications[0].date);
-      const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
+      const lastDate = new Date(sorted[0].date);
+      const diffInMilliseconds = Date.now() - lastDate.getTime();
       const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
 
       if (diffInHours < 1) {
@@ -184,40 +167,36 @@ export class LeadsListComponent implements OnInit {
     return 'Sin comunicaciones';
   }
 
-  getCommunicationClass(lead: Lead): string {
-    if (lead.communications && lead.communications.length > 0) {
-      const sortedCommunications = lead.communications.sort(
+  getCommunicationClass(row: Lead): string {
+    if (row.communications && row.communications.length > 0) {
+      const sorted = row.communications.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
-      const lastCommunicationDate = new Date(sortedCommunications[0].date);
-      const diffInMilliseconds = Date.now() - lastCommunicationDate.getTime();
+      const lastDate = new Date(sorted[0].date);
+      const diffInMilliseconds = Date.now() - lastDate.getTime();
       const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
 
       if (diffInDays <= 1) {
-        return 'within-one-days'; // Green if within 1 days
+        return 'within-one-days'; // Green
       } else if (diffInDays <= 3) {
-        return 'within-three-days'; // Light Green if within 4 days
+        return 'within-three-days'; // Light Green
       } else if (diffInDays <= 5) {
-        return 'within-five-days'; // Yellow if within 5 days
+        return 'within-five-days'; // Yellow
       } else if (diffInDays <= 7) {
-        return 'within-seven-days'; // Orange if within 7 days
+        return 'within-seven-days'; // Orange
       } else {
-        return 'more-than-seven-days'; // Red if more than 14 days
+        return 'more-than-seven-days'; // Red
       }
     }
-    return 'no-communications'; // Transparent if no communications
+    return 'no-communications';
   }
 
-  getStatusClass(lead: Lead): string {
-    if (lead.status === 'prospect') {
-      return 'prospect-class';
-    } else if (lead.status === 'client') {
-      return 'client-class';
-    } else if (lead.status === 'no-client') {
-      return 'no-client-class';
-    } else {
-      return '';
-    }
+  seeLead(lead: Lead): void {
+    this.router.navigate([`sales/leads/${lead.id}`]);
+  }
+
+  editLead(lead: Lead): void {
+    this.router.navigate([`sales/leads/${lead.id}/edit`]);
   }
 
   openConfirmDialog(lead: Lead): void {
@@ -244,27 +223,19 @@ export class LeadsListComponent implements OnInit {
       }
     });
   }
-  addLead() {
-    this.router.navigate(['sales/leads/create']);
+
+  // Keep this method
+  onRowClick(row: Lead): void {
+    this.router.navigate([`sales/leads/${row.id}`]);
   }
 
-  seeLead(lead: Lead) {
-    this.router.navigate([`sales/leads/${lead.id}`]);
-  }
-
-  editLead(lead: Lead) {
-    this.router.navigate([`sales/leads/${lead.id}/edit`]);
-  }
-
-  deleteLead(lead: Lead) {
+  // Re-implement your original delete method if not already present
+  deleteLead(lead: Lead): void {
     if (lead.id) {
       this.leadsService.deleteLead(String(lead.id)).subscribe(
         (response) => {
-          // Update consumibleData
+          // Update leadData
           this.leadData = this.leadData.filter((p) => p.id !== lead.id);
-
-          // Update dataSource
-          this.dataSource.data = this.leadData;
           this.toastService.showSuccess(
             'Cliente potencial eliminado con éxito',
             'Aceptar',
@@ -275,5 +246,9 @@ export class LeadsListComponent implements OnInit {
         },
       );
     }
+  }
+
+  addLead(): void {
+    this.router.navigate(['sales/leads/create']);
   }
 }

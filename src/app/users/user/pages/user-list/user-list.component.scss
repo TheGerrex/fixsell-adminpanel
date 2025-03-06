@@ -1,23 +1,22 @@
 @import '_variables.scss';
 
-.active-user {
-  font-family: 'Roboto Mono', monospace;
-  font-optical-sizing: auto;
+// Status indicators
+::ng-deep .active-user {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: $green-100;
+  color: $green-800;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 600;
-  font-style: normal;
-  background-color: $success-color;
-  color: $white;
-  border-radius: $border-radius;
-  padding: 0.25rem 0.5rem;
 }
 
-.inactive-user {
-  font-family: 'Roboto Mono', monospace;
-  font-optical-sizing: auto;
+::ng-deep .inactive-user {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: $red-100;
+  color: $red-800;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 600;
-  font-style: normal;
-  background-color: $danger-color;
-  color: $white;
-  border-radius: $border-radius;
-  padding: 0.25rem 0.5rem;
 }

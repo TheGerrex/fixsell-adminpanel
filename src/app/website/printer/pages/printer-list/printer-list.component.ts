@@ -1,8 +1,4 @@
-// printer-list.component.ts
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
@@ -10,6 +6,7 @@ import { PrinterService } from '../../services/printer.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-printer-list',
@@ -17,14 +14,11 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   styleUrls: ['./printer-list.component.scss'],
 })
 export class PrinterListComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  dataSource = new MatTableDataSource<Printer>();
-  searchTerm = '';
   printerData: Printer[] = [];
   isLoadingData = false;
+  searchTerm = '';
 
+  // Define the columns for the data table
   displayedColumns: string[] = [
     'brand',
     'model',
@@ -33,6 +27,42 @@ export class PrinterListComponent implements OnInit {
     'category',
     'price',
     'action',
+  ];
+
+  columns: TableColumn[] = [
+    {
+      name: 'brand',
+      label: 'Marca',
+      sortable: true,
+    },
+    {
+      name: 'model',
+      label: 'Modelo',
+      sortable: true,
+    },
+    {
+      name: 'rentable',
+      label: 'Tipo',
+      formatter: (value: any, row: Printer) =>
+        row.rentable ? 'Renta' : 'Venta',
+    },
+    {
+      name: 'color',
+      label: 'Modo de Impresión',
+      formatter: (value: any, row: Printer) => (row.color ? 'Color' : 'B&N'),
+    },
+    {
+      name: 'category',
+      label: 'Categoria',
+      sortable: true,
+    },
+    {
+      name: 'price',
+      label: 'Precio',
+      // align: 'right',
+      sortable: true,
+      formatter: (value: any, row: Printer) => `$${row.price} ${row.currency}`,
+    },
   ];
 
   constructor(
@@ -52,9 +82,6 @@ export class PrinterListComponent implements OnInit {
     this.printerService.getAllPrinters().subscribe(
       (printers) => {
         this.printerData = printers;
-        this.dataSource = new MatTableDataSource(printers);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
         this.isLoadingData = false;
       },
       (error) => {
@@ -62,11 +89,6 @@ export class PrinterListComponent implements OnInit {
         this.isLoadingData = false;
       },
     );
-  }
-
-  applyFilter(event: Event) {
-    const searchTerm = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = searchTerm.trim().toLowerCase();
   }
 
   seePrinter(printer: Printer) {
@@ -113,7 +135,6 @@ export class PrinterListComponent implements OnInit {
           this.printerData = this.printerData.filter(
             (p) => p.id !== printer.id,
           );
-          this.dataSource.data = this.printerData;
           this.toastService.showSuccess(
             'Multifuncional eliminada con éxito',
             'Aceptar',
@@ -128,5 +149,12 @@ export class PrinterListComponent implements OnInit {
 
   addPrinter() {
     this.router.navigate(['/website/printers/create']);
+  }
+
+  // This handles row clicks - often not needed if you have action buttons
+  onRowClick(row: Printer): void {
+    this.router.navigate([`/website/printers/${row.id}`], {
+      state: { printer: row },
+    });
   }
 }

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PrinterService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllPrinters(): Observable<Printer[]> {
     return this.http
@@ -29,40 +29,61 @@ export class PrinterService {
       .pipe(map((printerResponse) => printerResponse));
   }
 
-  // get printer id by name
   getPrinterIdByName(name: string): Observable<string> {
     return this.http.get<Printer[]>(`${environment.baseUrl}/printers`).pipe(
       map((printers: Printer[]) => {
-        const printer = printers.find((printer) => printer.model === name);
+        // Convert search name to lowercase
+        const searchNameLower = name.toLowerCase();
+
+        // Find printer with case-insensitive model match
+        const printer = printers.find(
+          (printer) =>
+            printer.model && printer.model.toLowerCase() === searchNameLower,
+        );
+
         if (printer) {
           return printer.id;
         } else {
+          // Try partial match
+          const partialMatch = printers.find(
+            (printer) =>
+              printer.model &&
+              (printer.model.toLowerCase().includes(searchNameLower) ||
+                searchNameLower.includes(printer.model.toLowerCase())),
+          );
+
+          if (partialMatch) {
+            return partialMatch.id;
+          }
+
           throw new Error('Printer not found');
         }
       }),
       catchError((err) => {
         console.error(err);
         throw err;
-      })
+      }),
     );
   }
 
   getPrinterByName(name: string): Observable<Printer> {
     let params = new HttpParams().append('model', name);
-    return this.http.get<Printer[]>(`${environment.baseUrl}/printers`, { params }).pipe(
-      map((printers: Printer[]) => {
-        const printer = printers[0];
-        if (printer) {
-          return printer;
-        } else {
-          throw new Error('Multifuncional no encontrada');
-        }
-      }),
-      catchError((err) => {
-        console.error(err);
-        throw err;
-      })
-    );
+    return this.http
+      .get<Printer[]>(`${environment.baseUrl}/printers`, { params })
+      .pipe(
+        map((printers: Printer[]) => {
+          const printer = printers[0];
+          if (printer) {
+            return printer;
+          } else {
+            throw new Error('Multifuncional no encontrada');
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          throw err;
+        }),
+      );
   }
 
   deletePrinter(id: string): Observable<Printer> {
@@ -87,7 +108,7 @@ export class PrinterService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 
@@ -101,7 +122,7 @@ export class PrinterService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 
@@ -113,9 +134,9 @@ export class PrinterService {
         map((brands: { name: string }[]) => brands.map((brand) => brand.name)),
         map((brandNames: string[]) =>
           brandNames.filter(
-            (brandName, index, self) => self.indexOf(brandName) === index
-          )
-        )
+            (brandName, index, self) => self.indexOf(brandName) === index,
+          ),
+        ),
       );
   }
 
@@ -125,13 +146,13 @@ export class PrinterService {
       .get<{ name: string }[]>(`${environment.baseUrl}/categories/printers`)
       .pipe(
         map((categories: { name: string }[]) =>
-          categories.map((category) => category.name)
+          categories.map((category) => category.name),
         ),
         map((categoryNames: string[]) =>
           categoryNames.filter(
-            (categoryName, index, self) => self.indexOf(categoryName) === index
-          )
-        )
+            (categoryName, index, self) => self.indexOf(categoryName) === index,
+          ),
+        ),
       );
   }
 
@@ -142,7 +163,7 @@ export class PrinterService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 }

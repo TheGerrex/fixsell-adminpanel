@@ -4,13 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
-import { Software } from '../../interfaces/software.iterface';
+import { Software } from '../../interfaces/software.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SoftwareService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllSoftware(): Observable<Software[]> {
     return this.http
@@ -38,26 +38,28 @@ export class SoftwareService {
       catchError((err) => {
         console.error(err);
         throw err;
-      })
+      }),
     );
   }
 
   getSoftwareByName(name: string): Observable<Software> {
     let params = new HttpParams().append('name', name);
-    return this.http.get<Software[]>(`${environment.baseUrl}/softwares`, { params }).pipe(
-      map((softwares: Software[]) => {
-        const software = softwares[0];
-        if (software) {
-          return software;
-        } else {
-          throw new Error('Software not found');
-        }
-      }),
-      catchError((err) => {
-        console.error(err);
-        throw err;
-      })
-    );
+    return this.http
+      .get<Software[]>(`${environment.baseUrl}/softwares`, { params })
+      .pipe(
+        map((softwares: Software[]) => {
+          const software = softwares[0];
+          if (software) {
+            return software;
+          } else {
+            throw new Error('Software not found');
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          throw err;
+        }),
+      );
   }
 
   deleteSoftware(id: string): Observable<Software> {
@@ -82,7 +84,7 @@ export class SoftwareService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 
@@ -96,8 +98,7 @@ export class SoftwareService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 }
-

@@ -5,13 +5,13 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ConsumiblesService } from 'src/app/website/consumibles/services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
-import { Software } from 'src/app/website/interfaces/software.iterface';
+import { Software } from 'src/app/website/interfaces/software.interface';
 import { PrinterService } from 'src/app/website/printer/services/printer.service';
 import { SoftwareService } from 'src/app/website/software/services/software.service';
 @Component({
   selector: 'lead-product-card',
   templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.scss'
+  styleUrl: './product-card.component.scss',
 })
 export class ProductCardComponent implements OnInit {
   constructor(
@@ -20,7 +20,7 @@ export class ProductCardComponent implements OnInit {
     private consumiblesService: ConsumiblesService,
     private printerService: PrinterService,
     private softwareService: SoftwareService,
-  ) { }
+  ) {}
 
   @Input() type_product!: string;
   @Input() product_name!: string;
@@ -43,57 +43,70 @@ export class ProductCardComponent implements OnInit {
     this.isLoading = true;
     if (this.type_product === 'consumible') {
       const consumibleName = this.product_name;
-      this.consumiblesService.getConsumibleIdByName(consumibleName).pipe(
-        switchMap((id: string) => this.consumiblesService.getConsumible(id))
-      ).subscribe(
-        (data) => {
-          this.productData = data;
-          this.isLoading = false;
-        },
-        (error) => {
-          this.toastService.showError(error.error.message, 'Cerrar');
-          this.isLoading = false;
-        }
-      );
+      this.consumiblesService
+        .getConsumibleIdByName(consumibleName)
+        .pipe(
+          switchMap((id: string) => this.consumiblesService.getConsumible(id)),
+        )
+        .subscribe(
+          (data) => {
+            this.productData = data;
+            this.isLoading = false;
+          },
+          (error) => {
+            this.toastService.showError(error.error.message, 'Cerrar');
+            this.isLoading = false;
+          },
+        );
     } else if (this.type_product === 'printer') {
       const printerName = this.product_name;
-      this.printerService.getPrinterIdByName(printerName).pipe(
-        switchMap((id: string) => {
-          if (id) {
-            return this.printerService.getPrinter(id);
-          } else {
-            // Handle the case where no printer with the given name is found
-            this.toastService.showError(`No printer found with name ${printerName}`, 'Cerrar');
-            return of(null);
-          }
-        })
-      ).subscribe(
-        (data) => {
-          this.productData = data;
-          console.log(data);
-          this.isLoading = false;
-        },
-        (error) => {
-          this.toastService.showError(error.error.message, 'Cerrar');
-          this.isLoading = false;
-        }
-      );
+      this.printerService
+        .getPrinterIdByName(printerName)
+        .pipe(
+          switchMap((id: string) => {
+            if (id) {
+              return this.printerService.getPrinter(id);
+            } else {
+              // Handle the case where no printer with the given name is found
+              this.toastService.showError(
+                `No printer found with name ${printerName}`,
+                'Cerrar',
+              );
+              return of(null);
+            }
+          }),
+        )
+        .subscribe(
+          (data) => {
+            this.productData = data;
+            console.log(data);
+            this.isLoading = false;
+          },
+          (error) => {
+            this.toastService.showError(error.error.message, 'Cerrar');
+            this.isLoading = false;
+          },
+        );
     } else if (this.type_product === 'software') {
       const softwareName = this.product_name;
-      this.softwareService.getSoftwareIdByName(softwareName).pipe(
-        switchMap((id: string) => this.softwareService.getSoftware(id))
-      ).subscribe(
-        (data) => {
-          this.productData = data;
-          this.isLoading = false;
-        },
-        (error) => {
-          this.toastService.showError(error.error.message, 'Cerrar');
-          this.isLoading = false;
-        }
-      );
+      this.softwareService
+        .getSoftwareIdByName(softwareName)
+        .pipe(switchMap((id: string) => this.softwareService.getSoftware(id)))
+        .subscribe(
+          (data) => {
+            this.productData = data;
+            this.isLoading = false;
+          },
+          (error) => {
+            this.toastService.showError(error.error.message, 'Cerrar');
+            this.isLoading = false;
+          },
+        );
     } else {
-      this.toastService.showError(`Invalid product type: ${this.type_product}`, 'Cerrar');
+      this.toastService.showError(
+        `Invalid product type: ${this.type_product}`,
+        'Cerrar',
+      );
       this.isLoading = false;
     }
 
@@ -152,7 +165,9 @@ export class ProductCardComponent implements OnInit {
   isPrinter(product: Consumible | Printer | Software): product is Printer {
     return (product as Printer).model !== undefined;
   }
-  isConsumable(product: Consumible | Printer | Software): product is Consumible {
+  isConsumable(
+    product: Consumible | Printer | Software,
+  ): product is Consumible {
     return (product as Consumible).name !== undefined;
   }
 

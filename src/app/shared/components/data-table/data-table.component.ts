@@ -53,6 +53,8 @@ export interface TableColumn {
 
   /** CSS classes to apply to the cell */
   cellClass?: string | ((row: any) => string);
+
+  sortData?: (row: any) => any;
 }
 
 /**
@@ -165,6 +167,11 @@ export class DataTableComponent implements OnInit, OnChanges {
       this.dataSource.sortingDataAccessor = (item: any, property: string) => {
         // Find column definition for this property
         const column = this.columns.find((col) => col.name === property);
+
+        // If column has custom sort data function, use it
+        if (column?.sortData) {
+          return this.getSortableValue(column.sortData(item));
+        }
 
         if (column?.formatter) {
           // For formatted columns, try to get a simple value for sorting

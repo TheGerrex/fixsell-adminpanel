@@ -1,0 +1,17 @@
+<app-data-table
+  [title]="'Clientes'"
+  [data]="clientData"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoading"
+  [addButtonText]="'Crear Cliente'"
+  [addButtonPermission]="'canCreateClient'"
+  [viewActionPermission]="'canViewClient'"
+  [editActionPermission]="'canUpdateClient'"
+  [deleteActionPermission]="'canDeleteClient'"
+  (rowClick)="onRowClick($event)"
+  (viewClick)="seeClient($event)"
+  (editClick)="editClient($event)"
+  (deleteClick)="openConfirmDialog($event)"
+  (addClick)="addClient()"
+></app-data-table>

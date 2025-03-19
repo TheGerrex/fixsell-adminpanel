@@ -249,6 +249,25 @@ export class PermissionsComponent implements OnInit, OnChanges {
         ],
       },
       {
+        name: 'Clients',
+        items: [
+          { key: 'canViewClient', label: 'View Client', checked: false },
+          { key: 'canCreateClient', label: 'Create Client', checked: false },
+          { key: 'canUpdateClient', label: 'Update Client', checked: false },
+          { key: 'canDeleteClient', label: 'Delete Client', checked: false },
+          {
+            key: 'canViewAllClients',
+            label: 'View All Clients',
+            checked: false,
+          },
+          {
+            key: 'canBeAssignedToClient',
+            label: 'Be Assigned to Client',
+            checked: false,
+          },
+        ],
+      },
+      {
         name: 'Events',
         items: [
           { key: 'canViewEvent', label: 'View Event', checked: false },

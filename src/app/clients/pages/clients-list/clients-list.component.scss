@@ -1,0 +1,13 @@
+@import '_variables.scss';
+
+.active-client {
+  color: $green-600;
+  font-weight: 500;
+}
+
+.inactive-client {
+  color: $red-500;
+  font-weight: 500;
+}
+
+// Add any additional styles specific to clients list

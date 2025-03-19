@@ -65,6 +65,13 @@ export const navbarData = [
     ],
   },
   {
+    label: 'Clientes',
+    routeLink: 'clients',
+    icon: 'people',
+    allowedPermissions: ['canViewClient'],
+    isExpanded: false,
+  },
+  {
     label: 'Soporte',
     routeLink: 'support/tickets',
     icon: 'support_agent',

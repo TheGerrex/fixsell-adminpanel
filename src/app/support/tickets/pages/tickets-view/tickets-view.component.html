@@ -531,20 +531,29 @@
                 <div class="button-actions">
                   <button
                     type="submit"
-                    class="button button-primary"
+                    class="button"
+                    [ngClass]="{
+                      'button-primary': !isSubmittingActivity,
+                      'button-loading-state': isSubmittingActivity
+                    }"
                     [disabled]="activityForm.invalid || isSubmittingActivity"
                   >
-                    <ng-container *ngIf="!isSubmittingActivity">
-                      <span class="button-label">Guardar</span>
-                    </ng-container>
-                    <ng-container *ngIf="isSubmittingActivity">
-                      <app-loading-spinner
-                        [isLoading]="true"
-                      ></app-loading-spinner>
-                      <span class="button-label">Guardando...</span>
-                    </ng-container>
+                    <div class="button-content">
+                      <div
+                        class="spinner-container"
+                        *ngIf="isSubmittingActivity"
+                      >
+                        <app-loading-spinner
+                          [isLoading]="true"
+                        ></app-loading-spinner>
+                      </div>
+                      <span class="button-label">{{
+                        isSubmittingActivity ? 'Guardando...' : 'Guardar'
+                      }}</span>
+                    </div>
                   </button>
                   <button
+                    type="button"
                     class="button button-text-secondary"
                     (click)="cancelNewActivity()"
                   >

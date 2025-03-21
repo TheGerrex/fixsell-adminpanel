@@ -1,21 +1,21 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <!-- header -->
 <div class="main-container" [hidden]="isLoadingData">
-  <div class="main-header">
-    <h3 class="main-title">Mis Tickets</h3>
-    <div class="main-action-buttons">
-      <button
-        class="button button-primary button-raised button-icon-text"
-        (click)="addTicket()"
-        *ngIf="'canCreateTicket' | hasPermission"
-      >
-        <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
-      </button>
-    </div>
-  </div>
   <div class="main-body">
-    <!-- open tickets and closed tickets -->
     <div class="tickets-container">
+      <div class="main-header">
+        <h3 class="main-title">Mis Tickets</h3>
+        <div class="main-action-buttons">
+          <button
+            class="button button-primary button-raised button-icon-text"
+            (click)="addTicket()"
+            *ngIf="'canCreateTicket' | hasPermission"
+          >
+            <mat-icon>add</mat-icon
+            ><span class="button-label">Crear Ticket</span>
+          </button>
+        </div>
+      </div>
       <div class="ticket-card">
         <div class="ticket-card-header">
           <div class="ticket-card-header-content">

@@ -33,7 +33,7 @@ export class TicketsDashboardComponent implements OnInit {
   events: CalendarEvent[] = [];
   isLowPriorityTicketListVisible: boolean = false;
   isMediumPriorityTicketListVisible: boolean = false;
-  isHighPriorityTicketListVisible: boolean = false;
+  isHighPriorityTicketListVisible: boolean = true;
   openTicketsCount: number = 0;
   closedTicketsCount: number = 0;
   highPriorityTicketsCount: number = 0;

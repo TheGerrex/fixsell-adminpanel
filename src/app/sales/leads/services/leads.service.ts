@@ -15,7 +15,7 @@ export class LeadsService {
     private consumiblesService: ConsumiblesService,
     private printerService: PrinterService,
     private softwareService: SoftwareService,
-  ) { }
+  ) {}
   // Get all leads by vendor
   getLeadsbyVendor(vendorId: string): Observable<any> {
     return this.http
@@ -88,45 +88,149 @@ export class LeadsService {
   //"type_of_product": "consumible",
   //search for product and get product details by name
   getProductByName(productType: string, productName: string): Observable<any> {
+    // Handle rent_package as printer
+    const effectiveType =
+      productType === 'rent_package' ? 'printer' : productType;
+
     // if product type is consumible
-    if (productType === 'consumible') {
+    if (effectiveType === 'consumible') {
       return this.consumiblesService.getConsumibleIdByName(productName).pipe(
+        catchError((error) => {
+          console.warn(
+            `Could not find exact match for consumible: ${productName}`,
+            error,
+          );
+          // Try to get all consumibles and find a case-insensitive match
+          return this.consumiblesService.getAllConsumibles().pipe(
+            map((consumibles) => {
+              const searchNameLower = productName.toLowerCase();
+              const match = consumibles.find(
+                (c) =>
+                  c.name.toLowerCase() === searchNameLower ||
+                  c.name.toLowerCase().includes(searchNameLower) ||
+                  searchNameLower.includes(c.name.toLowerCase()),
+              );
+
+              if (match) {
+                return match.id;
+              } else {
+                throw new Error('Consumible no encontrado');
+              }
+            }),
+          );
+        }),
         switchMap((id: string) => {
           if (id) {
             return this.consumiblesService.getConsumible(id);
           } else {
             throw new Error('Consumible no encontrado');
           }
-        })
+        }),
       );
     }
-    // if product type is printer
-    else if (productType === 'printer') {
+    // if product type is printer or rent_package
+    else if (effectiveType === 'printer') {
       return this.printerService.getPrinterIdByName(productName).pipe(
+        catchError((error) => {
+          console.warn(
+            `Could not find exact match for printer: ${productName}`,
+            error,
+          );
+          // Try to get all printers and find a case-insensitive match
+          return this.printerService.getAllPrinters().pipe(
+            map((printers) => {
+              const searchNameLower = productName.toLowerCase();
+              const match = printers.find(
+                (p) =>
+                  (p.model && p.model.toLowerCase() === searchNameLower) ||
+                  (p.model &&
+                    p.model.toLowerCase().includes(searchNameLower)) ||
+                  (p.model && searchNameLower.includes(p.model.toLowerCase())),
+              );
+
+              if (match) {
+                return match.id;
+              } else {
+                throw new Error('Multifuncional no encontrado');
+              }
+            }),
+          );
+        }),
         switchMap((id: string) => {
           if (id) {
             return this.printerService.getPrinter(id);
           } else {
             throw new Error('Multifuncional no encontrado');
           }
-        })
+        }),
       );
     }
     // if product type is software
-    else if (productType === 'software') {
+    else if (effectiveType === 'software') {
       return this.softwareService.getSoftwareIdByName(productName).pipe(
+        catchError((error) => {
+          console.warn(
+            `Could not find exact match for software: ${productName}`,
+            error,
+          );
+          // Try to get all software and find a case-insensitive match
+          return this.softwareService.getAllSoftware().pipe(
+            map((allSoftware) => {
+              const searchNameLower = productName.toLowerCase();
+              const match = allSoftware.find(
+                (s) =>
+                  s.name.toLowerCase() === searchNameLower ||
+                  s.name.toLowerCase().includes(searchNameLower) ||
+                  searchNameLower.includes(s.name.toLowerCase()),
+              );
+
+              if (match) {
+                return match.id;
+              } else {
+                throw new Error('Software no encontrado');
+              }
+            }),
+          );
+        }),
         switchMap((id: string) => {
           if (id) {
             return this.softwareService.getSoftware(id);
           } else {
             throw new Error('Software no encontrado');
           }
-        })
+        }),
       );
     }
-    // if product type is neither consumible, printer, nor software
+    // Handle other types including rent_package
     else {
-      throw new Error(`Invalid product type: ${productType}`);
+      // For rent_package, we've already handled it by treating it as a printer
+      if (productType === 'rent_package') {
+        return this.printerService.getPrinterIdByName(productName).pipe(
+          switchMap((id: string) => {
+            if (id) {
+              return this.printerService.getPrinter(id).pipe(
+                map((printer) => ({
+                  ...printer,
+                  isRentPackage: true,
+                  monthlyFee: 0, // Default value, could be updated later
+                  currency: 'MXN',
+                  rentDescription: `Paquete de renta: ${
+                    printer.model || productName
+                  }`,
+                })),
+              );
+            } else {
+              throw new Error('Paquete de renta no encontrado');
+            }
+          }),
+          catchError((error) => {
+            console.error(`Error loading rent package: ${error}`);
+            throw new Error(`Invalid product type: ${productType}`);
+          }),
+        );
+      } else {
+        throw new Error(`Invalid product type: ${productType}`);
+      }
     }
   }
 

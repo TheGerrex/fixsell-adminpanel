@@ -4,13 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Printer } from '../../interfaces/printer.interface';
 import { environment } from 'src/environments/environment';
-import { Software } from '../../interfaces/software.iterface';
+import { Software } from '../../interfaces/software.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SoftwareService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllSoftware(): Observable<Software[]> {
     return this.http
@@ -28,35 +28,70 @@ export class SoftwareService {
   getSoftwareIdByName(name: string): Observable<string> {
     return this.http.get<Software[]>(`${environment.baseUrl}/softwares`).pipe(
       map((softwares: Software[]) => {
-        const software = softwares.find((software) => software.name === name);
+        // Convert the search name to lowercase
+        const searchNameLower = name.toLowerCase();
+
+        // Find software with case-insensitive comparison
+        const software = softwares.find(
+          (software) => software.name.toLowerCase() === searchNameLower,
+        );
+
         if (software) {
           return software.id;
         } else {
+          // If exact match fails, try to find a partial match
+          const partialMatch = softwares.find(
+            (software) =>
+              software.name.toLowerCase().includes(searchNameLower) ||
+              searchNameLower.includes(software.name.toLowerCase()),
+          );
+
+          if (partialMatch) {
+            return partialMatch.id;
+          }
+
           throw new Error('Software not found');
         }
       }),
       catchError((err) => {
         console.error(err);
         throw err;
-      })
+      }),
     );
   }
 
   getSoftwareByName(name: string): Observable<Software> {
-    let params = new HttpParams().append('name', name);
-    return this.http.get<Software[]>(`${environment.baseUrl}/softwares`, { params }).pipe(
+    // Modified to use case-insensitive search directly
+    return this.http.get<Software[]>(`${environment.baseUrl}/softwares`).pipe(
       map((softwares: Software[]) => {
-        const software = softwares[0];
+        const searchNameLower = name.toLowerCase();
+
+        // Try exact match first (case insensitive)
+        const software = softwares.find(
+          (sw) => sw.name.toLowerCase() === searchNameLower,
+        );
+
         if (software) {
           return software;
-        } else {
-          throw new Error('Software not found');
         }
+
+        // Try partial match if exact match fails
+        const partialMatch = softwares.find(
+          (sw) =>
+            sw.name.toLowerCase().includes(searchNameLower) ||
+            searchNameLower.includes(sw.name.toLowerCase()),
+        );
+
+        if (partialMatch) {
+          return partialMatch;
+        }
+
+        throw new Error('Software not found');
       }),
       catchError((err) => {
         console.error(err);
         throw err;
-      })
+      }),
     );
   }
 
@@ -82,7 +117,7 @@ export class SoftwareService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 
@@ -96,8 +131,7 @@ export class SoftwareService {
         catchError((error) => {
           console.error('Error:', error);
           return throwError(error);
-        })
+        }),
       );
   }
 }
-

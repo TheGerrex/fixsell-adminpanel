@@ -270,3 +270,13 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+.active-client {
+  color: $green-600;
+  font-weight: 500;
+}
+
+.inactive-client {
+  color: $red-500;
+  font-weight: 500;
+}

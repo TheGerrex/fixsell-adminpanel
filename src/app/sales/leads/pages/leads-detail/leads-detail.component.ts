@@ -11,11 +11,14 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Software } from 'src/app/website/interfaces/software.iterface';
+import { Software } from 'src/app/website/interfaces/software.interface';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
 export interface Product {
-  // other properties...
+  printers?: Printer[];
   softwares?: Software[];
-  consumibles?: Consumible[]; // consumibles is optional and is an array of Consumible objects
+  consumibles?: Consumible[];
 }
 
 @Component({
@@ -28,8 +31,8 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
   consumable: Consumible | null = null;
   product: Product | null = null;
   lead!: Lead;
-  typeOfProduct: string | null = null; // add this line
-  displayedColumns: string[] = ['date', 'message', 'type', 'action']; // add 'actions'
+  typeOfProduct: string | null = null;
+  displayedColumns: string[] = ['date', 'message', 'type', 'action'];
   isLoading = false;
   leadId: string = '';
 
@@ -41,121 +44,226 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private toastService: ToastService
-  ) { }
+    private toastService: ToastService,
+  ) {}
 
   ngAfterViewInit(): void {
-    Promise.resolve().then(() => this.loadData());
+    // We already load data in ngOnInit, no need for duplicate calls
   }
 
   ngOnInit(): void {
-    Promise.resolve().then(() => this.loadData());
+    this.loadData();
   }
 
-
   loadData() {
-    this.isLoading = true; // Set isLoading to true before fetching the data
+    this.isLoading = true;
 
-    //get lead id from url
+    // Get lead id from url
     this.leadId = this.route.snapshot.paramMap.get('id') ?? '';
 
-    this.leadsService.getLead(this.leadId).subscribe((lead) => {
-      // set lead
-      this.lead = lead;
-      this.dataSource = new MatTableDataSource(lead.communications);
-      this.dataSource.paginator = this.paginator;
-      //store type_of_product and product_interested
-      this.typeOfProduct = lead.type_of_product;
-      const productInterested = lead.product_interested;
-      //search for product and get product details by name
-      if (this.typeOfProduct) {
-        this.leadsService
-          .getProductByName(this.typeOfProduct, productInterested)
-          .subscribe((product: any) => {
-            console.log(product);
-            if (this.typeOfProduct === 'consumible') {
-              this.product = { consumibles: [product] };
-              this.consumable = product; // set consumable to a truthy value
-            }
-            if (this.typeOfProduct === 'printer') {
-              this.product = {
-                consumibles: [
-                  {
-                    id: '',
-                    name: '',
+    this.leadsService.getLead(this.leadId).subscribe({
+      next: (lead) => {
+        // Set lead
+        this.lead = lead;
+        this.dataSource = new MatTableDataSource(lead.communications);
+
+        // Set paginator after data is loaded
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+        });
+
+        // Store type_of_product and product_interested
+        this.typeOfProduct = lead.type_of_product;
+        const productInterested = lead.product_interested;
+
+        // Search for product and get product details by name
+        if (this.typeOfProduct && productInterested) {
+          this.leadsService
+            .getProductByName(this.typeOfProduct, productInterested)
+            .pipe(
+              catchError((error) => {
+                console.error(
+                  `Error loading ${this.typeOfProduct} product:`,
+                  error,
+                );
+
+                // Create a fallback based on product type
+                if (this.typeOfProduct === 'software') {
+                  return of({
+                    id: '0',
+                    name: productInterested,
+                    img_url: [],
+                    description: 'No additional details available',
+                    price: 0,
+                    currency: 'MXN',
+                    category: '',
+                    tags: [],
+                  });
+                } else if (this.typeOfProduct === 'consumible') {
+                  return of({
+                    id: '0',
+                    name: productInterested,
                     brand: '',
                     price: 0,
-                    currency: '',
+                    currency: 'MXN',
                     sku: '',
                     origen: '',
                     volume: 0,
-                    longDescription: '',
+                    longDescription: 'No additional details available',
                     shortDescription: '',
                     compatibleModels: [],
                     color: '',
                     yield: 0,
                     img_url: [],
                     category: '',
-                    printers: [product as unknown as Printer],
                     orderDetails: [],
                     counterparts: [],
                     counterpart: {} as Consumible,
                     deals: [],
-                  },
-                ],
-              };
-            }
-            if (this.typeOfProduct === 'software') {
-              this.product = {
-                softwares: [
-                  {
-                    id: product.id,
-                    name: product.name,
-                    img_url: product.img_url,
-                    description: product.description,
-                    price: product.price,
-                    currency: product.currency,
-                    category: product.category,
-                    tags: product.tags,
-                  },
-                ],
-              };
-            }
-            this.isLoading = false; // Set isLoading to false after receiving the data
-          });
-      } else {
-        this.isLoading = false; // Set isLoading to false if there is no typeOfProduct
-      }
+                  });
+                } else if (this.typeOfProduct === 'printer') {
+                  return of({
+                    id: '0',
+                    model: productInterested,
+                    brand: '',
+                    price: 0,
+                    currency: 'MXN',
+                    longDescription: 'No additional details available',
+                    shortDescription: '',
+                    speed: '',
+                    maxPrintSize: '',
+                    paperSizes: [],
+                    functions: [],
+                    network: false,
+                    wireless: false,
+                    scan: false,
+                    copy: false,
+                    fax: false,
+                    duplex: false,
+                    color: false,
+                    img_url: [],
+                    category: '',
+                    deals: [],
+                  });
+                } else {
+                  this.toastService.showWarning(
+                    `Producto no encontrado: ${productInterested}`,
+                    'Aceptar',
+                  );
+                  return of(null);
+                }
+              }),
+            )
+            .subscribe({
+              next: (product: any) => {
+                if (!product) {
+                  this.isLoading = false;
+                  return;
+                }
+
+                console.log('Product details:', product);
+
+                if (this.typeOfProduct === 'consumible') {
+                  this.product = { consumibles: [product] };
+                  this.consumable = product;
+                } else if (this.typeOfProduct === 'printer') {
+                  this.product = {
+                    printers: [product],
+                    consumibles: [
+                      {
+                        id: '',
+                        name: '',
+                        brand: '',
+                        price: 0,
+                        currency: '',
+                        sku: '',
+                        origen: '',
+                        volume: 0,
+                        longDescription: '',
+                        shortDescription: '',
+                        compatibleModels: [],
+                        color: '',
+                        yield: 0,
+                        img_url: [],
+                        category: '',
+                        printers: [product as unknown as Printer],
+                        orderDetails: [],
+                        counterparts: [],
+                        counterpart: {} as Consumible,
+                        deals: [],
+                      },
+                    ],
+                  };
+                } else if (this.typeOfProduct === 'software') {
+                  this.product = {
+                    softwares: [
+                      {
+                        id: product.id || '0',
+                        name: product.name || productInterested,
+                        img_url: product.img_url || [],
+                        description:
+                          product.description || 'No description available',
+                        price: product.price || 0,
+                        currency: product.currency || 'MXN',
+                        category: product.category || '',
+                        tags: product.tags || [],
+                      },
+                    ],
+                  };
+                }
+
+                this.isLoading = false;
+              },
+              error: (error) => {
+                console.error('Error processing product:', error);
+                this.toastService.showError(
+                  `Error cargando el producto ${productInterested}`,
+                  'Cerrar',
+                );
+                this.isLoading = false;
+              },
+            });
+        } else {
+          this.isLoading = false;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading lead:', error);
+        this.toastService.showError(
+          'Error cargando el cliente potencial',
+          'Cerrar',
+        );
+        this.isLoading = false;
+      },
     });
   }
 
   addCommunication(): void {
-    // code to add a communication
     console.log(
       'navigating to: ',
-      `sales/leads/${this.lead?.id}/communication/create`
+      `sales/leads/${this.lead?.id}/communication/create`,
     );
     this.router.navigate([`sales/leads/${this.lead?.id}/communication/create`]);
   }
 
   viewCommunication(communication: Communication) {
-    // code to view the communication with the given id
     console.log(communication);
     console.log(communication.id);
     console.log(
       'navigating to: ',
-      `sales/leads/communication/${communication.id}`
+      `sales/leads/communication/${communication.id}`,
     );
     this.router.navigate([`sales/leads/communication/${communication.id}`]);
   }
 
   editCommunication(communication: Communication) {
-    // code to edit the communication with the given id
     console.log(communication);
     console.log(communication.id);
     console.log(
       'navigating to: ',
-      `sales/leads/communication/${communication.id}/edit`
+      `sales/leads/communication/${communication.id}/edit`,
     );
     this.router.navigate([
       `sales/leads/communication/${communication.id}/edit`,
@@ -194,25 +302,26 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
           // Update communications
           if (this.lead && this.lead.communications) {
             this.lead.communications = this.lead.communications.filter(
-              (c) => c.id !== communication.id
+              (c) => c.id !== communication.id,
             );
             this.dataSource = new MatTableDataSource(this.lead.communications);
+            this.dataSource.paginator = this.paginator;
           }
 
           this.toastService.showSuccess(
             'Comunicación eliminada con éxito',
-            'Aceptar'
+            'Aceptar',
           );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }
 
   openConfirmDialogLead(lead: Lead): void {
-    console.log("entre!", lead);
+    console.log('opening delete dialog for lead:', lead);
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
@@ -244,12 +353,12 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
           this.router.navigate(['/sales/leads']);
           this.toastService.showSuccess(
             'Cliente potencial eliminado con éxito',
-            'Aceptar'
+            'Aceptar',
           );
         },
         (error) => {
           this.toastService.showError(error.error.message, 'Cerrar');
-        }
+        },
       );
     }
   }
@@ -257,5 +366,4 @@ export class LeadsDetailComponent implements OnInit, AfterViewInit {
   editLead(id: string) {
     this.router.navigate(['/sales/leads/', id, 'edit']);
   }
-
 }

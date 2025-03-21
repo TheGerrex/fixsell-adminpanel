@@ -30,6 +30,13 @@ const routes: Routes = [
       import('./sales/sales.module').then((m) => m.SalesModule),
   },
   {
+    path: 'clients',
+    canActivate: [NavigationGuard, isAuthenticatedGuard],
+    data: { allowedPermissions: ['canViewClient'] },
+    loadChildren: () =>
+      import('./clients/clients.module').then((m) => m.ClientsModule),
+  },
+  {
     path: 'support',
     canActivate: [NavigationGuard, isAuthenticatedGuard],
     data: { allowedPermissions: ['canViewTicket'] },

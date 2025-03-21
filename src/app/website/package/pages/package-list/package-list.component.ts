@@ -41,10 +41,10 @@ export class PackageListComponent implements OnInit {
       formatter: (value: any, row: Package) => ({
         html: true,
         content: `<div style="display: flex; flex-direction: column">
-                    <div class="print-item">${this.formatPrints(
-                      row.packagePrints,
-                    )} impresiones</div>
-                  </div>`,
+                <div class="print-item">${this.formatPrints(
+                  row.packagePrintsBw || 0,
+                )} impresiones</div>
+              </div>`,
       }),
     },
     {
@@ -52,7 +52,7 @@ export class PackageListComponent implements OnInit {
       label: 'Deposito Inicial',
       sortable: true,
       formatter: (value: any, row: Package) =>
-        `${this.formatCurrency(row.packageDepositPrice)} ${
+        `${this.formatCurrency(Number(row.packageDepositPrice))} ${
           row.packageCurrency
         }`,
     },
@@ -61,7 +61,7 @@ export class PackageListComponent implements OnInit {
       label: 'Pago Mensual',
       sortable: true,
       formatter: (value: any, row: Package) =>
-        `$${row.packagePrice} ${row.packageCurrency} (${row.packageDiscountPercentage}% de descuento)`,
+        `$${row.packageMonthlyPrice} ${row.packageCurrency} (${row.packageDiscountPercentage}% de descuento)`,
     },
     {
       name: 'packageDuration',
@@ -118,20 +118,25 @@ export class PackageListComponent implements OnInit {
     return currentDate <= new Date(endDate);
   }
 
-  formatPrints(value: number): string {
+  formatPrints(value: number | string): string {
+    // Make sure value is treated as a number
+    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+
     return new Intl.NumberFormat('es-MX', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(value);
+    }).format(numericValue || 0); // Use 0 as fallback for null/undefined
   }
 
-  formatCurrency(value: number): string {
+  formatCurrency(value: number | string): string {
+    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+
     return new Intl.NumberFormat('es-MX', {
       style: 'currency',
       currency: 'MXN',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(value);
+    }).format(numericValue || 0);
   }
 
   formatDate(date: Date): string {

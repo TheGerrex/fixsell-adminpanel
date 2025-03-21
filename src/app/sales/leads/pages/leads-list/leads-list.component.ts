@@ -74,6 +74,16 @@ export class LeadsListComponent implements OnInit {
                   ${this.getLastCommunicationTime(row)}
                 </div>`,
       }),
+      // Add this property to provide sort data
+      sortData: (row: Lead) => {
+        if (row.communications && row.communications.length > 0) {
+          const sorted = row.communications.sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          );
+          return new Date(sorted[0].date).getTime();
+        }
+        return 0; // For leads with no communications, place them at the end
+      },
     },
     {
       name: 'assigned',

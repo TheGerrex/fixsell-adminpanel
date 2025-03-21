@@ -3,204 +3,252 @@
 <div class="main-container" [hidden]="isLoadingData">
   <div class="main-body">
     <div class="tickets-container">
-      <div class="main-header">
-        <h3 class="main-title">Mis Tickets</h3>
-        <div class="main-action-buttons">
-          <button
-            class="button button-primary button-raised button-icon-text"
-            (click)="addTicket()"
-            *ngIf="'canCreateTicket' | hasPermission"
-          >
-            <mat-icon>add</mat-icon
-            ><span class="button-label">Crear Ticket</span>
-          </button>
-        </div>
-      </div>
-      <div class="ticket-card">
-        <div class="ticket-card-header">
-          <div class="ticket-card-header-content">
-            <h5 class="card-title">Tickets Abiertos</h5>
-            <p class="card-subtitle">
-              Tienes <b>{{ openTicketsCount }}</b> tickets pendientes
-            </p>
-          </div>
-          <div class="ticket-card-header-actions">
+      <div class="tickets">
+        <div class="tickets-header">
+          <h3 class="tickets-title">Mis Tickets</h3>
+          <div class="tickets-action-buttons">
             <button
-              class="button button-text-primary"
-              (click)="navigateOpenTickets()"
-              *ngIf="'canViewTicket' | hasPermission"
+              class="button button-primary button-raised button-icon-text"
+              (click)="addTicket()"
+              *ngIf="'canCreateTicket' | hasPermission"
             >
-              <span class="button-label">Ver Todos</span>
+              <mat-icon>add</mat-icon
+              ><span class="button-label">Crear Ticket</span>
             </button>
           </div>
         </div>
-        <div class="ticket-card-body">
-          <!-- Add content for open tickets card here -->
-          <div class="ticket-list-card">
-            <div
-              class="ticket-list-card-header"
-              (click)="
-                isHighPriorityTicketListVisible =
-                  !isHighPriorityTicketListVisible
-              "
-            >
-              <div class="ticket-list-card-header-content">
-                <mat-icon class="high-priority">priority_high</mat-icon>
-                <p class="header-title">Urgente</p>
-                <div class="ticket-count">
-                  {{ highPriorityTicketsCount }}
-                </div>
-              </div>
-              <div class="ticket-list-card-header-actions">
-                <div
-                  class="arrow-down-icon"
-                  *ngIf="highPriorityTickets.length > 0"
-                  [class.rotate]="isHighPriorityTicketListVisible"
-                >
-                  <mat-icon>arrow_drop_down</mat-icon>
-                </div>
-              </div>
-            </div>
-            <div
-              class="ticket-list-card-body"
-              *ngIf="highPriorityTickets.length > 0"
-              [class.visible]="isHighPriorityTicketListVisible"
-            >
-              <div class="ticket-list-card-body-content">
-                <ng-container *ngFor="let ticket of highPriorityTickets">
-                  <support-ticket-card [ticket]="ticket"></support-ticket-card>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-          <div class="ticket-list-card">
-            <div
-              class="ticket-list-card-header"
-              (click)="
-                isMediumPriorityTicketListVisible =
-                  !isMediumPriorityTicketListVisible
-              "
-            >
-              <div class="ticket-list-card-header-content">
-                <mat-icon class="medium-priority">priority_high</mat-icon>
-                <p class="header-title">Moderado</p>
-                <div class="ticket-count">
-                  {{ mediumPriorityTicketsCount }}
-                </div>
-              </div>
-              <div class="ticket-list-card-header-actions">
-                <div
-                  class="arrow-down-icon"
-                  *ngIf="mediumPriorityTickets.length > 0"
-                  [class.rotate]="isMediumPriorityTicketListVisible"
-                >
-                  <mat-icon>arrow_drop_down</mat-icon>
-                </div>
-              </div>
-            </div>
-            <div
-              class="ticket-list-card-body"
-              *ngIf="mediumPriorityTickets.length > 0"
-              [class.visible]="isMediumPriorityTicketListVisible"
-            >
-              <div class="ticket-list-card-body-content">
-                <ng-container *ngFor="let ticket of mediumPriorityTickets">
-                  <support-ticket-card [ticket]="ticket"></support-ticket-card>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-          <div class="ticket-list-card">
-            <div
-              class="ticket-list-card-header"
-              (click)="
-                isLowPriorityTicketListVisible = !isLowPriorityTicketListVisible
-              "
-            >
-              <div class="ticket-list-card-header-content">
-                <!-- <div class="ticket-count low-priority">
-                  {{ lowPriorityTicketsCount }}
-                </div> -->
-                <mat-icon class="low-priority">priority_high</mat-icon>
-                <p class="header-title">Baja</p>
-                <div class="ticket-count">
-                  {{ lowPriorityTicketsCount }}
-                </div>
-              </div>
-              <div class="ticket-list-card-header-actions">
-                <div
-                  class="arrow-down-icon"
-                  *ngIf="lowPriorityTickets.length > 0"
-                  [class.rotate]="isLowPriorityTicketListVisible"
-                >
-                  <mat-icon>arrow_drop_down</mat-icon>
-                </div>
-              </div>
-            </div>
-            <div
-              class="ticket-list-card-body"
-              *ngIf="lowPriorityTickets.length > 0"
-              [class.visible]="isLowPriorityTicketListVisible"
-            >
-              <div class="ticket-list-card-body-content">
-                <ng-container *ngFor="let ticket of lowPriorityTickets">
-                  <support-ticket-card [ticket]="ticket"></support-ticket-card>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ticket-card">
-        <div class="ticket-card-header">
-          <div class="ticket-card-header-content">
-            <!-- <div class="ticket-count">{{ closedTicketsCount }}</div> -->
-            <h5 class="card-title">Tickets Resueltos</h5>
-            <p class="card-subtitle">
-              <b>{{ closedTicketsCount }}</b> tickets cerrados recientemente
-            </p>
-          </div>
-          <div class="ticket-card-header-actions">
-            <button
-              class="button button-text-primary button-full"
-              (click)="navigateClosedTickets()"
-            >
-              <span class="button-label">Ver Todos</span>
-            </button>
-          </div>
-        </div>
-        <!-- <div class="ticket-card-body">
-                    <div class="no-tickets" *ngIf="closedTickets.length < 0">
-                        <mat-icon>error</mat-icon>
-                        <p>No hay tickets por el momento.</p>
+        <div class="tickets-body">
+          <div class="tickets-body-content">
+            <mat-tab-group>
+              <mat-tab label="Tickets Abiertos">
+                <div class="ticket-card">
+                  <div class="ticket-card-header">
+                    <div class="ticket-card-header-content">
+                      <h5 class="card-title">Tickets Abiertos</h5>
+                      <ng-container
+                        *ngIf="openTicketsCount > 0; else noTickets"
+                      >
+                        <p class="card-subtitle">
+                          Tienes <b>{{ openTicketsCount }}</b> tickets
+                          pendientes.
+                          <span class="text-muted">¡Resuélvelos pronto!</span>
+                        </p>
+                      </ng-container>
+
+                      <ng-template #noTickets>
+                        <p class="card-subtitle text-success">
+                          No hay tickets abiertos. ¡Todo bajo control! 🎉
+                        </p>
+                      </ng-template>
                     </div>
-                    <div class="ticket opacity-7" *ngFor="let ticket of closedTickets">
-                        <div class="ticket-container">
-                            <div class="ticket-body">
-                                <div class="ticket-info">
-                                    <div class="ticket-info-item">
-                                        <span class="ticket-info-item-title">PROBLEMA</span>
-                                        <span class="ticket-info-item-content">{{ ticket.title }}</span>
-                                    </div>
-                                    <button class="button button-text-primary" (click)="seeTicket(ticket)"><span class="button-label">Ver Ticket</span></button>
-                                </div>
-                            </div>
-                            <div class="ticket-header">
-                                <div class="ticket-header-chips">
-                                    <div class="ticket-status" [ngClass]="getStatusClass(ticket)">{{ ticket.status | ticketStatus }}</div>
-                                    <div class="ticket-type">{{ ticket.type | ticketType }}</div>
-                                    <div class="ticket-client">
-                                        <mat-icon>person</mat-icon>{{ ticket.clientName }}
-                                    </div>
-                                    <div class="ticket-date">
-                                        <mat-icon>event</mat-icon>
-                                        {{ ticket.appointmentStartTime | date : "MMMM d, y - h:mm a" }}
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="ticket-card-header-actions">
+                      <button
+                        class="button button-text-primary"
+                        (click)="navigateOpenTickets()"
+                        *ngIf="'canViewTicket' | hasPermission"
+                      >
+                        <span class="button-label">Ver Todos</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="ticket-card-body">
+                    <!-- Add content for open tickets card here -->
+                    <div class="ticket-list-card">
+                      <div
+                        class="ticket-list-card-header"
+                        (click)="
+                          isHighPriorityTicketListVisible =
+                            !isHighPriorityTicketListVisible
+                        "
+                      >
+                        <div class="ticket-list-card-header-content">
+                          <mat-icon class="high-priority"
+                            >priority_high</mat-icon
+                          >
+                          <p class="header-title">Urgente</p>
+                          <div class="ticket-count">
+                            {{ highPriorityTicketsCount }}
+                          </div>
                         </div>
+                        <div
+                          class="ticket-list-card-header-actions"
+                          *ngIf="highPriorityTickets.length > 0"
+                        >
+                          <div
+                            class="arrow-down-icon"
+                            [class.rotate]="isHighPriorityTicketListVisible"
+                          >
+                            <mat-icon>arrow_drop_down</mat-icon>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="ticket-list-card-body"
+                        *ngIf="highPriorityTickets.length > 0"
+                        [class.visible]="isHighPriorityTicketListVisible"
+                      >
+                        <div class="ticket-list-card-body-content">
+                          <ng-container
+                            *ngFor="let ticket of highPriorityTickets"
+                          >
+                            <support-ticket-card
+                              [ticket]="ticket"
+                            ></support-ticket-card>
+                          </ng-container>
+                        </div>
+                      </div>
                     </div>
+                    <div class="ticket-list-card">
+                      <div
+                        class="ticket-list-card-header"
+                        (click)="
+                          isMediumPriorityTicketListVisible =
+                            !isMediumPriorityTicketListVisible
+                        "
+                      >
+                        <div class="ticket-list-card-header-content">
+                          <mat-icon class="medium-priority"
+                            >priority_high</mat-icon
+                          >
+                          <p class="header-title">Moderado</p>
+                          <div class="ticket-count">
+                            {{ mediumPriorityTicketsCount }}
+                          </div>
+                        </div>
+                        <div
+                          class="ticket-list-card-header-actions"
+                          *ngIf="mediumPriorityTickets.length > 0"
+                        >
+                          <div
+                            class="arrow-down-icon"
+                            [class.rotate]="isMediumPriorityTicketListVisible"
+                          >
+                            <mat-icon>arrow_drop_down</mat-icon>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="ticket-list-card-body"
+                        *ngIf="mediumPriorityTickets.length > 0"
+                        [class.visible]="isMediumPriorityTicketListVisible"
+                      >
+                        <div class="ticket-list-card-body-content">
+                          <ng-container
+                            *ngFor="let ticket of mediumPriorityTickets"
+                          >
+                            <support-ticket-card
+                              [ticket]="ticket"
+                            ></support-ticket-card>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ticket-list-card">
+                      <div
+                        class="ticket-list-card-header"
+                        (click)="
+                          isLowPriorityTicketListVisible =
+                            !isLowPriorityTicketListVisible
+                        "
+                      >
+                        <div class="ticket-list-card-header-content">
+                          <!-- <div class="ticket-count low-priority">
+                  {{ lowPriorityTicketsCount }}
                 </div> -->
+                          <mat-icon class="low-priority"
+                            >priority_high</mat-icon
+                          >
+                          <p class="header-title">Baja</p>
+                          <div class="ticket-count">
+                            {{ lowPriorityTicketsCount }}
+                          </div>
+                        </div>
+                        <div
+                          class="ticket-list-card-header-actions"
+                          *ngIf="lowPriorityTickets.length > 0"
+                        >
+                          <div
+                            class="arrow-down-icon"
+                            [class.rotate]="isLowPriorityTicketListVisible"
+                          >
+                            <mat-icon>arrow_drop_down</mat-icon>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="ticket-list-card-body"
+                        *ngIf="lowPriorityTickets.length > 0"
+                        [class.visible]="isLowPriorityTicketListVisible"
+                      >
+                        <div class="ticket-list-card-body-content">
+                          <ng-container
+                            *ngFor="let ticket of lowPriorityTickets"
+                          >
+                            <support-ticket-card
+                              [ticket]="ticket"
+                            ></support-ticket-card>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab label="Tickets Resueltos">
+                <div class="ticket-card">
+                  <div class="ticket-card-header">
+                    <div class="ticket-card-header-content">
+                      <h5 class="card-title">Tickets Resueltos</h5>
+                      <ng-container
+                        *ngIf="closedTicketsCount > 0; else noClosedTickets"
+                      >
+                        <p class="card-subtitle text-success">
+                          ¡Excelente! Has cerrado
+                          <b>{{ closedTicketsCount }}</b> tickets.
+                          <span class="text-muted">¡Sigue así! 🚀</span>
+                        </p>
+                      </ng-container>
+
+                      <ng-template #noClosedTickets>
+                        <div class="no-tickets">
+                          <p class="text-muted">
+                            Aún no has cerrado tickets. ¡Vamos por el primero!
+                            💪
+                          </p>
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div
+                      class="ticket-card-header-actions"
+                      *ngIf="closedTickets.length > 0"
+                    >
+                      <button
+                        class="button button-text-primary button-full"
+                        (click)="navigateClosedTickets()"
+                      >
+                        <span class="button-label">Ver Todos</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="ticket-card-body"
+                    *ngIf="closedTickets.length > 0"
+                  >
+                    <div class="ticket-list-card-body visible">
+                      <div class="ticket-list-card-body-content">
+                        <ng-container *ngFor="let ticket of closedTickets">
+                          <support-ticket-card
+                            [ticket]="ticket"
+                          ></support-ticket-card>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
       </div>
     </div>
 

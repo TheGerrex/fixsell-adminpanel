@@ -2,6 +2,26 @@
   <div class="ticket-container">
     <div class="ticket-header">
       <div class="ticket-header-chips">
+        <div class="ticket-priority" [ngSwitch]="ticket.priority">
+          <div
+            class="priority-flags-container high-priority"
+            *ngSwitchCase="'high'"
+          >
+            <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+          </div>
+          <div
+            class="priority-flags-container medium-priority"
+            *ngSwitchCase="'medium'"
+          >
+            <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+          </div>
+          <div
+            class="priority-flags-container low-priority"
+            *ngSwitchCase="'low'"
+          >
+            <mat-icon [ngClass]="getPriorityClass(ticket)">flag</mat-icon>
+          </div>
+        </div>
         <div
           class="ticket-chip ticket-status"
           [ngClass]="getStatusClass(ticket)"

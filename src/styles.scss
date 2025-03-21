@@ -253,6 +253,13 @@ input:focus {
   color: $danger-color !important;
 }
 
+.text-success {
+  color: $green-600 !important;
+}
+.text-muted {
+  color: $gray-500 !important;
+}
+
 /*----------------------[ Button ]-------------------------------*/
 
 .button {

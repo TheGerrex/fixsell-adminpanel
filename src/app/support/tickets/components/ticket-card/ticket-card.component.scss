@@ -2,8 +2,7 @@
 
 .ticket {
   background-color: transparent;
-  border-radius: $border-radius;
-  border: 1px solid $gray-300;
+  border-top: 1px solid $gray-300;
   &:hover {
     background-color: $gray-50;
   }
@@ -148,13 +147,13 @@
 }
 
 .priority-low {
-  background-color: $green-200;
+  color: $yellow-500;
 }
 
 .priority-medium {
-  background-color: $yellow-300;
+  color: $orange-500;
 }
 
 .priority-high {
-  background-color: $red-400;
+  color: $red-500;
 }

@@ -1,0 +1,30 @@
+<div class="ticket" (click)="onTicketClick(ticket)">
+  <div class="ticket-container">
+    <div class="ticket-header">
+      <div class="ticket-header-chips">
+        <div
+          class="ticket-chip ticket-status"
+          [ngClass]="getStatusClass(ticket)"
+        >
+          {{ ticket.status | ticketStatus }}
+        </div>
+        <div class="ticket-chip ticket-type">
+          {{ ticket.type | ticketType }}
+        </div>
+      </div>
+    </div>
+    <div class="ticket-body">
+      <div class="ticket-client">
+        <mat-icon>person</mat-icon>{{ ticket.clientName }}
+      </div>
+      <div class="ticket-date">
+        <mat-icon>event</mat-icon>
+        {{ ticket.appointmentStartTime | date : 'E, MMM d - h:mm a' }}
+      </div>
+      <div class="ticket-problem">
+        <span class="material-symbols-outlined"> problem </span>
+        {{ ticket.title }}
+      </div>
+    </div>
+  </div>
+</div>

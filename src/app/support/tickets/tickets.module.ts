@@ -8,6 +8,7 @@ import { TicketsDashboardComponent } from './pages/tickets-dashboard/tickets-das
 import { TicketsListComponent } from './pages/tickets-list/tickets-list.component';
 import { TicketsViewComponent } from './pages/tickets-view/tickets-view.component';
 import { TicketsCreateComponent } from './pages/tickets-create/tickets-create.component';
+
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -16,6 +17,7 @@ import { TicketTypePipe } from './pipes/ticket-type.pipe';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { LocalDatePipe } from './pipes/local-date.pipe';
 import { RelativeTimePipe } from './pipes/relative-time.pipe';
+import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -27,6 +29,7 @@ import { RelativeTimePipe } from './pipes/relative-time.pipe';
     TicketTypePipe,
     LocalDatePipe,
     RelativeTimePipe,
+    TicketCardComponent,
   ],
   imports: [
     CommonModule,
@@ -43,4 +46,4 @@ import { RelativeTimePipe } from './pipes/relative-time.pipe';
   ],
   providers: [DatePipe, provideNgxMask()],
 })
-export class TicketsModule {}
+export class TicketsModule { }

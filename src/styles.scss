@@ -80,58 +80,89 @@ h6 {
   font-weight: 500;
 }
 
+h1 {
+  font-size: 2.1875rem; /* 35px */
+  line-height: 2.7344rem; /* 43.75px */
+}
+
+h2 {
+  font-size: 1.75rem; /* 28px */
+  line-height: 2.1875rem; /* 35px */
+}
+
+h3 {
+  font-size: 1.53125rem; /* 24.5px */
+  line-height: 1.9125rem; /* 30.6px */
+}
+
+h4 {
+  font-size: 1.3125rem; /* 21px */
+  line-height: 1.64375rem; /* 26.3px */
+}
+
+h5 {
+  font-size: 1.09375rem; /* 17.5px */
+  line-height: 1.36875rem; /* 21.9px */
+}
+
+h6 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.25rem; /* 20px */
+}
+
+p {
+  font-size: 1rem; /* 16px */
+  line-height: 1.25rem; /* 20px */
+}
+
+small {
+  font-size: 0.65625rem; /* 10.5px */
+  line-height: 0.81875rem; /* 13.1px */
+}
+
 ul,
 li {
   margin: 0px;
 }
 
-h1 {
-  font-size: 35px;
-  line-height: 43.75px;
-}
-
-h2 {
-  font-size: 28px;
-  line-height: 35px;
-}
-
-h3 {
-  font-size: 24.5px;
-  line-height: 30.6px;
-}
-
-h4 {
-  font-size: 21px;
-  line-height: 26.3px;
-}
-
-h5 {
-  font-size: 17.5px;
-  line-height: 21.9px;
-}
-
-h6 {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-p {
-  font-size: 16px;
-  line-height: 20px;
-  margin-bottom: 0;
-}
-
-small {
-  font-size: 10.5px;
-  line-height: 13.1px;
-}
-
 li {
-  font-size: 1em;
+  font-size: 1rem;
 }
 
 b {
   font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem; /* 28px */
+    line-height: 2.1875rem; /* 35px */
+  }
+
+  h2 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 1.875rem; /* 30px */
+  }
+
+  h3 {
+    font-size: 1.3125rem; /* 21px */
+    line-height: 1.64375rem; /* 26.3px */
+  }
+
+  h4 {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.40625rem; /* 22.5px */
+  }
+
+  h5 {
+    font-size: 1rem; /* 16px */
+    line-height: 1.25rem; /* 20px */
+  }
+
+  h6 {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.09375rem; /* 17.5px */
+  }
 }
 
 /*----------------------[ Quill Editor ]-------------------------------*/
@@ -235,12 +266,12 @@ input:focus {
   gap: 8px;
   color: $text;
   font-size: 1rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 0.75rem;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
     box-shadow 0.2s;
   height: fit-content;
   border-radius: $border-radius;
-  min-height: 48px;
+  // min-height: 48px;
   &:not(:disabled) {
     cursor: pointer;
   }
@@ -617,10 +648,7 @@ input:focus {
     }
   }
   &-icon-text {
-    padding: 0.625rem 20px 0.625rem 16px;
-    mat-icon {
-      font-size: 1.4rem;
-    }
+    padding: 0.5rem 1.25rem 0.5rem 1rem;
   }
   &-text {
     &-primary {
@@ -739,6 +767,7 @@ button {
   justify-content: center;
   font-weight: 400;
   transition-duration: 0.2s;
+  line-height: 1;
 }
 
 .button-icon-option {
@@ -866,6 +895,12 @@ button.delete-icon mat-icon {
 
 .help-icon {
   color: $help-color;
+}
+
+.small-icon {
+  width: 21px !important;
+  height: 21px !important;
+  font-size: 21px !important; /* Optional: Adjust font size if needed */
 }
 
 /*----------------------[ Border ]-------------------------------*/

@@ -12,7 +12,7 @@
   align-items: center;
   background-color: $white;
   border: 1px solid $gray-300;
-  padding: 16px;
+  padding: 0.75rem;
   border-radius: $border-radius;
   width: 100%;
   gap: 1em;
@@ -35,7 +35,7 @@
 .main-body {
   display: flex;
   gap: 0.5rem;
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     flex-direction: column;
   }
 }
@@ -44,93 +44,101 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+  min-width: 280px;
 }
 
 .ticket-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   background-color: $white;
   border: 1px solid $gray-300;
   border-radius: $border-radius;
-  padding: 1rem;
   width: 100%;
 }
 
 .ticket-card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 1rem 0.75rem;
   row-gap: 1rem;
   .ticket-card-header-content {
     display: flex;
-    gap: 0.5em;
-    align-items: center;
-    margin-left: 0.5rem;
+    flex-direction: column;
+    gap: 0.25em;
+    align-items: flex-start;
     .card-title {
       margin: 0;
     }
-    .ticket-count {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-600;
-      color: $white;
-      width: 40px;
-      height: 40px;
-      border-radius: 40px;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 14px;
+    .card-subtitle {
+      font-size: 15px;
       line-height: 1;
+      font-weight: 400 !important;
+      color: $text-secondary;
+      margin: 0;
     }
   }
+  .ticket-card-header-actions {
+    width: 100%;
+    button {
+      width: 100%;
+    }
+    @media (min-width: 425px) {
+      width: auto;
+      button {
+        width: auto;
+      }
+    }
+  }
+  @media (min-width: 425px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.ticket-count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $gray-100;
+  color: $text;
+  font-weight: 600;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 2rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
 }
 
 .ticket-card-body {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .ticket-list-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid $gray-300;
-  border-radius: $border-radius;
+  // border: 1px solid $gray-300;
+  // border-radius: $border-radius;
 }
 
 .ticket-list-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.75rem;
   cursor: pointer;
+  border-top: 1px solid $gray-300;
   .ticket-list-card-header-content {
     display: flex;
-    gap: 0.5em;
+    gap: 0.25em;
     align-items: center;
     .header-title {
-      font-size: 18px;
       line-height: 1;
-      font-weight: 400 !important;
+      font-weight: 500;
       margin: 0;
-    }
-    .ticket-count {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-600;
-      color: $white;
-      width: 40px;
-      height: 40px;
-      border-radius: 40px;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 14px;
-      line-height: 1;
     }
   }
   .ticket-list-card-header-actions {
@@ -138,7 +146,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0.5rem;
+      padding: 0.25rem;
       transition: all 0.3s ease;
     }
   }
@@ -186,157 +194,22 @@
 }
 
 .ticket-list-card-body-content {
-  padding: 0.5rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
 .high-priority {
-  background-color: $red-500 !important;
+  color: $red-500 !important;
 }
 
 .medium-priority {
-  background-color: $orange-500 !important;
+  color: $orange-500 !important;
 }
 
 .low-priority {
-  background-color: $yellow-500 !important;
-}
-
-.ticket {
-  background-color: $gray-50;
-  border-radius: $border-radius;
-  border: 1px solid $gray-200;
-  &:hover {
-    background-color: $gray-100;
-  }
-  .ticket-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    .ticket-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      .ticket-icon {
-        color: $gray-600;
-      }
-      .ticket-header-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        .ticket-type {
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          background-color: $gray-600;
-          border-radius: $border-radius;
-          color: $white;
-          padding: 0.25rem 0.5rem;
-          font-family: 'Roboto Mono', monospace;
-          font-size: 14px;
-          line-height: 1;
-          min-height: 34px;
-        }
-        .ticket-status {
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          background-color: transparent;
-          border-radius: $border-radius;
-          color: $white;
-          padding: 0.25rem 0.5rem;
-          font-family: 'Roboto Mono', monospace;
-          font-size: 14px;
-          line-height: 1;
-          min-height: 34px;
-        }
-        .ticket-client {
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          border: 1px solid $text;
-          background-color: transparent;
-          border-radius: $border-radius;
-          color: $text;
-          padding: 0.25rem 0.5rem;
-          font-family: 'Roboto Mono', monospace;
-          font-size: 14px;
-          line-height: 1;
-          mat-icon {
-            color: $gray-600;
-          }
-        }
-        .ticket-date {
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          background-color: transparent;
-          border: 1px solid $gray-600;
-          border-radius: $border-radius;
-          color: $gray-600;
-          padding: 0.25rem 0.5rem;
-          font-family: 'Roboto Mono', monospace;
-          font-size: 14px;
-          line-height: 1;
-          mat-icon {
-            color: $gray-600;
-          }
-        }
-      }
-    }
-    .ticket-body {
-    }
-  }
-}
-
-.ticket-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  border-radius: $border-radius;
-  // border: 1px solid $gray-300;
-  // padding: .5rem;
-  // background-color: $gray-100;
-  .ticket-info-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-    mat-icon {
-      color: $red-500;
-    }
-    .ticket-info-item-title {
-      font-family: 'Roboto Mono', monospace;
-      font-weight: 500;
-      // padding: .25rem .5rem;
-    }
-    .ticket-info-item-content {
-      font-weight: 400;
-    }
-  }
-}
-
-.ticket-info .button {
-  display: none;
-}
-
-.ticket:hover .ticket-info .button {
-  display: flex;
-  /* or 'block', depending on your layout */
-}
-
-@media (max-width: 768px) {
-  .ticket-info .button {
-    display: flex;
-    /* or 'block', depending on your layout */
-  }
+  color: $yellow-500 !important;
 }
 
 @media (max-width: 600px) {
@@ -355,7 +228,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0.95rem 0.75rem;
   background-color: $white;
   border: 1px solid $gray-300;
   border-bottom: 0;
@@ -370,6 +243,10 @@
 .calendar-date-container {
   display: flex;
   flex-grow: 1;
+}
+.calendar-actions-container {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .calendar-date-selector {
@@ -417,8 +294,8 @@
   }
   .date-title {
     margin: 0;
-    font-weight: 400 !important;
-    font-size: 20px;
+    font-size: 18px;
+    font-weight: 400;
     color: $text;
   }
 }
@@ -433,34 +310,6 @@
 
 .month-view-header {
   // Add any specific styles for the month view header here
-}
-
-.status-open {
-  background-color: $indigo-500 !important;
-}
-
-.status-in-progress {
-  background-color: $yellow-500 !important;
-}
-
-.status-without-resolution {
-  background-color: $orange-500 !important;
-}
-
-.status-completed {
-  background-color: $green-500 !important;
-}
-
-.priority-low {
-  background-color: $green-200;
-}
-
-.priority-medium {
-  background-color: $yellow-300;
-}
-
-.priority-high {
-  background-color: $red-400;
 }
 
 .opacity-7 {
@@ -484,4 +333,10 @@
     color: $text;
     margin: 0;
   }
+}
+
+::ng-deep .cal-cell-row.cal-header {
+  border-top: 1px solid $gray-300;
+  border-right: 1px solid $gray-300;
+  border-left: 1px solid $gray-300;
 }

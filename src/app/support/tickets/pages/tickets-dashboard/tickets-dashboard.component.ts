@@ -235,6 +235,12 @@ export class TicketsDashboardComponent implements OnInit {
     this.loadTicketsEvent.emit(Status.COMPLETED);
   }
 
+  onTicketClick(ticket: any): void {
+    if (this.authService.hasPermission('canViewTicket')) {
+      this.seeTicket(ticket);
+    }
+  }
+
   seeTicket(ticket: Ticket) {
     this.router.navigate(['/support/tickets/' + ticket.id]);
   }

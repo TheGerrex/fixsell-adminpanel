@@ -1,0 +1,160 @@
+@import '_variables.scss';
+
+.ticket {
+  background-color: transparent;
+  border-radius: $border-radius;
+  border: 1px solid $gray-300;
+  &:hover {
+    background-color: $gray-50;
+  }
+  .ticket-container {
+    display: flex;
+    flex-direction: column;
+    // gap: 0.5rem;
+    padding: 0.75rem;
+    .ticket-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      .ticket-icon {
+        color: $gray-600;
+      }
+      .ticket-header-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+    }
+    .ticket-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}
+
+.ticket-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: transparent;
+  border-radius: $border-radius;
+  border: 1px solid $gray-200;
+  color: $white;
+  padding: 0.25rem 0.5rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  color: $text;
+  width: fit-content;
+  mat-icon,
+  .material-symbols-outlined {
+    color: $gray-600;
+  }
+}
+.ticket-date,
+.ticket-client {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  color: $text;
+  mat-icon,
+  .material-symbols-outlined {
+    color: $gray-600;
+  }
+}
+
+.ticket-problem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background-color: transparent;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  color: $text;
+  mat-icon,
+  .material-symbols-outlined {
+    color: $gray-600;
+  }
+}
+.ticket-type {
+  background-color: $gray-600;
+  border-color: $gray-600;
+  color: $white;
+}
+.ticket-status {
+  background-color: transparent;
+  color: $white;
+}
+.ticket-client {
+  background-color: transparent;
+  color: $text;
+}
+.ticket-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-radius: $border-radius;
+  .ticket-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    border: 1px solid $gray-600;
+    padding: 0.25rem 0.5rem;
+    border-radius: $border-radius;
+    width: 100%;
+    mat-icon {
+      color: $red-500;
+    }
+    .ticket-info-item-title {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 500;
+    }
+    .ticket-info-item-content {
+      font-weight: 400;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+    }
+  }
+}
+
+.status-open {
+  background-color: $indigo-500 !important;
+  border-color: $indigo-500 !important;
+}
+
+.status-in-progress {
+  background-color: $yellow-500 !important;
+  border-color: $yellow-500 !important;
+}
+
+.status-without-resolution {
+  background-color: $orange-500 !important;
+  border-color: $orange-500 !important;
+}
+
+.status-completed {
+  background-color: $green-500 !important;
+  border-color: $green-500 !important;
+}
+
+.priority-low {
+  background-color: $green-200;
+}
+
+.priority-medium {
+  background-color: $yellow-300;
+}
+
+.priority-high {
+  background-color: $red-400;
+}

@@ -531,23 +531,17 @@
                 <div class="button-actions">
                   <button
                     type="submit"
-                    class="button"
-                    [ngClass]="{
-                      'button-primary': !isSubmittingActivity,
-                      'button-loading-state': isSubmittingActivity
-                    }"
+                    class="button custom-loading-button"
+                    [class.is-loading]="isSubmittingActivity"
                     [disabled]="activityForm.invalid || isSubmittingActivity"
                   >
-                    <div class="button-content">
-                      <div
-                        class="spinner-container"
-                        *ngIf="isSubmittingActivity"
-                      >
+                    <div class="button-inner">
+                      <div class="spinner-wrapper" *ngIf="isSubmittingActivity">
                         <app-loading-spinner
                           [isLoading]="true"
                         ></app-loading-spinner>
                       </div>
-                      <span class="button-label">{{
+                      <span class="button-text">{{
                         isSubmittingActivity ? 'Guardando...' : 'Guardar'
                       }}</span>
                     </div>

@@ -52,6 +52,8 @@ export class TicketsViewComponent implements OnInit {
   isEditing: boolean = false;
   editingIndex: number | null = null;
 
+  isSubmittingActivity = false;
+
   // Add statusOptions and ticketStatus
   statusOptions = [
     { value: Status.OPEN, label: 'Abierto' },
@@ -381,6 +383,9 @@ export class TicketsViewComponent implements OnInit {
       console.error('Invalid form data');
       return;
     }
+
+    this.isSubmittingActivity = true; // Set loading state to true when submitting
+
     const newActivity: Omit<Activity, 'id'> = {
       text: this.activityForm.value.text,
       addedBy: this.currentUser ? this.currentUser : undefined,
@@ -397,6 +402,7 @@ export class TicketsViewComponent implements OnInit {
 
     const createActivityObserver = {
       next: (activity: Activity) => {
+        this.isSubmittingActivity = false; // Reset loading state on success
         this.toastService.showSuccess(
           'Actividad del ticket agregado correctamente',
           'OK',
@@ -406,6 +412,7 @@ export class TicketsViewComponent implements OnInit {
         this.activityForm.reset();
       },
       error: (error: any) => {
+        this.isSubmittingActivity = false; // Reset loading state on error
         this.toastService.showError('Error creando actividad', error);
       },
     };

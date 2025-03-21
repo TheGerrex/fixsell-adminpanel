@@ -532,9 +532,17 @@
                   <button
                     type="submit"
                     class="button button-primary"
-                    [disabled]="activityForm.invalid"
+                    [disabled]="activityForm.invalid || isSubmittingActivity"
                   >
-                    <span class="button-label">Guardar</span>
+                    <ng-container *ngIf="!isSubmittingActivity">
+                      <span class="button-label">Guardar</span>
+                    </ng-container>
+                    <ng-container *ngIf="isSubmittingActivity">
+                      <app-loading-spinner
+                        [isLoading]="true"
+                      ></app-loading-spinner>
+                      <span class="button-label">Guardando...</span>
+                    </ng-container>
                   </button>
                   <button
                     class="button button-text-secondary"

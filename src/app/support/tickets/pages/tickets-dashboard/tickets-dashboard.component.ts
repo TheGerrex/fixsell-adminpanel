@@ -113,7 +113,25 @@ export class TicketsDashboardComponent implements OnInit {
 
   populateCalendarWithTickets(tickets: any[]) {
     this.events = tickets.map((ticket) => {
-      console.log('Ticket:', ticket); // Log ticket data to inspect it
+      let eventColor;
+      let textClass;
+      switch (ticket.priority) {
+        case Priority.HIGH:
+          eventColor = { primary: '#fca5a5', secondary: '#fee2e2' };
+          textClass = 'event-text-high';
+          break;
+        case Priority.MEDIUM:
+          eventColor = { primary: '#fdba74', secondary: '#ffedd5' };
+          textClass = 'event-text-medium';
+          break;
+        case Priority.LOW:
+          eventColor = { primary: '#fde047', secondary: '#fef9c3' };
+          textClass = 'event-text-low';
+          break;
+        default:
+          eventColor = { primary: '#1e90ff', secondary: '#D1E8FF' };
+          textClass = 'event-text-default';
+      }
       return {
         id: ticket.id,
         start: new Date(ticket.appointmentStartTime),
@@ -123,11 +141,13 @@ export class TicketsDashboardComponent implements OnInit {
         clientPhone: ticket.clientPhone,
         clientAddress: ticket.clientAddress,
         priority: ticket.priority,
-        assigned: ticket.assigned ? ticket.assigned.name : '', // Ensure assignee is included
+        assigned: ticket.assigned ? ticket.assigned.name : '',
+        color: eventColor,
+        cssClass: textClass,
       };
     });
-    console.log('Events:', this.events); // Log events data to inspect it
   }
+
 
   setDayView(): void {
     this.view = CalendarView.Day;

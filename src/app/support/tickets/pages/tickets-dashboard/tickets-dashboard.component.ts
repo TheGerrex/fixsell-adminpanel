@@ -132,6 +132,10 @@ export class TicketsDashboardComponent implements OnInit {
           eventColor = { primary: '#1e90ff', secondary: '#D1E8FF' };
           textClass = 'event-text-default';
       }
+      // Add a class for past events
+      const isPastEvent = new Date(ticket.appointmentEndTime) < new Date();
+      const pastEventClass = isPastEvent ? 'past-event' : '';
+
       return {
         id: ticket.id,
         start: new Date(ticket.appointmentStartTime),
@@ -143,7 +147,7 @@ export class TicketsDashboardComponent implements OnInit {
         priority: ticket.priority,
         assigned: ticket.assigned ? ticket.assigned.name : '',
         color: eventColor,
-        cssClass: textClass,
+        cssClass: `${textClass} ${pastEventClass}`,
       };
     });
   }

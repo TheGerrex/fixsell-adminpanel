@@ -1329,17 +1329,23 @@ button.delete-icon mat-icon {
 
 /*----------------------[ Calendar Events ]-------------------------------*/
 
-.event-text-high .cal-event-title {
-  color: $red-600; /* Red for high priority */
+.event-text-high {
+  color: $red-700; /* Red for high priority */
 }
-.event-text-medium .cal-event-title {
-  color: $orange-600; /* Orange for medium priority */
+.event-text-medium {
+  color: $orange-700; /* Orange for medium priority */
 }
-.event-text-low .cal-event-title {
-  color: $yellow-600; /* Green for low priority */
+.event-text-low {
+  color: $yellow-700; /* Green for low priority */
 }
-.event-text-default .cal-event-title {
+.event-text-default {
   color: $text; /* Black for default */
+}
+.event-text-secondary {
+  color: $gray-600; /* Gray for secondary */
+}
+.past-event {
+  opacity: 0.75;
 }
 /*[ Width & Height ]
 -----------------------------------------------------------

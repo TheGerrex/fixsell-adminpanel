@@ -308,6 +308,20 @@
     font-size: 18px;
     font-weight: 400;
     color: $text;
+    font-family: 'Roboto Mono', monospace;
+  }
+}
+
+.button-today {
+  background-color: transparent;
+  color: $text;
+  border: 1px solid $gray-300;
+  padding: 1rem 1.25rem;
+  &:hover {
+    border-color: $text;
+  }
+  &:active {
+    background-color: $gray-100;
   }
 }
 
@@ -329,6 +343,8 @@
   }
 }
 
+// Calendar styles
+
 ::ng-deep .cal-cell-row.cal-header {
   border-top: 1px solid $gray-300;
   border-right: 1px solid $gray-300;
@@ -338,7 +354,7 @@
   font-weight: 500;
 }
 ::ng-deep .cal-week-view .cal-header.cal-weekend span {
-  color: $danger-color;
+  color: $red-700;
 }
 ::ng-deep .cal-week-view .cal-day-headers span {
   color: $text-secondary;
@@ -346,7 +362,7 @@
 }
 
 ::ng-deep .cal-week-view .cal-header.cal-today {
-  background-color: $green-100;
+  background-color: rgba($color: $primary-color, $alpha: 0.2);
 }
 
 ::ng-deep .cal-week-view .cal-day-headers .cal-header:hover {
@@ -362,6 +378,40 @@
 ::ng-deep .cal-hour-segment {
   border: none !important;
 }
+::ng-deep .cal-hour {
+  border-bottom: 1px solid $gray-300 !important;
+}
+::ng-deep .cal-time {
+  font-family: 'Roboto Mono', monospace;
+  letter-spacing: -3.5px;
+}
+::ng-deep .cal-header b {
+  font-family: 'Roboto Mono', monospace;
+}
+::ng-deep .cal-header span {
+  font-family: 'Roboto Mono', monospace;
+  letter-spacing: 0px;
+}
 ::ng-deep .cal-event {
   color: $text !important;
+}
+::ng-deep .cal-cell {
+  font-family: 'Roboto Mono', monospace;
+  letter-spacing: 0px;
+}
+::ng-deep .cal-month-view .cal-day-number {
+  font-family: 'Roboto Mono', monospace;
+  letter-spacing: -1px;
+}
+::ng-deep .cal-month-view .cal-day-cell.cal-weekend .cal-day-number {
+  color: $red-700;
+}
+::ng-deep .cal-month-view .cal-day-number {
+  opacity: 1;
+}
+::ng-deep .cal-month-view .cal-day-cell.cal-today {
+  background-color: rgba($color: $primary-color, $alpha: 0.2);
+}
+::ng-deep .cal-month-view .cal-day-badge {
+  background-color: $primary-color;
 }

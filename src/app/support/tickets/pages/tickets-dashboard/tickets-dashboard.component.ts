@@ -9,6 +9,8 @@ import { Ticket, Priority } from '../../../interfaces/tickets.interface';
 import { TicketsService } from 'src/app/support/services/tickets.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { NewTicketDialogComponent } from 'src/app/shared/components/new-ticket-dialog/new-ticket-dialog.component';
 
 @Component({
   selector: 'app-tickets-dashboard',
@@ -23,6 +25,7 @@ export class TicketsDashboardComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private ticketsService: TicketsService,
+    private dialog: MatDialog,
   ) {
     /*...*/
   }
@@ -267,6 +270,19 @@ export class TicketsDashboardComponent implements OnInit {
 
   seeTicket(ticket: Ticket) {
     this.router.navigate(['/support/tickets/' + ticket.id]);
+  }
+
+  hourSegmentClicked(event: any): void {
+    const dialogRef = this.dialog.open(NewTicketDialogComponent, {
+      width: '250px',
+      data: { start: event.date }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // this.addEvent(result);
+      }
+    });
   }
 
   getStatusClass(ticket: Ticket): string {

@@ -315,10 +315,11 @@
 .button-today {
   background-color: transparent;
   color: $text;
+  font-weight: 500;
   border: 1px solid $gray-300;
   padding: 1rem 1.25rem;
   &:hover {
-    border-color: $text;
+    border: 1px solid $text;
   }
   &:active {
     background-color: $gray-100;

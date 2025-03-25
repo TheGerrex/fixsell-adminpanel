@@ -10,7 +10,7 @@ import { TicketsService } from 'src/app/support/services/tickets.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { NewTicketDialogComponent } from 'src/app/shared/components/new-ticket-dialog/new-ticket-dialog.component';
+import { NewTicketDialogComponent } from 'src/app/support/tickets/components/new-ticket-dialog/new-ticket-dialog.component';
 
 @Component({
   selector: 'app-tickets-dashboard',
@@ -273,14 +273,24 @@ export class TicketsDashboardComponent implements OnInit {
   }
 
   hourSegmentClicked(event: any): void {
+    const startDate = new Date(event.date);
+    const startTime = `${startDate.getHours()}:${startDate.getMinutes() < 10 ? '0' : ''}${startDate.getMinutes()}`;
+
     const dialogRef = this.dialog.open(NewTicketDialogComponent, {
-      width: '250px',
-      data: { start: event.date }
+      width: 'fit-content',
+
+      maxHeight: '80vh',
+      data: {
+        appointmentStartDate: startDate,
+        startTime: startTime,
+      }
     });
+    console.log('hourSegmentClicked', event);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.addEvent(result);
+        // Refresh the events in the calendar
+        this.loadUserTickets();
       }
     });
   }

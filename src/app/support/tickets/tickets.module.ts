@@ -18,6 +18,8 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { LocalDatePipe } from './pipes/local-date.pipe';
 import { RelativeTimePipe } from './pipes/relative-time.pipe';
 import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
+import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
+import { NewTicketDialogComponent } from './components/new-ticket-dialog/new-ticket-dialog.component';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -25,11 +27,12 @@ import { TicketCardComponent } from './components/ticket-card/ticket-card.compon
     TicketsListComponent,
     TicketsViewComponent,
     TicketsCreateComponent,
+    TicketCardComponent,
+    NewTicketDialogComponent,
     TicketStatusPipe,
     TicketTypePipe,
     LocalDatePipe,
     RelativeTimePipe,
-    TicketCardComponent,
   ],
   imports: [
     CommonModule,

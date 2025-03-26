@@ -1,31 +1,19 @@
-<h3 mat-dialog-title class="header-title">Nuevo Ticket de Soporte</h3>
+<h3 mat-dialog-title class="header-title">Crear Ticket de Servicio</h3>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="createTicketForm">
-    <!-- <div class="section-card-header">
-      <div class="section-card-header-wrapper">
-        <h3 class="header-title">Nuevo Ticket de Soporte</h3>
-      </div>
-      <div class="button-actions">
-        <button
-          ButtonResize
-          class="button button-primary button-raised button-icon-text"
-          (click)="submitForm()"
-        >
-          <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
-        </button>
-      </div>
-    </div> -->
-
     <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
 
     <div class="form-container">
       <div class="form-section">
-        <h4 class="form-section-subheader">Evento</h4>
+        <div class="form-section-header">
+          <mat-icon>event</mat-icon>
+          <h5 class="form-section-subheader">Detalles del Evento</h5>
+        </div>
         <div class="form-grid">
           <!-- Title -->
           <div class="form-item three-quarter-row">
             <mat-form-field appearance="outline">
-              <mat-label>Titulo</mat-label>
+              <mat-label>Asunto del Ticket</mat-label>
               <input
                 matInput
                 type="text"
@@ -130,10 +118,13 @@
         </div>
       </div>
       <div class="form-section">
-        <h4 class="form-section-subheader">Cliente</h4>
+        <div class="form-section-header">
+          <mat-icon>person</mat-icon>
+          <h5 class="form-section-subheader">Información del Cliente</h5>
+        </div>
         <div class="form-grid">
           <!-- Client Name -->
-          <div class="form-item half-row">
+          <div class="form-item full-row">
             <mat-form-field appearance="outline">
               <mat-label>Nombre</mat-label>
               <input
@@ -164,25 +155,6 @@
             </mat-form-field>
           </div>
 
-          <!-- Client Address -->
-          <div
-            class="form-item half-row"
-            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-          >
-            <mat-form-field appearance="outline">
-              <mat-label>Dirección</mat-label>
-              <input
-                matInput
-                type="text"
-                placeholder="Dirección del cliente"
-                formControlName="clientAddress"
-              />
-              <mat-error *ngIf="isValidField('clientAddress')">{{
-                getFieldError('clientAddress')
-              }}</mat-error>
-            </mat-form-field>
-          </div>
-
           <!-- clientEmail -->
           <div class="form-item half-row">
             <mat-form-field appearance="outline">
@@ -198,10 +170,32 @@
               }}</mat-error>
             </mat-form-field>
           </div>
+
+          <!-- Client Address -->
+          <div
+            class="form-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Dirección</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Dirección del cliente"
+                formControlName="clientAddress"
+              />
+              <mat-error *ngIf="isValidField('clientAddress')">{{
+                getFieldError('clientAddress')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
         </div>
       </div>
       <div class="form-section">
-        <h4 class="form-section-subheader">Problema</h4>
+        <div class="form-section-header">
+          <span class="material-symbols-outlined"> problem </span>
+          <h5 class="form-section-subheader">Descripción del Problema</h5>
+        </div>
         <div class="form-grid">
           <!-- Issue -->
           <div class="form-item full-row">
@@ -254,12 +248,15 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button
-    ButtonResize
-    class="button button-primary button-raised button-icon-text"
-    (click)="submitForm()"
-  >
-    <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
-  </button>
+  <div class="button-actions">
+    <button mat-dialog-close class="button button-text-primary">
+      <span class="button-label">Cancelar</span>
+    </button>
+    <button
+      class="button button-primary button-raised button-icon-text"
+      (click)="submitForm()"
+    >
+      <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
+    </button>
+  </div>
 </mat-dialog-actions>

@@ -75,7 +75,8 @@ export class TicketsDashboardComponent implements OnInit {
       ticketsObservable.subscribe(
         (tickets) => {
           this.allTickets = tickets.filter(
-            (ticket) => ticket.status !== Status.COMPLETED,
+            (ticket) => ticket.status !== Status.COMPLETED &&
+              ticket.status !== Status.WITHOUT_RESOLUTION
           );
           this.closedTickets = tickets.filter(
             (ticket) => ticket.status === Status.COMPLETED,
@@ -98,7 +99,6 @@ export class TicketsDashboardComponent implements OnInit {
             [
               Status.OPEN,
               Status.IN_PROGRESS,
-              Status.WITHOUT_RESOLUTION,
             ].includes(ticket.status),
           ).length;
           this.closedTicketsCount = tickets.filter(
@@ -278,7 +278,6 @@ export class TicketsDashboardComponent implements OnInit {
 
     const dialogRef = this.dialog.open(NewTicketDialogComponent, {
       width: 'fit-content',
-
       maxHeight: '80vh',
       data: {
         appointmentStartDate: startDate,

@@ -1195,68 +1195,87 @@ button.delete-icon mat-icon {
   gap: 1em;
   width: 100%;
   max-width: 768px;
-  .form-section-subheader {
-    color: $text;
-    margin-bottom: 1rem;
-  }
+}
 
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(120px, 1fr));
-    row-gap: 1rem;
-    column-gap: 1rem;
-    .form-item {
-      min-height: 50px;
+.form-section-subheader {
+  color: $text;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1;
+}
 
-      .item-label {
-        font-weight: 500;
-        color: $text;
-        margin-bottom: 0.25rem;
-      }
-      .item-value {
-        color: $text;
-        word-break: break-word; // Ensures long words break and wrap to the next line
-        white-space: normal; // Allows the text to wrap normally
-      }
-      textarea {
-        min-height: 8em !important;
-      }
-      mat-form-field {
-        width: 100%;
-      }
-      @media (max-width: 600px) {
-        grid-column: 1 / -1;
-        gap: 1rem;
-        row-gap: 1rem;
-      }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  row-gap: 1rem;
+  column-gap: 1rem;
+  .form-item {
+    min-height: 50px;
+
+    .item-label {
+      font-weight: 500;
+      color: $text;
+      margin-bottom: 0.25rem;
     }
-    .full-row {
-      grid-column: 1 / -1; // This will make the description item span the entire row
+    .item-value {
+      color: $text;
+      word-break: break-word; // Ensures long words break and wrap to the next line
+      white-space: normal; // Allows the text to wrap normally
     }
-    .three-quarter-row {
-      grid-column: span 3; // This will make the description item span half row
+    textarea {
+      min-height: 8em !important;
     }
-    .half-row {
-      grid-column: span 2; // This will make the description item span half row
-    }
-    .quarter-row {
-      grid-column: span 1; // This will make the description item span half row
-    }
-    @media (max-width: 1024px) {
-      grid-template-columns: repeat(4, 1fr);
+    mat-form-field {
+      width: 100%;
     }
     @media (max-width: 600px) {
-      grid-template-columns: 1fr;
+      grid-column: 1 / -1;
+      gap: 1rem;
       row-gap: 1rem;
-      column-gap: 1rem;
-      .three-quarter-row,
-      .half-row,
-      .quarter-row {
-        grid-column: 1 / -1;
-      }
     }
   }
-  .form-section {
+  .full-row {
+    grid-column: 1 / -1; // This will make the description item span the entire row
+  }
+  .three-quarter-row {
+    grid-column: span 3; // This will make the description item span half row
+  }
+  .half-row {
+    grid-column: span 2; // This will make the description item span half row
+  }
+  .quarter-row {
+    grid-column: span 1; // This will make the description item span half row
+  }
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    row-gap: 1rem;
+    column-gap: 1rem;
+    .three-quarter-row,
+    .half-row,
+    .quarter-row {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.form-section {
+}
+
+.form-section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  row-gap: 0.5rem;
+
+  mat-icon,
+  span {
+    color: $text;
+    margin-bottom: 0.5rem;
   }
 }
 /*----------------------[ Snackbar/Toast ]-------------------------------*/

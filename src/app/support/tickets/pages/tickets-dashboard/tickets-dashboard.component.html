@@ -5,7 +5,7 @@
     <div class="tickets-container">
       <div class="tickets">
         <div class="tickets-header">
-          <h3 class="tickets-title">Mis Tickets</h3>
+          <h3 class="tickets-title">Gestión de Tickets</h3>
           <div class="tickets-action-buttons">
             <button
               class="button button-primary button-raised button-icon-text"
@@ -26,18 +26,18 @@
                     <div class="ticket-card-header-content">
                       <h5 class="card-title">Tickets Abiertos</h5>
                       <ng-container
-                        *ngIf="openTicketsCount > 0; else noTickets"
+                        *ngIf="openTicketsCount <= 0; else yesTickets"
                       >
+                        <p class="card-subtitle text-success">
+                          No hay tickets abiertos. ¡Todo bajo control! 🎉
+                        </p>
+                      </ng-container>
+
+                      <ng-template #yesTickets>
                         <p class="card-subtitle">
                           Tienes <b>{{ openTicketsCount }}</b> tickets
                           pendientes.
                           <span class="text-muted">¡Resuélvelos pronto!</span>
-                        </p>
-                      </ng-container>
-
-                      <ng-template #noTickets>
-                        <p class="card-subtitle text-success">
-                          No hay tickets abiertos. ¡Todo bajo control! 🎉
                         </p>
                       </ng-template>
                     </div>
@@ -223,7 +223,7 @@
                       *ngIf="closedTickets.length > 0"
                     >
                       <button
-                        class="button button-text-primary button-full"
+                        class="button button-outline-primary button-full"
                         (click)="navigateClosedTickets()"
                       >
                         <span class="button-label">Ver Todos</span>

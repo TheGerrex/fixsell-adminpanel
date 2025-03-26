@@ -3,7 +3,7 @@
     <div class="section-card-header">
       <div class="section-card-header-wrapper">
         <app-breadcrumb></app-breadcrumb>
-        <h3 class="header-title">Nuevo Ticket de Soporte</h3>
+        <h3 class="header-title">Crear Ticket de Servicio</h3>
       </div>
       <div class="button-actions">
         <button
@@ -21,12 +21,15 @@
     <div class="section-card-body">
       <div class="form-container">
         <div class="form-section">
-          <h4 class="form-section-subheader">Evento</h4>
+          <div class="form-section-header">
+            <mat-icon>event</mat-icon>
+            <h5 class="form-section-subheader">Detalles del Evento</h5>
+          </div>
           <div class="form-grid">
             <!-- Title -->
             <div class="form-item three-quarter-row">
               <mat-form-field appearance="outline">
-                <mat-label>Titulo</mat-label>
+                <mat-label>Asunto del Ticket</mat-label>
                 <input
                   matInput
                   type="text"
@@ -131,7 +134,10 @@
           </div>
         </div>
         <div class="form-section">
-          <h4 class="form-section-subheader">Cliente</h4>
+          <div class="form-section-header">
+            <mat-icon>person</mat-icon>
+            <h5 class="form-section-subheader">Información del Cliente</h5>
+          </div>
           <div class="form-grid">
             <!-- Client Name -->
             <div class="form-item half-row">
@@ -202,7 +208,10 @@
           </div>
         </div>
         <div class="form-section">
-          <h4 class="form-section-subheader">Problema</h4>
+          <div class="form-section-header">
+            <span class="material-symbols-outlined"> problem </span>
+            <h5 class="form-section-subheader">Descripción del Problema</h5>
+          </div>
           <div class="form-grid">
             <!-- Issue -->
             <div class="form-item full-row">

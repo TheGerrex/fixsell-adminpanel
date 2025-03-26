@@ -1,6 +1,7 @@
-<div>
-  <form [formGroup]="createTicketForm" class="section-card">
-    <div class="section-card-header">
+<h3 mat-dialog-title class="header-title">Nuevo Ticket de Soporte</h3>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="createTicketForm">
+    <!-- <div class="section-card-header">
       <div class="section-card-header-wrapper">
         <h3 class="header-title">Nuevo Ticket de Soporte</h3>
       </div>
@@ -13,244 +14,252 @@
           <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
         </button>
       </div>
-    </div>
+    </div> -->
 
     <app-loading-spinner [isLoading]="isSubmitting"></app-loading-spinner>
 
-    <div class="section-card-body">
-      <div class="form-container">
-        <div class="form-section">
-          <h4 class="form-section-subheader">Evento</h4>
-          <div class="form-grid">
-            <!-- Title -->
-            <div class="form-item three-quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Titulo</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Descripción simple del problema"
-                  formControlName="title"
-                />
-                <mat-error *ngIf="isValidField('title')">{{
-                  getFieldError('title')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Type -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Tipo</mat-label>
-                <mat-select formControlName="type">
-                  <mat-option *ngFor="let type of types" [value]="type.value">{{
-                    type.viewValue
-                  }}</mat-option>
-                </mat-select>
-                <mat-error *ngIf="isValidField('type')">{{
-                  getFieldError('type')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Date -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Fecha</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="ticketDatepicker"
-                  formControlName="appointmentStartTime"
-                />
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="ticketDatepicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #ticketDatepicker>
-                  <mat-datepicker-actions>
-                    <button mat-button matDatepickerCancel>Cancel</button>
-                    <button mat-raised-button matDatepickerApply>Apply</button>
-                  </mat-datepicker-actions>
-                </mat-datepicker>
-                <mat-error *ngIf="isValidField('appointmentStartTime')">{{
-                  getFieldError('appointmentStartTime')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Time Start -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Hora de Inicio</mat-label>
-                <mat-select formControlName="startTime">
-                  <mat-option
-                    *ngFor="let time of timeValues"
-                    [value]="time.value"
-                    >{{ time.display }}</mat-option
-                  >
-                </mat-select>
-                <mat-error *ngIf="isValidField('startTime')">{{
-                  getFieldError('startTime')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Time End -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Hora de Finalización</mat-label>
-                <mat-select formControlName="endTime">
-                  <mat-option
-                    *ngFor="let time of timeValues"
-                    [value]="time.value"
-                    >{{ time.display }}</mat-option
-                  >
-                </mat-select>
-                <mat-error *ngIf="isValidField('endTime')">{{
-                  getFieldError('endTime')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Appointment End Date -->
-            <div
-              class="ticket-data-item full-row"
-              *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-              hidden
-            >
-              <p>Appointment End Date</p>
+    <div class="form-container">
+      <div class="form-section">
+        <h4 class="form-section-subheader">Evento</h4>
+        <div class="form-grid">
+          <!-- Title -->
+          <div class="form-item three-quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Titulo</mat-label>
               <input
                 matInput
-                formControlName="appointmentEndTime"
-                class="form-control"
-                readonly
-                hidden
+                type="text"
+                placeholder="Descripción simple del problema"
+                formControlName="title"
               />
-            </div>
+              <mat-error *ngIf="isValidField('title')">{{
+                getFieldError('title')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Type -->
+          <div class="form-item quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let type of types" [value]="type.value">{{
+                  type.viewValue
+                }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="isValidField('type')">{{
+                getFieldError('type')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Date -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha</mat-label>
+              <input
+                matInput
+                [matDatepicker]="ticketDatepicker"
+                formControlName="appointmentStartTime"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="ticketDatepicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #ticketDatepicker>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+              <mat-error *ngIf="isValidField('appointmentStartTime')">{{
+                getFieldError('appointmentStartTime')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Time Start -->
+          <div class="form-item quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Hora de Inicio</mat-label>
+              <mat-select formControlName="startTime">
+                <mat-option
+                  *ngFor="let time of timeValues"
+                  [value]="time.value"
+                  >{{ time.display }}</mat-option
+                >
+              </mat-select>
+              <mat-error *ngIf="isValidField('startTime')">{{
+                getFieldError('startTime')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Time End -->
+          <div class="form-item quarter-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Hora de Finalización</mat-label>
+              <mat-select formControlName="endTime">
+                <mat-option
+                  *ngFor="let time of timeValues"
+                  [value]="time.value"
+                  >{{ time.display }}</mat-option
+                >
+              </mat-select>
+              <mat-error *ngIf="isValidField('endTime')">{{
+                getFieldError('endTime')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Appointment End Date -->
+          <div
+            class="ticket-data-item full-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+            hidden
+          >
+            <p>Appointment End Date</p>
+            <input
+              matInput
+              formControlName="appointmentEndTime"
+              class="form-control"
+              readonly
+              hidden
+            />
           </div>
         </div>
-        <div class="form-section">
-          <h4 class="form-section-subheader">Cliente</h4>
-          <div class="form-grid">
-            <!-- Client Name -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Nombre</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="John Doe"
-                  formControlName="clientName"
-                />
-                <mat-error *ngIf="isValidField('clientName')">{{
-                  getFieldError('clientName')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+      </div>
+      <div class="form-section">
+        <h4 class="form-section-subheader">Cliente</h4>
+        <div class="form-grid">
+          <!-- Client Name -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="John Doe"
+                formControlName="clientName"
+              />
+              <mat-error *ngIf="isValidField('clientName')">{{
+                getFieldError('clientName')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-            <!-- clientPhone -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Teléfono</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Ingrese el teléfono"
-                  formControlName="clientPhone"
-                />
-                <mat-error *ngIf="isValidField('clientPhone')">
-                  {{ getFieldError('clientPhone') }}
-                </mat-error>
-              </mat-form-field>
-            </div>
+          <!-- clientPhone -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Ingrese el teléfono"
+                formControlName="clientPhone"
+              />
+              <mat-error *ngIf="isValidField('clientPhone')">
+                {{ getFieldError('clientPhone') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-            <!-- Client Address -->
-            <div
-              class="form-item half-row"
-              *ngIf="createTicketForm.get('type')?.value === 'on-site'"
-            >
-              <mat-form-field appearance="outline">
-                <mat-label>Dirección</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Dirección del cliente"
-                  formControlName="clientAddress"
-                />
-                <mat-error *ngIf="isValidField('clientAddress')">{{
-                  getFieldError('clientAddress')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+          <!-- Client Address -->
+          <div
+            class="form-item half-row"
+            *ngIf="createTicketForm.get('type')?.value === 'on-site'"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Dirección</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Dirección del cliente"
+                formControlName="clientAddress"
+              />
+              <mat-error *ngIf="isValidField('clientAddress')">{{
+                getFieldError('clientAddress')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
 
-            <!-- clientEmail -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Email</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="cliente@email.com"
-                  formControlName="clientEmail"
-                />
-                <mat-error *ngIf="isValidField('clientEmail')">{{
-                  getFieldError('clientEmail')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+          <!-- clientEmail -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="cliente@email.com"
+                formControlName="clientEmail"
+              />
+              <mat-error *ngIf="isValidField('clientEmail')">{{
+                getFieldError('clientEmail')
+              }}</mat-error>
+            </mat-form-field>
           </div>
         </div>
-        <div class="form-section">
-          <h4 class="form-section-subheader">Problema</h4>
-          <div class="form-grid">
-            <!-- Issue -->
-            <div class="form-item full-row">
-              <quill-editor
-                formControlName="issue"
-                [placeholder]="'Descripción detallada del problema'"
-                [class.is-invalid]="
-                  createTicketForm.controls['issue'].invalid &&
-                  createTicketForm.controls['issue'].touched
-                "
-              ></quill-editor>
-              <span *ngIf="isValidField('issue')" class="form-text text-danger">
-                {{ getFieldError('issue') }}
-              </span>
-            </div>
+      </div>
+      <div class="form-section">
+        <h4 class="form-section-subheader">Problema</h4>
+        <div class="form-grid">
+          <!-- Issue -->
+          <div class="form-item full-row">
+            <quill-editor
+              formControlName="issue"
+              [placeholder]="'Descripción detallada del problema'"
+              [class.is-invalid]="
+                createTicketForm.controls['issue'].invalid &&
+                createTicketForm.controls['issue'].touched
+              "
+            ></quill-editor>
+            <span *ngIf="isValidField('issue')" class="form-text text-danger">
+              {{ getFieldError('issue') }}
+            </span>
+          </div>
 
-            <!-- Priority -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Prioridad</mat-label>
-                <mat-select formControlName="priority">
-                  <mat-option
-                    *ngFor="let priority of priorities"
-                    [value]="priority"
-                    >{{ translatePriority(priority) }}</mat-option
-                  >
-                </mat-select>
-                <mat-error *ngIf="isValidField('priority')">{{
-                  getFieldError('priority')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-            <!-- Assigned -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Asignar</mat-label>
-                <mat-select formControlName="assigned">
-                  <mat-option *ngFor="let user of users" [value]="user.id">{{
-                    user.name
-                  }}</mat-option>
-                </mat-select>
-                <mat-error *ngIf="isValidField('assigned')">{{
-                  getFieldError('assigned')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+          <!-- Priority -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Prioridad</mat-label>
+              <mat-select formControlName="priority">
+                <mat-option
+                  *ngFor="let priority of priorities"
+                  [value]="priority"
+                  >{{ translatePriority(priority) }}</mat-option
+                >
+              </mat-select>
+              <mat-error *ngIf="isValidField('priority')">{{
+                getFieldError('priority')
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+          <!-- Assigned -->
+          <div class="form-item half-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Asignar</mat-label>
+              <mat-select formControlName="assigned">
+                <mat-option *ngFor="let user of users" [value]="user.id">{{
+                  user.name
+                }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="isValidField('assigned')">{{
+                getFieldError('assigned')
+              }}</mat-error>
+            </mat-form-field>
           </div>
         </div>
       </div>
     </div>
   </form>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    ButtonResize
+    class="button button-primary button-raised button-icon-text"
+    (click)="submitForm()"
+  >
+    <mat-icon>add</mat-icon><span class="button-label">Crear Ticket</span>
+  </button>
+</mat-dialog-actions>

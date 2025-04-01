@@ -265,6 +265,7 @@
   background: $white;
   z-index: 1000;
   position: relative;
+  height: $nav-height;
   .sidenav-mobile-header {
     display: flex;
     justify-content: space-between;

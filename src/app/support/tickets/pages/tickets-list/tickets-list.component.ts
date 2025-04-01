@@ -24,16 +24,27 @@ export class TicketsListComponent implements OnInit {
   searchTerm = '';
 
   displayedColumns: string[] = [
+    'status',
     'clientName',
     'title',
     'type',
-    'status',
     'priority',
     'updatedDate',
     'action',
   ];
 
   columns: TableColumn[] = [
+    {
+      name: 'status',
+      label: 'Estatus',
+      sortable: true,
+      formatter: (value: any, row: Ticket) => ({
+        html: true,
+        content: `<div class="ticket-status ${this.getStatusClass(row)}">
+                    ${this.getStatusTranslation(row.status)}
+                  </div>`,
+      }),
+    },
     {
       name: 'clientName',
       label: 'Cliente',
@@ -63,17 +74,6 @@ export class TicketsListComponent implements OnInit {
             return value;
         }
       },
-    },
-    {
-      name: 'status',
-      label: 'Estatus',
-      sortable: true,
-      formatter: (value: any, row: Ticket) => ({
-        html: true,
-        content: `<div class="ticket-status ${this.getStatusClass(row)}">
-                    ${this.getStatusTranslation(row.status)}
-                  </div>`,
-      }),
     },
     {
       name: 'priority',
@@ -176,7 +176,7 @@ export class TicketsListComponent implements OnInit {
     private toastService: ToastService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -189,20 +189,20 @@ export class TicketsListComponent implements OnInit {
       this.authService.hasPermission('canViewAllTickets');
     if (canViewAllTickets) {
       this.displayedColumns = [
+        'status',
         'clientName',
         'title',
         'type',
-        'status',
         'priority',
         'updatedDate',
         'action',
       ];
     } else {
       this.displayedColumns = [
+        'status',
         'clientName',
         'title',
         'type',
-        'status',
         'priority',
         'updatedDate',
         'action',

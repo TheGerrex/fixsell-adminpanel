@@ -3,7 +3,10 @@
   <!-- Table header with search and actions -->
   <div class="table-header">
     <div class="table-header-container">
-      <h3 class="table-title" *ngIf="title">{{ title }}</h3>
+      <div class="table-header-wrapper">
+        <app-breadcrumb></app-breadcrumb>
+        <h3 class="table-title" *ngIf="title">{{ title }}</h3>
+      </div>
       <div class="table-actions">
         <!-- Search field (desktop) -->
         <mat-form-field appearance="outline">
@@ -68,8 +71,8 @@
           <!-- Header Row -->
           <tr
             mat-header-row
-            class="sticky-header"
             *matHeaderRowDef="displayedColumns"
+            matHeaderRowDefSticky
           ></tr>
           <!-- Data Rows -->
           <tr
@@ -79,6 +82,7 @@
             [class.clickable-row]="rowClick.observed"
             class="table-row"
           ></tr>
+
           <!-- Column Definitions -->
           <ng-container
             *ngFor="let column of columns"
@@ -91,7 +95,6 @@
               [mat-sort-header]="column.sortable ? column.name : ''"
               [style.text-align]="column.align || 'left'"
               [style.width]="column.width || 'auto'"
-              class="sticky-header"
             >
               {{ column.label }}
             </th>
@@ -174,6 +177,20 @@
           </ng-container>
         </table>
       </div>
+      <!-- No items message and create button -->
+      <ng-container *ngIf="dataSource.data.length === 0">
+        <div class="no-items-container">
+          <p class="message-text">No se encontraron registros en esta tabla.</p>
+          <button
+            ButtonResize
+            class="button button-primary button-raised button-icon-text"
+            (click)="onAddClick()"
+          >
+            <mat-icon>add</mat-icon>
+            <span class="button-label">{{ addButtonText }}</span>
+          </button>
+        </div>
+      </ng-container>
     </div>
 
     <!-- Pagination -->

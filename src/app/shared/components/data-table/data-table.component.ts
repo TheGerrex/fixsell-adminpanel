@@ -10,18 +10,9 @@ import {
   ViewChild,
   ViewEncapsulation, // Add this import
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
-import { HasPermissionPipe } from '../../pipes/has-permission.pipe';
-import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 /**
  * Column configuration for DataTable component
@@ -79,8 +70,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Input() isLoading: boolean = false;
 
   // Pagination settings
-  @Input() pageSizeOptions: number[] = [5, 10, 25, 100];
-  @Input() defaultPageSize: number = 8;
+  @Input() pageSizeOptions: number[] = [10, 25, 50, 100];
+  @Input() defaultPageSize: number = 10;
 
   // Actions configuration
   @Input() showActions: boolean = true;

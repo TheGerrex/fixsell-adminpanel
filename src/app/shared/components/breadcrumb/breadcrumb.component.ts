@@ -11,7 +11,7 @@ type Breadcrumb = { label: string; url: string };
 @Component({
   selector: 'app-breadcrumb',
   template: `
-    <nav>
+    <nav [class.hidden]="isInitialPage()">
       <div class="breadcrumb-container">
         <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
           <div class="breadcrumb-route">
@@ -31,7 +31,9 @@ type Breadcrumb = { label: string; url: string };
     </nav>
   `,
   styles: [
-    `
+    `      .hidden {
+        display: none;
+      }
       .breadcrumb-container {
         display: flex;
         flex-wrap: wrap;
@@ -101,9 +103,11 @@ export class BreadcrumbComponent implements OnInit {
     };
 
     const createBreadcrumbs = (url: string): Observable<Breadcrumb[]> => {
-      const urlSegments = url.split('/');
+      const [path, queryParams] = url.split('?');
+      const urlSegments = path.split('/');
       const labelSegments = [...urlSegments].slice(2);
       const breadcrumbObservables: Observable<Breadcrumb>[] = [];
+
       for (let i = 0; i < labelSegments.length; i++) {
         if (
           labelSegments[i].match(
@@ -111,7 +115,7 @@ export class BreadcrumbComponent implements OnInit {
           )
         ) {
           breadcrumbObservables[i] = this.itemNameService
-            .getItemName(urlSegments[2], labelSegments[i]) //maybe add functionality in case if different url.. e.g. /website/printer or /users or /website/consumibles/printers
+            .getItemName(urlSegments[2], labelSegments[i])
             .pipe(
               map((name) => {
                 return {
@@ -121,13 +125,25 @@ export class BreadcrumbComponent implements OnInit {
               })
             );
         } else {
+          let label = labelMap[labelSegments[i]] || labelSegments[i];
+          if (labelSegments[i] === 'list' && queryParams === 'status=open,in_progress,without_resolution') {
+            label = 'Listado';
+          }
           breadcrumbObservables[i] = of({
-            label: labelMap[labelSegments[i]] || labelSegments[i],
+            label: label,
             url: `/${urlSegments.slice(0, i + 3).join('/')}`,
           });
         }
       }
-      return forkJoin(breadcrumbObservables);
+
+      return forkJoin(breadcrumbObservables).pipe(
+        map((breadcrumbs) => {
+          // Filter out the initial page breadcrumb
+          return breadcrumbs.filter(
+            (breadcrumb) => breadcrumb.url !== '/website/printers'
+          );
+        })
+      );
     };
 
     this.sharedService.currentPrinterModel.subscribe((model) => {
@@ -177,6 +193,11 @@ export class BreadcrumbComponent implements OnInit {
 
     const nextUrl = path ? `${url}/${path}` : url;
 
+    // Filter out the initial page breadcrumb
+    if (nextUrl === '/website/printers') {
+      return breadcrumbs;
+    }
+
     const breadcrumb = {
       label: label,
       url: nextUrl,
@@ -200,5 +221,9 @@ export class BreadcrumbComponent implements OnInit {
     } else {
       this.router.navigate([url]);
     }
+  }
+
+  isInitialPage(): boolean {
+    return this.router.url.split('/').length <= 3;
   }
 }

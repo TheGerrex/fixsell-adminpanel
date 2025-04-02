@@ -512,14 +512,16 @@
               *ngIf="newActivity"
             >
               <div class="new-activity">
-                <quill-editor
-                  formControlName="text"
-                  placeholder="Cual es tu nueva actividad?"
-                  [class.is-invalid]="
-                    activityForm.controls['text'].invalid &&
-                    activityForm.controls['text'].touched
-                  "
-                ></quill-editor>
+                <div class="quill-container">
+                  <quill-editor
+                    formControlName="text"
+                    placeholder="Cual es tu nueva actividad?"
+                    [class.is-invalid]="
+                      activityForm.controls['text'].invalid &&
+                      activityForm.controls['text'].touched
+                    "
+                  ></quill-editor>
+                </div>
                 <span
                   *ngIf="isValidFieldActivityForm('text') && newActivity"
                   class="form-text text-danger"
@@ -567,10 +569,9 @@
                     {{ activity.addedAt | relativeTime }}
                   </p>
                 </div>
-                <quill-editor
-                  [(ngModel)]="activity.text"
-                  *ngIf="editingIndex === i"
-                ></quill-editor>
+                <div class="quill-container" *ngIf="editingIndex === i">
+                  <quill-editor [(ngModel)]="activity.text"></quill-editor>
+                </div>
                 <div class="button-actions" *ngIf="editingIndex === i">
                   <button
                     class="button button-primary"

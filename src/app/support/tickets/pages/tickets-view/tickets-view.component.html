@@ -194,14 +194,14 @@
                     class="form-item full-row"
                     *ngIf="ticketAppointmentDateStart"
                   >
-                    <ng-container *ngIf="eventReadOnly"
-                      ><p class="item-label">Fecha</p>
+                    <ng-container *ngIf="eventReadOnly">
+                      <p class="item-label">Fecha</p>
                       <p class="item-value">
                         {{
                           ticketAppointmentDateStart | date : 'EEE d MMM yyyy'
                         }}
-                      </p></ng-container
-                    >
+                      </p>
+                    </ng-container>
                     <ng-container *ngIf="!eventReadOnly">
                       <mat-form-field appearance="outline">
                         <mat-label>Fecha</mat-label>
@@ -449,26 +449,24 @@
           </div>
           <form [formGroup]="issueForm" (ngSubmit)="onSaveIssue()">
             <div class="data-card-body" style="justify-content: flex-start">
-              <div
-                class="ticket-problem-content"
-                *ngIf="issueReadOnly"
-                [innerHTML]="ticketIssue"
-              ></div>
-              <div class="quill-container" *ngIf="!issueReadOnly">
-                <quill-editor
-                  formControlName="issue"
-                  placeholder="Descripción detallada del problema"
-                  [class.is-invalid]="
-                    issueForm.controls['issue'].invalid &&
-                    issueForm.controls['issue'].touched
-                  "
-                ></quill-editor>
-                <span
-                  *ngIf="isValidFieldIssueForm('issue') && !issueReadOnly"
-                  class="form-text text-danger"
-                >
-                  {{ getFieldErrorIssueForm('issue') }}
-                </span>
+              <div class="ticket-problem-content">
+                <div *ngIf="issueReadOnly" [innerHTML]="ticketIssue"></div>
+                <div class="quill-container" *ngIf="!issueReadOnly">
+                  <quill-editor
+                    formControlName="issue"
+                    placeholder="Descripción detallada del problema"
+                    [class.is-invalid]="
+                      issueForm.controls['issue'].invalid &&
+                      issueForm.controls['issue'].touched
+                    "
+                  ></quill-editor>
+                  <span
+                    *ngIf="isValidFieldIssueForm('issue') && !issueReadOnly"
+                    class="form-text text-danger"
+                  >
+                    {{ getFieldErrorIssueForm('issue') }}
+                  </span>
+                </div>
               </div>
             </div>
             <div class="data-card-footer" *ngIf="!issueReadOnly">
@@ -588,7 +586,7 @@
                   </button>
                 </div>
                 <div
-                  class="activity-card-content"
+                  class="activity-card-content activity-text"
                   [innerHTML]="activity.text"
                   *ngIf="editingIndex !== i"
                 ></div>

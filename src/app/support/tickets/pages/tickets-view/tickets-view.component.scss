@@ -401,11 +401,35 @@
   ::ng-deep quill-editor {
     width: 100%;
     max-width: 100%;
+    display: block; /* Ensure block display */
 
-    .ql-container,
+    .ql-container {
+      max-width: 100%;
+      overflow-x: hidden; /* Change from auto to hidden */
+    }
+
     .ql-editor {
       max-width: 100%;
-      overflow-x: auto;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: pre-wrap; /* Preserve whitespace but wrap */
+      word-break: break-word; /* More modern approach than break-all */
+    }
+
+    /* Force long content to wrap */
+    .ql-editor * {
+      max-width: 100%;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    /* Handle pre blocks which might cause overflow */
+    .ql-editor pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-width: 100%;
+      overflow-x: hidden;
     }
   }
 }
@@ -436,6 +460,7 @@
   overflow-wrap: break-word;
   word-break: break-all; // use break-all or break-word depending on your needs
 }
+
 form {
   display: flex;
   flex-direction: column;

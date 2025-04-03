@@ -1,5 +1,6 @@
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { User } from 'src/app/users/interfaces/users.interface';
+import { TaxRegime } from 'src/app/shared/services/tax-regime.service';
 
 // Enums to match backend
 export enum PaymentMethod {
@@ -163,11 +164,11 @@ export interface BaseClassification {
   updatedAt: string | Date;
 }
 
-export interface BusinessGroup extends BaseClassification {}
-export interface CollectionZone extends BaseClassification {}
-export interface ClientCategory extends BaseClassification {}
-export interface BusinessLine extends BaseClassification {}
-export interface BranchOffice extends BaseClassification {}
+export interface BusinessGroup extends BaseClassification { }
+export interface CollectionZone extends BaseClassification { }
+export interface ClientCategory extends BaseClassification { }
+export interface BusinessLine extends BaseClassification { }
+export interface BranchOffice extends BaseClassification { }
 
 // Commercial conditions
 export interface CommercialConditions {
@@ -228,7 +229,7 @@ export interface Client {
   postalCode: string;
   reference?: string;
   legalRepresentative: string;
-  taxRegime: string;
+  taxRegime: TaxRegime;
   isActive: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;

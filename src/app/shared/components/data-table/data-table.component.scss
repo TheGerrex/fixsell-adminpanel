@@ -89,6 +89,11 @@
       $mat-paginator-mobile
   ); /* Adjust height as needed */
   display: block;
+  @media (min-width: 768px) {
+    max-height: calc(
+      100vh - $nav-height - $header-height - $padding - $mat-paginator
+    );
+  }
 }
 
 .responsive-table {

@@ -1,0 +1,33 @@
+@import '_variables.scss';
+
+.form-item-toggle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  // border: 1px solid $gray-300;
+  // border-radius: $border-radius;
+  height: max-content;
+  padding: 0.5rem 0;
+  .item-toggle-label {
+    color: $gray-600;
+    margin-bottom: 0;
+    line-height: 1;
+  }
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25em;
+  .item-label {
+    font-weight: 500;
+    color: $text;
+    margin-bottom: 0.25rem;
+  }
+  .item-value {
+    color: $text;
+    word-break: break-word; // Ensures long words break and wrap to the next line
+    white-space: normal; // Allows the text to wrap normally
+  }
+}

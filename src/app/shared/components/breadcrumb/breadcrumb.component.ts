@@ -1,6 +1,6 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { SharedService } from '../../services/shared.service';
 import { PrinterService } from 'src/app/website/printer/services/printer.service';
 import { Observable, forkJoin, of } from 'rxjs';
@@ -96,7 +96,11 @@ export class BreadcrumbComponent implements OnInit {
       printer: 'Multifuncional',
       config: 'Configuración',
       tickets: 'Tickets',
-      leads: 'Clientes Potenciales',
+      leads: 'Prospectos',
+      sales: 'Ventas',
+      clients: 'Clientes',
+      leads_communication: 'Comunicación',
+      leads_list: 'Listado de Prospectos',
       list: 'Listado',
       communication: 'Comunicación',
       // Add more mappings here if needed
@@ -104,45 +108,56 @@ export class BreadcrumbComponent implements OnInit {
 
     const createBreadcrumbs = (url: string): Observable<Breadcrumb[]> => {
       const [path, queryParams] = url.split('?');
-      const urlSegments = path.split('/');
-      const labelSegments = [...urlSegments].slice(2);
+      const urlSegments = path.split('/').filter((segment) => segment); // Remove empty segments
       const breadcrumbObservables: Observable<Breadcrumb>[] = [];
 
-      for (let i = 0; i < labelSegments.length; i++) {
+      // Only process the last two segments for labels
+      const relevantSegments = urlSegments.slice(-2);
+
+      for (let i = 0; i < relevantSegments.length; i++) {
         if (
-          labelSegments[i].match(
+          relevantSegments[i].match(
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
           )
         ) {
-          breadcrumbObservables[i] = this.itemNameService
-            .getItemName(urlSegments[2], labelSegments[i])
-            .pipe(
+          // Find the index of the UUID in the full urlSegments array
+          const uuidIndex = urlSegments.indexOf(relevantSegments[i]);
+          const type = urlSegments[uuidIndex - 1]; // Get the segment before the UUID
+          const uuid = relevantSegments[i]; // Isolate the UUID
+          console.log('Detected UUID:', uuid, 'Type:', type); // Debug log
+
+          breadcrumbObservables.push(
+            this.itemNameService.getItemName(type, uuid).pipe(
               map((name) => {
                 return {
-                  label: labelMap[name] || name,
-                  url: `/${urlSegments.slice(0, i + 3).join('/')}`,
+                  label: name || 'Unknown',
+                  url: `/${urlSegments.slice(0, uuidIndex + 1).join('/')}`, // Use the full path for the link
                 };
+              }),
+              catchError((error) => {
+                console.error('Error fetching item name:', error);
+                return of({
+                  label: 'Unknown',
+                  url: `/${urlSegments.slice(0, uuidIndex + 1).join('/')}`, // Use the full path for the link
+                });
               })
-            );
+            )
+          );
         } else {
-          let label = labelMap[labelSegments[i]] || labelSegments[i];
-          if (labelSegments[i] === 'list' && queryParams === 'status=open,in_progress,without_resolution') {
-            label = 'Listado';
-          }
-          breadcrumbObservables[i] = of({
-            label: label,
-            url: `/${urlSegments.slice(0, i + 3).join('/')}`,
-          });
+          // Handle non-UUID segments
+          let label = labelMap[relevantSegments[i]] || relevantSegments[i];
+          const segmentIndex = urlSegments.indexOf(relevantSegments[i]);
+          breadcrumbObservables.push(
+            of({
+              label: label,
+              url: `/${urlSegments.slice(0, segmentIndex + 1).join('/')}`, // Use the full path for the link
+            })
+          );
         }
       }
 
       return forkJoin(breadcrumbObservables).pipe(
-        map((breadcrumbs) => {
-          // Filter out the initial page breadcrumb
-          return breadcrumbs.filter(
-            (breadcrumb) => breadcrumb.url !== '/website/printers'
-          );
-        })
+        map((breadcrumbs) => breadcrumbs)
       );
     };
 
@@ -224,6 +239,27 @@ export class BreadcrumbComponent implements OnInit {
   }
 
   isInitialPage(): boolean {
-    return this.router.url.split('/').length <= 3;
+    const urlSegments = this.router.url.split('/').filter((segment) => segment); // Remove empty segments
+
+    // List of known initial pages
+    const initialPages = [
+      'clients', // Single-segment initial page
+      'website/printers', // Two-segment initial page
+      'website/consumibles',
+      'website/deals',
+      'website/packages',
+      'website/config',
+      'sales/leads',
+      'support/tickets',
+      'chat/chats',
+      'users/user',
+      'users/config',
+    ];
+
+    // Join the URL segments to form the current path
+    const currentPath = urlSegments.join('/');
+
+    // Check if the current path matches any of the initial pages
+    return initialPages.includes(currentPath);
   }
 }

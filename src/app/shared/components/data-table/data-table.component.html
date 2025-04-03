@@ -180,15 +180,20 @@
       <!-- No items message and create button -->
       <ng-container *ngIf="dataSource.data.length === 0">
         <div class="no-items-container">
-          <p class="message-text">No se encontraron registros en esta tabla.</p>
-          <button
-            ButtonResize
-            class="button button-primary button-raised button-icon-text"
-            (click)="onAddClick()"
-          >
-            <mat-icon>add</mat-icon>
-            <span class="button-label">{{ addButtonText }}</span>
-          </button>
+          <div class="no-items-wrapper">
+            <mat-icon class="no-items-icon">warning</mat-icon>
+            <p class="message-text">
+              No se encontraron registros en esta tabla.
+            </p>
+            <button
+              ButtonResize
+              class="button button-primary button-raised button-icon-text"
+              (click)="onAddClick()"
+            >
+              <mat-icon>add</mat-icon>
+              <span class="button-label">{{ addButtonText }}</span>
+            </button>
+          </div>
         </div>
       </ng-container>
     </div>

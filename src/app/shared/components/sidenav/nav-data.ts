@@ -53,7 +53,7 @@ export const navbarData = [
     isExpanded: false,
     subRoutes: [
       {
-        label: 'Clientes Potenciales',
+        label: 'Prospectos',
         routeLink: 'sales/leads',
         allowedPermissions: ['canViewLead'],
       },

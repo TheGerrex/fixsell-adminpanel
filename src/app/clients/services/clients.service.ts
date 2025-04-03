@@ -25,7 +25,7 @@ import {
   providedIn: 'root',
 })
 export class ClientsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Private error handling method
   private handleError(error: any) {
@@ -70,6 +70,14 @@ export class ClientsService {
       .delete<void>(`${environment.baseUrl}/clients/${id}`)
       .pipe(catchError((error) => this.handleError(error)));
   }
+
+  // ======== CLIENT GETTERS ========
+  getClientCommercialName(id: string): Observable<string> {
+    return this.http.get<{ commercialName: string }>(`${environment.baseUrl}/clients/${id}`).pipe(
+      map((response) => response.commercialName),
+    );
+  }
+
 
   // ======== CLIENT ACCOUNTS METHODS ========
 

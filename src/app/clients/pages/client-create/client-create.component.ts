@@ -121,7 +121,8 @@ export class ClientCreateComponent implements OnInit {
       next: (response) => {
         this.isSubmittingForm = false;
         this.toastService.showSuccess('Cliente creado con éxito', 'Close');
-        this.router.navigate(['/clients/client']);
+        const clientId = response.id; // Assuming the response contains the created client's ID
+        this.router.navigate([`/clients/${clientId}`]);
         this.createClientForm.reset();
       },
       error: (error) => {

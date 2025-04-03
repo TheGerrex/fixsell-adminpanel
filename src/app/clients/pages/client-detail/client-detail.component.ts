@@ -29,6 +29,7 @@ export class ClientDetailComponent implements OnInit {
         this.getClientData(this.clientId);
       }
     });
+    this.isLoading = false;
   }
 
   getClientData(clientId: string) {
@@ -46,6 +47,6 @@ export class ClientDetailComponent implements OnInit {
   }
 
   editClient(id: string) {
-    this.router.navigate(['/sales/leads/', id, 'edit']);
+    this.router.navigate(['/clients/', id, 'edit']);
   }
 }

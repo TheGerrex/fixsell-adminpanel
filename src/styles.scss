@@ -274,8 +274,7 @@ input:focus {
   color: $text;
   font-size: 1rem;
   padding: 0.675rem;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
-    box-shadow 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
   height: fit-content;
   border-radius: $border-radius;
   // min-height: 48px;
@@ -286,11 +285,162 @@ input:focus {
     outline: 0;
   }
   &:focus {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
-      0 1px 2px 0 black;
+    box-shadow: $box-shadow-focus-primary;
   }
   &:disabled {
     opacity: 0.6;
+  }
+  &-primary {
+    color: $primary-color-text;
+    background: $primary-color;
+    border: 1px $primary-color solid;
+    &:hover {
+      background: $primary-color-hover;
+      color: $primary-color-text;
+      border-color: $primary-color-hover;
+    }
+    &:active {
+      background: $primary-color-active;
+      color: $primary-color-text;
+      border-color: $primary-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-primary;
+    }
+  }
+  &-secondary {
+    color: $secondary-color-text;
+    background: $secondary-color;
+    border: 1px $secondary-color solid;
+    &:hover {
+      background: $secondary-color-hover;
+      color: $secondary-color-text;
+      border-color: $secondary-color-hover;
+    }
+    &:active {
+      background: $secondary-color-active;
+      color: $secondary-color-text;
+      border-color: $secondary-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-secondary;
+    }
+  }
+  &-success {
+    color: $success-color-text;
+    background: $success-color;
+    border: 1px $success-color solid;
+    &:hover {
+      background: $success-color-hover;
+      color: $success-color-text;
+      border-color: $success-color-hover;
+    }
+    &:active {
+      background: $success-color-active;
+      color: $success-color-text;
+      border-color: $success-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-success;
+    }
+  }
+  &-info {
+    color: $info-color-text;
+    background: $info-color;
+    border: 1px $info-color solid;
+    &:hover {
+      background: $info-color-hover;
+      color: $info-color-text;
+      border-color: $info-color-hover;
+    }
+    &:active {
+      background: $info-color-active;
+      color: $info-color-text;
+      border-color: $info-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-info;
+    }
+  }
+  &-warning {
+    color: $warning-color-text;
+    background: $warning-color;
+    border: 1px $warning-color solid;
+    &:hover {
+      background: $warning-color-hover;
+      color: $warning-color-text;
+      border-color: $warning-color-hover;
+    }
+    &:active {
+      background: $warning-color-active;
+      color: $warning-color-text;
+      border-color: $warning-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-warning;
+    }
+  }
+  &-help {
+    color: $help-color-text;
+    background: $help-color;
+    border: 1px $help-color solid;
+    &:hover {
+      background: $help-color-hover;
+      color: $help-color-text;
+      border-color: $help-color-hover;
+    }
+    &:active {
+      background: $help-color-active;
+      color: $help-color-text;
+      border-color: $help-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-help;
+    }
+  }
+  &-danger {
+    color: $danger-color-text;
+    background: $danger-color;
+    border: 1px $danger-color solid;
+    &:hover {
+      background: $danger-color-hover;
+      color: $danger-color-text;
+      border-color: $danger-color-hover;
+    }
+    &:active {
+      background: $danger-color-active;
+      color: $danger-color-text;
+      border-color: $danger-color-active;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-danger;
+    }
+  }
+  &-default {
+    color: $default-color;
+    background: $white;
+    border: 1px solid $gray-300;
+    &:hover {
+      background: $gray-50;
+      color: $default-color;
+    }
+    &:active {
+      background: $gray-100;
+      color: $default-color;
+      border-color: $gray-500;
+    }
+    &:focus {
+      box-shadow: $box-shadow-focus-primary;
+    }
+  }
+  &-full {
+    width: 100%;
+  }
+  &-rounded {
+    border-radius: 2rem;
+  }
+  &-raised {
+    box-shadow: $box-shadow-3;
   }
   &-outline {
     background: transparent;
@@ -309,8 +459,7 @@ input:focus {
         border-color: $primary-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-primary;
       }
     }
     &-secondary {
@@ -327,8 +476,7 @@ input:focus {
         border-color: $secondary-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-secondary;
       }
     }
     &-success {
@@ -345,8 +493,7 @@ input:focus {
         border-color: $success-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-success;
       }
     }
     &-info {
@@ -363,8 +510,7 @@ input:focus {
         border-color: $info-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-info;
       }
     }
     &-warning {
@@ -381,8 +527,7 @@ input:focus {
         border-color: $warning-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-warning;
       }
     }
     &-help {
@@ -399,8 +544,7 @@ input:focus {
         border-color: $help-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-help;
       }
     }
     &-danger {
@@ -417,152 +561,9 @@ input:focus {
         border-color: $danger-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-danger;
       }
     }
-  }
-  &-primary {
-    color: $primary-color-text;
-    background: $primary-color;
-    border: 1px $primary-color solid;
-    &:hover {
-      background: $primary-color-hover;
-      color: $primary-color-text;
-      border-color: $primary-color-hover;
-    }
-    &:active {
-      background: $primary-color-active;
-      color: $primary-color-text;
-      border-color: $primary-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-secondary {
-    color: $secondary-color-text;
-    background: $secondary-color;
-    border: 1px $secondary-color solid;
-    &:hover {
-      background: $secondary-color-hover;
-      color: $secondary-color-text;
-      border-color: $secondary-color-hover;
-    }
-    &:active {
-      background: $secondary-color-active;
-      color: $secondary-color-text;
-      border-color: $secondary-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-success {
-    color: $success-color-text;
-    background: $success-color;
-    border: 1px $success-color solid;
-    &:hover {
-      background: $success-color-hover;
-      color: $success-color-text;
-      border-color: $success-color-hover;
-    }
-    &:active {
-      background: $success-color-active;
-      color: $success-color-text;
-      border-color: $success-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-info {
-    color: $info-color-text;
-    background: $info-color;
-    border: 1px $info-color solid;
-    &:hover {
-      background: $info-color-hover;
-      color: $info-color-text;
-      border-color: $info-color-hover;
-    }
-    &:active {
-      background: $info-color-active;
-      color: $info-color-text;
-      border-color: $info-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-warning {
-    color: $warning-color-text;
-    background: $warning-color;
-    border: 1px $warning-color solid;
-    &:hover {
-      background: $warning-color-hover;
-      color: $warning-color-text;
-      border-color: $warning-color-hover;
-    }
-    &:active {
-      background: $warning-color-active;
-      color: $warning-color-text;
-      border-color: $warning-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-help {
-    color: $help-color-text;
-    background: $help-color;
-    border: 1px $help-color solid;
-    &:hover {
-      background: $help-color-hover;
-      color: $help-color-text;
-      border-color: $help-color-hover;
-    }
-    &:active {
-      background: $help-color-active;
-      color: $help-color-text;
-      border-color: $help-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-danger {
-    color: $danger-color-text;
-    background: $danger-color;
-    border: 1px $danger-color solid;
-    &:hover {
-      background: $danger-color-hover;
-      color: $danger-color-text;
-      border-color: $danger-color-hover;
-    }
-    &:active {
-      background: $danger-color-active;
-      color: $danger-color-text;
-      border-color: $danger-color-active;
-    }
-    &:focus {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
-        0 1px 2px 0 black;
-    }
-  }
-  &-full {
-    width: 100%;
-  }
-  &-rounded {
-    border-radius: 2rem;
-  }
-  &-raised {
-    box-shadow: $box-shadow-3;
   }
   &-icon {
     padding: 0.625em;
@@ -580,8 +581,7 @@ input:focus {
         border-color: $success-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-success;
       }
     }
     &-danger {
@@ -597,8 +597,7 @@ input:focus {
         border-color: $danger-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-danger;
       }
     }
     &-warning {
@@ -614,8 +613,7 @@ input:focus {
         border-color: $danger-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-warning;
       }
     }
     &-info {
@@ -631,8 +629,7 @@ input:focus {
         border-color: $info-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-info;
       }
     }
     &-help {
@@ -648,8 +645,7 @@ input:focus {
         border-color: $help-color-active;
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus,
-          0 1px 2px 0 black;
+        box-shadow: $box-shadow-focus-help;
       }
     }
   }
@@ -657,7 +653,8 @@ input:focus {
     &-primary {
       color: $primary-color;
       background-color: transparent;
-      border: none;
+      border: 1px solid transparent;
+      border-radius: $border-radius;
       &:hover {
         background: rgba($color: $primary-color, $alpha: 0.1);
       }
@@ -665,7 +662,7 @@ input:focus {
         background: rgba($color: $primary-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $primary-color-focus;
+        box-shadow: $box-shadow-focus-primary;
       }
     }
     &-secondary {
@@ -679,7 +676,7 @@ input:focus {
         background: rgba($color: $secondary-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $secondary-color-focus;
+        box-shadow: $box-shadow-focus-secondary;
       }
     }
     &-success {
@@ -693,7 +690,7 @@ input:focus {
         background: rgba($color: $success-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $success-color-focus;
+        box-shadow: $box-shadow-focus-success;
       }
     }
     &-info {
@@ -707,7 +704,7 @@ input:focus {
         background: rgba($color: $info-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $info-color-focus;
+        box-shadow: $box-shadow-focus-info;
       }
     }
     &-warning {
@@ -721,7 +718,7 @@ input:focus {
         background: rgba($color: $warning-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $warning-color-focus;
+        box-shadow: $box-shadow-focus-warning;
       }
     }
     &-help {
@@ -735,7 +732,7 @@ input:focus {
         background: rgba($color: $help-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $help-color-focus;
+        box-shadow: $box-shadow-focus-help;
       }
     }
     &-danger {
@@ -749,7 +746,7 @@ input:focus {
         background: rgba($color: $danger-color-active, $alpha: 0.1);
       }
       &:focus {
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px $danger-color-focus;
+        box-shadow: $box-shadow-focus-danger;
       }
     }
   }

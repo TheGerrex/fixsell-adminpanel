@@ -19,6 +19,10 @@ import { MatPaginator } from '@angular/material/paginator';
  * Column configuration for DataTable component
  */
 export interface TableColumn {
+
+  /** Tipo de dato en la columna (para definir el tipo de filtro) */
+  type?: 'text' | 'select' | 'date';
+
   /** Property name in data object */
   name: string;
 
@@ -105,20 +109,30 @@ export class DataTableComponent implements OnInit, OnChanges {
   dataSource = new MatTableDataSource<any>();
   searchTerm: string = '';
   isSearchOpen: boolean = false;
+  filteredValues: { [key: string]: string } = {};
 
   ngOnInit(): void {
     // Initialize data source
     this.updateDataSource();
 
     // Configure custom filtering if needed
+    // this.dataSource.filterPredicate = (data: any, filter: string) => {
+    //   const searchTerms = filter.trim().toLowerCase().split(' ');
+    //   return searchTerms.every((term) => {
+    //     return Object.keys(data).some((key) => {
+    //       const value = data[key];
+    //       if (value === null || value === undefined) return false;
+    //       return String(value).toLowerCase().includes(term);
+    //     });
+    //   });
+    // };
+
+    // Filtro personalizado para múltiples columnas
     this.dataSource.filterPredicate = (data: any, filter: string) => {
-      const searchTerms = filter.trim().toLowerCase().split(' ');
-      return searchTerms.every((term) => {
-        return Object.keys(data).some((key) => {
-          const value = data[key];
-          if (value === null || value === undefined) return false;
-          return String(value).toLowerCase().includes(term);
-        });
+      const filters = JSON.parse(filter);
+      return Object.keys(filters).every(column => {
+        const value = filters[column]?.toLowerCase();
+        return !value || (data[column] && data[column].toString().toLowerCase().includes(value));
       });
     };
   }
@@ -132,9 +146,7 @@ export class DataTableComponent implements OnInit, OnChanges {
       this.updateDataSource();
 
       // Need to set up sorting/pagination after view init, but also when data changes
-      setTimeout(() => {
-        this.setupSortingAndPagination();
-      });
+      setTimeout(() => this.setupSortingAndPagination());
     }
   }
 
@@ -206,14 +218,25 @@ export class DataTableComponent implements OnInit, OnChanges {
   /**
    * Apply filter to the table
    */
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    this.filterChange.emit(filterValue);
+
+  applyFilter(event: Event | string, column: string): void {
+    const value = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
+    this.filteredValues[column] = value.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
+    this.filterChange.emit(value);
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  getFilterOptions(column: string): string[] {
+    return [...new Set(this.data.map(item => item[column]))];
+  }
+
+  resetFilters(): void {
+    this.filteredValues = {};
+    this.dataSource.filter = '';
   }
 
   /**
@@ -221,12 +244,8 @@ export class DataTableComponent implements OnInit, OnChanges {
    */
   getCellContent(column: TableColumn, element: any): any {
     const value = element[column.name];
+    return column.formatter ? column.formatter(value, element) : value;
 
-    if (column.formatter) {
-      return column.formatter(value, element);
-    }
-
-    return value;
   }
 
   /**

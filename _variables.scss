@@ -5,6 +5,12 @@ $icon-color-default: #4b5563;
 $icon-color-text: #1f2937;
 $form-border: #e0e0e0;
 $border-radius: 6px;
+$default-color: #4b5563;
+$black: #000;
+$magenta: #ff00ff;
+$cyan: #00ffff;
+$yellow: #ffff00;
+$white: #fff;
 $text: #1f2937;
 $text-secondary: #6b7280;
 $light-50: #f8fafc;
@@ -104,11 +110,11 @@ $primary-color-active: #1d4ed8;
 $primary-color-hover: #2563eb;
 $primary-color-transparent: #eff6ff;
 $hover-background: #f1f5f9;
-$secondary-color: #64748b;
-$secondary-color-focus: #b0b9c6;
-$secondary-color-text: #fff;
-$secondary-color-active: #334155;
-$secondary-color-hover: #475569;
+$secondary-color: $gray-500;
+$secondary-color-focus: $gray-300;
+$secondary-color-text: $gray-50;
+$secondary-color-active: $gray-700;
+$secondary-color-hover: $gray-600;
 $success-color: #22c55e;
 $success-color-focus: #88eaac;
 $success-color-active: #15803d;
@@ -145,14 +151,24 @@ $fixsell-color-200: #ff8397;
 $fixsell-color-300: #fd5f76;
 $fixsell-color-400: #d53957;
 $fixsell-color-500: #ae003a;
-$black: #000;
-$magenta: #ff00ff;
-$cyan: #00ffff;
-$yellow: #ffff00;
-$white: #fff;
+
 $box-shadow-1: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 $box-shadow-2: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 $box-shadow-3: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+$box-shadow-focus-primary: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($primary-color-focus, 0.6);
+$box-shadow-focus-secondary: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($secondary-color-focus, 0.6);
+$box-shadow-focus-success: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($success-color-focus, 0.6);
+$box-shadow-focus-info: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($info-color-focus, 0.6);
+$box-shadow-focus-warning: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($warning-color-focus, 0.6);
+$box-shadow-focus-help: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($help-color-focus, 0.6);
+$box-shadow-focus-danger: 0 0 0 2px rgba(255, 255, 255, 0.8),
+  0 0 0 4px rgba($danger-color-focus, 0.6);
 
 // Widths and Heights
 $header-height: 82px;

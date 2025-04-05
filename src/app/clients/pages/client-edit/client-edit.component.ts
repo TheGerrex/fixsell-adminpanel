@@ -88,6 +88,12 @@ export class ClientEditComponent implements OnInit {
     this.clientService.getClient(clientId).subscribe({
       next: (client) => {
         this.editClientForm.patchValue(client);
+        const selectedTaxRegime = this.taxRegimeValues.find(
+          (regime) => regime.description === client.taxRegime.description
+        );
+        if (selectedTaxRegime) {
+          this.editClientForm.get('taxRegime')?.setValue(selectedTaxRegime);
+        }
       },
       error: (error) => {
         this.toastService.showError(`Error fetching client data: ${error.error.message}`, 'Close');

@@ -1,30 +1,34 @@
-@import "_variables.scss";
+@import '_variables.scss';
 .export-menu {
-    width: 300px;
+  width: 300px;
 }
 
 .export-button-item {
-    width: 100%;
+  width: 100%;
 }
 
 .export-button-item-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1em;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  width: 100%;
 }
 
 .icon-filetype {
-    font-family: "Roboto Mono", monospace;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-style: normal;
-    color: $gray-600;
-    background-color: $gray-50;
-    border: 1px solid $gray-300;
-    padding: 0px .5rem;
-    border-radius: $border-radius;
-    font-weight: 600;
-    font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Roboto Mono', monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  color: $gray-600;
+  background-color: $gray-50;
+  border: 1px solid $gray-300;
+  padding: 0px 0.5rem;
+  border-radius: $border-radius;
+  font-weight: 600;
+  font-size: 12px;
+  min-width: 55px;
 }

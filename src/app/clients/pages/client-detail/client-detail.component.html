@@ -24,67 +24,81 @@
         </button>
       </div>
     </div>
-    <div class="section-card-body">
-      <div class="lead-container">
-        <div class="lead-wrapper">
-          <div class="cards-container">
-            <div class="data-card">
-              <div class="data-card-header">
-                <h4 class="header-title">Datos del Cliente</h4>
-              </div>
-              <div class="data-card-body">
-                <div class="data-grid">
-                  <!-- businessName -->
-                  <div class="item">
-                    <p class="item-label">Razón Social</p>
-                    <p class="item-value">{{ client.businessName }}</p>
+    <mat-tab-group>
+      <mat-tab label="Datos Fiscales">
+        <div class="section-card-body">
+          <div class="lead-container">
+            <div class="lead-wrapper">
+              <div class="cards-container">
+                <div class="data-card">
+                  <div class="data-card-header">
+                    <h4 class="header-title">Datos del Cliente</h4>
                   </div>
-                  <!-- commercialName -->
-                  <div class="item">
-                    <p class="item-label">Nombre Comercial</p>
-                    <p class="item-value">{{ client.commercialName }}</p>
-                  </div>
-                  <!-- legalRepresentative -->
-                  <div class="item">
-                    <p class="item-label">Representante Legal</p>
-                    <p class="item-value">{{ client.legalRepresentative }}</p>
-                  </div>
-                  <!-- rfc -->
-                  <div class="item">
-                    <p class="item-label">RFC</p>
-                    <p class="item-value">{{ client.rfc }}</p>
-                  </div>
-                  <!-- taxRegime -->
-                  <div class="item">
-                    <p class="item-label">Régimen Fiscal</p>
-                    <p class="item-value">
-                      {{ client.taxRegime.code }} |
-                      {{ client.taxRegime.description }}
-                    </p>
-                  </div>
-                  <!-- cfdiUse -->
-                  <div class="item">
-                    <p class="item-label">Uso de CFDI</p>
-                    <p class="item-value">{{ client.cfdiUse }}</p>
-                  </div>
+                  <div class="data-card-body">
+                    <div class="data-grid">
+                      <!-- businessName -->
+                      <div class="item">
+                        <p class="item-label">Razón Social</p>
+                        <p class="item-value">{{ client.businessName }}</p>
+                      </div>
+                      <!-- commercialName -->
+                      <div class="item">
+                        <p class="item-label">Nombre Comercial</p>
+                        <p class="item-value">{{ client.commercialName }}</p>
+                      </div>
+                      <!-- legalRepresentative -->
+                      <div class="item">
+                        <p class="item-label">Representante Legal</p>
+                        <p class="item-value">
+                          {{ client.legalRepresentative }}
+                        </p>
+                      </div>
+                      <!-- rfc -->
+                      <div class="item">
+                        <p class="item-label">RFC</p>
+                        <p class="item-value">{{ client.rfc }}</p>
+                      </div>
+                      <!-- taxRegime -->
+                      <div class="item">
+                        <p class="item-label">Régimen Fiscal</p>
+                        <p class="item-value">
+                          {{ client.taxRegime.code }} |
+                          {{ client.taxRegime.description }}
+                        </p>
+                      </div>
+                      <!-- cfdiUse -->
+                      <div class="item">
+                        <p class="item-label">Uso de CFDI</p>
+                        <p class="item-value">{{ client.cfdiUse }}</p>
+                      </div>
 
-                  <!-- Location -->
-                  <div class="item">
-                    <p class="item-label">Dirección</p>
-                    <p class="item-value">
-                      {{ client.street }} #{{ client.exteriorNumber }},
-                      {{ client.neighborhood }}, {{ client.municipality }}
-                      <br />
-                      {{ client.state }}
-                      {{ client.postalCode }} {{ client.country }}
-                    </p>
+                      <!-- Location -->
+                      <div class="item">
+                        <p class="item-label">Dirección</p>
+                        <p class="item-value">
+                          {{ client.street }} #{{ client.exteriorNumber }},
+                          {{ client.neighborhood }}, {{ client.municipality }}
+                          <br />
+                          {{ client.state }}
+                          {{ client.postalCode }} {{ client.country }}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </mat-tab>
+      <mat-tab label="Condiciones Comerciales"> Content 2 </mat-tab>
+      <mat-tab label="Clasificación"> Content 3 </mat-tab>
+      <mat-tab label="Cuentas"> Content 3 </mat-tab>
+      <mat-tab label="Información Complemento"> Content 3 </mat-tab>
+      <mat-tab label="Configuración de lista de precio"> Content 3 </mat-tab>
+      <mat-tab label="Contactos"> Content 3 </mat-tab>
+      <mat-tab label="Dirección de Entrega"> Content 3 </mat-tab>
+      <mat-tab label="Configuración de Suspención"> Content 3 </mat-tab>
+    </mat-tab-group>
   </form>
 </div>

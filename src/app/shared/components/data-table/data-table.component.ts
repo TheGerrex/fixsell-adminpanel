@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -61,6 +62,8 @@ export interface TableColumn {
 export class DataTableComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
 
   // Table configuration
   @Input() title: string = '';
@@ -101,6 +104,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   // Component state
   dataSource = new MatTableDataSource<any>();
   searchTerm: string = '';
+  isSearchOpen: boolean = false;
 
   ngOnInit(): void {
     // Initialize data source
@@ -311,5 +315,17 @@ export class DataTableComponent implements OnInit, OnChanges {
         this.editClick.observed ||
         this.deleteClick.observed)
     );
+  }
+
+
+  toggleSearch() {
+    this.isSearchOpen = true;
+    setTimeout(() => this.searchInput?.nativeElement?.focus(), 100); // Enfocar el input al abrir
+  }
+
+  closeSearch() {
+    if (!this.searchTerm) {
+      this.isSearchOpen = false;
+    }
   }
 }

@@ -9,16 +9,33 @@
       </div>
       <div class="table-actions">
         <!-- Search field (desktop) -->
-        <mat-form-field appearance="outline">
-          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
-          <input
-            matInput
-            type="text"
-            placeholder="Buscar"
-            [(ngModel)]="searchTerm"
-            (input)="applyFilter($event)"
-          />
-        </mat-form-field>
+        <div class="search-container">
+          <!-- Ícono de búsqueda (visible cuando está colapsado) -->
+          <div class="search-button" *ngIf="!isSearchOpen">
+            <mat-icon class="search-icon" (click)="toggleSearch()">
+              search
+            </mat-icon>
+          </div>
+
+          <!-- Input de búsqueda con animación -->
+          <mat-form-field
+            *ngIf="isSearchOpen"
+            class="search-input"
+            appearance="outline"
+          >
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+              matInput
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="searchTerm"
+              (input)="applyFilter($event)"
+              #searchInput
+              (blur)="closeSearch()"
+              (keyup.escape)="closeSearch()"
+            />
+          </mat-form-field>
+        </div>
 
         <!-- Export button -->
         <website-export
@@ -71,8 +88,7 @@
           <!-- Header Row -->
           <tr
             mat-header-row
-            *matHeaderRowDef="displayedColumns"
-            matHeaderRowDefSticky
+            *matHeaderRowDef="displayedColumns; sticky: true"
           ></tr>
           <!-- Data Rows -->
           <tr
@@ -131,48 +147,76 @@
             *ngIf="shouldShowActionsColumn()"
             [matColumnDef]="actionsColumnName"
           >
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              style="width: 50px; min-width: 50px"
+            >
+              Acciones
+            </th>
             <td
               mat-cell
               *matCellDef="let element"
               [attr.data-column]="actionsColumnName"
+              class="actions-cell"
             >
-              <button
-                mat-icon-button
-                class="see-icon"
-                *ngIf="
-                  showViewAction &&
-                  viewClick.observed &&
-                  (viewActionPermission | hasPermission)
-                "
-                (click)="onViewClick(element, $event)"
-              >
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button
-                mat-icon-button
-                class="edit-icon"
-                *ngIf="
-                  showEditAction &&
-                  editClick.observed &&
-                  (editActionPermission | hasPermission)
-                "
-                (click)="onEditClick(element, $event)"
-              >
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button
-                mat-icon-button
-                class="delete-icon"
-                *ngIf="
-                  showDeleteAction &&
-                  deleteClick.observed &&
-                  (deleteActionPermission | hasPermission)
-                "
-                (click)="onDeleteClick(element, $event)"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
+              <div class="actions-container">
+                <!-- Menú desplegable con botón -->
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="actionsMenu"
+                  class="actions-button"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+
+                <!-- Menú de opciones -->
+                <mat-menu #actionsMenu="matMenu" class="menu-actions">
+                  <button
+                    mat-menu-item
+                    *ngIf="
+                      showViewAction &&
+                      viewClick.observed &&
+                      (viewActionPermission | hasPermission)
+                    "
+                    (click)="onViewClick(element, $event)"
+                  >
+                    <mat-icon class="view-icon" style="color: #1f2937"
+                      >visibility</mat-icon
+                    >
+                    <span>Ver</span>
+                  </button>
+                  <button
+                    mat-menu-item
+                    *ngIf="
+                      showEditAction &&
+                      editClick.observed &&
+                      (editActionPermission | hasPermission)
+                    "
+                    (click)="onEditClick(element, $event)"
+                  >
+                    <mat-icon class="edit-icon" style="color: #3f51b5"
+                      >edit</mat-icon
+                    >
+                    <span>Editar</span>
+                  </button>
+                  <button
+                    mat-menu-item
+                    *ngIf="
+                      showDeleteAction &&
+                      deleteClick.observed &&
+                      (deleteActionPermission | hasPermission)
+                    "
+                    (click)="onDeleteClick(element, $event)"
+                  >
+                    <mat-icon class="delete-icon" style="color: #f44336"
+                      >delete</mat-icon
+                    >
+                    <span>Eliminar</span>
+                  </button>
+                </mat-menu>
+              </div>
             </td>
           </ng-container>
         </table>

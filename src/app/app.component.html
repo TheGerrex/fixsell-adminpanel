@@ -1,8 +1,11 @@
 <router-outlet *ngIf="finishedAuthCheck()" />
 
 <div class="loco-container" *ngIf="!finishedAuthCheck()">
-    <div class="loco-wrapper" *ngIf="!finishedAuthCheck()">
-        <div class="loader"></div>
-        <img src="../assets/images/Fixsell Brand/fixsell-logo.png" />
-    </div>
+  <div class="loco-wrapper" *ngIf="!finishedAuthCheck()">
+    <div class="loader"></div>
+    <img src="../assets/images/Fixsell Brand/fixsell-logo.png" />
+  </div>
 </div>
+
+<!-- Global notifications toast. -->
+<app-notification-toast></app-notification-toast>

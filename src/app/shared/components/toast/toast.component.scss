@@ -1,47 +1,135 @@
 @import '_variables.scss';
 
-
 .toast-component {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $white;
+  gap: 1rem;
+  border-left: 3px solid;
+  padding: 12px 16px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  min-width: 300px;
+  max-width: 380px;
+
+  .toast-body {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-grow: 1;
+    gap: 0.75rem;
+
+    .toast-icon {
+      margin-top: 2px;
+      mat-icon {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+    .toast-message-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .toast-title {
+        color: $text;
+        font-weight: 600;
+        margin: 0;
+        font-size: 16px;
+        line-height: 20px;
+      }
+
+      .toast-message {
+        color: $text-secondary;
+        margin: 0;
+        width: 100%;
+        font-size: 14px;
+        line-height: 18px;
+        word-wrap: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+      }
+    }
+  }
+
+  .toast-actions {
+    display: flex;
     align-items: center;
-    background-color: $white;
-    gap: 1rem;
-     border-left: 3px solid;
+    gap: 0.5rem;
 
-    .toast-body {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-grow: 1;
-        gap: .5rem;
-
-        .toast-message-container {
-            display: flex;
-            gap: 1em;
-            align-items: center;
-            justify-content: flex-start;
-            .toast-message {
-                color: $text;
-                margin-bottom: 0;
-                width: 100%;
-                font-size: 16px;
-                line-height: 24px;
-                word-wrap: break-word; // Ensures words break to prevent overflow
-                white-space: normal; // Allows text to wrap to the next line
-                overflow-wrap: break-word; // Breaks words that are too long to fit
-            }
-        }
+    button {
+      min-width: auto;
+      padding: 6px 12px;
     }
-    
+  }
 
-    .close-button {
-        color: $gray-500;
-        transition: background-color 0.3s ease-out;
-        &:hover {
-            background-color: $gray-100;
-        }
+  .close-button {
+    color: $gray-500;
+    transition: background-color 0.3s ease-out;
+    &:hover {
+      background-color: $gray-100;
     }
+  }
+}
 
+// Toast color classes
+.info-border {
+  border-left-color: $info-color;
+}
+
+.success-border {
+  border-left-color: $success-color;
+}
+
+.warning-border {
+  border-left-color: $warning-color;
+}
+
+.danger-border {
+  border-left-color: $danger-color;
+}
+
+.info-icon {
+  color: $info-color;
+}
+
+.success-icon {
+  color: $success-color;
+}
+
+.warning-icon {
+  color: $warning-color;
+}
+
+.danger-icon {
+  color: $danger-color;
+}
+
+// Toast panel classes (to be used with snackbar)
+::ng-deep .info-toast {
+  margin-top: 16px !important;
+  max-width: 400px !important;
+  padding: 0 !important;
+}
+
+::ng-deep .success-toast {
+  margin-top: 16px !important;
+  max-width: 400px !important;
+  padding: 0 !important;
+}
+
+::ng-deep .warning-toast {
+  margin-top: 16px !important;
+  max-width: 400px !important;
+  padding: 0 !important;
+}
+
+::ng-deep .danger-toast {
+  margin-top: 16px !important;
+  max-width: 400px !important;
+  padding: 0 !important;
 }

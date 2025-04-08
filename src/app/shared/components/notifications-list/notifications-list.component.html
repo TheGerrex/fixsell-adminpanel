@@ -1,0 +1,23 @@
+<div class="notifications-list">
+  <h2>Notifications</h2>
+  <div *ngIf="notifications.length === 0" class="no-notifications">
+    No notifications to show.
+  </div>
+  <div
+    *ngFor="let notification of notifications"
+    class="notification-item"
+    [ngClass]="{ unread: notification.status === 'unread' }"
+  >
+    <div class="notification-details">
+      <h3>{{ notification.title }}</h3>
+      <p>{{ notification.message }}</p>
+      <small>{{ notification.createdAt | date : 'short' }}</small>
+    </div>
+    <button
+      *ngIf="notification.status === 'unread'"
+      (click)="markAsRead(notification)"
+    >
+      Mark as Read
+    </button>
+  </div>
+</div>

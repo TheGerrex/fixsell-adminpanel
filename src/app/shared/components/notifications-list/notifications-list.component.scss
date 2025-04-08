@@ -1,0 +1,62 @@
+.notifications-list {
+  padding: 1rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .no-notifications {
+    text-align: center;
+    color: #666;
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s ease;
+
+    &.unread {
+      background-color: #f9f9f9;
+      h3 {
+        font-weight: bold;
+      }
+    }
+
+    .notification-details {
+      flex: 1;
+
+      h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      p {
+        margin: 0.25rem 0;
+        font-size: 14px;
+        color: #555;
+      }
+
+      small {
+        color: #999;
+      }
+    }
+
+    button {
+      margin-left: 1rem;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+}

@@ -464,7 +464,7 @@ input:focus {
     }
     &-secondary {
       color: $secondary-color;
-      border: 1px $secondary-color solid;
+      border: 1px $gray-300 solid;
       &:hover {
         background: $secondary-color-hover;
         color: $secondary-color-text;

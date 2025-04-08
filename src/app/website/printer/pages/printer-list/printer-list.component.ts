@@ -34,33 +34,39 @@ export class PrinterListComponent implements OnInit {
       name: 'brand',
       label: 'Marca',
       sortable: true,
+      type: 'select',
     },
     {
       name: 'model',
       label: 'Modelo',
       sortable: true,
+      type: 'input',
     },
     {
       name: 'rentable',
       label: 'Tipo',
+      type: 'select',
       formatter: (value: any, row: Printer) =>
         row.rentable ? 'Renta' : 'Venta',
     },
     {
       name: 'color',
       label: 'Modo de Impresión',
+      type: 'select',
       formatter: (value: any, row: Printer) => (row.color ? 'Color' : 'B&N'),
     },
     {
       name: 'category',
       label: 'Categoria',
       sortable: true,
+      type: 'select',
     },
     {
       name: 'price',
       label: 'Precio',
       // align: 'right',
       sortable: true,
+      type: 'input',
       formatter: (value: any, row: Printer) => `$${row.price} ${row.currency}`,
     },
   ];
@@ -71,7 +77,7 @@ export class PrinterListComponent implements OnInit {
     private authService: AuthService,
     private toastService: ToastService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadData();

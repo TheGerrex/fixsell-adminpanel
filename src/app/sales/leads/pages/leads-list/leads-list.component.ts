@@ -32,6 +32,7 @@ export class LeadsListComponent implements OnInit {
       name: 'status',
       label: 'Estatus',
       sortable: true,
+      type: 'select',
       formatter: (value: any, row: Lead) => ({
         html: true,
         content: `<div class="${this.getStatusClass(
@@ -43,34 +44,37 @@ export class LeadsListComponent implements OnInit {
       name: 'client',
       label: 'Cliente',
       sortable: true,
+      type: 'input',
     },
     {
       name: 'product_interested',
       label: 'Producto Interesado',
       sortable: true,
+      type: 'select',
       formatter: (value: any, row: Lead) => this.getProductName(row),
     },
     {
       name: 'email',
       label: 'Contacto',
       sortable: true,
+      type: 'input',
       formatter: (value: any, row: Lead) => ({
         html: true,
-        content: `${row.email}<br>${
-          row.phone ? this.formatPhone(row.phone) : ''
-        }`,
+        content: `${row.email}<br>${row.phone ? this.formatPhone(row.phone) : ''
+          }`,
       }),
     },
     {
       name: 'last_contacted',
       label: 'Último Contacto',
       sortable: true,
+      type: 'date',
       formatter: (value: any, row: Lead) => ({
         html: true,
         content: `<div class="last-contact-container">
                   <div class="status-icon ${this.getCommunicationClass(
-                    row,
-                  )}"></div>
+          row,
+        )}"></div>
                   ${this.getLastCommunicationTime(row)}
                 </div>`,
       }),
@@ -88,6 +92,7 @@ export class LeadsListComponent implements OnInit {
     {
       name: 'assigned',
       label: 'Asignado',
+      type: 'select',
       formatter: (value: any, row: Lead) => row.assigned?.name || 'No asignado',
     },
   ];
@@ -96,7 +101,7 @@ export class LeadsListComponent implements OnInit {
     private router: Router,
     private toastService: ToastService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadData();

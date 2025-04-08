@@ -65,6 +65,20 @@
   }
 }
 
+.filter-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+
+  .filter-cell {
+    width: 100%;
+    @media (min-width: 768px) {
+      width: fit-content; // Ajusta el tamaño según tus necesidades
+    }
+  }
+}
+
 .search-container {
   display: flex;
   align-items: center;

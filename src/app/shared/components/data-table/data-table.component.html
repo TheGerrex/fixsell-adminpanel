@@ -9,15 +9,10 @@
       </div>
       <div class="table-actions">
         <!-- Filter button -->
-        <button class="button button-text-secondary button-icon">
-          <mat-icon>filter_list</mat-icon>
-          <span class="button-label">Filtros</span>
-        </button>
-        <button class="button button-outline-secondary button-icon">
-          <mat-icon>filter_list</mat-icon>
-          <span class="button-label">Filtros</span>
-        </button>
-        <button class="button button-secondary button-icon">
+        <button
+          class="button button-outline-secondary button-icon"
+          (click)="toggleFilterRow()"
+        >
           <mat-icon>filter_list</mat-icon>
           <span class="button-label">Filtros</span>
         </button>
@@ -26,11 +21,10 @@
           <!-- Ícono de búsqueda (visible cuando está colapsado) -->
           <button
             class="button button-default button-icon"
+            (click)="toggleSearch()"
             *ngIf="!isSearchOpen"
           >
-            <mat-icon class="search-icon" (click)="toggleSearch()">
-              search
-            </mat-icon>
+            <mat-icon class="search-icon"> search </mat-icon>
           </button>
 
           <!-- Input de búsqueda con animación -->
@@ -74,6 +68,57 @@
           <span class="button-label">{{ addButtonText }}</span>
         </button>
       </div>
+
+      <div class="filter-row" *ngIf="showFilterRow">
+        <ng-container *ngFor="let column of columns">
+          <div class="filter-cell">
+            <ng-container [ngSwitch]="column.type">
+              <!-- Input de texto -->
+              <mat-form-field *ngSwitchCase="'input'" appearance="outline">
+                <mat-label>{{ column.label }}</mat-label>
+                <input
+                  matInput
+                  #inputRef
+                  (input)="applyFilter(inputRef.value, column.name)"
+                  placeholder="Filtrar {{ column.label }}"
+                />
+              </mat-form-field>
+
+              <!-- Lista desplegable -->
+              <mat-form-field *ngSwitchCase="'select'" appearance="outline">
+                <mat-label>{{ column.label }}</mat-label>
+                <mat-select
+                  (selectionChange)="applyFilter($event.value, column.name)"
+                >
+                  <mat-option [value]="''">Todos</mat-option>
+
+                  <mat-option
+                    *ngFor="let option of getFilterOptions(column.name)"
+                    [value]="option.toString()"
+                  >
+                    {{ getFormattedOption(option, column.name) }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Datepicker para fechas -->
+              <mat-form-field *ngSwitchCase="'date'" appearance="outline">
+                <mat-label>{{ column.label }}</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  (dateChange)="applyFilter($event.value, column.name)"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
     </div>
 
     <!-- Search field (mobile) -->
@@ -106,54 +151,6 @@
             mat-header-row
             *matHeaderRowDef="displayedColumns; sticky: true"
           ></tr>
-
-          <!-- Fila de filtros -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <!-- Espacio para Acciones -->
-            <ng-container *ngFor="let column of columns">
-              <th mat-header-cell *matHeaderCellDef>
-                <ng-container [ngSwitch]="column.type">
-                  <!-- Input de texto -->
-                  <mat-form-field *ngSwitchCase="'text'" appearance="outline">
-                    <input
-                      matInput
-                      (input)="applyFilter($event, column.name)"
-                      placeholder="Filtrar {{ column.label }}"
-                    />
-                  </mat-form-field>
-
-                  <!-- Lista desplegable -->
-                  <mat-form-field *ngSwitchCase="'select'" appearance="outline">
-                    <mat-select
-                      (selectionChange)="applyFilter($event.value, column.name)"
-                    >
-                      <mat-option
-                        *ngFor="let option of getFilterOptions(column.name)"
-                        [value]="option"
-                      >
-                        {{ option }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-
-                  <!-- Datepicker para fechas -->
-                  <mat-form-field *ngSwitchCase="'date'" appearance="outline">
-                    <input
-                      matInput
-                      [matDatepicker]="picker"
-                      (dateChange)="applyFilter($event.value, column.name)"
-                    />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="picker"
-                    ></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </ng-container>
-              </th>
-            </ng-container>
-          </tr>
 
           <!-- Data Rows -->
           <tr

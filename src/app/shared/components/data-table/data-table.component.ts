@@ -21,7 +21,7 @@ import { MatPaginator } from '@angular/material/paginator';
 export interface TableColumn {
 
   /** Tipo de dato en la columna (para definir el tipo de filtro) */
-  type?: 'text' | 'select' | 'date';
+  type?: 'input' | 'select' | 'date';
 
   /** Property name in data object */
   name: string;
@@ -109,32 +109,37 @@ export class DataTableComponent implements OnInit, OnChanges {
   dataSource = new MatTableDataSource<any>();
   searchTerm: string = '';
   isSearchOpen: boolean = false;
-  filteredValues: { [key: string]: string } = {};
+  showFilterRow: boolean = false;
+  filteredValues: { [key: string]: any } = {};
 
   ngOnInit(): void {
     // Initialize data source
     this.updateDataSource();
 
-    // Configure custom filtering if needed
-    // this.dataSource.filterPredicate = (data: any, filter: string) => {
-    //   const searchTerms = filter.trim().toLowerCase().split(' ');
-    //   return searchTerms.every((term) => {
-    //     return Object.keys(data).some((key) => {
-    //       const value = data[key];
-    //       if (value === null || value === undefined) return false;
-    //       return String(value).toLowerCase().includes(term);
-    //     });
-    //   });
-    // };
-
     // Filtro personalizado para múltiples columnas
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const filters = JSON.parse(filter);
-      return Object.keys(filters).every(column => {
-        const value = filters[column]?.toLowerCase();
-        return !value || (data[column] && data[column].toString().toLowerCase().includes(value));
+
+      return Object.keys(filters).every((column) => {
+        const filterValue = filters[column];
+        const dataValue = data[column];
+
+        // Skip if no filter applied
+        if (filterValue === null || filterValue === undefined || filterValue === '') {
+          return true;
+        }
+
+        // Boolean filter (e.g., from select for 'color')
+        if (typeof filterValue === 'boolean') {
+          return dataValue === filterValue;
+        }
+
+        // Normal string-based filter (e.g., model input)
+        return dataValue?.toString().toLowerCase().includes(filterValue.toString().toLowerCase());
       });
     };
+
+
   }
 
   ngAfterViewInit(): void {
@@ -219,20 +224,63 @@ export class DataTableComponent implements OnInit, OnChanges {
    * Apply filter to the table
    */
 
-  applyFilter(event: Event | string, column: string): void {
-    const value = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
-    this.filteredValues[column] = value.trim().toLowerCase();
-    this.dataSource.filter = JSON.stringify(this.filteredValues);
-    this.filterChange.emit(value);
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  applyFilter(eventOrValue: Event | string, columnName: string): void {
+    let value: string;
+    if (typeof eventOrValue === 'string') {
+      value = eventOrValue;
+    } else {
+      const target = eventOrValue.target as HTMLInputElement;
+      value = target?.value || '';
     }
+    if (value.toLowerCase() === 'true') {
+      this.filteredValues[columnName] = true;
+    } else if (value.toLowerCase() === 'false') {
+      this.filteredValues[columnName] = false;
+    } else {
+      this.filteredValues[columnName] = value.trim().toLowerCase();
+    }
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
   }
+
+  getFormattedOption(value: any, columnName: string): string {
+    const column = this.columns.find(col => col.name === columnName);
+    if (column?.formatter) {
+      const mockRow = { [columnName]: value };
+      const formattedValue = column.formatter(value, mockRow);
+      if (typeof formattedValue === 'string') {
+        return formattedValue;
+      } else if (typeof formattedValue === 'object' && formattedValue.html) {
+        return formattedValue.content;
+      }
+    }
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No'; // Adjust this to your actual formatted value for boolean
+    }
+    return value.toString();
+  }
+
+
+
+
 
   getFilterOptions(column: string): string[] {
     return [...new Set(this.data.map(item => item[column]))];
   }
+
+  // getFormattedOption(value: any, columnName: string): string {
+  //   const column = this.columns.find(col => col.name === columnName);
+  //   if (column?.formatter) {
+  //     // Mock row with just the value we're formatting
+  //     const mockRow = { [columnName]: value };
+  //     const formattedValue = column.formatter(value, mockRow);
+  //     if (typeof formattedValue === 'string') {
+  //       return formattedValue;
+  //     } else if (typeof formattedValue === 'object' && formattedValue.html) {
+  //       return formattedValue.content;
+  //     }
+  //   }
+  //   return value.toString();
+  // }
 
   resetFilters(): void {
     this.filteredValues = {};
@@ -335,7 +383,12 @@ export class DataTableComponent implements OnInit, OnChanges {
         this.deleteClick.observed)
     );
   }
-
+  /**
+   * Toggle filter row visibility
+   */
+  toggleFilterRow(): void {
+    this.showFilterRow = !this.showFilterRow;
+  }
 
   toggleSearch() {
     this.isSearchOpen = true;

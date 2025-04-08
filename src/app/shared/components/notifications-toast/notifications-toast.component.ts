@@ -78,6 +78,13 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
         borderColor: 'info-border',
         toastClass: 'info-toast',
       },
+      ticket_updated: {
+        icon: 'update',
+        buttonColor: 'button-primary',
+        iconColor: 'info-icon',
+        borderColor: 'info-border',
+        toastClass: 'info-toast',
+      },
       ticket_assigned: {
         icon: 'assignment_ind',
         buttonColor: 'button-warning',

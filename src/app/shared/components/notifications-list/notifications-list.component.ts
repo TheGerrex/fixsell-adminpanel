@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 import {
   NotificationService,
   Notification,
@@ -14,7 +15,10 @@ export class NotificationsListComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     // Retrieve notifications from the backend via HTTP.
@@ -36,10 +40,71 @@ export class NotificationsListComponent implements OnInit, OnDestroy {
     );
   }
 
-  markAsRead(notification: Notification): void {
+  markAsRead(notification: Notification, event?: Event): void {
+    if (event) {
+      event.stopPropagation(); // Prevent navigation when clicking the mark as read button
+    }
+
     this.notificationService.markAsRead(notification.id).subscribe(() => {
       notification.status = 'read';
     });
+  }
+
+  markAllAsRead(): void {
+    // You'll need to implement this in your notification service
+    this.notificationService.markAllAsRead().subscribe(() => {
+      this.notifications.forEach((notification) => {
+        notification.status = 'read';
+      });
+    });
+  }
+
+  hasUnreadNotifications(): boolean {
+    return this.notifications.some(
+      (notification) => notification.status === 'unread',
+    );
+  }
+
+  getNotificationTypeClass(type: string): string {
+    switch (type) {
+      case 'ticket_created':
+        return 'ticket-created';
+      case 'ticket_updated':
+        return 'ticket-updated';
+      case 'ticket_assigned':
+        return 'ticket-assigned';
+      case 'ticket_closed':
+        return 'ticket-closed';
+      default:
+        return 'default';
+    }
+  }
+
+  getNotificationIcon(type: string): string {
+    switch (type) {
+      case 'ticket_created':
+        return 'confirmation_number';
+      case 'ticket_updated':
+        return 'update';
+      case 'ticket_assigned':
+        return 'assignment_ind';
+      case 'ticket_closed':
+        return 'task_alt';
+      default:
+        return 'notifications';
+    }
+  }
+
+  navigateToEntity(notification: Notification): void {
+    this.markAsRead(notification);
+
+    // Navigate to the appropriate page based on the notification type
+    if (notification.entityType === 'ticket') {
+      this.router.navigate(['/support/tickets', notification.entityId]);
+    } else if (notification.entityType === 'lead') {
+      this.router.navigate(['/sales/leads', notification.entityId]);
+    }
+    // Add more entity types as needed
   }
 
   ngOnDestroy(): void {

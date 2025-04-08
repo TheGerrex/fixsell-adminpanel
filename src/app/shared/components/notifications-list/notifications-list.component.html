@@ -1,23 +1,49 @@
-<div class="notifications-list">
-  <h2>Notifications</h2>
-  <div *ngIf="notifications.length === 0" class="no-notifications">
-    No notifications to show.
-  </div>
-  <div
-    *ngFor="let notification of notifications"
-    class="notification-item"
-    [ngClass]="{ unread: notification.status === 'unread' }"
-  >
-    <div class="notification-details">
-      <h3>{{ notification.title }}</h3>
-      <p>{{ notification.message }}</p>
-      <small>{{ notification.createdAt | date : 'short' }}</small>
-    </div>
+<div class="notifications-container">
+  <div class="notifications-header">
+    <h3>Notificaciones</h3>
     <button
-      *ngIf="notification.status === 'unread'"
-      (click)="markAsRead(notification)"
+      class="button button-text-primary"
+      *ngIf="hasUnreadNotifications()"
+      (click)="markAllAsRead()"
     >
-      Mark as Read
+      Marcar todo como leído
     </button>
+  </div>
+
+  <div *ngIf="notifications.length === 0" class="notifications-empty">
+    <mat-icon class="no-items-icon">notifications_off</mat-icon>
+    <p class="message-text">No hay notificaciones disponibles.</p>
+  </div>
+
+  <div class="notifications-list" *ngIf="notifications.length > 0">
+    <div
+      *ngFor="let notification of notifications"
+      class="notification-item"
+      [ngClass]="{ unread: notification.status === 'unread' }"
+      (click)="navigateToEntity(notification)"
+    >
+      <div
+        class="notification-icon"
+        [ngClass]="getNotificationTypeClass(notification.type)"
+      >
+        <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
+      </div>
+      <div class="notification-content">
+        <div class="notification-title">{{ notification.title }}</div>
+        <div class="notification-message">{{ notification.message }}</div>
+        <div class="notification-timestamp">
+          {{ notification.createdAt | date : 'dd MMM yyyy, h:mm a' }}
+        </div>
+      </div>
+      <div class="notification-actions">
+        <button
+          class="button-icon-option"
+          *ngIf="notification.status === 'unread'"
+          (click)="markAsRead(notification, $event)"
+        >
+          <mat-icon>check_circle</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

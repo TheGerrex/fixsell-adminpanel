@@ -31,17 +31,19 @@ export class ClientsListComponent implements OnInit {
     {
       name: 'status',
       label: 'Estado',
+      type: 'select',
       sortable: true,
       formatter: (value: any, row: Client) => ({
         html: true,
-        content: `<div class="${this.getStatusClass(row)}">${
-          row.isActive ? 'Activo' : 'Inactivo'
-        }</div>`,
+        content: `<div class="${this.getStatusClass(row)}">${row.isActive ? 'Activo' : 'Inactivo'
+          }</div>`,
       }),
+      showFilter: true,
     },
     {
       name: 'businessName',
       label: 'Cliente',
+      type: 'input',
       sortable: true,
       formatter: (value: any, row: Client) => ({
         html: true,
@@ -50,29 +52,36 @@ export class ClientsListComponent implements OnInit {
                   ${row.commercialName ? '<br>' + row.commercialName : ''}
                 </div>`,
       }),
+      showFilter: true,
     },
     {
       name: 'rfc',
       label: 'RFC',
+      type: 'input',
       sortable: true,
+      showFilter: false,
     },
     {
       name: 'address',
       label: 'Dirección',
+      type: 'input',
       sortable: false,
       formatter: (value: any, row: Client) => ({
         html: true,
         content: this.formatAddress(row),
       }),
+      showFilter: false,
     },
     {
       name: 'contact',
       label: 'Contacto',
+      type: 'select',
       sortable: false,
       formatter: (value: any, row: Client) => ({
         html: true,
         content: this.getMainContactInfo(row),
       }),
+      showFilter: false,
     },
   ];
 
@@ -81,7 +90,7 @@ export class ClientsListComponent implements OnInit {
     private router: Router,
     private toastService: ToastService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadData();

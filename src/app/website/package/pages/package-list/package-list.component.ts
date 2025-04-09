@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { PackageService } from '../../services/package.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { Package } from 'src/app/website/interfaces/package.interface';
@@ -32,33 +31,40 @@ export class PackageListComponent implements OnInit {
     {
       name: 'model',
       label: 'Modelo',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: Package) => row.printer.model,
     },
     {
       name: 'prints',
       label: 'Impresiónes',
+      type: 'input',
+      showFilter: false,
       formatter: (value: any, row: Package) => ({
         html: true,
         content: `<div style="display: flex; flex-direction: column">
                 <div class="print-item">${this.formatPrints(
-                  row.packagePrintsBw || 0,
-                )} impresiones</div>
+          row.packagePrintsBw || 0,
+        )} impresiones</div>
               </div>`,
       }),
     },
     {
       name: 'deposit',
       label: 'Deposito Inicial',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Package) =>
-        `${this.formatCurrency(Number(row.packageDepositPrice))} ${
-          row.packageCurrency
+        `${this.formatCurrency(Number(row.packageDepositPrice))} ${row.packageCurrency
         }`,
     },
     {
       name: 'monthlyPrice',
       label: 'Pago Mensual',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Package) =>
         `$${row.packageMonthlyPrice} ${row.packageCurrency} (${row.packageDiscountPercentage}% de descuento)`,
@@ -66,21 +72,24 @@ export class PackageListComponent implements OnInit {
     {
       name: 'packageDuration',
       label: 'Duración de Contrato',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Package) => `${row.packageDuration} meses`,
     },
     {
       name: 'packageEndDate',
       label: 'Terminacion de paquete',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Package) => ({
         html: true,
         content: `<div class="end-date-container">
-                    <span class="status-icon ${
-                      this.isWithinDateRange(row.packageEndDate)
-                        ? 'within-date-range'
-                        : 'past-deal'
-                    }"></span>
+                    <span class="status-icon ${this.isWithinDateRange(row.packageEndDate)
+            ? 'within-date-range'
+            : 'past-deal'
+          }"></span>
                     ${this.formatDate(row.packageEndDate)}
                   </div>`,
       }),
@@ -89,11 +98,10 @@ export class PackageListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     private packageService: PackageService,
     private dialog: MatDialog,
     private toastService: ToastService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadData();

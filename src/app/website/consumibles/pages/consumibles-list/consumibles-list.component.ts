@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { ConsumiblesService } from '../../services/consumibles.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
@@ -32,21 +31,29 @@ export class ConsumiblesListComponent implements OnInit {
     {
       name: 'name',
       label: 'Nombre',
+      type: 'input',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'sku',
       label: 'SKU',
+      type: 'input',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'brand',
       label: 'Fabricante',
+      type: 'select',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'yield',
       label: 'Vida Util',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Consumible) =>
         value ? `${value} paginas` : '',
@@ -54,11 +61,15 @@ export class ConsumiblesListComponent implements OnInit {
     {
       name: 'origen',
       label: 'Origen',
+      type: 'select',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'price',
       label: 'Precio',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       // align: 'right',
       formatter: (value: any, row: Consumible) => `${value} ${row.currency}`,
@@ -66,17 +77,18 @@ export class ConsumiblesListComponent implements OnInit {
     {
       name: 'category',
       label: 'Categoria',
+      type: 'select',
+      showFilter: true,
       sortable: true,
     },
   ];
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     private dialog: MatDialog,
     private toastService: ToastService,
     private consumiblesService: ConsumiblesService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadData();

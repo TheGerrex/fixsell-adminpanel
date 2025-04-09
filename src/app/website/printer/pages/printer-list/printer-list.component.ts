@@ -35,12 +35,14 @@ export class PrinterListComponent implements OnInit {
       label: 'Marca',
       sortable: true,
       type: 'select',
+      showFilter: true
     },
     {
       name: 'model',
       label: 'Modelo',
       sortable: true,
       type: 'input',
+      showFilter: true
     },
     {
       name: 'rentable',
@@ -48,18 +50,21 @@ export class PrinterListComponent implements OnInit {
       type: 'select',
       formatter: (value: any, row: Printer) =>
         row.rentable ? 'Renta' : 'Venta',
+      showFilter: true
     },
     {
       name: 'color',
       label: 'Modo de Impresión',
       type: 'select',
       formatter: (value: any, row: Printer) => (row.color ? 'Color' : 'B&N'),
+      showFilter: true
     },
     {
       name: 'category',
       label: 'Categoria',
       sortable: true,
       type: 'select',
+      showFilter: true
     },
     {
       name: 'price',
@@ -68,6 +73,7 @@ export class PrinterListComponent implements OnInit {
       sortable: true,
       type: 'input',
       formatter: (value: any, row: Printer) => `$${row.price} ${row.currency}`,
+      showFilter: false
     },
   ];
 

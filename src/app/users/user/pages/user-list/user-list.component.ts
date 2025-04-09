@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { Role, User } from 'src/app/users/interfaces/users.interface';
+import { User } from 'src/app/users/interfaces/users.interface';
 import { UsersService } from 'src/app/users/services/users.service';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from 'src/app/shared/components/data-table/data-table.component';
@@ -24,22 +24,30 @@ export class UserListComponent implements OnInit {
     {
       name: 'name',
       label: 'Nombre',
+      type: 'input',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'email',
       label: 'Correo',
+      type: 'input',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'role',
       label: 'Rol',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: User) => row.role?.name || 'Sin rol',
     },
     {
       name: 'isActive',
       label: 'Estado',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: User) => ({
         html: true,
@@ -53,10 +61,9 @@ export class UserListComponent implements OnInit {
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    private authService: AuthService,
     private userService: UsersService,
     private toastService: ToastService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isLoading = true;

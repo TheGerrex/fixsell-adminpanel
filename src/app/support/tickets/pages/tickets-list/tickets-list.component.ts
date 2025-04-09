@@ -37,6 +37,8 @@ export class TicketsListComponent implements OnInit {
     {
       name: 'status',
       label: 'Estatus',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: Ticket) => ({
         html: true,
@@ -48,16 +50,22 @@ export class TicketsListComponent implements OnInit {
     {
       name: 'clientName',
       label: 'Cliente',
+      type: 'input',
+      showFilter: true,
       sortable: true,
     },
     {
       name: 'title',
       label: 'Tema',
+      type: 'input',
+      showFilter: false,
       sortable: true,
     },
     {
       name: 'type',
       label: 'Tipo',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any) => {
         // Handle ticket type formatting
@@ -78,6 +86,8 @@ export class TicketsListComponent implements OnInit {
     {
       name: 'priority',
       label: 'Prioridad',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: Ticket) => {
         const priorityClass = this.getPriorityClass(row);
@@ -122,6 +132,8 @@ export class TicketsListComponent implements OnInit {
     {
       name: 'updatedDate',
       label: 'Ultima Actualización',
+      type: 'date',
+      showFilter: false,
       sortable: true,
       formatter: (value: any) => {
         if (!value) return '';

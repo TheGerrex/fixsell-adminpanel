@@ -39,12 +39,14 @@ export class LeadsListComponent implements OnInit {
           row,
         )}">${this.translateStatus(row.status)}</div>`,
       }),
+      showFilter: true,
     },
     {
       name: 'client',
       label: 'Cliente',
       sortable: true,
       type: 'input',
+      showFilter: true,
     },
     {
       name: 'product_interested',
@@ -52,6 +54,7 @@ export class LeadsListComponent implements OnInit {
       sortable: true,
       type: 'select',
       formatter: (value: any, row: Lead) => this.getProductName(row),
+      showFilter: true,
     },
     {
       name: 'email',
@@ -63,6 +66,7 @@ export class LeadsListComponent implements OnInit {
         content: `${row.email}<br>${row.phone ? this.formatPhone(row.phone) : ''
           }`,
       }),
+      showFilter: false,
     },
     {
       name: 'last_contacted',
@@ -88,13 +92,16 @@ export class LeadsListComponent implements OnInit {
         }
         return 0; // For leads with no communications, place them at the end
       },
+      showFilter: false,
     },
     {
       name: 'assigned',
       label: 'Asignado',
       type: 'select',
       formatter: (value: any, row: Lead) => row.assigned?.name || 'No asignado',
+      showFilter: true,
     },
+
   ];
   constructor(
     private leadsService: LeadsService,

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { DealService } from '../../services/deal.service';
-import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Deal } from 'src/app/website/interfaces/deal.interface';
@@ -32,6 +30,8 @@ export class DealListComponent implements OnInit {
     {
       name: 'productType',
       label: 'Producto',
+      type: 'select',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: Deal) =>
         row.printer ? 'Multifuncional' : 'Consumible',
@@ -39,17 +39,21 @@ export class DealListComponent implements OnInit {
     {
       name: 'productName',
       label: 'Nombre',
+      type: 'input',
+      showFilter: true,
       sortable: true,
       formatter: (value: any, row: Deal) =>
         row.printer
           ? row.printer.model
           : row.consumible
-          ? row.consumible.name
-          : 'N/A',
+            ? row.consumible.name
+            : 'N/A',
     },
     {
       name: 'regularPrice',
       label: 'Precio',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Deal) => {
         let price = '0';
@@ -69,6 +73,8 @@ export class DealListComponent implements OnInit {
     {
       name: 'dealPrice',
       label: 'Precio Promoción',
+      type: 'input',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Deal) =>
         `$${row.dealPrice} ${row.dealCurrency} (${row.dealDiscountPercentage}% de descuento)`,
@@ -76,6 +82,8 @@ export class DealListComponent implements OnInit {
     {
       name: 'dealEndDate',
       label: 'Terminación de promoción',
+      type: 'date',
+      showFilter: false,
       sortable: true,
       formatter: (value: any, row: Deal) => {
         if (!row.dealEndDate) return 'Sin fecha de terminación';
@@ -83,11 +91,10 @@ export class DealListComponent implements OnInit {
         return {
           html: true,
           content: `<div class="end-date-container">
-                      <span class="status-icon ${
-                        this.isWithinDateRange(row.dealEndDate)
-                          ? 'within-date-range'
-                          : 'past-deal'
-                      }"></span>
+                      <span class="status-icon ${this.isWithinDateRange(row.dealEndDate)
+              ? 'within-date-range'
+              : 'past-deal'
+            }"></span>
                       ${this.formatDate(row.dealEndDate)}
                     </div>`,
         };
@@ -97,12 +104,10 @@ export class DealListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     private dialog: MatDialog,
-    private dialogService: DialogService,
     private toastService: ToastService,
     private dealService: DealService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadData();

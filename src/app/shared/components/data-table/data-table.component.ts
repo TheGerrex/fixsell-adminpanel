@@ -7,13 +7,16 @@ import {
   OnChanges,
   OnInit,
   Output,
+  QueryList,
   SimpleChanges,
   ViewChild,
+  ViewChildren,
   ViewEncapsulation, // Add this import
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSelect } from '@angular/material/select';
 
 /**
  * Column configuration for DataTable component
@@ -22,6 +25,9 @@ export interface TableColumn {
 
   /** Tipo de dato en la columna (para definir el tipo de filtro) */
   type?: 'input' | 'select' | 'date';
+
+  /** Property control filter visibility */
+  showFilter?: boolean;
 
   /** Property name in data object */
   name: string;
@@ -67,6 +73,9 @@ export class DataTableComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChildren('filterInput') filterInputs!: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChildren('filterSelect') selectRefs!: QueryList<MatSelect>;
+
 
 
   // Table configuration
@@ -119,25 +128,32 @@ export class DataTableComponent implements OnInit, OnChanges {
     // Filtro personalizado para múltiples columnas
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const filters = JSON.parse(filter);
-
       return Object.keys(filters).every((column) => {
         const filterValue = filters[column];
         const dataValue = data[column];
 
-        // Skip if no filter applied
-        if (filterValue === null || filterValue === undefined || filterValue === '') {
+        // Aquí verificas si el valor del filtro coincide con el de la fila
+        if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) {
           return true;
         }
 
-        // Boolean filter (e.g., from select for 'color')
+        // Para los valores en array o multi-select, asegura que los datos sean correctos
+        if (Array.isArray(filterValue)) {
+          return filterValue.some(val =>
+            dataValue?.toString().toLowerCase().includes(val.toString().toLowerCase())
+          );
+        }
+
+        // Maneja el filtro por valores booleanos o por texto
         if (typeof filterValue === 'boolean') {
           return dataValue === filterValue;
         }
 
-        // Normal string-based filter (e.g., model input)
         return dataValue?.toString().toLowerCase().includes(filterValue.toString().toLowerCase());
       });
     };
+
+
 
 
   }
@@ -220,11 +236,102 @@ export class DataTableComponent implements OnInit, OnChanges {
     }
   }
 
+  applyMultiFilter(selectedValues: any[], columnName: string): void {
+    // Si la columna contiene objetos, necesitamos asegurarnos de que estamos filtrando por la propiedad 'name'
+    if (this.data.length > 0 && typeof this.data[0][columnName] === 'object') {
+      // Si estamos trabajando con objetos, extraemos el 'name' de cada objeto
+      const selectedNames = selectedValues.map(value => value.name || value); // 'value.name' o 'value' si no es un objeto
+      this.filteredValues[columnName] = selectedNames;
+      console.log('Filtered Values:', this.filteredValues);
+    } else {
+      // Si es un valor primitivo, simplemente lo asignamos
+      this.filteredValues[columnName] = selectedValues;
+    }
+
+    this.updateFilter(); // Aplicamos el filtro
+  }
+
+
+  addInputFilter(event: KeyboardEvent, columnName: string): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim();
+
+    if (value) {
+      this.filteredValues[columnName] = this.filteredValues[columnName] || [];
+      if (!this.filteredValues[columnName].includes(value)) {
+        this.filteredValues[columnName].push(value);
+      }
+      input.value = '';
+      this.updateFilter();
+    }
+  }
+
+  removeFilter(columnName: string, valueToRemove: string): void {
+    const currentValue = this.filteredValues[columnName];
+
+    // Si es array, quitamos el valor del array
+    if (Array.isArray(currentValue)) {
+      this.filteredValues[columnName] = currentValue.filter(
+        (val: string) => val !== valueToRemove
+      );
+    }
+    // Si es valor único
+    else if (currentValue === valueToRemove) {
+      this.filteredValues[columnName] = '';
+    }
+
+    // 🔥 Aquí reseteamos el mat-select correspondiente visualmente
+    const select = this.selectRefs.find(
+      ref => ref._elementRef.nativeElement.getAttribute('data-column') === columnName
+    );
+    if (select) {
+      select.writeValue(this.filteredValues[columnName] || []);
+    }
+    // Reseteamos el input correspondiente visualmente
+    const input = this.filterInputs.find(
+      ref => ref.nativeElement.getAttribute('data-column') === columnName
+    );
+    if (input) {
+      (input.nativeElement as HTMLInputElement).value = '';  // Limpiamos el valor del input
+    }
+
+
+
+    this.updateFilter();
+  }
+
+
+  getActiveFilters(): { column: string; columnLabel: string; value: string }[] {
+    const filters: { column: string; columnLabel: string; value: string }[] = [];
+
+    for (const key in this.filteredValues) {
+      const column = this.columns.find(c => c.name === key);
+      const filterValue = this.filteredValues[key];
+
+      if (!column) continue;
+
+      if (Array.isArray(filterValue)) {
+        filterValue.forEach((value: string) => {
+          filters.push({ column: key, columnLabel: column.label, value });
+        });
+      } else if (filterValue !== null && filterValue !== undefined && filterValue !== '') {
+        filters.push({ column: key, columnLabel: column.label, value: filterValue.toString() });
+      }
+    }
+
+    return filters;
+  }
+
+  updateFilter(): void {
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
+  }
+
+  getFilterCount(): number {
+    return this.getActiveFilters().length;
+  }
   /**
    * Apply filter to the table
-   */
-
-  applyFilter(eventOrValue: Event | string, columnName: string): void {
+   */applyFilter(eventOrValue: Event | string, columnName: string): void {
     let value: string;
     if (typeof eventOrValue === 'string') {
       value = eventOrValue;
@@ -247,25 +354,58 @@ export class DataTableComponent implements OnInit, OnChanges {
     if (column?.formatter) {
       const mockRow = { [columnName]: value };
       const formattedValue = column.formatter(value, mockRow);
+      console.log('Formatted Value:', formattedValue);
+
+      if (typeof formattedValue === 'object' && formattedValue.html) {
+        // Extract plain text from the HTML content
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = formattedValue.content;
+        return tempDiv.textContent || tempDiv.innerText || '';
+      }
+
       if (typeof formattedValue === 'string') {
+        // Check if the string contains HTML and extract plain text
+        if (formattedValue.includes('<')) {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = formattedValue;
+          return tempDiv.textContent || tempDiv.innerText || '';
+        }
         return formattedValue;
-      } else if (typeof formattedValue === 'object' && formattedValue.html) {
-        return formattedValue.content;
       }
     }
+
     if (typeof value === 'boolean') {
       return value ? 'Yes' : 'No'; // Adjust this to your actual formatted value for boolean
     }
-    return value.toString();
+
+    return value?.toString() || '';
+  }
+  getFilterOptions(column: string): any[] {
+    const columnConfig = this.columns.find(col => col.name === column);
+
+    if (columnConfig?.showFilter === false) {
+      return []; // Si el filtro está deshabilitado para esta columna, devuelve un array vacío.
+    }
+
+    // Si la columna contiene objetos, buscamos la propiedad 'name' de manera dinámica
+    if (this.data.length > 0 && typeof this.data[0][column] === 'object') {
+      const values = this.data.map(item => item[column]);
+      // Si el valor es un objeto, usamos su propiedad 'name' o el valor predeterminado 'No asignado'
+      const uniqueValues = [...new Set(values.map(value => value?.name || 'No asignado'))];
+      return uniqueValues;
+    }
+
+    // Si no es un objeto, simplemente devolvemos valores únicos (para valores primitivos)
+    const values = this.data.map(item => item[column]);
+    const uniqueValues = [...new Set(values.filter(value => value !== undefined && value !== null && value !== ''))];
+    return uniqueValues;
   }
 
 
 
 
 
-  getFilterOptions(column: string): string[] {
-    return [...new Set(this.data.map(item => item[column]))];
-  }
+
 
   // getFormattedOption(value: any, columnName: string): string {
   //   const column = this.columns.find(col => col.name === columnName);
@@ -281,10 +421,13 @@ export class DataTableComponent implements OnInit, OnChanges {
   //   }
   //   return value.toString();
   // }
-
   resetFilters(): void {
-    this.filteredValues = {};
-    this.dataSource.filter = '';
+    this.filteredValues = {}; // Clear all filters
+
+    // Reset filters for all columns
+    this.columns.forEach(column => {
+      this.applyFilter('', column.name); // Pass an empty filter value and the column name
+    });
   }
 
   /**

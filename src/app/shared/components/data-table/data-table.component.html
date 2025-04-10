@@ -74,6 +74,7 @@
             <!-- Input de texto -->
             <mat-form-field *ngSwitchCase="'input'" appearance="outline">
               <mat-label>{{ column.label }}</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
               <input
                 #filterInput
                 [attr.data-column]="column.name"
@@ -81,6 +82,16 @@
                 (input)="applyFilter(filterInput.value, column.name)"
                 placeholder="Filtrar {{ column.label }}"
               />
+              <button
+                mat-icon-button
+                matSuffix
+                *ngIf="filterInput.value"
+                (click)="clearInput(filterInput, column.name)"
+                aria-label="Clear input"
+                style="margin-right: 0.25rem"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
             </mat-form-field>
 
             <!-- Lista desplegable -->
@@ -97,7 +108,7 @@
                   *ngFor="let option of getFilterOptions(column.name)"
                   [value]="option"
                 >
-                  {{ getFormattedOption(option, column.name) }}
+                  {{ option }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -130,9 +141,7 @@
         >
           <span class="chip-label">{{ chip.columnLabel }}</span>
           <span class="chip-divider">|</span>
-          <span class="chip-value">{{
-            getFormattedOption(chip.value, chip.column)
-          }}</span>
+          <span class="chip-value">{{ chip.value }}</span>
 
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>

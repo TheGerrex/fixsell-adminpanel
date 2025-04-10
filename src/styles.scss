@@ -1340,6 +1340,126 @@ button.delete-icon mat-icon {
   color: #22c55e !important;
 }
 
+/*----------------------[ Status Classes ]-------------------------------*/
+.prospect-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $indigo-50;
+  font-weight: 500;
+  background-color: $indigo-600;
+  border-radius: 50px;
+  padding: 0.25rem 0.5rem;
+  text-transform: uppercase;
+}
+.client-class {
+  color: $green-500;
+  font-weight: 500;
+}
+.no-client-class {
+  color: $red-500;
+  font-weight: 500;
+}
+
+/* Status background colors */
+.within-one-days {
+  background-color: $green-500;
+}
+.within-three-days {
+  background-color: $green-400;
+}
+.within-five-days {
+  background-color: $yellow-300;
+}
+.within-seven-days {
+  background-color: $orange-400;
+}
+.more-than-seven-days {
+  background-color: $red-400;
+}
+.no-communications {
+  background-color: transparent;
+}
+.within-date-range {
+  background-color: $green-500;
+}
+
+.past-deal {
+  background-color: $red-500;
+}
+
+.print-item {
+  margin-bottom: 4px;
+}
+
+.end-date-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.within-date-range {
+  background-color: $green-500;
+}
+
+.past-deal {
+  background-color: $red-500;
+}
+
+.ticket-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 50px;
+  color: $white;
+  padding: 0.25rem 0.75rem;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  min-height: 34px;
+}
+
+.status-open {
+  background-color: $indigo-500;
+  color: $indigo-50;
+}
+
+.status-in-progress {
+  background-color: $yellow-500;
+  color: $yellow-800;
+}
+
+.status-without-resolution {
+  background-color: $orange-500;
+  color: $text;
+}
+
+.status-completed {
+  background-color: $green-500;
+  color: #0a1f12;
+}
+
+.priority-low {
+  color: $yellow-500;
+}
+
+.priority-medium {
+  color: $orange-500;
+}
+
+.priority-high {
+  color: $red-500;
+}
+
 /*----------------------[ Position ]-------------------------------*/
 
 .pos-relative {

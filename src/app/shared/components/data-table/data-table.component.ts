@@ -57,6 +57,8 @@ export interface TableColumn {
   cellClass?: string | ((row: any) => string);
 
   sortData?: (row: any) => any;
+
+  rawValue?: (row: any) => any;
 }
 
 /**
@@ -125,37 +127,34 @@ export class DataTableComponent implements OnInit, OnChanges {
     // Initialize data source
     this.updateDataSource();
 
-    // Filtro personalizado para múltiples columnas
+    // Custom filter predicate to use rawValue for filtering
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const filters = JSON.parse(filter);
-      return Object.keys(filters).every((column) => {
-        const filterValue = filters[column];
-        const dataValue = data[column];
+      return Object.keys(filters).every((columnName) => {
+        const filterValue = filters[columnName];
+        const column = this.columns.find(col => col.name === columnName);
 
-        // Aquí verificas si el valor del filtro coincide con el de la fila
-        if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) {
+        if (!column || !filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) {
           return true;
         }
 
-        // Para los valores en array o multi-select, asegura que los datos sean correctos
+        // Use rawValue if defined, otherwise use the raw data
+        const rawValue = column.rawValue ? column.rawValue(data) : data[columnName];
+        const formattedValue = String(rawValue).toLowerCase();
+
+        // Handle array filters (e.g., multi-select)
         if (Array.isArray(filterValue)) {
-          return filterValue.some(val =>
-            dataValue?.toString().toLowerCase().includes(val.toString().toLowerCase())
-          );
+          return filterValue.some(val => formattedValue.includes(val.toString().toLowerCase()));
         }
 
-        // Maneja el filtro por valores booleanos o por texto
+        // Handle boolean and text filters
         if (typeof filterValue === 'boolean') {
-          return dataValue === filterValue;
+          return formattedValue === filterValue.toString();
         }
 
-        return dataValue?.toString().toLowerCase().includes(filterValue.toString().toLowerCase());
+        return formattedValue.includes(filterValue.toString().toLowerCase());
       });
     };
-
-
-
-
   }
 
   ngAfterViewInit(): void {
@@ -266,6 +265,11 @@ export class DataTableComponent implements OnInit, OnChanges {
     }
   }
 
+  clearInput(inputElement: HTMLInputElement, columnName: string): void {
+    inputElement.value = ''; // Clear the input field
+    this.applyFilter('', columnName); // Remove the filter
+  }
+
   removeFilter(columnName: string, valueToRemove: string): void {
     const currentValue = this.filteredValues[columnName];
 
@@ -351,76 +355,68 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   getFormattedOption(value: any, columnName: string): string {
     const column = this.columns.find(col => col.name === columnName);
-    if (column?.formatter) {
-      const mockRow = { [columnName]: value };
-      const formattedValue = column.formatter(value, mockRow);
-      console.log('Formatted Value:', formattedValue);
 
-      if (typeof formattedValue === 'object' && formattedValue.html) {
-        // Extract plain text from the HTML content
+    // If the value is already a raw value, return it directly
+    if (!column?.formatter) {
+      return value?.toString() || '';
+    }
+
+    // Use the formatter to format the value
+    const mockRow = { [columnName]: value };
+    const formattedValue = column.formatter(value, mockRow);
+
+    if (typeof formattedValue === 'object' && formattedValue.html) {
+      // Extract plain text from the HTML content
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = formattedValue.content;
+      return tempDiv.textContent || tempDiv.innerText || '';
+    }
+
+    if (typeof formattedValue === 'string') {
+      // Check if the string contains HTML and extract plain text
+      if (formattedValue.includes('<')) {
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = formattedValue.content;
+        tempDiv.innerHTML = formattedValue;
         return tempDiv.textContent || tempDiv.innerText || '';
       }
-
-      if (typeof formattedValue === 'string') {
-        // Check if the string contains HTML and extract plain text
-        if (formattedValue.includes('<')) {
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = formattedValue;
-          return tempDiv.textContent || tempDiv.innerText || '';
-        }
-        return formattedValue;
-      }
+      return formattedValue;
     }
 
     if (typeof value === 'boolean') {
       return value ? 'Yes' : 'No'; // Adjust this to your actual formatted value for boolean
     }
-
+    console.log(`Formatted option for ${value}:`, this.getFormattedOption(value, columnName));
     return value?.toString() || '';
   }
-  getFilterOptions(column: string): any[] {
-    const columnConfig = this.columns.find(col => col.name === column);
 
-    if (columnConfig?.showFilter === false) {
-      return []; // Si el filtro está deshabilitado para esta columna, devuelve un array vacío.
+  getFilterOptions(columnName: string): any[] {
+    const columnConfig = this.columns.find(col => col.name === columnName);
+
+    if (!columnConfig || columnConfig.showFilter === false) {
+      return []; // If the filter is disabled for this column, return an empty array.
     }
 
-    // Si la columna contiene objetos, buscamos la propiedad 'name' de manera dinámica
-    if (this.data.length > 0 && typeof this.data[0][column] === 'object') {
-      const values = this.data.map(item => item[column]);
-      // Si el valor es un objeto, usamos su propiedad 'name' o el valor predeterminado 'No asignado'
-      const uniqueValues = [...new Set(values.map(value => value?.name || 'No asignado'))];
-      return uniqueValues;
-    }
+    // Map the data to raw values or the column's property value
+    const values = this.data.map(row => {
+      if (columnConfig.rawValue) {
+        return columnConfig.rawValue(row); // Use rawValue if defined
+      }
 
-    // Si no es un objeto, simplemente devolvemos valores únicos (para valores primitivos)
-    const values = this.data.map(item => item[column]);
+      const columnValue = row[columnName];
+      if (typeof columnValue === 'object' && columnValue !== null) {
+        // If the value is an object, try to extract a meaningful property (e.g., 'name')
+        return columnValue.name || 'No asignado';
+      }
+
+      return columnValue; // For primitive values, return as is
+    });
+
+    // Return unique values, filtering out undefined, null, or empty strings
     const uniqueValues = [...new Set(values.filter(value => value !== undefined && value !== null && value !== ''))];
+    console.log(`Filter options for ${columnName}:`, uniqueValues);
     return uniqueValues;
   }
 
-
-
-
-
-
-
-  // getFormattedOption(value: any, columnName: string): string {
-  //   const column = this.columns.find(col => col.name === columnName);
-  //   if (column?.formatter) {
-  //     // Mock row with just the value we're formatting
-  //     const mockRow = { [columnName]: value };
-  //     const formattedValue = column.formatter(value, mockRow);
-  //     if (typeof formattedValue === 'string') {
-  //       return formattedValue;
-  //     } else if (typeof formattedValue === 'object' && formattedValue.html) {
-  //       return formattedValue.content;
-  //     }
-  //   }
-  //   return value.toString();
-  // }
   resetFilters(): void {
     this.filteredValues = {}; // Clear all filters
 
@@ -428,6 +424,20 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.columns.forEach(column => {
       this.applyFilter('', column.name); // Pass an empty filter value and the column name
     });
+
+    // Clear the values inside the input fields
+    this.filterInputs.forEach(inputRef => {
+      const inputElement = inputRef.nativeElement as HTMLInputElement;
+      inputElement.value = ''; // Clear the input field
+    });
+
+    // Clear the values inside the select fields (if applicable)
+    this.selectRefs.forEach(selectRef => {
+      selectRef.writeValue([]); // Reset the select field
+    });
+
+    // Update the filter to reflect the cleared state
+    this.updateFilter();
   }
 
   /**

@@ -35,6 +35,7 @@ export class PackageListComponent implements OnInit {
       showFilter: true,
       sortable: true,
       formatter: (value: any, row: Package) => row.printer.model,
+      rawValue: (row: Package) => row.printer.model,
     },
     {
       name: 'prints',
@@ -49,6 +50,7 @@ export class PackageListComponent implements OnInit {
         )} impresiones</div>
               </div>`,
       }),
+      rawValue: (row: Package) => row.packagePrintsBw,
     },
     {
       name: 'deposit',
@@ -59,6 +61,7 @@ export class PackageListComponent implements OnInit {
       formatter: (value: any, row: Package) =>
         `${this.formatCurrency(Number(row.packageDepositPrice))} ${row.packageCurrency
         }`,
+      rawValue: (row: Package) => row.packageDepositPrice,
     },
     {
       name: 'monthlyPrice',
@@ -68,6 +71,7 @@ export class PackageListComponent implements OnInit {
       sortable: true,
       formatter: (value: any, row: Package) =>
         `$${row.packageMonthlyPrice} ${row.packageCurrency} (${row.packageDiscountPercentage}% de descuento)`,
+      rawValue: (row: Package) => row.packageMonthlyPrice,
     },
     {
       name: 'packageDuration',
@@ -76,6 +80,7 @@ export class PackageListComponent implements OnInit {
       showFilter: false,
       sortable: true,
       formatter: (value: any, row: Package) => `${row.packageDuration} meses`,
+      rawValue: (row: Package) => row.packageDuration,
     },
     {
       name: 'packageEndDate',
@@ -93,6 +98,7 @@ export class PackageListComponent implements OnInit {
                     ${this.formatDate(row.packageEndDate)}
                   </div>`,
       }),
+      rawValue: (row: Package) => row.packageEndDate,
     },
   ];
 

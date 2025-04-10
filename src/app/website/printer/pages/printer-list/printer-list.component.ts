@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { PrinterService } from '../../services/printer.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
@@ -50,6 +49,7 @@ export class PrinterListComponent implements OnInit {
       type: 'select',
       formatter: (value: any, row: Printer) =>
         row.rentable ? 'Renta' : 'Venta',
+      rawValue: (row: Printer) => (row.rentable ? 'Renta' : 'Venta'),
       showFilter: true
     },
     {
@@ -57,6 +57,7 @@ export class PrinterListComponent implements OnInit {
       label: 'Modo de Impresión',
       type: 'select',
       formatter: (value: any, row: Printer) => (row.color ? 'Color' : 'B&N'),
+      rawValue: (row: Printer) => (row.color ? 'Color' : 'B&N'),
       showFilter: true
     },
     {
@@ -73,6 +74,7 @@ export class PrinterListComponent implements OnInit {
       sortable: true,
       type: 'input',
       formatter: (value: any, row: Printer) => `$${row.price} ${row.currency}`,
+      rawValue: (row: Printer) => row.price,
       showFilter: false
     },
   ];
@@ -80,7 +82,6 @@ export class PrinterListComponent implements OnInit {
   constructor(
     private router: Router,
     private printerService: PrinterService,
-    private authService: AuthService,
     private toastService: ToastService,
     private dialog: MatDialog,
   ) { }

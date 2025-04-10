@@ -39,6 +39,7 @@ export class LeadsListComponent implements OnInit {
           row,
         )}">${this.translateStatus(row.status)}</div>`,
       }),
+      rawValue: (row: Lead) => this.translateStatus(row.status), // Raw value for filtering
       showFilter: true,
     },
     {
@@ -54,6 +55,7 @@ export class LeadsListComponent implements OnInit {
       sortable: true,
       type: 'select',
       formatter: (value: any, row: Lead) => this.getProductName(row),
+      rawValue: (row: Lead) => this.getProductName(row),
       showFilter: true,
     },
     {
@@ -66,6 +68,7 @@ export class LeadsListComponent implements OnInit {
         content: `${row.email}<br>${row.phone ? this.formatPhone(row.phone) : ''
           }`,
       }),
+      rawValue: (row: Lead) => row.email,
       showFilter: false,
     },
     {
@@ -82,6 +85,7 @@ export class LeadsListComponent implements OnInit {
                   ${this.getLastCommunicationTime(row)}
                 </div>`,
       }),
+      rawValue: (row: Lead) => this.getLastCommunicationTime(row),
       // Add this property to provide sort data
       sortData: (row: Lead) => {
         if (row.communications && row.communications.length > 0) {
@@ -99,6 +103,7 @@ export class LeadsListComponent implements OnInit {
       label: 'Asignado',
       type: 'select',
       formatter: (value: any, row: Lead) => row.assigned?.name || 'No asignado',
+      rawValue: (row: Lead) => row.assigned?.name || 'No asignado',
       showFilter: true,
     },
 

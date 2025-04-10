@@ -42,6 +42,7 @@ export class UserListComponent implements OnInit {
       showFilter: true,
       sortable: true,
       formatter: (value: any, row: User) => row.role?.name || 'Sin rol',
+      rawValue: (row: User) => row.role?.name || 'Sin rol',
     },
     {
       name: 'isActive',
@@ -55,6 +56,7 @@ export class UserListComponent implements OnInit {
           ? '<span class="active-user">ACTIVO</span>'
           : '<span class="inactive-user">INACTIVO</span>',
       }),
+      rawValue: (row: User) => (row.isActive ? 'Activo' : 'Inactivo'),
     },
   ];
 

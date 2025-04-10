@@ -35,6 +35,7 @@ export class DealListComponent implements OnInit {
       sortable: true,
       formatter: (value: any, row: Deal) =>
         row.printer ? 'Multifuncional' : 'Consumible',
+      rawValue: (row: Deal) => (row.printer ? 'Multifuncional' : 'Consumible'),
     },
     {
       name: 'productName',
@@ -43,6 +44,12 @@ export class DealListComponent implements OnInit {
       showFilter: true,
       sortable: true,
       formatter: (value: any, row: Deal) =>
+        row.printer
+          ? row.printer.model
+          : row.consumible
+            ? row.consumible.name
+            : 'N/A',
+      rawValue: (row: Deal) =>
         row.printer
           ? row.printer.model
           : row.consumible
@@ -69,6 +76,20 @@ export class DealListComponent implements OnInit {
 
         return `$${price} ${currency}`;
       },
+      rawValue: (row: Deal) => {
+        let price = '0';
+        let currency = 'MXN';
+
+        if (row.printer) {
+          price = row.printer.price.toString();
+          currency = row.printer.currency;
+        } else if (row.consumible) {
+          price = row.consumible.price.toString();
+          currency = row.consumible.currency;
+        }
+
+        return `$${price} ${currency}`;
+      },
     },
     {
       name: 'dealPrice',
@@ -78,6 +99,7 @@ export class DealListComponent implements OnInit {
       sortable: true,
       formatter: (value: any, row: Deal) =>
         `$${row.dealPrice} ${row.dealCurrency} (${row.dealDiscountPercentage}% de descuento)`,
+      rawValue: (row: Deal) => row.dealPrice,
     },
     {
       name: 'dealEndDate',
@@ -99,6 +121,7 @@ export class DealListComponent implements OnInit {
                     </div>`,
         };
       },
+      rawValue: (row: Deal) => row.dealEndDate || 'Sin fecha de terminación',
     },
   ];
 

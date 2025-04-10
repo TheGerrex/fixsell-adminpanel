@@ -35,9 +35,9 @@ export class ClientsListComponent implements OnInit {
       sortable: true,
       formatter: (value: any, row: Client) => ({
         html: true,
-        content: `<div class="${this.getStatusClass(row)}">${row.isActive ? 'Activo' : 'Inactivo'
-          }</div>`,
+        content: `<div class="${this.getStatusClass(row)}">${row.isActive ? 'Activo' : 'Inactivo'}</div>`,
       }),
+      rawValue: (row: Client) => (row.isActive ? 'Activo' : 'Inactivo'), // Raw value for filtering
       showFilter: true,
     },
     {
@@ -52,6 +52,7 @@ export class ClientsListComponent implements OnInit {
                   ${row.commercialName ? '<br>' + row.commercialName : ''}
                 </div>`,
       }),
+      rawValue: (row: Client) => row.businessName, // Use raw business name for filtering
       showFilter: true,
     },
     {
@@ -59,7 +60,8 @@ export class ClientsListComponent implements OnInit {
       label: 'RFC',
       type: 'input',
       sortable: true,
-      showFilter: false,
+      rawValue: (row: Client) => row.rfc, // Raw value for filtering
+      showFilter: true,
     },
     {
       name: 'address',
@@ -70,6 +72,7 @@ export class ClientsListComponent implements OnInit {
         html: true,
         content: this.formatAddress(row),
       }),
+      rawValue: (row: Client) => this.formatAddress(row), // Use formatted address for filtering
       showFilter: false,
     },
     {
@@ -81,6 +84,7 @@ export class ClientsListComponent implements OnInit {
         html: true,
         content: this.getMainContactInfo(row),
       }),
+      rawValue: (row: Client) => this.getMainContactInfo(row), // Use contact info for filtering
       showFilter: false,
     },
   ];

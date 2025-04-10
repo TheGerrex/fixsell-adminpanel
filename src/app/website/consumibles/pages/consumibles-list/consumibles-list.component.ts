@@ -57,6 +57,7 @@ export class ConsumiblesListComponent implements OnInit {
       sortable: true,
       formatter: (value: any, row: Consumible) =>
         value ? `${value} paginas` : '',
+      rawValue: (row: Consumible) => row.yield,
     },
     {
       name: 'origen',
@@ -73,6 +74,7 @@ export class ConsumiblesListComponent implements OnInit {
       sortable: true,
       // align: 'right',
       formatter: (value: any, row: Consumible) => `${value} ${row.currency}`,
+      rawValue: (row: Consumible) => row.price,
     },
     {
       name: 'category',

@@ -82,20 +82,6 @@
   gap: 1rem;
 }
 
-.ticket-status {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.25rem;
-  border-radius: $border-radius;
-  color: $white;
-  padding: 0.25rem 0.5rem;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 14px;
-  line-height: 1;
-  min-height: 34px;
-}
-
 .ticket-data-item {
   display: flex;
   flex-direction: column;
@@ -251,33 +237,47 @@
   }
 }
 
-.status-open {
-  background-color: $indigo-500 !important;
-}
+// .ticket-status {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   gap: 0.25rem;
+//   border-radius: $border-radius;
+//   color: $white;
+//   padding: 0.25rem 0.5rem;
+//   font-family: 'Roboto Mono', monospace;
+//   font-size: 14px;
+//   line-height: 1;
+//   min-height: 34px;
+// }
 
-.status-in-progress {
-  background-color: $yellow-500;
-}
+// .status-open {
+//   background-color: $indigo-500 !important;
+// }
 
-.status-without-resolution {
-  background-color: $orange-500;
-}
+// .status-in-progress {
+//   background-color: $yellow-500;
+// }
 
-.status-completed {
-  background-color: $green-500;
-}
+// .status-without-resolution {
+//   background-color: $orange-500;
+// }
 
-.priority-low {
-  color: $yellow-500;
-}
+// .status-completed {
+//   background-color: $green-500;
+// }
 
-.priority-medium {
-  color: $orange-500;
-}
+// .priority-low {
+//   color: $yellow-500;
+// }
 
-.priority-high {
-  color: $red-500;
-}
+// .priority-medium {
+//   color: $orange-500;
+// }
+
+// .priority-high {
+//   color: $red-500;
+// }
 
 .priority-flags-container {
   display: flex;

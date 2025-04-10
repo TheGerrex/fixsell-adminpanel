@@ -46,6 +46,7 @@ export class TicketsListComponent implements OnInit {
                     ${this.getStatusTranslation(row.status)}
                   </div>`,
       }),
+      rawValue: (row: Ticket) => this.getStatusTranslation(row.status),
     },
     {
       name: 'clientName',
@@ -80,6 +81,17 @@ export class TicketsListComponent implements OnInit {
             return 'Email';
           default:
             return value;
+        }
+      },
+      rawValue: (row: Ticket) => {
+        // Handle ticket type formatting
+        switch (row.type) {
+          case 'remote':
+            return 'Remoto';
+          case 'on-site':
+            return 'En sitio';
+          default:
+            return row.type;
         }
       },
     },
@@ -128,6 +140,19 @@ export class TicketsListComponent implements OnInit {
           content: flagsHtml,
         };
       },
+      rawValue: (row: Ticket) => {
+        // Handle ticket type formatting
+        switch (row.priority) {
+          case 'high':
+            return 'Alto';
+          case 'medium':
+            return 'Medio';
+          case 'low':
+            return 'Bajo';
+          default:
+            return row.priority;
+        }
+      },
     },
     {
       name: 'updatedDate',
@@ -136,6 +161,17 @@ export class TicketsListComponent implements OnInit {
       showFilter: false,
       sortable: true,
       formatter: (value: any) => {
+        if (!value) return '';
+        const date = new Date(value);
+        return date.toLocaleDateString('es-MX', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        });
+      },
+      rawValue: (value: any) => {
         if (!value) return '';
         const date = new Date(value);
         return date.toLocaleDateString('es-MX', {

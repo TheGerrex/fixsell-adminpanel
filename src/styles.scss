@@ -270,7 +270,7 @@ input:focus {
   align-items: center;
   justify-content: center;
   position: relative;
-  gap: 8px;
+  gap: 0.25rem;
   color: $text;
   font-size: 1rem;
   padding: 0.675rem;
@@ -566,7 +566,7 @@ input:focus {
     }
   }
   &-icon {
-    padding: 0.625em;
+    padding: 0.675em;
     &-success {
       color: $success-color;
       border-color: $success-color;
@@ -751,7 +751,12 @@ input:focus {
     }
   }
   &-icon-text {
-    padding: 0.675rem 1.25rem 0.675rem 1rem;
+    padding: 0.675rem 0.75rem 0.675rem 0.675rem;
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
   }
 }
 
@@ -771,6 +776,7 @@ button {
   font-weight: 400;
   transition-duration: 0.2s;
   line-height: 1;
+  font-size: 16px;
 }
 
 .button-icon-option {

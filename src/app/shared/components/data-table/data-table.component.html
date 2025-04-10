@@ -46,8 +46,12 @@
           </button>
         </div>
       </div>
-      <div class="filter-row" *ngIf="showFilterRow">
-        <div class="filter-header">
+    </div>
+  </div>
+
+  <!-- Filter row -->
+  <div class="filter-row" *ngIf="showFilterRow">
+    <!-- <div class="filter-header">
           <div class="filter-title-container">
             <mat-icon>filter_list</mat-icon>
             <h5 class="filter-title">Filtros</h5>
@@ -59,76 +63,91 @@
           >
             <span class="delete-filter-label">Limpiar Filtros</span>
           </div>
-        </div>
-        <div class="filter-cells">
-          <ng-container *ngFor="let column of columns">
-            <div class="filter-cell" *ngIf="column.showFilter !== false">
-              <ng-container [ngSwitch]="column.type">
-                <!-- Input de texto -->
-                <mat-form-field *ngSwitchCase="'input'" appearance="outline">
-                  <mat-label>{{ column.label }}</mat-label>
-                  <input
-                    #filterInput
-                    [attr.data-column]="column.name"
-                    matInput
-                    (input)="applyFilter(filterInput.value, column.name)"
-                    placeholder="Filtrar {{ column.label }}"
-                  />
-                </mat-form-field>
+        </div> -->
+    <!-- <div class="filter-cells-icon">
+      <mat-icon>filter_list</mat-icon>
+    </div> -->
+    <div class="filter-cells">
+      <ng-container *ngFor="let column of columns">
+        <div class="filter-cell" *ngIf="column.showFilter !== false">
+          <ng-container [ngSwitch]="column.type">
+            <!-- Input de texto -->
+            <mat-form-field *ngSwitchCase="'input'" appearance="outline">
+              <mat-label>{{ column.label }}</mat-label>
+              <input
+                #filterInput
+                [attr.data-column]="column.name"
+                matInput
+                (input)="applyFilter(filterInput.value, column.name)"
+                placeholder="Filtrar {{ column.label }}"
+              />
+            </mat-form-field>
 
-                <!-- Lista desplegable -->
-                <mat-form-field *ngSwitchCase="'select'" appearance="outline">
-                  <mat-label>{{ column.label }}</mat-label>
-                  <mat-select
-                    #filterSelect
-                    [attr.data-column]="column.name"
-                    multiple
-                    (selectionChange)="
-                      applyMultiFilter($event.value, column.name)
-                    "
-                    [value]="filteredValues[column.name] || []"
-                  >
-                    <mat-option
-                      *ngFor="let option of getFilterOptions(column.name)"
-                      [value]="option"
-                    >
-                      {{ getFormattedOption(option, column.name) }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+            <!-- Lista desplegable -->
+            <mat-form-field *ngSwitchCase="'select'" appearance="outline">
+              <mat-label>{{ column.label }}</mat-label>
+              <mat-select
+                #filterSelect
+                [attr.data-column]="column.name"
+                multiple
+                (selectionChange)="applyMultiFilter($event.value, column.name)"
+                [value]="filteredValues[column.name] || []"
+              >
+                <mat-option
+                  *ngFor="let option of getFilterOptions(column.name)"
+                  [value]="option"
+                >
+                  {{ getFormattedOption(option, column.name) }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-                <!-- Datepicker para fechas -->
-                <mat-form-field *ngSwitchCase="'date'" appearance="outline">
-                  <mat-label>{{ column.label }}</mat-label>
-                  <input
-                    matInput
-                    [matDatepicker]="picker"
-                    (dateChange)="applyFilter($event.value, column.name)"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="picker"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-              </ng-container>
-            </div>
+            <!-- Datepicker para fechas -->
+            <mat-form-field *ngSwitchCase="'date'" appearance="outline">
+              <mat-label>{{ column.label }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                (dateChange)="applyFilter($event.value, column.name)"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
           </ng-container>
         </div>
-        <div class="filter-chips" *ngIf="getActiveFilters().length">
-          <mat-chip-set>
-            <mat-chip
-              *ngFor="let chip of getActiveFilters()"
-              [removable]="true"
-              (removed)="removeFilter(chip.column, chip.value)"
-            >
-              {{ chip.columnLabel }}:
-              {{ getFormattedOption(chip.value, chip.column) }}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-          </mat-chip-set>
-        </div>
-      </div>
+      </ng-container>
+    </div>
+    <div class="filter-chips" *ngIf="getActiveFilters().length">
+      <mat-chip-set>
+        <mat-chip
+          class="filter-chip"
+          *ngFor="let chip of getActiveFilters()"
+          [removable]="true"
+          (removed)="removeFilter(chip.column, chip.value)"
+        >
+          <span class="chip-label">{{ chip.columnLabel }}</span>
+          <span class="chip-divider">|</span>
+          <span class="chip-value">{{
+            getFormattedOption(chip.value, chip.column)
+          }}</span>
+
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <!-- Chip to clear all filters -->
+        <mat-chip
+          class="filter-chip clear-all-chip"
+          [removable]="false"
+          (click)="resetFilters()"
+        >
+          <div class="chip-content">
+            <span class="chip-label">Limpiar Filtros</span>
+            <mat-icon>clear_all</mat-icon>
+          </div>
+        </mat-chip>
+      </mat-chip-set>
     </div>
   </div>
 

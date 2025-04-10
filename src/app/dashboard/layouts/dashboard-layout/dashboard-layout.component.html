@@ -9,12 +9,11 @@
 
 <!-- <app-body [collapsed]="isSideNavCollapsed" [screenWidth]="screenWidth"></app-body> -->
 <div class="container-grid">
-    <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
-    <div class="container-grid-content">
-        <router-outlet></router-outlet>
-    </div>
+  <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+  <div class="container-grid-content">
+    <router-outlet></router-outlet>
+  </div>
 </div>
-
 
 <!-- add the component in components/printer-register/printer-register.component -->
 <!-- <app-printers-register></app-printers-register> -->

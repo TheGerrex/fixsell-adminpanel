@@ -102,11 +102,18 @@
     <!-- User Information -->
     <div class="sidenav-item-user" routerLink="/dashboard/settings">
       <div class="sidenav-user-icon-container">
-        <div class="avatar">
+        <div class="avatar-container">
           <img
+            class="avatar"
             src="../../../../assets/icons/avatar/avatar-1.svg"
             alt="avatar"
           />
+          <!-- Add notification badge -->
+          <span class="notification-badge" *ngIf="unreadNotificationsCount > 0">
+            {{
+              unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount
+            }}
+          </span>
         </div>
       </div>
       <div class="sidenav-user-items-container" *ngIf="sidenavOpen">
@@ -161,7 +168,7 @@
           }}</span>
         </div>
         <!-- Label and Expander -->
-        <div class="sidenav-link-items-container" *ngIf="sidenavOpen">
+        <div class="sidenav-link-items-container" *ngIf="!collapsed">
           <div class="sidenav-link-item-header">
             <span class="sidenav-link-text" @fadeInOut>{{ data.label }}</span>
             <mat-icon
@@ -194,17 +201,24 @@
       </div>
     </div>
 
-    <!-- User Information -->
+    <!-- User Information (Mobile) -->
     <div class="sidenav-item-user" routerLink="/dashboard/settings">
       <div class="sidenav-user-icon-container">
-        <div class="avatar">
+        <div class="avatar-container">
           <img
+            class="avatar"
             src="../../../../assets/icons/avatar/avatar-1.svg"
             alt="avatar"
           />
+          <!-- Add notification badge to mobile view too -->
+          <span class="notification-badge" *ngIf="unreadNotificationsCount > 0">
+            {{
+              unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount
+            }}
+          </span>
         </div>
       </div>
-      <div class="sidenav-user-items-container" *ngIf="sidenavOpen">
+      <div class="sidenav-user-items-container" *ngIf="!collapsed">
         <div class="sidenav-user-item-header">
           <span class="sidenav-user-name" @fadeInOut>{{ user?.name }}</span>
           <span class="sidenav-user-email" @fadeInOut>{{ user?.email }}</span>

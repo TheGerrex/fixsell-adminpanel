@@ -36,6 +36,8 @@ import { PermissionsComponent } from './components/permissions/permissions.compo
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 // Import any other needed modules/components
 import { DataTableComponent } from './components/data-table/data-table.component';
+import { NotificationsListComponent } from './components/notifications-list/notifications-list.component';
+import { NotificationToastComponent } from './components/notifications-toast/notifications-toast.component';
 @NgModule({
   declarations: [
     SidenavComponent,
@@ -66,6 +68,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
     HasPermissionPipe,
     SafeHtmlPipe,
     DataTableComponent,
+    NotificationsListComponent,
+    NotificationToastComponent,
   ],
   imports: [
     CommonModule,
@@ -102,6 +106,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
     HasPermissionPipe,
     PermissionsComponent,
     DataTableComponent,
+    NotificationsListComponent,
+    NotificationToastComponent,
   ],
 })
 export class SharedModule {}

@@ -99,6 +99,28 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
         borderColor: 'success-border',
         toastClass: 'success-toast',
       },
+      // Add lead notification types
+      lead_created: {
+        icon: 'person_add',
+        buttonColor: 'button-primary',
+        iconColor: 'info-icon',
+        borderColor: 'info-border',
+        toastClass: 'info-toast',
+      },
+      lead_assigned: {
+        icon: 'assignment_ind',
+        buttonColor: 'button-warning',
+        iconColor: 'warning-icon',
+        borderColor: 'warning-border',
+        toastClass: 'warning-toast',
+      },
+      lead_updated: {
+        icon: 'update',
+        buttonColor: 'button-primary',
+        iconColor: 'info-icon',
+        borderColor: 'info-border',
+        toastClass: 'info-toast',
+      },
       // Default case handled in the return statement
     };
 

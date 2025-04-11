@@ -75,6 +75,13 @@ export class NotificationsListComponent implements OnInit, OnDestroy {
         return 'ticket-assigned';
       case 'ticket_closed':
         return 'ticket-closed';
+      // Add lead notification types
+      case 'lead_created':
+        return 'lead-created';
+      case 'lead_assigned':
+        return 'lead-assigned';
+      case 'lead_updated':
+        return 'lead-updated';
       default:
         return 'default';
     }
@@ -90,6 +97,13 @@ export class NotificationsListComponent implements OnInit, OnDestroy {
         return 'assignment_ind';
       case 'ticket_closed':
         return 'task_alt';
+      // Add lead notification types
+      case 'lead_created':
+        return 'person_add';
+      case 'lead_assigned':
+        return 'assignment_ind';
+      case 'lead_updated':
+        return 'update';
       default:
         return 'notifications';
     }

@@ -122,6 +122,21 @@
     color: $success-color;
   }
 
+  &.lead-created {
+    background-color: rgba($info-color, 0.1);
+    color: $info-color;
+  }
+
+  &.lead-assigned {
+    background-color: rgba($warning-color, 0.1);
+    color: $warning-color;
+  }
+
+  &.lead-updated {
+    background-color: rgba($info-color, 0.1);
+    color: $info-color;
+  }
+
   &.default {
     background-color: rgba($primary-color, 0.1);
     color: $primary-color;

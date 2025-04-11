@@ -246,6 +246,11 @@ export class LeadsCreateComponent implements OnInit {
   async submitForm() {
     this.logFormValidity();
 
+    // Check if already submitting to prevent duplicate submissions
+    if (this.isSubmitting) {
+      return;
+    }
+
     // Check if product_interested is empty but there's a value in productControl
     if (
       !this.createLeadForm.get('product_interested')?.value &&
@@ -281,6 +286,7 @@ export class LeadsCreateComponent implements OnInit {
       return;
     }
 
+    // Set submitting flag to prevent duplicate submissions
     this.isSubmitting = true;
 
     console.log('Form unprepared:', this.createLeadForm.value);
@@ -301,55 +307,79 @@ export class LeadsCreateComponent implements OnInit {
     console.log('Data for lead:', data);
 
     try {
-      // Make the POST request to create lead
-      this.leadsService.createLead(data).subscribe({
-        next: (leadResponse) => {
-          console.log('Lead created response:', leadResponse);
+      // Make the POST request to create lead - use a single HTTP call
+      this.leadsService
+        .createLead(data)
+        .pipe(
+          // Handle the response in the same chain to prevent multiple executions
+          switchMap((leadResponse) => {
+            console.log('Lead created response:', leadResponse);
 
-          // If no lead response, try to recover by looking up the lead
-          if (!leadResponse) {
-            this.toastService.showWarning(
-              'El lead fue creado pero hubo un error en la respuesta. Intentando recuperar datos...',
-              'warning-snackbar',
+            // If no lead response, try to recover by looking up the lead
+            if (!leadResponse) {
+              this.toastService.showWarning(
+                'El lead fue creado pero hubo un error en la respuesta. Intentando recuperar datos...',
+                'warning-snackbar',
+              );
+              throw new Error('No lead response');
+            }
+
+            this.lead = leadResponse;
+
+            // If we have a lead but no ID (which should never happen with a proper backend)
+            if (!this.lead || !this.lead.id) {
+              this.toastService.showWarning(
+                'Lead creado pero falta información. Verifique en la lista de leads.',
+                'warning-snackbar',
+              );
+              throw new Error('Lead missing ID');
+            }
+
+            this.toastService.showSuccess(
+              'Cliente potencial creado con éxito',
+              'success-snackbar',
             );
 
-            // Navigate to the leads list since we couldn't get the lead details
-            setTimeout(() => {
-              this.isSubmitting = false;
-              this.router.navigate(['/sales/leads']);
-            }, 1500);
-            return;
-          }
+            // Create the sales communication in the same chain
+            const salesCommunicationData = {
+              message: `Hola, quiero saber mas sobre el ${this.selectedType.getValue()}: ${
+                this.productControl.value ||
+                this.createLeadForm.get('product_interested')?.value ||
+                ''
+              }`,
+              date: new Date().toISOString(),
+              type: 'manual',
+              leadId: this.lead.id,
+              notes: 'generado automáticamente por el sistema',
+            };
 
-          this.lead = leadResponse;
-
-          // If we have a lead but no ID (which should never happen with a proper backend)
-          if (!this.lead || !this.lead.id) {
-            this.toastService.showWarning(
-              'Lead creado pero falta información. Verifique en la lista de leads.',
-              'warning-snackbar',
+            return this.leadsService.createSalesCommunication(
+              salesCommunicationData,
+            );
+          }),
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('Communication created:', response);
+            this.isSubmitting = false;
+            this.router.navigate([`/sales/leads/${this.lead?.id}`]);
+          },
+          error: (error) => {
+            console.error('Error in lead creation process:', error);
+            this.toastService.showError(
+              'Error: ' +
+                (error.error?.message || error.message || 'Error desconocido'),
+              'error-snackbar',
             );
             this.isSubmitting = false;
-            this.router.navigate(['/sales/leads']);
-            return;
-          }
 
-          this.toastService.showSuccess(
-            'Cliente potencial creado con éxito',
-            'success-snackbar',
-          );
-          this.createSalesCommunication(this.lead.id);
-        },
-        error: (error) => {
-          console.error('Error creating lead:', error);
-          this.toastService.showError(
-            'Error al crear el cliente potencial: ' +
-              (error.error?.message || 'Error desconocido'),
-            'error-snackbar',
-          );
-          this.isSubmitting = false;
-        },
-      });
+            // If we have a lead ID but just had an error with the communication,
+            // still navigate to the lead
+            if (this.lead?.id) {
+              this.router.navigate([`/sales/leads/${this.lead.id}`]);
+            }
+          },
+        });
     } catch (error) {
       console.error('Exception in lead creation:', error);
       this.toastService.showError(

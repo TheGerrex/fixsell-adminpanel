@@ -9,7 +9,7 @@ import { ClientsListComponent } from './pages/clients-list/clients-list.componen
 import { ClientDetailComponent } from './pages/client-detail/client-detail.component';
 import { ClientCreateComponent } from './pages/client-create/client-create.component';
 import { ClientEditComponent } from './pages/client-edit/client-edit.component';
-
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -24,6 +24,9 @@ import { ClientEditComponent } from './pages/client-edit/client-edit.component';
     SharedModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
+  providers: [provideNgxMask()],
 })
-export class ClientsModule {}
+export class ClientsModule { }

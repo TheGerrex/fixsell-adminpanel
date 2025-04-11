@@ -1,5 +1,20 @@
 @import '_variables.scss';
 
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Ensure the actions container spans the full width */
+
+  margin-top: 1rem; /* Optional: Add spacing above the button */
+}
+
 .form-item-toggle {
   display: flex;
   gap: 0.5rem;

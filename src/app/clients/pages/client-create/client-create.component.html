@@ -13,6 +13,7 @@
       <div class="button-actions">
         <button
           ButtonResize
+          [disabled]="!isAllStepsCompleted()"
           type="submit"
           class="button button-primary button-raised"
         >
@@ -25,287 +26,480 @@
     <app-loading-spinner *ngIf="isSubmittingForm"></app-loading-spinner>
 
     <div class="section-card-body">
-      <div class="form-container">
-        <div class="form-section">
-          <h5 class="form-section-subheader">Información General</h5>
-          <div class="form-grid">
-            <!-- businessName -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Razón Social</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Empresa SA de CV"
-                  formControlName="businessName"
-                />
-                <mat-error *ngIf="isValidField('businessName')">{{
-                  getFieldError('businessName')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+      <mat-stepper linear #stepper style="width: 100%">
+        <mat-step [stepControl]="createClientForm" [editable]="true">
+          <form [formGroup]="createClientForm" class="form">
+            <ng-template matStepLabel>Datos Fiscales</ng-template>
+            <div class="form-container">
+              <div class="form-section">
+                <h5 class="form-section-subheader">Información General</h5>
+                <div class="form-grid">
+                  <!-- businessName -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Razón Social</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Empresa SA de CV"
+                        formControlName="businessName"
+                      />
+                      <mat-error *ngIf="isValidField('businessName')">{{
+                        getFieldError('businessName')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
 
-            <!-- comercialName -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Nombre Comercial</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Nombre de Empresa"
-                  formControlName="commercialName"
-                />
-                <mat-error *ngIf="isValidField('commercialName')">{{
-                  getFieldError('commercialName')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+                  <!-- comercialName -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Nombre Comercial</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Nombre de Empresa"
+                        formControlName="commercialName"
+                      />
+                      <mat-error *ngIf="isValidField('commercialName')">{{
+                        getFieldError('commercialName')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
 
-            <!-- rfc -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>RFC</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="ABC123456789"
-                  formControlName="rfc"
-                />
-                <mat-error *ngIf="isValidField('rfc')">{{
-                  getFieldError('rfc')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+                  <!-- rfc -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>RFC</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="ABC123456789"
+                        formControlName="rfc"
+                      />
+                      <mat-error *ngIf="isValidField('rfc')">{{
+                        getFieldError('rfc')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
 
-            <!-- legalRepresentative -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Representante Legal</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="John Doe"
-                  formControlName="legalRepresentative"
-                />
-                <mat-error *ngIf="isValidField('legalRepresentative')">{{
-                  getFieldError('legalRepresentative')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+                  <!-- legalRepresentative -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Representante Legal</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="John Doe"
+                        formControlName="legalRepresentative"
+                      />
+                      <mat-error *ngIf="isValidField('legalRepresentative')">{{
+                        getFieldError('legalRepresentative')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
 
-            <!-- cfdiUse -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Uso de CFDI</mat-label>
-                <mat-select formControlName="cfdiUse">
-                  <mat-option *ngFor="let value of cfdiValues" [value]="value">
-                    {{ value }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="isValidField('cfdiUse')">{{
-                  getFieldError('cfdiUse')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+                  <!-- cfdiUse -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Uso de CFDI</mat-label>
+                      <mat-select formControlName="cfdiUse">
+                        <mat-option
+                          *ngFor="let value of cfdiValues"
+                          [value]="value"
+                        >
+                          {{ value }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="isValidField('cfdiUse')">{{
+                        getFieldError('cfdiUse')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
 
-            <!-- taxRegime -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Régimen Fiscal</mat-label>
-                <mat-select formControlName="taxRegime">
-                  <mat-option
-                    *ngFor="let value of taxRegimeValues"
-                    [value]="value"
-                  >
-                    {{ value.code }} | {{ value.description }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="isValidField('taxRegime')">{{
-                  getFieldError('taxRegime')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
+                  <!-- taxRegime -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Régimen Fiscal</mat-label>
+                      <mat-select formControlName="taxRegime">
+                        <mat-option
+                          *ngFor="let value of taxRegimeValues"
+                          [value]="value"
+                        >
+                          {{ value.code }} | {{ value.description }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="isValidField('taxRegime')">{{
+                        getFieldError('taxRegime')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <h5 class="form-section-subheader">Domicilio Fiscal</h5>
+                <div class="form-grid">
+                  <!-- street -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Calle</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="123 Main St"
+                        formControlName="street"
+                      />
+                      <mat-error *ngIf="isValidField('street')">{{
+                        getFieldError('street')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- exteriorNumber -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Número Exterior</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="101"
+                        pattern="[0-9]*"
+                        formControlName="exteriorNumber"
+                      />
+                      <mat-error *ngIf="isValidField('exteriorNumber')">{{
+                        getFieldError('exteriorNumber')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- interiorNumber -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Número Interior</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="A"
+                        formControlName="interiorNumber"
+                      />
+                      <mat-error *ngIf="isValidField('interiorNumber')">{{
+                        getFieldError('interiorNumber')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- neighborhood -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Colonia</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Centro"
+                        formControlName="neighborhood"
+                      />
+                      <mat-error *ngIf="isValidField('neighborhood')">{{
+                        getFieldError('neighborhood')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- locality -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Localidad</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Nombre de Ciudad"
+                        formControlName="locality"
+                      />
+                      <mat-error *ngIf="isValidField('locality')">{{
+                        getFieldError('locality')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
 
-            <!-- isrRetention -->
-            <div class="form-item half-row">
-              <div class="form-item-toggle">
-                <p class="item-toggle-label">¿Aplica Retención de ISR?</p>
-                <mat-slide-toggle formControlName="isrRetention">
-                </mat-slide-toggle>
+                  <!-- municipality -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Municipio</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Nombre de Municipio"
+                        formControlName="municipality"
+                      />
+                      <mat-error *ngIf="isValidField('municipality')">{{
+                        getFieldError('municipality')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- country -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Pais</mat-label>
+                      <mat-select
+                        formControlName="country"
+                        (selectionChange)="updateStates($event.value)"
+                      >
+                        <mat-option value="México">México</mat-option>
+                        <mat-option value="USA">Estados Unidos</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="isValidField('country')">{{
+                        getFieldError('country')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- state -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Estado</mat-label>
+                      <mat-select formControlName="state">
+                        <mat-option
+                          *ngFor="let state of states"
+                          [value]="state.name"
+                        >
+                          {{ state.name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="isValidField('state')">{{
+                        getFieldError('state')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- postalCode -->
+                  <div class="form-item quarter-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Código Postal</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="12345"
+                        formControlName="postalCode"
+                        mask="00000"
+                      />
+                      <mat-error *ngIf="isValidField('postalCode')">{{
+                        getFieldError('postalCode')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- reference -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Referencia</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Cerca de punto de referencia"
+                        formControlName="reference"
+                      />
+                      <mat-error *ngIf="isValidField('reference')">{{
+                        getFieldError('reference')
+                      }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
             </div>
+            <div class="form-actions">
+              <button
+                matStepperPrevious
+                type="button"
+                class="button button-outline-secondary"
+              >
+                <mat-icon>arrow_back</mat-icon>
+                <span class="button-label">Atras</span>
+              </button>
+              <button
+                matStepperNext
+                type="button"
+                class="button button-outline-primary"
+              >
+                <span class="button-label">Siguiente</span>
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="createClientForm" [editable]="true">
+          <form [formGroup]="createComercialConditionsClientForm" class="form">
+            <ng-template matStepLabel>Condiciones Comerciales</ng-template>
+            <div class="form-container">
+              <div class="form-section">
+                <h5 class="form-section-subheader">Condiciones Comerciales</h5>
+                <div class="form-grid">
+                  <!-- assignedExecutiveId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Ejecutivo asignado</mat-label>
+                      <mat-select formControlName="assignedExecutiveId">
+                        <mat-option
+                          *ngFor="let executive of executives"
+                          [value]="executive.id"
+                        >
+                          {{ executive.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
 
-            <!-- isActive? -->
-            <!-- <div class="form-item half-row">
-              <div class="form-item-toggle">
-                <p class="item-toggle-label">Cliente Inactivo/Activo</p>
-                <mat-slide-toggle formControlName="isActive">
-                </mat-slide-toggle>
+                  <!-- collectionExecutiveId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Ejecutivo de cobranza</mat-label>
+                      <mat-select formControlName="collectionExecutiveId">
+                        <mat-option
+                          *ngFor="let executive of collectionExecutives"
+                          [value]="executive.id"
+                        >
+                          {{ executive.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- creditDays -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Días de crédito</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        placeholder="Días de crédito"
+                        formControlName="creditDays"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- creditLimit -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Monto límite de crédito</mat-label>
+                      <span matPrefix style="margin-left: 0.5rem">$&nbsp;</span>
+                      <input
+                        matInput
+                        type="number"
+                        placeholder="Límite de crédito"
+                        formControlName="creditLimit"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- isActiveClient -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">Cliente Activo</p>
+                      <mat-slide-toggle formControlName="isActive">
+                      </mat-slide-toggle>
+                    </div>
+                  </div>
+
+                  <!-- applyVatWithholding -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">Aplicar retención I.V.A</p>
+                      <mat-slide-toggle
+                        formControlName="applyVatWithholding"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+
+                  <!-- isrRetention -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">¿Aplica Retención de ISR?</p>
+                      <mat-slide-toggle formControlName="isrRetention">
+                      </mat-slide-toggle>
+                    </div>
+                  </div>
+                  <!-- validateCreditLimitInSales -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">
+                        Validar límite de crédito en documentos de venta?
+                      </p>
+                      <mat-slide-toggle
+                        formControlName="validateCreditLimitInSales"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+                  <!-- collectionObservations -->
+                  <div class="form-item full-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Observaciones para cobranza</mat-label>
+                      <textarea
+                        matInput
+                        placeholder="Escribe observaciones para cobranza"
+                        formControlName="collectionObservations"
+                        rows="3"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- currency -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Moneda</mat-label>
+                      <mat-select formControlName="currency">
+                        <mat-option value="MXN"> MXN </mat-option>
+                        <mat-option value="USD"> USD </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- reviewDays -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Días de revisión</mat-label>
+                      <mat-select formControlName="reviewDays" multiple>
+                        <mat-option
+                          *ngFor="let day of daysOfWeek"
+                          [value]="day"
+                        >
+                          {{ day }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- paymentDays -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Días de pago</mat-label>
+                      <mat-select formControlName="paymentDays" multiple>
+                        <mat-option
+                          *ngFor="let day of daysOfWeek"
+                          [value]="day"
+                        >
+                          {{ day }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
-            </div> -->
-          </div>
-        </div>
-        <div class="form-section">
-          <h5 class="form-section-subheader">Domicilio Fiscal</h5>
-          <div class="form-grid">
-            <!-- street -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Calle</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="123 Main St"
-                  formControlName="street"
-                />
-                <mat-error *ngIf="isValidField('street')">{{
-                  getFieldError('street')
-                }}</mat-error>
-              </mat-form-field>
             </div>
-            <!-- exteriorNumber -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Número Exterior</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="101"
-                  formControlName="exteriorNumber"
-                />
-                <mat-error *ngIf="isValidField('exteriorNumber')">{{
-                  getFieldError('exteriorNumber')
-                }}</mat-error>
-              </mat-form-field>
+            <div class="form-actions">
+              <button
+                matStepperPrevious
+                type="button"
+                class="button button-outline-secondary"
+              >
+                <mat-icon>arrow_back</mat-icon>
+                <span class="button-label">Atras</span>
+              </button>
+              <button
+                matStepperNext
+                type="button"
+                class="button button-outline-primary"
+              >
+                <span class="button-label">Siguiente</span>
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
             </div>
-            <!-- interiorNumber -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Número Interior</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="A"
-                  formControlName="interiorNumber"
-                />
-                <mat-error *ngIf="isValidField('interiorNumber')">{{
-                  getFieldError('interiorNumber')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-            <!-- neighborhood -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Colonia</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Centro"
-                  formControlName="neighborhood"
-                />
-                <mat-error *ngIf="isValidField('neighborhood')">{{
-                  getFieldError('neighborhood')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-            <!-- locality -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Localidad</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Nombre de Ciudad"
-                  formControlName="locality"
-                />
-                <mat-error *ngIf="isValidField('locality')">{{
-                  getFieldError('locality')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- municipality -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Municipio</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Nombre de Municipio"
-                  formControlName="municipality"
-                />
-                <mat-error *ngIf="isValidField('municipality')">{{
-                  getFieldError('municipality')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- country -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Pais</mat-label>
-                <mat-select
-                  formControlName="country"
-                  (selectionChange)="updateStates($event.value)"
-                >
-                  <mat-option value="México">México</mat-option>
-                  <mat-option value="USA">Estados Unidos</mat-option>
-                </mat-select>
-                <mat-error *ngIf="isValidField('country')">{{
-                  getFieldError('country')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- state -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Estado</mat-label>
-                <mat-select formControlName="state">
-                  <mat-option *ngFor="let state of states" [value]="state.name">
-                    {{ state.name }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="isValidField('state')">{{
-                  getFieldError('state')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- postalCode -->
-            <div class="form-item quarter-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Código Postal</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="12345"
-                  formControlName="postalCode"
-                />
-                <mat-error *ngIf="isValidField('postalCode')">{{
-                  getFieldError('postalCode')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- reference -->
-            <div class="form-item half-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Referencia</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Cerca de punto de referencia"
-                  formControlName="reference"
-                />
-                <mat-error *ngIf="isValidField('reference')">{{
-                  getFieldError('reference')
-                }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
+          </form>
+        </mat-step>
+      </mat-stepper>
     </div>
   </form>
 </div>

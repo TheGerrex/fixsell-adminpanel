@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { map, catchError } from 'rxjs/operators';
 import {
@@ -20,6 +20,7 @@ import {
   BranchOffice,
   PaymentComplementInfo,
 } from '../interfaces/client.interface';
+import { User } from 'src/app/auth/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -77,6 +78,28 @@ export class ClientsService {
       map((response) => response.commercialName),
     );
   }
+
+  /**
+   * Fetches all users and filters those with the 'canBeAssignedClient' permission.
+   */
+  fetchExecutives(): Observable<User[]> {
+    const url = `${environment.baseUrl}/auth`; // Replace with your actual endpoint for fetching users
+
+    return this.http.get<User[]>(url).pipe(
+      map((users: User[]) => {
+        // Filter users who have the 'canBeAssignedClient' permission
+        return users.filter((user) => {
+          const permissions = user.role?.permission;
+          return permissions?.["canBeAssignedToClient"] === true;
+        });
+      }),
+      catchError((err) => {
+        console.error('Error fetching executives:', err);
+        return of([]); // Return an empty array in case of an error
+      })
+    );
+  }
+
 
 
   // ======== CLIENT ACCOUNTS METHODS ========
@@ -668,4 +691,6 @@ export class ClientsService {
         catchError((error) => this.handleError(error)),
       );
   }
+
+
 }

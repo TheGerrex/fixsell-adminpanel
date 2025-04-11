@@ -4,6 +4,7 @@ import {
   EventEmitter,
   HostListener,
   OnInit,
+  OnDestroy,
   Output,
   computed,
   inject,
@@ -19,6 +20,8 @@ import {
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { NotificationService } from '../../services/notifications.service';
+import { Subscription } from 'rxjs';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -49,7 +52,7 @@ interface SideNavToggle {
     ]),
   ],
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnInit, OnDestroy {
   @Output() onToggleSideNav = new EventEmitter<SideNavToggle>();
   collapsed = true;
   sidenavOpen = true;
@@ -57,10 +60,15 @@ export class SidenavComponent implements OnInit {
   navData = navbarData;
   user = this.authService.currentUser();
 
+  // Add notification count
+  unreadNotificationsCount = 0;
+  private subscriptions = new Subscription();
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
+    private notificationService: NotificationService,
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -72,11 +80,25 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
     this.collapsed = this.screenWidth <= 768;
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.navData.forEach((item) => (item.isExpanded = false));
-      });
+
+    // Router event subscription
+    this.subscriptions.add(
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationEnd))
+        .subscribe(() => {
+          this.navData.forEach((item) => (item.isExpanded = false));
+        }),
+    );
+
+    // Initialize notification system
+    this.notificationService.connectSocket();
+
+    // Subscribe to unread notifications count
+    this.subscriptions.add(
+      this.notificationService.unreadCount$.subscribe((count) => {
+        this.unreadNotificationsCount = count;
+      }),
+    );
   }
 
   handleClick(data: any) {
@@ -150,5 +172,10 @@ export class SidenavComponent implements OnInit {
       );
     }
     return false;
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscriptions to prevent memory leaks
+    this.subscriptions.unsubscribe();
   }
 }

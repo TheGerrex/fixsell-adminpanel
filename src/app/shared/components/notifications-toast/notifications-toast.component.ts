@@ -15,12 +15,26 @@ import { ToastComponent } from '../toast/toast.component';
 export class NotificationToastComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   private lastNotificationId: string | null = null;
+  private audio: HTMLAudioElement;
 
   constructor(
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private router: Router,
-  ) {}
+  ) {
+    // Initialize the audio element with correct path
+    this.audio = new Audio();
+    this.audio.src = 'assets/audio/printer-notification.mp3'; // Fixed typo in filename
+
+    // Add an error handler for the audio element
+    this.audio.onerror = (e) => {
+      console.error('Audio error:', e);
+      console.error('Audio error code:', this.audio.error?.code);
+      console.error('Audio error message:', this.audio.error?.message);
+    };
+
+    this.audio.load();
+  }
 
   ngOnInit(): void {
     // Connect to the socket when the component initializes
@@ -35,6 +49,7 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
             // Only show the toast if this is a new notification
             if (latest.id !== this.lastNotificationId) {
               this.lastNotificationId = latest.id;
+              this.playNotificationSound();
               this.showToast(latest);
             }
           }
@@ -44,6 +59,38 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
 
     // Load initial unread notifications
     this.notificationService.loadNotifications();
+  }
+
+  // Method to play the notification sound
+  playNotificationSound(): void {
+    // Check if audio is properly loaded
+    if (this.audio.readyState === 0) {
+      console.warn('Audio not ready, reloading...');
+      // Try to reload the audio
+      this.audio.src = 'assets/audio/notification.mp3';
+      this.audio.load();
+    }
+
+    // Reset the audio to the beginning in case it was already played
+    this.audio.currentTime = 0;
+
+    // Play the sound with better error handling
+    this.audio
+      .play()
+      .then(() => {
+        console.log('Notification sound played successfully');
+      })
+      .catch((error) => {
+        // Handle any errors (e.g., browser restrictions on autoplay)
+        console.error('Error playing notification sound:', error);
+
+        // If it's a user interaction error, we might want to handle it differently
+        if (error.name === 'NotAllowedError') {
+          console.warn(
+            'Audio playback was prevented due to lack of user interaction',
+          );
+        }
+      });
   }
 
   showToast(notification: Notification): void {

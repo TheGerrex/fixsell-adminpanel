@@ -14,8 +14,12 @@ import { ToastComponent } from '../toast/toast.component';
 })
 export class NotificationToastComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  private lastNotificationId: string | null = null;
+  private seenNotificationIds: string[] = [];
+  private readonly SEEN_NOTIFICATIONS_KEY = 'fixsell_seen_notifications';
+  private readonly MAX_STORED_IDS = 100;
+  private readonly NOTIFICATION_EXPIRY_TIME = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
   private audio: HTMLAudioElement;
+  private notificationsEnabled = false; // Track if browser notifications are enabled
 
   constructor(
     private notificationService: NotificationService,
@@ -24,7 +28,7 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
   ) {
     // Initialize the audio element with correct path
     this.audio = new Audio();
-    this.audio.src = 'assets/audio/printer-notification.mp3'; // Fixed typo in filename
+    this.audio.src = 'assets/audio/printer-notification.mp3';
 
     // Add an error handler for the audio element
     this.audio.onerror = (e) => {
@@ -34,6 +38,12 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
     };
 
     this.audio.load();
+
+    // Load seen notification IDs from storage
+    this.loadSeenNotifications();
+
+    // Check if browser notifications are already permitted
+    this.checkNotificationPermission();
   }
 
   ngOnInit(): void {
@@ -46,11 +56,18 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
         (notifications: Notification[]) => {
           if (notifications && notifications.length > 0) {
             const latest = notifications[0];
-            // Only show the toast if this is a new notification
-            if (latest.id !== this.lastNotificationId) {
-              this.lastNotificationId = latest.id;
+
+            // Skip already read notifications
+            if (latest.status === 'read') {
+              return;
+            }
+
+            // Only show if it's a new notification (not in seen list)
+            if (latest.id && !this.isNotificationSeen(latest)) {
+              this.markNotificationAsSeen(latest.id);
               this.playNotificationSound();
               this.showToast(latest);
+              this.showBrowserNotification(latest);
             }
           }
         },
@@ -59,6 +76,141 @@ export class NotificationToastComponent implements OnInit, OnDestroy {
 
     // Load initial unread notifications
     this.notificationService.loadNotifications();
+  }
+
+  /**
+   * Check if browser notifications are permitted and set the flag
+   */
+  private checkNotificationPermission(): void {
+    if (!('Notification' in window)) {
+      console.log('This browser does not support desktop notifications');
+      return;
+    }
+
+    if (Notification.permission === 'granted') {
+      this.notificationsEnabled = true;
+    } else if (Notification.permission !== 'denied') {
+      // We need to ask for permission
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          this.notificationsEnabled = true;
+        }
+      });
+    }
+  }
+
+  /**
+   * Show a browser notification
+   */
+  private showBrowserNotification(notification: Notification): void {
+    // Check if browser notifications are supported and enabled
+    if (!this.notificationsEnabled || !('Notification' in window)) {
+      return;
+    }
+
+    // If permission is granted, create and show the notification
+    if (Notification.permission === 'granted') {
+      const notificationType = this.getNotificationType(notification.type);
+
+      // Create the notification
+      const browserNotification = new Notification(
+        'Fixsell - ' + notification.title,
+        {
+          body: notification.message,
+          icon: '/assets/icons/favicon.png', // Path to your app icon
+          badge: '/assets/icons/favicon.png', // Small icon for Android
+          tag: notification.id, // Prevents duplicate notifications
+          requireInteraction: false, // Auto close after a while
+        },
+      );
+
+      // Add click handler to navigate when notification is clicked
+      browserNotification.onclick = () => {
+        window.focus(); // Focus the window
+
+        // Mark as read and navigate
+        this.notificationService.markAsRead(notification.id).subscribe(() => {
+          if (notification.entityType === 'ticket') {
+            this.router.navigate(['/support/tickets', notification.entityId]);
+          } else if (notification.entityType === 'lead') {
+            this.router.navigate(['/sales/leads', notification.entityId]);
+          } else {
+            this.router.navigate(['/dashboard/settings']);
+          }
+        });
+
+        browserNotification.close();
+      };
+    } else if (Notification.permission !== 'denied') {
+      // We need to ask for permission
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          this.notificationsEnabled = true;
+          this.showBrowserNotification(notification);
+        }
+      });
+    }
+  }
+  // Check if notification has been seen
+  private isNotificationSeen(notification: Notification): boolean {
+    // Check if the notification ID is in our seen list
+    const isSeen = this.seenNotificationIds.includes(notification.id);
+
+    // Check if the notification is older than our expiry time
+    // This avoids showing very old notifications even if they weren't seen
+    const isOld = this.isNotificationOld(notification);
+
+    return isSeen || isOld;
+  }
+
+  // Check if a notification is older than our cutoff time
+  private isNotificationOld(notification: Notification): boolean {
+    const notificationDate = new Date(notification.createdAt).getTime();
+    const now = Date.now();
+    return now - notificationDate > this.NOTIFICATION_EXPIRY_TIME;
+  }
+
+  // Mark a notification as seen so it doesn't show again on refresh
+  private markNotificationAsSeen(id: string): void {
+    // Add to the front of the array (most recent first)
+    this.seenNotificationIds.unshift(id);
+
+    // Limit the size of the array to prevent it from growing too large
+    if (this.seenNotificationIds.length > this.MAX_STORED_IDS) {
+      this.seenNotificationIds = this.seenNotificationIds.slice(
+        0,
+        this.MAX_STORED_IDS,
+      );
+    }
+
+    // Save to localStorage
+    try {
+      localStorage.setItem(
+        this.SEEN_NOTIFICATIONS_KEY,
+        JSON.stringify(this.seenNotificationIds),
+      );
+    } catch (e) {
+      console.error('Error storing seen notifications:', e);
+    }
+  }
+
+  // Load seen notification IDs from localStorage
+  private loadSeenNotifications(): void {
+    try {
+      const stored = localStorage.getItem(this.SEEN_NOTIFICATIONS_KEY);
+      if (stored) {
+        this.seenNotificationIds = JSON.parse(stored);
+
+        // Validate that the parsed result is actually an array
+        if (!Array.isArray(this.seenNotificationIds)) {
+          console.error('Stored notification IDs is not an array, resetting');
+          this.seenNotificationIds = [];
+        }
+      }
+    } catch (e) {
+      console.error('Error loading seen notifications:', e);
+      this.seenNotificationIds = [];
+    }
   }
 
   // Method to play the notification sound

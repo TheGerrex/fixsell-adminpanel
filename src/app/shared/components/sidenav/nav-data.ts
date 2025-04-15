@@ -58,18 +58,17 @@ export const navbarData = [
         allowedPermissions: ['canViewLead'],
       },
       {
+        label: 'Clientes',
+        routeLink: 'sales/clients',
+        allowedPermissions: ['canViewClient'],
+      },
+      {
         label: 'Cotización',
         routeLink: 'sales/quote',
         allowedPermissions: ['canCreateQuote'],
       },
+
     ],
-  },
-  {
-    label: 'Clientes',
-    routeLink: 'clients',
-    icon: 'people',
-    allowedPermissions: ['canViewClient'],
-    isExpanded: false,
   },
   {
     label: 'Soporte',

@@ -6,7 +6,7 @@ import { ClientsListComponent } from './pages/clients-list/clients-list.componen
 import { ClientDetailComponent } from './pages/client-detail/client-detail.component';
 import { ClientCreateComponent } from './pages/client-create/client-create.component';
 import { ClientEditComponent } from './pages/client-edit/client-edit.component';
-import { RoleGuard } from '../auth/guards/role.guard';
+import { RoleGuard } from '../../auth/guards/role.guard';
 
 const routes: Routes = [
   {
@@ -52,4 +52,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ClientsRoutingModule {}
+export class ClientsRoutingModule { }

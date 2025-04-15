@@ -8,7 +8,7 @@ import { Permission } from 'src/app/users/interfaces/users.interface';
   providedIn: 'root',
 })
 export class RoleService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private routePermissions: { [key: string]: string[] } = {
     '/website/printers': ['canViewPrinter'],
@@ -48,6 +48,10 @@ export class RoleService {
     '/sales/leads/communication/*': ['canViewLeadCommunication'],
     '/sales/leads/communication/*/edit': ['canUpdateLeadCommunication'],
     '/sales/leads/*/communication/create': ['canCreateLeadCommunication'],
+    '/sales/clients/*': ['canViewClient'],
+    '/sales/clients/create': ['canCreateClient'],
+    '/sales/clients/create/*': ['canUpdateClient', 'canDeleteClient'],
+    '/sales/clients/*/edit': ['canUpdateClient'],
     '/users/user': ['canViewUser'],
     '/users/user/create': ['canCreateUser'],
     '/users/user/create/*': ['canUpdateUser', 'canDeleteUser'],

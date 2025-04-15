@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientsRoutingModule } from './clients-routing.module';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { LayoutPageComponent } from './pages/layout-page/layout-page.component';

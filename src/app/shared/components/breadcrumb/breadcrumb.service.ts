@@ -3,7 +3,7 @@ import { PrinterService } from 'src/app/website/printer/services/printer.service
 import { ConsumiblesService } from '../../../website/consumibles/services/consumibles.service';
 import { UsersService } from 'src/app/users/services/users.service';
 import { Observable } from 'rxjs';
-import { ClientsService } from 'src/app/clients/services/clients.service';
+import { ClientsService } from 'src/app/sales/clients/services/clients.service';
 
 @Injectable({
   providedIn: 'root',

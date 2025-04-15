@@ -34,7 +34,7 @@ const routes: Routes = [
     canActivate: [NavigationGuard, isAuthenticatedGuard],
     data: { allowedPermissions: ['canViewClient'] },
     loadChildren: () =>
-      import('./clients/clients.module').then((m) => m.ClientsModule),
+      import('./sales/clients/clients.module').then((m) => m.ClientsModule),
   },
   {
     path: 'support',
@@ -66,4 +66,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -250,6 +250,7 @@ export class BreadcrumbComponent implements OnInit {
       'website/packages',
       'website/config',
       'sales/leads',
+      'sales/clients',
       'support/tickets',
       'chat/chats',
       'users/user',

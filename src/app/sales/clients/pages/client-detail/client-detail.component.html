@@ -69,7 +69,10 @@
                       <!-- cfdiUse -->
                       <div class="item">
                         <p class="item-label">Uso de CFDI</p>
-                        <p class="item-value">{{ client.cfdiUse }}</p>
+                        <p class="item-value">
+                          {{ client.cfdiUse.code }} |
+                          {{ client.cfdiUse.description }}
+                        </p>
                       </div>
 
                       <!-- Location -->

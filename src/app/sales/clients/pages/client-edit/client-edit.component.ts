@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CfdiService } from 'src/app/shared/services/cfdi.service';
+import { Cfdi, CfdiService } from 'src/app/shared/services/cfdi.service';
 import { TaxRegime, TaxRegimeService } from 'src/app/shared/services/tax-regime.service';
 import { LocationService } from 'src/app/shared/services/location.service';
 import { ClientsService } from '../../services/clients.service';
@@ -20,7 +20,7 @@ import { ClientsService } from '../../services/clients.service';
 })
 export class ClientEditComponent implements OnInit {
   public editClientForm!: FormGroup;
-  public cfdiValues: string[] = [];
+  public cfdiValues: Cfdi[] = [];
   public taxRegimeValues: TaxRegime[] = [];
   public states: { code: string; name: string }[] = [];
   hide = true;
@@ -88,6 +88,16 @@ export class ClientEditComponent implements OnInit {
     this.clientService.getClient(clientId).subscribe({
       next: (client) => {
         this.editClientForm.patchValue(client);
+
+        // Set the CFDI code in the form
+        const selectedCfdi = this.cfdiValues.find(
+          (cfdi) => cfdi.code === client.cfdiUse.code
+        );
+        if (selectedCfdi) {
+          this.editClientForm.get('cfdiUse')?.setValue(selectedCfdi);
+        }
+
+        // Set the Tax Regime
         const selectedTaxRegime = this.taxRegimeValues.find(
           (regime) => regime.description === client.taxRegime.description
         );
@@ -96,7 +106,10 @@ export class ClientEditComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.toastService.showError(`Error fetching client data: ${error.error.message}`, 'Close');
+        this.toastService.showError(
+          `Error fetching client data: ${error.error.message}`,
+          'Close'
+        );
         console.error('Error fetching client data:', error.error.message);
       },
     });

@@ -1,25 +1,21 @@
 <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
 <div *ngIf="!isLoading">
-  <form
-    [formGroup]="createClientForm"
-    (ngSubmit)="submitForm()"
-    class="section-card"
-  >
+  <div class="section-card">
     <div class="section-card-header">
       <div class="section-card-header-wrapper">
         <app-breadcrumb></app-breadcrumb>
         <h3 class="header-title">Nuevo Cliente</h3>
       </div>
       <div class="button-actions">
-        <button
+        <!-- <button
           ButtonResize
-          [disabled]="!isAllStepsCompleted()"
+          (click)="submitTaxForm()"
           type="submit"
           class="button button-primary button-raised"
         >
           <mat-icon>add</mat-icon
           ><span class="button-label">Crear Cliente</span>
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -27,8 +23,8 @@
 
     <div class="section-card-body">
       <mat-stepper linear #stepper style="width: 100%">
-        <mat-step [stepControl]="createClientForm" [editable]="true">
-          <form [formGroup]="createClientForm" class="form">
+        <mat-step [stepControl]="createClientTaxForm" [editable]="true">
+          <form [formGroup]="createClientTaxForm" class="form">
             <ng-template matStepLabel>Datos Fiscales</ng-template>
             <div class="form-container">
               <div class="form-section">
@@ -107,7 +103,7 @@
                           *ngFor="let value of cfdiValues"
                           [value]="value"
                         >
-                          {{ value }}
+                          {{ value.code }} | {{ value.description }}
                         </mat-option>
                       </mat-select>
                       <mat-error *ngIf="isValidField('cfdiUse')">{{
@@ -303,25 +299,19 @@
             </div>
             <div class="form-actions">
               <button
-                matStepperPrevious
-                type="button"
-                class="button button-outline-secondary"
-              >
-                <mat-icon>arrow_back</mat-icon>
-                <span class="button-label">Atras</span>
-              </button>
-              <button
                 matStepperNext
-                type="button"
-                class="button button-outline-primary"
+                (click)="submitTaxForm()"
+                [disabled]="createClientTaxForm.invalid || isSubmittingForm"
+                type="submit"
+                class="button button-primary button-raised"
               >
-                <span class="button-label">Siguiente</span>
+                <span class="button-label">Guardar cliente y continuar</span>
                 <mat-icon>arrow_forward</mat-icon>
               </button>
             </div>
           </form>
         </mat-step>
-        <mat-step [stepControl]="createClientForm" [editable]="true">
+        <mat-step [stepControl]="createClientTaxForm" [editable]="true">
           <form [formGroup]="createComercialConditionsClientForm" class="form">
             <ng-template matStepLabel>Condiciones Comerciales</ng-template>
             <div class="form-container">
@@ -501,5 +491,5 @@
         </mat-step>
       </mat-stepper>
     </div>
-  </form>
+  </div>
 </div>

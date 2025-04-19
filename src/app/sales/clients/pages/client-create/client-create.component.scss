@@ -9,7 +9,7 @@
 
 .form-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%; /* Ensure the actions container spans the full width */
 
   margin-top: 1rem; /* Optional: Add spacing above the button */
@@ -29,4 +29,8 @@
     margin-bottom: 0;
     line-height: 1;
   }
+}
+
+::ng-deep .mat-horizontal-content-container {
+  padding: 0 !important; /* Ensure padding is completely removed */
 }

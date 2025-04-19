@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CfdiService } from 'src/app/shared/services/cfdi.service';
+import { Cfdi, CfdiService } from 'src/app/shared/services/cfdi.service';
 import { TaxRegime, TaxRegimeService } from 'src/app/shared/services/tax-regime.service';
 import { LocationService } from 'src/app/shared/services/location.service';
 import { ClientsService } from '../../services/clients.service';
@@ -21,9 +21,9 @@ import { User } from 'src/app/auth/interfaces';
   styleUrl: './client-create.component.scss',
 })
 export class ClientCreateComponent implements OnInit {
-  public createClientForm!: FormGroup;
+  public createClientTaxForm!: FormGroup;
   public createComercialConditionsClientForm!: FormGroup;
-  public cfdiValues: string[] = [];
+  public cfdiValues: Cfdi[] = [];
   public taxRegimeValues: TaxRegime[] = [];
   public states: { code: string; name: string }[] = [];
   public daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -47,19 +47,19 @@ export class ClientCreateComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.loadExecutives();
-    this.initializeForm();
+    this.initializeTaxDataForm();
     this.initializeComercialConditionsForm();
     this.cfdiValues = this.cfdiService.getCfdiValues();
     this.taxRegimeValues = this.taxRegimeService.getTaxRegimes();
     this.updateStates();
-    this.createClientForm.get('country')?.valueChanges.subscribe(country => {
+    this.createClientTaxForm.get('country')?.valueChanges.subscribe(country => {
       this.updateStates(country);
     });
     this.isLoading = false;
   }
 
-  initializeForm() {
-    this.createClientForm = this.fb.group(
+  initializeTaxDataForm() {
+    this.createClientTaxForm = this.fb.group(
       {
         businessName: ['', Validators.required],
         commercialName: ['', Validators.required],
@@ -99,6 +99,37 @@ export class ClientCreateComponent implements OnInit {
     });
   }
 
+  getClientData(clientId: string) {
+    this.clientService.getClient(clientId).subscribe({
+      next: (client) => {
+        this.createClientTaxForm.patchValue(client);
+
+        // Set the CFDI code in the form
+        const selectedCfdi = this.cfdiValues.find(
+          (cfdi) => cfdi.code === client.cfdiUse.code
+        );
+        if (selectedCfdi) {
+          this.createClientTaxForm.get('cfdiUse')?.setValue(selectedCfdi);
+        }
+
+        // Set the Tax Regime
+        const selectedTaxRegime = this.taxRegimeValues.find(
+          (regime) => regime.description === client.taxRegime.description
+        );
+        if (selectedTaxRegime) {
+          this.createClientTaxForm.get('taxRegime')?.setValue(selectedTaxRegime);
+        }
+      },
+      error: (error) => {
+        this.toastService.showError(
+          `Error fetching client data: ${error.error.message}`,
+          'Close'
+        );
+        console.error('Error fetching client data:', error.error.message);
+      },
+    });
+  }
+
   loadExecutives(): void {
     this.clientService.fetchExecutives().subscribe((executives) => {
       this.executives = executives;
@@ -111,13 +142,13 @@ export class ClientCreateComponent implements OnInit {
   }
 
   isValidField(field: string): boolean | null {
-    return this.validatorsService.isValidField(this.createClientForm, field);
+    return this.validatorsService.isValidField(this.createClientTaxForm, field);
   }
 
   getFieldError(field: string): string | null {
-    if (!this.createClientForm.controls[field]) return null;
+    if (!this.createClientTaxForm.controls[field]) return null;
 
-    const errors = this.createClientForm.controls[field].errors || {};
+    const errors = this.createClientTaxForm.controls[field].errors || {};
 
     console.log(errors);
 
@@ -139,29 +170,26 @@ export class ClientCreateComponent implements OnInit {
   // Check if all forms are valid
   isAllStepsCompleted(): boolean {
     return (
-      this.createClientForm.valid &&
+      this.createClientTaxForm.valid &&
       this.createComercialConditionsClientForm.valid
     );
   }
 
-  submitForm() {
-    if (this.createClientForm.invalid) {
+  submitTaxForm() {
+    if (this.createClientTaxForm.invalid) {
       console.log('Invalid form');
-      this.createClientForm.markAllAsTouched();
+      this.createClientTaxForm.markAllAsTouched();
       return;
     }
     this.isSubmittingForm = true;
 
-    const clientData = { ...this.createClientForm.value };
+    const clientData = { ...this.createClientTaxForm.value };
 
     console.log('Client Data:', clientData);
     this.clientService.createClient(clientData).subscribe({
       next: (response) => {
         this.isSubmittingForm = false;
-        this.toastService.showSuccess('Cliente creado con éxito', 'Close');
-        const clientId = response.id; // Assuming the response contains the created client's ID
-        this.router.navigate([`/clients/${clientId}`]);
-        this.createClientForm.reset();
+        this.toastService.showSuccess('Datos fiscales guardados correctamente', 'Close');
       },
       error: (error) => {
         this.isSubmittingForm = false;

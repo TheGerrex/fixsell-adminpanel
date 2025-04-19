@@ -1,6 +1,7 @@
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { User } from 'src/app/users/interfaces/users.interface';
 import { TaxRegime } from 'src/app/shared/services/tax-regime.service';
+import { Cfdi } from 'src/app/shared/services/cfdi.service';
 
 // Enums to match backend
 export enum PaymentMethod {
@@ -220,7 +221,7 @@ export interface Client {
   exteriorNumber: string;
   interiorNumber?: string;
   neighborhood: string;
-  cfdiUse: CfdiAllowedValues;
+  cfdiUse: Cfdi;
   isrRetention: boolean;
   locality: string;
   municipality: string;

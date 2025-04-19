@@ -98,7 +98,7 @@
                 <mat-label>Uso de CFDI</mat-label>
                 <mat-select formControlName="cfdiUse">
                   <mat-option *ngFor="let value of cfdiValues" [value]="value">
-                    {{ value }}
+                    {{ value.code }} | {{ value.description }}
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf="isValidField('cfdiUse')">{{

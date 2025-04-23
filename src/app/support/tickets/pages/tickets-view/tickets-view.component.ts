@@ -485,6 +485,23 @@ export class TicketsViewComponent implements OnInit {
             'Estado del ticket actualizado correctamente',
             'OK',
           );
+          // If status is COMPLETED, trigger the rating prompt in the chatbot backend
+          if (this.ticket.status === 'completed') {
+            // Assuming the client's phone number is in ticket.clientPhone
+            this.ticketsService
+              .sendRatingPrompt(this.ticket.clientPhone)
+              .subscribe(
+                (ratingResponse) => {
+                  console.log(
+                    'Rating prompt sent successfully:',
+                    ratingResponse,
+                  );
+                },
+                (ratingError) => {
+                  console.error('Error sending rating prompt:', ratingError);
+                },
+              );
+          }
         },
         (error) => {
           this.toastService.showError(

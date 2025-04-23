@@ -30,7 +30,7 @@ export class TicketsService {
       map((ticketResponse) => {
         console.log('Received tickets:', ticketResponse);
         return ticketResponse;
-      })
+      }),
     );
   }
   getTicketById(ticketId: string): Observable<Ticket> {
@@ -41,7 +41,7 @@ export class TicketsService {
 
   updateTicket(
     id: number,
-    ticket: Partial<Omit<Ticket, 'assigned'>> & { assigned?: string }
+    ticket: Partial<Omit<Ticket, 'assigned'>> & { assigned?: string },
   ): Observable<Ticket> {
     console.log('update ticket function called');
     console.trace(); // This will output a stack trace
@@ -67,7 +67,19 @@ export class TicketsService {
         tap({
           next: () => console.log('Ticket deleted successfully'),
           error: (error) => console.log('Error deleting ticket:', error),
-        })
+        }),
       );
+  }
+
+  // send rating trigger to chatbot python backend
+  // This function sends a rating prompt to the chatbot backend for a specific phone number.
+  // Requirments for this function:
+  // - The phone number should be a string.
+  // - The function should return an Observable of any type.
+  sendRatingPrompt(phone: string): Observable<any> {
+    // Assuming you have configured environment.chatbotUrl accordingly.
+    return this.http.post(`${environment.chatbotUrl}/api/send-rating-prompt`, {
+      phone_number: phone,
+    });
   }
 }

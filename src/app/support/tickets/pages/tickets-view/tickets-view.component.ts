@@ -475,41 +475,52 @@ export class TicketsViewComponent implements OnInit {
 
   changeStatus() {
     console.log('Cambio de Estatus');
-    // Call the updateTicket method with the ticket id and the updated status
     this.ticketsService
       .updateTicket(this.ticket.id, { status: this.ticketStatus })
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.ticket.status = this.ticketStatus;
+
+          // Ensure these values are still set properly after status change
+          if (!this.ticketAppointmentDateEnd) {
+            this.ticketAppointmentDateEnd = this.ticketAppointmentDateStart;
+          }
+
+          // Make sure client data is preserved
+          if (this.ticket.clientPhone) {
+            this.clientPhone = this.ticket.clientPhone;
+          }
+
           this.toastService.showSuccess(
             'Estado del ticket actualizado correctamente',
             'OK',
           );
+
           // If status is COMPLETED, trigger the rating prompt in the chatbot backend
           if (this.ticket.status === 'completed') {
             // Assuming the client's phone number is in ticket.clientPhone
             this.ticketsService
               .sendRatingPrompt(this.ticket.clientPhone)
-              .subscribe(
-                (ratingResponse) => {
+              .subscribe({
+                next: (ratingResponse) => {
                   console.log(
                     'Rating prompt sent successfully:',
                     ratingResponse,
                   );
                 },
-                (ratingError) => {
+                error: (ratingError) => {
                   console.error('Error sending rating prompt:', ratingError);
                 },
-              );
+              });
           }
         },
-        (error) => {
+        error: (error) => {
           this.toastService.showError(
             'Error al actualizar el estado del ticket',
             error.message,
           );
         },
-      );
+      });
   }
 
   changePriority() {

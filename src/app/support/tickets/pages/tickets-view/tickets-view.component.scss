@@ -571,3 +571,49 @@ form {
     transform: translateX(100%);
   }
 }
+
+/* Add these to fix form elements breaking out */
+.form-container-fixed {
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-item {
+  min-width: 0; /* Prevent overflowing */
+  overflow: hidden; /* Prevent overflowing */
+}
+
+.half-row {
+  grid-column: span 1;
+}
+
+.full-row {
+  grid-column: 1 / -1;
+}
+
+.full-width-field {
+  width: 100%;
+}
+
+/* Fix for mat-form-field in smaller containers */
+::ng-deep .mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .half-row {
+    grid-column: 1 / -1;
+  }
+}

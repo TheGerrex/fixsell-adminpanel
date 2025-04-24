@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
@@ -8,12 +7,12 @@ import {
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
-import { MatDialog } from '@angular/material/dialog';
 import { Cfdi, CfdiService } from 'src/app/shared/services/cfdi.service';
 import { TaxRegime, TaxRegimeService } from 'src/app/shared/services/tax-regime.service';
 import { LocationService } from 'src/app/shared/services/location.service';
 import { ClientsService } from '../../services/clients.service';
 import { User } from 'src/app/auth/interfaces';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-client-create',
@@ -23,6 +22,14 @@ import { User } from 'src/app/auth/interfaces';
 export class ClientCreateComponent implements OnInit {
   public createClientTaxForm!: FormGroup;
   public createComercialConditionsClientForm!: FormGroup;
+  public createClassificationClientForm!: FormGroup;
+  public createSuspensionConfigClientForm!: FormGroup;
+  public createComplementInfoClientForm!: FormGroup;
+  public createBillingAddressClientForm!: FormGroup;
+  public createShippingAddressClientForm!: FormGroup;
+  public createContactsClientForm!: FormGroup;
+  public createPrintersClientForm!: FormGroup;
+  public createAccountsClientForm!: FormGroup;
   public cfdiValues: Cfdi[] = [];
   public taxRegimeValues: TaxRegime[] = [];
   public states: { code: string; name: string }[] = [];
@@ -32,13 +39,12 @@ export class ClientCreateComponent implements OnInit {
   hide = true;
   isLoading = false;
   isSubmittingForm = false;
+  clientId = '';
   constructor(
-    private router: Router,
     private fb: FormBuilder,
     private toastService: ToastService,
     private validatorsService: ValidatorsService,
     private clientService: ClientsService,
-    private dialog: MatDialog,
     private cfdiService: CfdiService,
     private taxRegimeService: TaxRegimeService,
     private locationService: LocationService,
@@ -200,6 +206,72 @@ export class ClientCreateComponent implements OnInit {
         console.error('Error creando cliente:', error.error.message);
       },
     });
+  }
+
+  submitAllForms(): void {
+    if (this.isSubmittingForm) return;
+
+    this.isSubmittingForm = true;
+
+    // Step 1: Submit Tax Form
+    if (this.createClientTaxForm.invalid) {
+      console.log('Tax form is invalid.');
+      this.createClientTaxForm.markAllAsTouched();
+      this.isSubmittingForm = false;
+      return;
+    }
+
+    const clientData = { ...this.createClientTaxForm.value };
+    this.clientService.createClient(clientData).subscribe({
+      next: (response) => {
+        this.clientId = response.id; // Assuming the response contains the client ID
+        console.log('Client created successfully with ID:', this.clientId);
+
+        // Step 2: Submit Commercial Conditions Form
+        this.submitCommercialConditionsForm();
+      },
+      error: (err) => {
+        console.error('Error submitting tax form:', err);
+        this.toastService.showError('Error submitting tax form', 'Close');
+        this.isSubmittingForm = false;
+      },
+    });
+  }
+
+  private submitCommercialConditionsForm(): void {
+    if (this.createComercialConditionsClientForm.invalid) {
+      console.error('Commercial conditions form is invalid.');
+      this.createComercialConditionsClientForm.markAllAsTouched();
+      this.isSubmittingForm = false;
+      return;
+    }
+
+    const commercialConditionsPayload = {
+      ...this.createComercialConditionsClientForm.value,
+      clientId: this.clientId, // Add clientId to the payload
+    };
+
+    this.clientService.createCommercialCondition(commercialConditionsPayload).subscribe({
+      next: () => {
+        console.log('Commercial conditions submitted successfully!');
+      },
+      error: (err) => {
+        console.error('Error submitting commercial conditions:', err);
+        this.toastService.showError('Error submitting commercial conditions', 'Close');
+        this.isSubmittingForm = false;
+      },
+    });
+  }
+
+  private finalizeSubmission(): void {
+    console.log('All forms submitted successfully!');
+    this.toastService.showSuccess('All forms submitted successfully!', 'Close');
+    this.isSubmittingForm = false;
+  }
+
+  skipStep(stepper: MatStepper): void {
+    console.log('Skipping step...');
+    stepper.next(); // Move to the next step
   }
 }
 

@@ -7,15 +7,15 @@
         <h3 class="header-title">Nuevo Cliente</h3>
       </div>
       <div class="button-actions">
-        <!-- <button
+        <button
           ButtonResize
-          (click)="submitTaxForm()"
+          (click)="submitAllForms()"
           type="submit"
           class="button button-primary button-raised"
         >
           <mat-icon>add</mat-icon
           ><span class="button-label">Crear Cliente</span>
-        </button> -->
+        </button>
       </div>
     </div>
 
@@ -28,7 +28,7 @@
             <ng-template matStepLabel>Datos Fiscales</ng-template>
             <div class="form-container">
               <div class="form-section">
-                <h5 class="form-section-subheader">Información General</h5>
+                <h5 class="form-section-subheader">Información Fiscal</h5>
                 <div class="form-grid">
                   <!-- businessName -->
                   <div class="form-item half-row">
@@ -298,15 +298,8 @@
               </div>
             </div>
             <div class="form-actions">
-              <button
-                matStepperNext
-                (click)="submitTaxForm()"
-                [disabled]="createClientTaxForm.invalid || isSubmittingForm"
-                type="submit"
-                class="button button-primary button-raised"
-              >
-                <span class="button-label">Guardar cliente y continuar</span>
-                <mat-icon>arrow_forward</mat-icon>
+              <button class="button button-outline-primary" matStepperNext>
+                Siguiente
               </button>
             </div>
           </form>
@@ -477,6 +470,12 @@
               >
                 <mat-icon>arrow_back</mat-icon>
                 <span class="button-label">Atras</span>
+              </button>
+              <button
+                class="button button-outline-secondary"
+                (click)="skipStep(stepper)"
+              >
+                Omitir
               </button>
               <button
                 matStepperNext

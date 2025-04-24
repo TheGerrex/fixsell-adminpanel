@@ -11,7 +11,7 @@
   display: flex;
   justify-content: flex-end;
   width: 100%; /* Ensure the actions container spans the full width */
-
+  gap: 0.5rem; /* Space between buttons */
   margin-top: 1rem; /* Optional: Add spacing above the button */
 }
 

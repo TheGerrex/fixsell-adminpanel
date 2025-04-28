@@ -77,6 +77,10 @@ export class TicketsService {
   // - The phone number should be a string.
   // - The function should return an Observable of any type.
   sendRatingPrompt(phone: string, ticketId: string): Observable<any> {
+    console.log('Sending rating prompt to chatbot backend:', {
+      phone_number: phone,
+      ticket_id: ticketId,
+    });
     return this.http.post(`${environment.chatbotUrl}/api/send-rating-prompt`, {
       phone_number: phone,
       ticket_id: ticketId,

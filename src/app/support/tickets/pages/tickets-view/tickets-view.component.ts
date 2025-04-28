@@ -477,52 +477,46 @@ export class TicketsViewComponent implements OnInit {
     console.log('Cambio de Estatus');
     this.ticketsService
       .updateTicket(this.ticket.id, { status: this.ticketStatus })
-      .subscribe({
-        next: (response) => {
+      .subscribe(
+        (response) => {
           this.ticket.status = this.ticketStatus;
-
-          // Ensure these values are still set properly after status change
-          if (!this.ticketAppointmentDateEnd) {
-            this.ticketAppointmentDateEnd = this.ticketAppointmentDateStart;
-          }
-
-          // Make sure client data is preserved
-          if (this.ticket.clientPhone) {
-            this.clientPhone = this.ticket.clientPhone;
-          }
-
           this.toastService.showSuccess(
             'Estado del ticket actualizado correctamente',
             'OK',
           );
 
-          // If status is COMPLETED, trigger the rating prompt in the chatbot backend
+          // If ticket is completed, send rating prompt
           if (this.ticket.status === 'completed') {
-            // Assuming the client's phone number is in ticket.clientPhone
-            this.ticketsService
-              .sendRatingPrompt(this.ticket.clientPhone)
-              .subscribe({
-                next: (ratingResponse) => {
-                  console.log(
-                    'Rating prompt sent successfully:',
-                    ratingResponse,
-                  );
-                },
-                error: (ratingError) => {
-                  console.error('Error sending rating prompt:', ratingError);
-                },
-              });
+            console.log('Ticket completed, sending rating prompt');
+            // Make sure to include both phone and ticket ID
+            if (this.clientPhone) {
+              this.ticketsService
+                .sendRatingPrompt(this.clientPhone, this.ticket.id.toString())
+                .subscribe(
+                  () => {
+                    console.log('Rating prompt sent successfully');
+                  },
+                  (error) => {
+                    console.error('Error sending rating prompt:', error);
+                    this.toastService.showError(
+                      'Error al enviar la solicitud de calificación',
+                      error.message,
+                    );
+                  },
+                );
+            } else {
+              console.warn('No client phone available to send rating prompt');
+            }
           }
         },
-        error: (error) => {
+        (error) => {
           this.toastService.showError(
             'Error al actualizar el estado del ticket',
             error.message,
           );
         },
-      });
+      );
   }
-
   changePriority() {
     console.log('Change priority');
     // Call the updateTicket method with the ticket id and the updated priority

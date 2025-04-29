@@ -1,28 +1,57 @@
-<div class="permissions-card section-card">
+<div class="section-card">
   <div class="section-card-header">
-    <h3 class="header-title">Permisos</h3>
-    <button
-      class="button button-primary button-raised"
-      (click)="submitPermissions()"
-    >
-      <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
-    </button>
+    <div class="section-card-header-wrapper">
+      <h3 class="header-title">Permisos de Usuario</h3>
+      <p class="header-subtitle">
+        Elija las opciones de menú a las que tendrá acceso este usuario
+      </p>
+    </div>
+    <div class="button-actions">
+      <button
+        ButtonResize
+        (click)="submitPermissions()"
+        class="button button-primary button-raised"
+      >
+        <mat-icon>save</mat-icon><span class="button-label">Guardar</span>
+      </button>
+    </div>
   </div>
   <div class="section-card-body">
-    <div
-      class="permission-category"
-      *ngFor="let category of permissionCategories"
-    >
-      <div class="category-header">
-        <h3>{{ category.name }}</h3>
-      </div>
-      <div class="permission-item" *ngFor="let item of category.items">
-        <mat-checkbox
-          [(ngModel)]="item.checked"
-          (change)="onPermissionChange()"
-        >
-          {{ item.label }}
-        </mat-checkbox>
+    <!-- <mat-accordion multi="true" style="width: 100%">
+      <mat-expansion-panel *ngFor="let category of permissionCategories">
+        <mat-expansion-panel-header>
+          <mat-panel-title> {{ category.name }} </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="permission-item" *ngFor="let item of category.items">
+          <mat-checkbox
+            [(ngModel)]="item.checked"
+            (change)="onPermissionChange()"
+          >
+            {{ item.label }}
+          </mat-checkbox>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion> -->
+    <div class="permission-body">
+      <div
+        class="permission-category"
+        *ngFor="let category of permissionCategories; let i = index"
+      >
+        <div class="category-header" (click)="toggleCategory(i)">
+          <mat-icon class="icon">
+            {{ isCategoryVisible[i] ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+          <h5>{{ category.name }}</h5>
+        </div>
+        <div class="permission-item" *ngIf="isCategoryVisible[i]">
+          <mat-checkbox
+            *ngFor="let item of category.items"
+            [(ngModel)]="item.checked"
+            (change)="onPermissionChange()"
+          >
+            {{ item.label }}
+          </mat-checkbox>
+        </div>
       </div>
     </div>
   </div>

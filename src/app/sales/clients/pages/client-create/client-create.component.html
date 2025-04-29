@@ -10,6 +10,7 @@
         <button
           ButtonResize
           (click)="submitAllForms()"
+          [disabled]="stepper.selectedIndex === 0"
           type="submit"
           class="button button-primary button-raised"
         >
@@ -304,9 +305,199 @@
             </div>
           </form>
         </mat-step>
-        <mat-step [stepControl]="createClientTaxForm" [editable]="true">
+        <mat-step
+          [stepControl]="createComercialConditionsClientForm"
+          [editable]="true"
+        >
           <form [formGroup]="createComercialConditionsClientForm" class="form">
             <ng-template matStepLabel>Condiciones Comerciales</ng-template>
+            <div class="form-container">
+              <div class="form-section">
+                <h5 class="form-section-subheader">Condiciones Comerciales</h5>
+                <div class="form-grid">
+                  <!-- assignedExecutiveId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Ejecutivo asignado</mat-label>
+                      <mat-select formControlName="assignedExecutiveId">
+                        <mat-option
+                          *ngFor="let executive of executives"
+                          [value]="executive.id"
+                        >
+                          {{ executive.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- collectionExecutiveId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Ejecutivo de cobranza</mat-label>
+                      <mat-select formControlName="collectionExecutiveId">
+                        <mat-option
+                          *ngFor="let executive of collectionExecutives"
+                          [value]="executive.id"
+                        >
+                          {{ executive.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- creditDays -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Días de crédito</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        placeholder="Días de crédito"
+                        formControlName="creditDays"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- creditLimit -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Monto límite de crédito</mat-label>
+                      <span matPrefix style="margin-left: 0.5rem">$&nbsp;</span>
+                      <input
+                        matInput
+                        type="number"
+                        placeholder="Límite de crédito"
+                        formControlName="creditLimit"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- isActiveClient -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">Cliente Activo</p>
+                      <mat-slide-toggle formControlName="isActive">
+                      </mat-slide-toggle>
+                    </div>
+                  </div>
+
+                  <!-- applyVatWithholding -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">Aplicar retención I.V.A</p>
+                      <mat-slide-toggle
+                        formControlName="applyVatWithholding"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+
+                  <!-- isrRetention -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">¿Aplica Retención de ISR?</p>
+                      <mat-slide-toggle formControlName="isrRetention">
+                      </mat-slide-toggle>
+                    </div>
+                  </div>
+                  <!-- validateCreditLimitInSales -->
+                  <div class="form-item half-row">
+                    <div class="form-item-toggle">
+                      <p class="item-toggle-label">
+                        Validar límite de crédito en documentos de venta?
+                      </p>
+                      <mat-slide-toggle
+                        formControlName="validateCreditLimitInSales"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+                  <!-- collectionObservations -->
+                  <div class="form-item full-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Observaciones para cobranza</mat-label>
+                      <textarea
+                        matInput
+                        placeholder="Escribe observaciones para cobranza"
+                        formControlName="collectionObservations"
+                        rows="3"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- currency -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Moneda</mat-label>
+                      <mat-select formControlName="currency">
+                        <mat-option value="MXN"> MXN </mat-option>
+                        <mat-option value="USD"> USD </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- reviewDays -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Días de revisión</mat-label>
+                      <mat-select formControlName="reviewDays" multiple>
+                        <mat-option
+                          *ngFor="let day of daysOfWeek"
+                          [value]="day"
+                        >
+                          {{ day }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- paymentDays -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Días de pago</mat-label>
+                      <mat-select formControlName="paymentDays" multiple>
+                        <mat-option
+                          *ngFor="let day of daysOfWeek"
+                          [value]="day"
+                        >
+                          {{ day }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button
+                matStepperPrevious
+                type="button"
+                class="button button-outline-secondary"
+              >
+                <mat-icon>arrow_back</mat-icon>
+                <span class="button-label">Atras</span>
+              </button>
+              <button
+                class="button button-outline-secondary"
+                (click)="skipStep(stepper)"
+              >
+                Omitir
+              </button>
+              <button
+                matStepperNext
+                type="button"
+                class="button button-outline-primary"
+              >
+                <span class="button-label">Siguiente</span>
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step
+          [stepControl]="createComercialConditionsClientForm"
+          [editable]="true"
+        >
+          <form [formGroup]="createComercialConditionsClientForm" class="form">
+            <ng-template matStepLabel>Clasificación</ng-template>
             <div class="form-container">
               <div class="form-section">
                 <h5 class="form-section-subheader">Condiciones Comerciales</h5>

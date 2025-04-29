@@ -52,6 +52,7 @@ export class RoleService {
     '/sales/clients/create': ['canCreateClient'],
     '/sales/clients/create/*': ['canUpdateClient', 'canDeleteClient'],
     '/sales/clients/*/edit': ['canUpdateClient'],
+    '/sales/config': ['canConfigureSales'],
     '/users/user': ['canViewUser'],
     '/users/user/create': ['canCreateUser'],
     '/users/user/create/*': ['canUpdateUser', 'canDeleteUser'],

@@ -67,6 +67,11 @@ export const navbarData = [
         routeLink: 'sales/quote',
         allowedPermissions: ['canCreateQuote'],
       },
+      {
+        label: 'Configuración',
+        routeLink: 'sales/config',
+        allowedPermissions: ['canConfigSales'],
+      },
 
     ],
   },

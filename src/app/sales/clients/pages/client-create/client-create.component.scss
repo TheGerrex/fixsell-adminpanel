@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin-top: 1rem;
 }
 
 .form-actions {
@@ -13,6 +14,7 @@
   width: 100%; /* Ensure the actions container spans the full width */
   gap: 0.5rem; /* Space between buttons */
   margin-top: 1rem; /* Optional: Add spacing above the button */
+  padding: 0.25rem;
 }
 
 .form-item-toggle {

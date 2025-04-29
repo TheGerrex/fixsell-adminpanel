@@ -1,6 +1,6 @@
 <!-- src/app/users/user/pages/user-edit/user-edit.component.html -->
 
-<div>
+<div class="user-container">
   <form
     [formGroup]="editUserForm"
     (ngSubmit)="submitForm()"
@@ -238,20 +238,19 @@
       </div>
     </div>
   </form>
+
+  <!-- Permissions Card -->
+  <app-permissions
+    [permissionId]="selectedPermissionId"
+    (permissionsChange)="onPermissionsChange($event)"
+  ></app-permissions>
 </div>
 
-<!-- Permissions Card -->
-<div class="permissions-card section-card">
+<!-- <div class="permissions-card section-card">
   <div class="section-card-header">
     <h3 class="header-title">
       Permisos de {{ selectedRoleName || 'Rol no seleccionado' }}
     </h3>
   </div>
-  <div class="section-card-body">
-    <!-- Pass permissionId to PermissionsComponent -->
-    <app-permissions
-      [permissionId]="selectedPermissionId"
-      (permissionsChange)="onPermissionsChange($event)"
-    ></app-permissions>
-  </div>
-</div>
+  
+</div> -->

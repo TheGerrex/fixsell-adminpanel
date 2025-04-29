@@ -35,12 +35,13 @@ export class PermissionsComponent implements OnInit, OnChanges {
 
   permissions: Permission = { id: '', name: '' };
   permissionCategories: PermissionCategory[] = [];
+  isCategoryVisible: boolean[] = [];
 
   constructor(
     private roleService: RoleService,
     private http: HttpClient,
     private toastService: ToastService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializePermissionCategories();
@@ -53,7 +54,7 @@ export class PermissionsComponent implements OnInit, OnChanges {
     if (
       changes['permissionId'] &&
       changes['permissionId'].currentValue !==
-        changes['permissionId'].previousValue
+      changes['permissionId'].previousValue
     ) {
       this.fetchPermissions();
     }
@@ -315,6 +316,10 @@ export class PermissionsComponent implements OnInit, OnChanges {
       });
     });
     this.permissionsChange.emit(this.permissions);
+  }
+
+  toggleCategory(index: number): void {
+    this.isCategoryVisible[index] = !this.isCategoryVisible[index];
   }
 
   submitPermissions(): void {

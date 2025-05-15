@@ -131,3 +131,16 @@ $active-background-color: #d0d0d0; /* Background color on click */
     }
   }
 }
+
+// WhatsApp related styles
+.whatsapp-avatar {
+  background-color: #25d366 !important; // WhatsApp green
+  color: white;
+  font-size: 20px;
+}
+
+.whatsapp-icon {
+  color: #25d366; // WhatsApp green
+  font-size: 12px;
+  margin-left: 5px;
+}

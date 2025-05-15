@@ -17,18 +17,25 @@
       *ngFor="let chat of chats"
       (click)="selectChat(chat.roomId)"
     >
+      <!-- Use special WhatsApp avatar for WhatsApp chats -->
       <div
         class="avatar"
         [ngClass]="{
           online: chat.status === 'online',
-          offline: chat.status === 'offline'
+          offline: chat.status === 'offline',
+          'whatsapp-avatar': chat.isWhatsApp
         }"
       >
-        {{ chat.name.charAt(0) }}
+        <i *ngIf="chat.isWhatsApp" class="fa fa-whatsapp"></i>
+        <span *ngIf="!chat.isWhatsApp">{{ chat.name.charAt(0) }}</span>
       </div>
       <div class="chat-details">
         <div class="name-time">
-          <div class="name">{{ chat.name }}</div>
+          <div class="name">
+            {{ chat.name }}
+            <!-- Small WhatsApp icon beside name -->
+            <i *ngIf="chat.isWhatsApp" class="fa fa-whatsapp whatsapp-icon"></i>
+          </div>
           <div class="time">{{ chat.time }}</div>
         </div>
         <div class="last-message">{{ chat.lastMessage }}</div>

@@ -8,9 +8,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../../services/chat.service';
 import { ClientService } from '../../services/client.service';
-import { ChatHistoryService } from '../../services/chat-history.service'; // Import ChatHistoryService
+import { ChatHistoryService } from '../../services/chat-history.service';
+import { WhatsAppService, WhatsAppChat } from '../../services/whatsapp.service';
 import { interval, startWith, Subscription, switchMap } from 'rxjs';
 import { CommunicationService } from '../../services/communication.service';
+
 interface ChatItem {
   name: string;
   lastMessage: string;
@@ -18,6 +20,7 @@ interface ChatItem {
   status: 'online' | 'offline';
   unreadCount?: number;
   roomId: string;
+  isWhatsApp?: boolean; // Add flag to identify WhatsApp chats
 }
 
 interface ChatMessage {
@@ -49,30 +52,53 @@ export class ChatListsComponent implements OnInit {
   ];
   activeTab = 'Todos';
 
-  connectedClients: { id: string; roomName: string }[] = []; // Add property to store connected clients
+  connectedClients: { id: string; roomName: string }[] = [];
   private clientsSubscription: Subscription | undefined;
-  private chatMessages: ChatMessage[] = []; // Store chat messages
+  private chatMessages: ChatMessage[] = [];
+  private whatsAppChats: WhatsAppChat[] = []; // Store WhatsApp chats
+  private whatsAppSubscription: Subscription | undefined;
 
   constructor(
     private clientService: ClientService,
-    private chatHistoryService: ChatHistoryService, // Inject ChatHistoryService
-    private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
-    private communicationService: CommunicationService, // Inject CommunicationService
+    private chatHistoryService: ChatHistoryService,
+    private cdr: ChangeDetectorRef,
+    private communicationService: CommunicationService,
+    private whatsAppService: WhatsAppService, // Inject WhatsApp service
   ) {}
 
   ngOnInit(): void {
-    this.fetchConnectedClients(); // Call method to load connected clients
-    this.loadChatHistory(); // Call method to load chat history
+    this.fetchConnectedClients();
+    this.loadChatHistory();
+    this.fetchWhatsAppChats(); // Add method to fetch WhatsApp chats
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscriptions
+    if (this.clientsSubscription) {
+      this.clientsSubscription.unsubscribe();
+    }
+    if (this.whatsAppSubscription) {
+      this.whatsAppSubscription.unsubscribe();
+    }
   }
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
-    // Here you would typically filter the chats based on the active tab
+    // Filter chats based on active tab (implement later)
   }
 
   selectChat(roomId: string) {
-    this.communicationService.emitChatRoomSelected(roomId);
-    console.log('Room selected:', roomId);
+    // Handle differently based on chat type
+    if (roomId.startsWith('whatsapp:')) {
+      const phoneNumber = roomId.replace('whatsapp:', '');
+      console.log('WhatsApp chat selected:', phoneNumber);
+      // Emit different event for WhatsApp chats if needed
+      this.communicationService.emitChatRoomSelected(roomId);
+    } else {
+      // Regular web chat
+      this.communicationService.emitChatRoomSelected(roomId);
+      console.log('Room selected:', roomId);
+    }
   }
 
   private fetchConnectedClients(): void {
@@ -83,10 +109,9 @@ export class ChatListsComponent implements OnInit {
       )
       .subscribe(
         (clients) => {
-          // console.log('Updating clients:', clients);
           this.connectedClients = clients;
-          this.updateChatItems(); // Update chat items when connected clients are updated
-          this.cdr.detectChanges(); // Manually trigger change detection
+          this.updateChatItems();
+          this.cdr.detectChanges();
         },
         (error) => console.error('Error fetching connected clients:', error),
       );
@@ -95,15 +120,34 @@ export class ChatListsComponent implements OnInit {
   private loadChatHistory(): void {
     this.chatHistoryService.getChatHistory().subscribe(
       (messages: ChatMessage[]) => {
-        this.chatMessages = messages; // Store chat messages
-        this.updateChatItems(); // Update chat items when chat history is loaded
+        this.chatMessages = messages;
+        this.updateChatItems();
       },
       (error) => console.error('Error loading chat history:', error),
     );
   }
 
+  private fetchWhatsAppChats(): void {
+    // Poll for WhatsApp chats every 10 seconds
+    this.whatsAppSubscription = interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.whatsAppService.getWhatsAppChats()),
+      )
+      .subscribe(
+        (chats: WhatsAppChat[]) => {
+          this.whatsAppChats = chats;
+          this.updateChatItems();
+          console.log('WhatsApp chats loaded:', chats.length);
+        },
+        (error) => console.error('Error loading WhatsApp chats:', error),
+      );
+  }
+
   private updateChatItems(): void {
     const chatItems: ChatItem[] = [];
+
+    // Process regular web chats
     const groupedMessages: GroupedMessages = this.chatMessages.reduce(
       (acc: GroupedMessages, message: ChatMessage) => {
         if (!acc[message.roomId]) {
@@ -124,7 +168,7 @@ export class ChatListsComponent implements OnInit {
 
       const senderName =
         roomMessages.find((message) => message.senderName !== null)
-          ?.senderName || 'Anonymous'; // Use 'Anonymous' as fallback if no senderName is found
+          ?.senderName || 'Anonymous';
 
       const isOnline = this.connectedClients.some(
         (client) => client.roomName === roomId,
@@ -134,12 +178,43 @@ export class ChatListsComponent implements OnInit {
         name: senderName,
         lastMessage: latestMessage.message,
         time: new Date(latestMessage.timestamp).toLocaleTimeString(),
-        status: isOnline ? 'online' : 'offline', // Set status based on connected clients
+        status: isOnline ? 'online' : 'offline',
         roomId: roomId,
+        isWhatsApp: false, // Regular web chat
       });
     }
 
-    this.chats = chatItems;
-    this.cdr.detectChanges(); // Manually trigger change detection
+    // Add WhatsApp chats
+    for (const chat of this.whatsAppChats) {
+      const lastActivityDate = new Date(chat.last_activity);
+      chatItems.push({
+        name: this.formatPhoneNumber(chat.phone_number), // Format the phone number for display
+        lastMessage: chat.last_message,
+        time: lastActivityDate.toLocaleTimeString(),
+        status: 'online', // Assume WhatsApp users are online
+        unreadCount: chat.interaction_count,
+        roomId: `whatsapp:${chat.phone_number}`, // Prefix with whatsapp: to distinguish
+        isWhatsApp: true, // Mark as WhatsApp chat
+      });
+    }
+
+    // Sort all chats by time (most recent first)
+    this.chats = chatItems.sort((a, b) => {
+      const timeA = new Date(a.time).getTime();
+      const timeB = new Date(b.time).getTime();
+      return timeB - timeA;
+    });
+
+    this.cdr.detectChanges();
+  }
+
+  // Helper method to format phone numbers for display
+  private formatPhoneNumber(phoneNumber: string): string {
+    // Keep only the last 10 digits for display if it's a long number
+    if (phoneNumber.length > 10) {
+      const digits = phoneNumber.replace(/\D/g, '');
+      return digits.substring(Math.max(0, digits.length - 10));
+    }
+    return phoneNumber;
   }
 }

@@ -128,11 +128,11 @@ export class ChatListsComponent implements OnInit {
   }
 
   private fetchWhatsAppChats(): void {
-    // Poll for WhatsApp chats every 10 seconds
+    // Poll for combined WhatsApp chats (both active and database)
     this.whatsAppSubscription = interval(10000)
       .pipe(
         startWith(0),
-        switchMap(() => this.whatsAppService.getAllWhatsAppChats()),
+        switchMap(() => this.whatsAppService.getCombinedWhatsAppChats()),
       )
       .subscribe(
         (chats: WhatsAppChat[]) => {

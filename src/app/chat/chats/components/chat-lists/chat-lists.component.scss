@@ -136,11 +136,34 @@ $active-background-color: #d0d0d0; /* Background color on click */
 .whatsapp-avatar {
   background-color: #25d366 !important; // WhatsApp green
   color: white;
-  font-size: 20px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .whatsapp-icon {
   color: #25d366; // WhatsApp green
-  font-size: 12px;
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
   margin-left: 5px;
+  vertical-align: middle;
+}
+
+// Style for unread count badge
+.unread-count {
+  background-color: #25d366;
+  color: white;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-left: auto;
+  padding: 0 4px;
 }

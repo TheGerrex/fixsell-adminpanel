@@ -26,7 +26,7 @@
           'whatsapp-avatar': chat.isWhatsApp
         }"
       >
-        <i *ngIf="chat.isWhatsApp" class="fa fa-whatsapp"></i>
+        <mat-icon *ngIf="chat.isWhatsApp">chat</mat-icon>
         <span *ngIf="!chat.isWhatsApp">{{ chat.name.charAt(0) }}</span>
       </div>
       <div class="chat-details">
@@ -34,11 +34,20 @@
           <div class="name">
             {{ chat.name }}
             <!-- Small WhatsApp icon beside name -->
-            <i *ngIf="chat.isWhatsApp" class="fa fa-whatsapp whatsapp-icon"></i>
+            <mat-icon *ngIf="chat.isWhatsApp" class="whatsapp-icon"
+              >chat</mat-icon
+            >
           </div>
           <div class="time">{{ chat.time }}</div>
         </div>
         <div class="last-message">{{ chat.lastMessage }}</div>
+        <!-- Show unread count if there are unread messages -->
+        <div
+          *ngIf="chat.unreadCount && chat.unreadCount > 0"
+          class="unread-count"
+        >
+          {{ chat.unreadCount }}
+        </div>
       </div>
     </div>
   </div>

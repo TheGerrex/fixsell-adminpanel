@@ -27,10 +27,14 @@ export class WhatsAppService {
   /**
    * Fetches all active WhatsApp chats from the backend
    */
-  getWhatsAppChats(): Observable<WhatsAppChat[]> {
+  getActiveWhatsAppChats(): Observable<WhatsAppChat[]> {
     return this.http.get<WhatsAppChat[]>(
       `${this.baseURL}/api/webhook/whatsapp/chats`,
     );
+  }
+
+  getAllWhatsAppChats(): Observable<WhatsAppChat[]> {
+    return this.http.get<WhatsAppChat[]>('/api/webhook/whatsapp/chats/all');
   }
 
   /**

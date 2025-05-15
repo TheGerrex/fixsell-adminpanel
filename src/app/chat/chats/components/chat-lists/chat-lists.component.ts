@@ -132,7 +132,7 @@ export class ChatListsComponent implements OnInit {
     this.whatsAppSubscription = interval(10000)
       .pipe(
         startWith(0),
-        switchMap(() => this.whatsAppService.getWhatsAppChats()),
+        switchMap(() => this.whatsAppService.getAllWhatsAppChats()),
       )
       .subscribe(
         (chats: WhatsAppChat[]) => {

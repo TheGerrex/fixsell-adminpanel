@@ -19,9 +19,14 @@ interface PermissionItem {
   checked: boolean;
 }
 
+interface PermissionSubItem {
+  name: string;
+  subitems: PermissionItem[];
+}
+
 interface PermissionCategory {
   name: string;
-  items: PermissionItem[];
+  items: PermissionSubItem[];
 }
 
 @Component({
@@ -82,228 +87,233 @@ export class PermissionsComponent implements OnInit, OnChanges {
   initializePermissionCategories(): void {
     this.permissionCategories = [
       {
-        name: 'Printers',
+        name: 'Pagina Web',
         items: [
-          { key: 'canViewPrinter', label: 'View Printer', checked: false },
-          { key: 'canCreatePrinter', label: 'Create Printer', checked: false },
-          { key: 'canUpdatePrinter', label: 'Update Printer', checked: false },
-          { key: 'canDeletePrinter', label: 'Delete Printer', checked: false },
           {
-            key: 'canManagePrinterCRUD',
-            label: 'Manage Printer CRUD',
-            checked: false,
+            name: 'Multifuncionales',
+            subitems: [
+              { key: 'canViewPrinter', label: 'Ver Multifuncional', checked: false },
+              { key: 'canCreatePrinter', label: 'Crear Multifuncional', checked: false },
+              { key: 'canUpdatePrinter', label: 'Editar Multifuncional', checked: false },
+              { key: 'canDeletePrinter', label: 'Eliminar Multifuncional', checked: false },
+              {
+                key: 'canManagePrinterCRUD',
+                label: 'Gestión CRUD de Multifuncionales',
+                checked: false,
+              },
+            ],
+          },
+          {
+            name: 'Categorias',
+            subitems: [
+              { key: 'canViewCategory', label: 'Ver Categoria', checked: false },
+              { key: 'canCreateCategory', label: 'Crear Categoria', checked: false },
+              { key: 'canUpdateCategory', label: 'Editar Categoria', checked: false },
+              { key: 'canDeleteCategory', label: 'Eliminar Categoria', checked: false },
+            ],
+          },
+          {
+            name: 'Marcas',
+            subitems: [
+              { key: 'canViewBrand', label: 'Ver Marca', checked: false },
+              { key: 'canCreateBrand', label: 'Crear Marca', checked: false },
+              { key: 'canUpdateBrand', label: 'Editar Marca', checked: false },
+              { key: 'canDeleteBrand', label: 'Eliminar Marca', checked: false },
+            ],
+          },
+          {
+            name: 'Consumibles',
+            subitems: [
+              { key: 'canViewConsumable', label: 'Ver Consumible', checked: false },
+              { key: 'canCreateConsumable', label: 'Crear Consumible', checked: false },
+              { key: 'canUpdateConsumable', label: 'Editar Consumible', checked: false },
+              { key: 'canDeleteConsumable', label: 'Eliminar Consumible', checked: false },
+            ],
+          },
+          {
+            name: 'Promociones',
+            subitems: [
+              { key: 'canViewDeal', label: 'Ver Promoción', checked: false },
+              { key: 'canCreateDeal', label: 'Crear Promoción', checked: false },
+              { key: 'canUpdateDeal', label: 'Editar Promoción', checked: false },
+              { key: 'canDeleteDeal', label: 'Eliminar Promoción', checked: false },
+            ],
+          },
+          {
+            name: 'Paquetes de Renta',
+            subitems: [
+              { key: 'canViewPackage', label: 'Ver Paquete de Renta', checked: false },
+              { key: 'canCreatePackage', label: 'Crear Paquete de Renta', checked: false },
+              { key: 'canUpdatePackage', label: 'Editar Paquete de Renta', checked: false },
+              { key: 'canDeletePackage', label: 'Eliminar Paquete de Renta', checked: false },
+            ],
+          },
+          {
+            name: 'Eventos',
+            subitems: [
+              { key: 'canViewEvent', label: 'Ver Evento', checked: false },
+              { key: 'canCreateEvent', label: 'Crear Evento', checked: false },
+              { key: 'canUpdateEvent', label: 'Editar Evento', checked: false },
+              { key: 'canDeleteEvent', label: 'Eliminar Evento', checked: false },
+            ],
+          },
+          {
+            name: 'Configuración del sitio web',
+            subitems: [
+              {
+                key: 'canConfigureWebsite',
+                label: 'Gestión de configuración de sitio web',
+                checked: false,
+              },
+            ],
           },
         ],
       },
       {
-        name: 'Categories',
+        name: 'Ventas',
         items: [
-          { key: 'canViewCategory', label: 'View Category', checked: false },
           {
-            key: 'canCreateCategory',
-            label: 'Create Category',
-            checked: false,
+            name: 'Prospectos',
+            subitems: [
+              { key: 'canViewLead', label: 'Ver Prospecto', checked: false },
+              { key: 'canCreateLead', label: 'Crear Prospecto', checked: false },
+              { key: 'canUpdateLead', label: 'Editar Prospecto', checked: false },
+              { key: 'canDeleteLead', label: 'Eliminar Prospecto', checked: false },
+              {
+                key: 'canViewAllLeads',
+                label: 'Ver todos los prospectos',
+                checked: false,
+              },
+              {
+                key: 'canBeAssignedToLead',
+                label: 'Ser asignado a prospectos',
+                checked: false,
+              },
+            ],
           },
           {
-            key: 'canUpdateCategory',
-            label: 'Update Category',
-            checked: false,
+            name: 'Clientes',
+            subitems: [
+              { key: 'canViewClient', label: 'Ver Cliente', checked: false },
+              { key: 'canCreateClient', label: 'Crear Cliente', checked: false },
+              { key: 'canUpdateClient', label: 'Editar Cliente', checked: false },
+              { key: 'canDeleteClient', label: 'Eliminar Cliente', checked: false },
+              {
+                key: 'canViewAllClients',
+                label: 'Ver todos los clientes',
+                checked: false,
+              },
+              {
+                key: 'canBeAssignedToClient',
+                label: 'Ser asignado a clientes',
+                checked: false,
+              },
+            ],
           },
           {
-            key: 'canDeleteCategory',
-            label: 'Delete Category',
-            checked: false,
+            name: 'Comunicación de Prospectos',
+            subitems: [
+              {
+                key: 'canViewLeadCommunication',
+                label: 'Ver Comunicación de Prospecto',
+                checked: false,
+              },
+              {
+                key: 'canCreateLeadCommunication',
+                label: 'Crear Comunicación de Prospecto',
+                checked: false,
+              },
+              {
+                key: 'canUpdateLeadCommunication',
+                label: 'Editar Comunicación de Prospecto',
+                checked: false,
+              },
+              {
+                key: 'canDeleteLeadCommunication',
+                label: 'Eliminar Comunicación de Prospecto',
+                checked: false,
+              },
+            ],
           },
         ],
       },
       {
-        name: 'Brands',
-        items: [
-          { key: 'canViewBrand', label: 'View Brand', checked: false },
-          { key: 'canCreateBrand', label: 'Create Brand', checked: false },
-          { key: 'canUpdateBrand', label: 'Update Brand', checked: false },
-          { key: 'canDeleteBrand', label: 'Delete Brand', checked: false },
-        ],
-      },
-      {
-        name: 'Consumables',
+        name: 'Soporte',
         items: [
           {
-            key: 'canViewConsumable',
-            label: 'View Consumable',
-            checked: false,
-          },
-          {
-            key: 'canCreateConsumable',
-            label: 'Create Consumable',
-            checked: false,
-          },
-          {
-            key: 'canUpdateConsumable',
-            label: 'Update Consumable',
-            checked: false,
-          },
-          {
-            key: 'canDeleteConsumable',
-            label: 'Delete Consumable',
-            checked: false,
+            name: 'Tickets',
+            subitems: [
+              { key: 'canViewTicket', label: 'Ver Ticket', checked: false },
+              { key: 'canCreateTicket', label: 'Crear Ticket', checked: false },
+              { key: 'canUpdateTicket', label: 'Editar Ticket', checked: false },
+              { key: 'canDeleteTicket', label: 'Eliminar Ticket', checked: false },
+              {
+                key: 'canViewAllTickets',
+                label: 'Ver todos los tickets',
+                checked: false,
+              },
+            ],
           },
         ],
       },
       {
-        name: 'Deals',
+        name: 'Chat',
         items: [
-          { key: 'canViewDeal', label: 'View Deal', checked: false },
-          { key: 'canCreateDeal', label: 'Create Deal', checked: false },
-          { key: 'canUpdateDeal', label: 'Update Deal', checked: false },
-          { key: 'canDeleteDeal', label: 'Delete Deal', checked: false },
-        ],
-      },
-      {
-        name: 'Packages',
-        items: [
-          { key: 'canViewPackage', label: 'View Package', checked: false },
-          { key: 'canCreatePackage', label: 'Create Package', checked: false },
-          { key: 'canUpdatePackage', label: 'Update Package', checked: false },
-          { key: 'canDeletePackage', label: 'Delete Package', checked: false },
-        ],
-      },
-      {
-        name: 'Leads',
-        items: [
-          { key: 'canViewLead', label: 'View Lead', checked: false },
-          { key: 'canCreateLead', label: 'Create Lead', checked: false },
-          { key: 'canUpdateLead', label: 'Update Lead', checked: false },
-          { key: 'canDeleteLead', label: 'Delete Lead', checked: false },
           {
-            key: 'canViewAllLeads',
-            label: 'View All Leads',
-            checked: false,
-          },
-          {
-            key: 'canBeAssignedToLead',
-            label: 'Be Assigned to Lead',
-            checked: false,
+            name: 'Chats',
+            subitems: [
+              { key: 'canViewChat', label: 'Ver Chat', checked: false },
+              { key: 'canCreateChat', label: 'Crear Chat', checked: false },
+              { key: 'canUpdateChat', label: 'Editar Chat', checked: false },
+              { key: 'canDeleteChat', label: 'Eliminar Chat', checked: false },
+            ],
           },
         ],
       },
       {
-        name: 'Users',
-        items: [
-          { key: 'canViewUser', label: 'View User', checked: false },
-          { key: 'canCreateUser', label: 'Create User', checked: false },
-          { key: 'canUpdateUser', label: 'Update User', checked: false },
-          { key: 'canDeleteUser', label: 'Delete User', checked: false },
-          {
-            key: 'canManageUserConfig',
-            label: 'Manage User Config',
-            checked: false,
-          },
-        ],
-      },
-      {
-        name: 'Tickets',
-        items: [
-          { key: 'canViewTicket', label: 'View Ticket', checked: false },
-          { key: 'canCreateTicket', label: 'Create Ticket', checked: false },
-          { key: 'canUpdateTicket', label: 'Update Ticket', checked: false },
-          { key: 'canDeleteTicket', label: 'Delete Ticket', checked: false },
-          {
-            key: 'canViewAllTickets',
-            label: 'View All Tickets',
-            checked: false,
-          },
-        ],
-      },
-      {
-        name: 'Chats',
-        items: [
-          { key: 'canViewChat', label: 'View Chat', checked: false },
-          { key: 'canCreateChat', label: 'Create Chat', checked: false },
-          { key: 'canUpdateChat', label: 'Update Chat', checked: false },
-          { key: 'canDeleteChat', label: 'Delete Chat', checked: false },
-        ],
-      },
-      {
-        name: 'Lead Communications',
+        name: 'Usuarios',
         items: [
           {
-            key: 'canViewLeadCommunication',
-            label: 'View Lead Communication',
-            checked: false,
+            name: 'Usuarios',
+            subitems: [
+              { key: 'canViewUser', label: 'Ver Usuario', checked: false },
+              { key: 'canCreateUser', label: 'Crear Usuario', checked: false },
+              { key: 'canUpdateUser', label: 'Editar Usuario', checked: false },
+              { key: 'canDeleteUser', label: 'Eliminar Usuario', checked: false },
+
+            ],
           },
           {
-            key: 'canCreateLeadCommunication',
-            label: 'Create Lead Communication',
-            checked: false,
+            name: 'Registros',
+            subitems: [
+              {
+                key: 'canViewLogs',
+                label: 'Ver Registros',
+                checked: false,
+              },
+            ],
           },
           {
-            key: 'canUpdateLeadCommunication',
-            label: 'Update Lead Communication',
-            checked: false,
-          },
-          {
-            key: 'canDeleteLeadCommunication',
-            label: 'Delete Lead Communication',
-            checked: false,
+            name: 'Configuración',
+            subitems: [
+              {
+                key: 'canManageUserConfig',
+                label: 'Gestión de configuración de usuarios',
+                checked: false,
+              },
+            ],
           },
         ],
-      },
-      {
-        name: 'Clients',
-        items: [
-          { key: 'canViewClient', label: 'View Client', checked: false },
-          { key: 'canCreateClient', label: 'Create Client', checked: false },
-          { key: 'canUpdateClient', label: 'Update Client', checked: false },
-          { key: 'canDeleteClient', label: 'Delete Client', checked: false },
-          {
-            key: 'canViewAllClients',
-            label: 'View All Clients',
-            checked: false,
-          },
-          {
-            key: 'canBeAssignedToClient',
-            label: 'Be Assigned to Client',
-            checked: false,
-          },
-        ],
-      },
-      {
-        name: 'Events',
-        items: [
-          { key: 'canViewEvent', label: 'View Event', checked: false },
-          { key: 'canCreateEvent', label: 'Create Event', checked: false },
-          { key: 'canUpdateEvent', label: 'Update Event', checked: false },
-          { key: 'canDeleteEvent', label: 'Delete Event', checked: false },
-        ],
-      },
-      {
-        name: 'Website Configuration',
-        items: [
-          {
-            key: 'canConfigureWebsite',
-            label: 'Configure Website',
-            checked: false,
-          },
-        ],
-      },
-      {
-        name: 'logs',
-        items: [
-          {
-            key: 'canViewLogs',
-            label: 'View Logs',
-            checked: false,
-          },
-        ],
-      },
-    ];
+      }
+    ]
   }
 
   updatePermissionCategories(): void {
     this.permissionCategories.forEach((category) => {
       category.items.forEach((item) => {
-        item.checked = !!this.permissions[item.key];
+        item.subitems.forEach((subitem) => {
+          subitem.checked = !!this.permissions[subitem.key];
+        });
       });
     });
   }
@@ -312,10 +322,27 @@ export class PermissionsComponent implements OnInit, OnChanges {
     // Update the permissions object based on user input
     this.permissionCategories.forEach((category) => {
       category.items.forEach((item) => {
-        this.permissions[item.key] = item.checked;
+        item.subitems.forEach((subitem) => {
+          this.permissions[subitem.key] = subitem.checked;
+        });
       });
     });
     this.permissionsChange.emit(this.permissions);
+  }
+
+  toggleAllSubitems(item: PermissionSubItem, isChecked: boolean): void {
+    item.subitems.forEach((subitem) => {
+      subitem.checked = isChecked;
+    });
+    this.onPermissionChange();
+  }
+
+  isAllSubitemsChecked(item: PermissionSubItem): boolean {
+    return item.subitems.every((subitem) => subitem.checked);
+  }
+
+  isSomeSubitemsChecked(item: PermissionSubItem): boolean {
+    return item.subitems.some((subitem) => subitem.checked) && !this.isAllSubitemsChecked(item);
   }
 
   toggleCategory(index: number): void {

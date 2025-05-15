@@ -1256,6 +1256,20 @@ button.delete-icon mat-icon {
     }
   }
 
+  .form-item-toggle {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    height: max-content;
+    padding: 0.5rem 0;
+    .item-toggle-label {
+      color: $gray-600;
+      margin-bottom: 0;
+      line-height: 1;
+    }
+  }
+
   // Columnas adaptativas
   .full-row {
     grid-column: span 4;

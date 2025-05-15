@@ -225,13 +225,20 @@
             </div>
 
             <!-- Estado de Usuario -->
-            <div class="form-item half-row">
+            <!-- <div class="form-item half-row">
               <p class="item-label">Estado de Usuario</p>
               <mat-slide-toggle formControlName="isActive">
                 {{
                   editUserForm.get('isActive')?.value ? 'Activo' : 'Inactivo'
                 }}
               </mat-slide-toggle>
+            </div> -->
+            <div class="form-item half-row">
+              <div class="form-item-toggle">
+                <p class="item-toggle-label">Usuario Activo</p>
+                <mat-slide-toggle formControlName="isActive">
+                </mat-slide-toggle>
+              </div>
             </div>
           </div>
         </div>

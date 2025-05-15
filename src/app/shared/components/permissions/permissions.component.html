@@ -17,40 +17,42 @@
     </div>
   </div>
   <div class="section-card-body">
-    <!-- <mat-accordion multi="true" style="width: 100%">
-      <mat-expansion-panel *ngFor="let category of permissionCategories">
-        <mat-expansion-panel-header>
-          <mat-panel-title> {{ category.name }} </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="permission-item" *ngFor="let item of category.items">
-          <mat-checkbox
-            [(ngModel)]="item.checked"
-            (change)="onPermissionChange()"
-          >
-            {{ item.label }}
-          </mat-checkbox>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion> -->
     <div class="permission-body">
       <div
         class="permission-category"
         *ngFor="let category of permissionCategories; let i = index"
       >
-        <div class="category-header" (click)="toggleCategory(i)">
+        <div class="permission-category-header" (click)="toggleCategory(i)">
           <mat-icon class="icon">
             {{ isCategoryVisible[i] ? 'expand_less' : 'expand_more' }}
           </mat-icon>
-          <h5>{{ category.name }}</h5>
+          <h5 class="permission-category-title">{{ category.name }}</h5>
         </div>
         <div class="permission-item" *ngIf="isCategoryVisible[i]">
-          <mat-checkbox
+          <div
+            class="permission-subcategory"
             *ngFor="let item of category.items"
-            [(ngModel)]="item.checked"
-            (change)="onPermissionChange()"
           >
-            {{ item.label }}
-          </mat-checkbox>
+            <div class="permission-subcategory-header">
+              <mat-checkbox
+                [checked]="isAllSubitemsChecked(item)"
+                [indeterminate]="isSomeSubitemsChecked(item)"
+                (change)="toggleAllSubitems(item, $event.checked)"
+              >
+                <p class="permission-subcategory-title">{{ item.name }}</p>
+              </mat-checkbox>
+            </div>
+
+            <div class="permission-subcategory-content">
+              <mat-checkbox
+                *ngFor="let subitem of item.subitems"
+                [(ngModel)]="subitem.checked"
+                (change)="onPermissionChange()"
+              >
+                {{ subitem.label }}
+              </mat-checkbox>
+            </div>
+          </div>
         </div>
       </div>
     </div>

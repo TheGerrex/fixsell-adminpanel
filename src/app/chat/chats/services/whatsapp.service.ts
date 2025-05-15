@@ -29,7 +29,7 @@ export class WhatsAppService {
    */
   getWhatsAppChats(): Observable<WhatsAppChat[]> {
     return this.http.get<WhatsAppChat[]>(
-      `${this.baseURL}/webhook/whatsapp/chats`,
+      `${this.baseURL}/chats`, // Changed from /webhook/whatsapp/chats
     );
   }
 

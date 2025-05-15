@@ -29,7 +29,7 @@ export class WhatsAppService {
    */
   getWhatsAppChats(): Observable<WhatsAppChat[]> {
     return this.http.get<WhatsAppChat[]>(
-      `${this.baseURL}/webhook/whatsapp/chats`,
+      `${this.baseURL}/api/webhook/whatsapp/chats`,
     );
   }
 
@@ -38,7 +38,7 @@ export class WhatsAppService {
    */
   getWhatsAppChatHistory(phoneNumber: string): Observable<any> {
     return this.http.get(
-      `${this.baseURL}/webhook/whatsapp/history/${phoneNumber}`,
+      `${this.baseURL}/api/webhook/whatsapp/history/${phoneNumber}`,
     );
   }
 
@@ -46,7 +46,7 @@ export class WhatsAppService {
    * Send a message to a WhatsApp user
    */
   sendWhatsAppMessage(phoneNumber: string, message: string): Observable<any> {
-    return this.http.post(`${this.baseURL}/webhook/whatsapp/send`, {
+    return this.http.post(`${this.baseURL}/api/webhook/whatsapp/send`, {
       phone_number: phoneNumber,
       message: message,
     });

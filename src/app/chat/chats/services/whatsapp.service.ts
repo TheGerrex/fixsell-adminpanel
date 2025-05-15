@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of, pipe } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface WhatsAppChat {
@@ -34,7 +34,14 @@ export class WhatsAppService {
   }
 
   getAllWhatsAppChats(): Observable<WhatsAppChat[]> {
-    return this.http.get<WhatsAppChat[]>('/api/webhook/whatsapp/chats/all');
+    return this.http
+      .get<WhatsAppChat[]>('/api/webhook/whatsapp/chats/all')
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching WhatsApp chats:', error);
+          return of([]);
+        }),
+      );
   }
 
   /**

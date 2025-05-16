@@ -6,7 +6,7 @@ import { ToastComponent } from '../components/toast/toast.component';
   providedIn: 'root',
 })
 export class ToastService {
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar) { }
 
   showSuccess(message: string, buttonText: string) {
     this.snackBar.openFromComponent(ToastComponent, {
@@ -19,7 +19,7 @@ export class ToastService {
         borderColor: 'success-border',
         icon: 'done',
       },
-      duration: 8000,
+      duration: 80000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
       panelClass: ['success-toast'],

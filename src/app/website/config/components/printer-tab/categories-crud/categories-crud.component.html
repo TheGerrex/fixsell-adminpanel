@@ -1,87 +1,114 @@
 <div class="table-header">
   <div class="table-header-container">
-    <h3 class="table-title">Categorias</h3>
-    <div class="table-actions">
-      <mat-form-field appearance="outline">
-        <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
-        <input
-          matInput
-          type="text"
-          placeholder="Buscar Categorias"
-          [(ngModel)]="searchTerm"
-          (input)="applyFilter($event)"
-      /></mat-form-field>
-      <button
-        ButtonResize
-        class="button button-primary button-raised button-icon-text"
-        (click)="addCategory()"
-        *ngIf="'canCreateCategory' | hasPermission"
-      >
-        <mat-icon>add</mat-icon
-        ><span class="button-label">Crear Categoria</span>
-      </button>
+    <div class="table-header-wrapper">
+      <div class="table-header-title">
+        <h3 class="table-title">Categorias</h3>
+      </div>
+      <div class="table-actions">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
+          <input
+            matInput
+            type="text"
+            placeholder="Buscar Categorias"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilter($event)"
+        /></mat-form-field>
+        <button
+          ButtonResize
+          class="button button-primary button-raised button-icon-text"
+          (click)="addCategory()"
+          *ngIf="'canCreateCategory' | hasPermission"
+        >
+          <mat-icon>add</mat-icon
+          ><span class="button-label">Crear Categoria</span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="table-search">
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
-      <input
-        matInput
-        type="text"
-        placeholder="Buscar Categorias"
-        [(ngModel)]="searchTerm"
-        (input)="applyFilter($event)"
-    /></mat-form-field>
   </div>
 </div>
 <div class="responsive-table">
   <div class="table-container">
-    <table
-      mat-table
-      matSort
-      [dataSource]="dataSource"
-      class="category-list-table dense-theme"
-    >
-      <h2>Marcas</h2>
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let category" data-column="name">
-          {{ category.name }}
-        </td>
-      </ng-container>
+    <div class="table-wrapper">
+      <table
+        mat-table
+        matSort
+        [dataSource]="dataSource"
+        class="data-table dense-theme"
+      >
+        <!-- Fila de encabezado -->
+        <tr
+          mat-header-row
+          *matHeaderRowDef="CategoriesDisplayedColumns; sticky: true"
+        ></tr>
 
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let category" data-column="actions">
-          <button
-            mat-icon-button
-            class="edit-icon"
-            *ngIf="'canUpdateCategory' | hasPermission"
-            (click)="editCategory(category.id, category)"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            class="delete-icon"
-            *ngIf="'canDeleteCategory' | hasPermission"
-            (click)="deleteCategory(category.id, category.name)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+        <!-- Data Rows -->
+        <tr
+          mat-row
+          *matRowDef="let row; columns: CategoriesDisplayedColumns"
+          class="table-row"
+        ></tr>
 
-      <tr mat-header-row *matHeaderRowDef="CategoriesDisplayedColumns"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: CategoriesDisplayedColumns"
-      ></tr>
-    </table>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let category" data-column="name">
+            {{ category.name }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="actions-header-cell">
+            Acciones
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let category"
+            data-column="actions"
+            class="actions-cell"
+          >
+            <button
+              mat-icon-button
+              class="edit-icon"
+              *ngIf="'canUpdateCategory' | hasPermission"
+              (click)="editCategory(category.id, category)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="delete-icon"
+              *ngIf="'canDeleteCategory' | hasPermission"
+              (click)="deleteCategory(category.id, category.name)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+      </table>
+    </div>
+    <!-- No items message and create button -->
+    <ng-container *ngIf="dataSource.data.length === 0">
+      <div class="no-items-container">
+        <div class="no-items-wrapper">
+          <mat-icon class="no-items-icon">warning</mat-icon>
+          <p class="message-text">No se encontraron registros en esta tabla.</p>
+          <button
+            ButtonResize
+            class="button button-primary button-raised button-icon-text"
+            (click)="addCategory()"
+          >
+            <mat-icon>add</mat-icon>
+            <span class="button-label">Crear Categoria</span>
+          </button>
+        </div>
+      </div>
+    </ng-container>
   </div>
+
+  <!-- Pagination -->
   <mat-paginator
-    [pageSizeOptions]="[5, 10, 25, 100]"
-    [pageSize]="8"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    [pageSize]="10"
     showFirstLastButtons
     class="table-paginator"
   ></mat-paginator>

@@ -55,18 +55,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-
-    button {
-      min-width: auto;
-      padding: 6px 12px;
-    }
   }
 
   .close-button {
     color: $gray-500;
-    transition: background-color 0.3s ease-out;
+    transition: all 0.3s ease-out;
     &:hover {
       background-color: $gray-100;
+      color: $gray-600;
     }
   }
 }

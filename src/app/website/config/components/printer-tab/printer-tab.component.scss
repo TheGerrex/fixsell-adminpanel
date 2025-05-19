@@ -1,16 +1,18 @@
+@import '../../../../../../variables';
+
 .tab-page {
   display: flex;
   flex-direction: column;
   gap: 2em;
   background-color: #fff;
-  border-radius: 8px;
-  padding: 1em;
+  border-radius: $border-radius;
+  padding: 0.5rem;
 
   .config-table-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap; /* Add this line */
-    gap: 2em; /* Add some space between the items */
+    gap: 1rem; /* Add some space between the items */
 
     .config-item {
       display: flex;

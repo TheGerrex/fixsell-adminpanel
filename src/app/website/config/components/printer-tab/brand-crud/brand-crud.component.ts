@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { AddPrinterBrandDialogComponent } from 'src/app/shared/components/add-printer-brand-dialog/add-printer-brand-dialog.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { EditPrinterBrandDialogComponent } from 'src/app/shared/components/edit-printer-brand-dialog/edit-printer-brand-dialog.component';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-brand-crud',
@@ -35,7 +36,8 @@ export class BrandCrudComponent implements OnInit {
     private authService: AuthService,
     private brandService: BrandService,
     private dialog: MatDialog,
-  ) {}
+    private toastService: ToastService,
+  ) { }
 
   ngOnInit() {
     this.initializePermissions();
@@ -112,6 +114,10 @@ export class BrandCrudComponent implements OnInit {
         this.brandService.deleteBrand(id).subscribe(() => {
           this.getBrands();
         });
+        this.toastService.showSuccess(
+          'Marca eliminada con éxito',
+          'Cerrar',
+        );
       }
     });
   }

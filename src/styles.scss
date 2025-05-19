@@ -777,6 +777,7 @@ button {
   transition-duration: 0.2s;
   line-height: 1;
   font-size: 16px;
+  white-space: nowrap; /* Prevent line breaks */
 }
 
 .button-icon-option {

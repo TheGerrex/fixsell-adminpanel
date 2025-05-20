@@ -1,12 +1,21 @@
 import { Component } from '@angular/core';
 
+interface SideNavToggle {
+  screenWidth: number;
+  collapsed: boolean;
+}
+
 @Component({
-  selector: 'app-layout-page',
-  standalone: true,
-  imports: [],
+  selector: 'app-sales-config-layout-page',
   templateUrl: './layout-page.component.html',
-  styleUrl: './layout-page.component.scss'
+  styleUrls: ['./layout-page.component.scss'],
 })
 export class LayoutPageComponent {
+  isSideNavCollapsed = true;
+  screenWidth = 0;
 
+  onToggleSideNav(data: SideNavToggle): void {
+    this.screenWidth = data.screenWidth;
+    this.isSideNavCollapsed = data.collapsed;
+  }
 }

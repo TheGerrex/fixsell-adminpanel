@@ -1,1 +1,6 @@
-<p>layout-page works!</p>
+<div class="container-grid">
+  <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+  <div class="container-grid-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

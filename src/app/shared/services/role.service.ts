@@ -11,6 +11,14 @@ export class RoleService {
   constructor(private http: HttpClient) { }
 
   private routePermissions: { [key: string]: string[] } = {
+    // Dashboard permissions
+    '/dashboard/intro-screen': ['canViewDashboard'],
+    '/dashboard/printerscrud': ['canManagePrinterCRUD'],
+    '/dashboard/ventas': ['canViewVentas'],
+    '/dashboard/inventario': ['canViewInventario'],
+    '/dashboard/chat': ['canManageChat'],
+    '/dashboard/settings': ['canManageSettings'],
+    // Website permissions
     '/website/printers': ['canViewPrinter'],
     '/website/printers/create': ['canCreatePrinter'],
     '/website/printers/*': ['canViewPrinter'],
@@ -21,12 +29,6 @@ export class RoleService {
     '/website/deals/*': ['canViewDeal'],
     '/website/deals/*/edit': ['canUpdateDeal'],
     '/website/config': ['canConfigureWebsite'],
-    '/dashboard/intro-screen': ['canViewDashboard'],
-    '/dashboard/printerscrud': ['canManagePrinterCRUD'],
-    '/dashboard/ventas': ['canViewVentas'],
-    '/dashboard/inventario': ['canViewInventario'],
-    '/dashboard/chat': ['canManageChat'],
-    '/dashboard/settings': ['canManageSettings'],
     '/website/consumibles': ['canViewConsumable'],
     '/website/consumibles/create': ['canCreateConsumable'],
     '/website/consumibles/create/*': [
@@ -40,6 +42,7 @@ export class RoleService {
     '/website/packages/create/*': ['canUpdatePackage', 'canDeletePackage'],
     '/website/packages/*': ['canViewPackage'],
     '/website/packages/*/edit': ['canUpdatePackage'],
+    // Sales permissions
     '/sales/leads': ['canViewLead'],
     '/sales/leads/create': ['canCreateLead'],
     '/sales/leads/create/*': ['canUpdateLead', 'canDeleteLead'],
@@ -53,12 +56,14 @@ export class RoleService {
     '/sales/clients/create/*': ['canUpdateClient', 'canDeleteClient'],
     '/sales/clients/*/edit': ['canUpdateClient'],
     '/sales/config': ['canConfigureSales'],
+    // Users permissions
     '/users/user': ['canViewUser'],
     '/users/user/create': ['canCreateUser'],
     '/users/user/create/*': ['canUpdateUser', 'canDeleteUser'],
     '/users/user/*': ['canUpdateUser', 'canDeleteUser'],
     '/users/user/*/edit': ['canUpdateUser'],
     '/users/config': ['canManageUserConfig'],
+    // Support permissions
     '/support/tickets': ['canViewTicket'],
     '/support/tickets/create': ['canCreateTicket'],
     '/support/tickets/create/*': ['canUpdateTicket', 'canDeleteTicket'],
@@ -66,10 +71,11 @@ export class RoleService {
     '/support/tickets/*/edit': ['canUpdateTicket'],
     '/support/config': ['canManageSupportConfig'],
     '/support/tickets/list': ['canViewTicketList'],
+    // Chat permissions
     '/chat/chats': ['canViewChat'],
     '/chat/live-chat': ['canManageLiveChat'],
     '/chat/config': ['canManageChatConfig'],
-    // events
+    // Events permissions
     '/events': ['canViewEvents'],
     '/events/create': ['canCreateEvent'],
     '/events/edit/*': ['canUpdateEvent'],

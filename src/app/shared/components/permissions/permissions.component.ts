@@ -235,6 +235,16 @@ export class PermissionsComponent implements OnInit, OnChanges {
               },
             ],
           },
+          {
+            name: 'Configuración de Ventas',
+            subitems: [
+              {
+                key: 'canConfigureSales',
+                label: 'Gestión de configuración de ventas',
+                checked: false,
+              },
+            ],
+          },
         ],
       },
       {

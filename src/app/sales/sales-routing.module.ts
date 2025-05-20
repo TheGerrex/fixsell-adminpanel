@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ConfigModule } from './config/config.module';
 
 const routes: Routes = [
   {
@@ -12,6 +13,12 @@ const routes: Routes = [
     data: { allowedPermissions: ['canViewClient'] },
     loadChildren: () =>
       import('./clients/clients.module').then((m) => m.ClientsModule),
+  },
+  {
+    path: 'config',
+    data: { allowedPermissions: ['canConfigureSales'] },
+    loadChildren: () =>
+      import('./config/config.module').then((m) => m.ConfigModule),
   },
 ];
 

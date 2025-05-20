@@ -103,6 +103,7 @@ export class BreadcrumbComponent implements OnInit {
       leads_list: 'Listado de Prospectos',
       list: 'Listado',
       communication: 'Comunicación',
+      events: 'Eventos',
       // Add more mappings here if needed
     };
 
@@ -249,6 +250,7 @@ export class BreadcrumbComponent implements OnInit {
       'website/deals',
       'website/packages',
       'website/config',
+      'website/events',
       'sales/leads',
       'sales/clients',
       'support/tickets',

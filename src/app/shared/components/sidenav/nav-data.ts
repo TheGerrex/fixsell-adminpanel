@@ -70,7 +70,7 @@ export const navbarData = [
       {
         label: 'Configuración',
         routeLink: 'sales/config',
-        allowedPermissions: ['canConfigSales'],
+        allowedPermissions: ['canConfigureSales'],
       },
 
     ],

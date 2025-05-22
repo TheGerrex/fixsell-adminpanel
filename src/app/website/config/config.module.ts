@@ -9,7 +9,21 @@ import { PrinterTabComponent } from './components/printer-tab/printer-tab.compon
 import { BrandCrudComponent } from './components/printer-tab/brand-crud/brand-crud.component';
 import { CategoriesCrudComponent } from './components/printer-tab/categories-crud/categories-crud.component';
 @NgModule({
-  declarations: [LayoutPageComponent, ConfigTabsComponent, PrinterTabComponent, BrandCrudComponent, CategoriesCrudComponent],
-  imports: [CommonModule, ConfigRoutingModule, SharedModule, WebsiteModule],
+  declarations:
+    [
+      LayoutPageComponent,
+      ConfigTabsComponent,
+      PrinterTabComponent,
+      BrandCrudComponent,
+      CategoriesCrudComponent
+    ],
+
+  imports:
+    [
+      CommonModule,
+      ConfigRoutingModule,
+      SharedModule,
+      WebsiteModule
+    ],
 })
-export class ConfigModule {}
+export class ConfigModule { }

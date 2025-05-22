@@ -14,9 +14,7 @@ const routes: Routes = [
   {
     path: 'consumibles',
     loadChildren: () =>
-      import('./consumibles/consumibles.module').then(
-        (m) => m.ConsumiblesModule,
-      ),
+      import('./consumibles/consumibles.module').then((m) => m.ConsumiblesModule),
   },
   {
     path: 'packages',
@@ -39,4 +37,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WebsiteRoutingModule {}
+export class WebsiteRoutingModule { }

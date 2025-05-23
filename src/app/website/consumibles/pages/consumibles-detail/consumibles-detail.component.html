@@ -1,6 +1,6 @@
 <app-loading-spinner [isLoading]="isLoadingData"></app-loading-spinner>
 <div class="section-card" *ngIf="consumible && !isLoadingData">
-  <div class="section-card-header">
+  <div class="section-card-header border-bottom">
     <div class="section-card-header-wrapper">
       <app-breadcrumb></app-breadcrumb>
       <h3 class="header-title">{{ consumible.brand }} {{ consumible.name }}</h3>

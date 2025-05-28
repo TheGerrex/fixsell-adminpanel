@@ -253,6 +253,7 @@ export class BreadcrumbComponent implements OnInit {
       'website/events',
       'sales/leads',
       'sales/clients',
+      'sales/config',
       'support/tickets',
       'chat/chats',
       'users/user',

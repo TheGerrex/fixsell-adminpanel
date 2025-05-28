@@ -21,6 +21,7 @@ import {
   PaymentComplementInfo,
 } from '../interfaces/client.interface';
 import { User } from 'src/app/auth/interfaces';
+import { NewClientCategory } from '../../config/components/client-category-crud/client-category.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class ClientsService {
   // Private error handling method
   private handleError(error: any) {
     console.error('API Error:', error);
-    return throwError(error);
+    return throwError(() => new Error(error.message || 'Server error'));
   }
 
   // ======== MAIN CLIENT METHODS ========
@@ -662,8 +663,11 @@ export class ClientsService {
       );
   }
 
-  // Client Categories
-  getClientCategories(): Observable<ClientCategory[]> {
+  // ======== CLIENT CATEGORIES METHODS ========
+
+
+  // Client Categories - Find All
+  getAllClientCategories(): Observable<ClientCategory[]> {
     return this.http
       .get<ClientCategory[]>(`${environment.baseUrl}/client-categories`)
       .pipe(
@@ -672,7 +676,52 @@ export class ClientsService {
       );
   }
 
-  // Business Lines
+  // Client Categories - Find One
+  getClientCategory(id: string): Observable<ClientCategory> {
+    return this.http
+      .get<ClientCategory>(`${environment.baseUrl}/client-categories/${id}`)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Client Categories - Create
+  createClientCategory(category: NewClientCategory): Observable<ClientCategory> {
+    return this.http
+      .post<ClientCategory>(`${environment.baseUrl}/client-categories`, category)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Client Categories - Update
+  updateClientCategory(
+    id: string,
+    category: ClientCategory,
+  ): Observable<ClientCategory> {
+    return this.http
+      .patch<ClientCategory>(
+        `${environment.baseUrl}/client-categories/${id}`,
+        category,
+      )
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Client Categories - Delete
+  deleteClientCategory(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.baseUrl}/client-categories/${id}`)
+      .pipe(
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // ======== CLIENT BUSINESS LINES METHODS ========
   getBusinessLines(): Observable<BusinessLine[]> {
     return this.http
       .get<BusinessLine[]>(`${environment.baseUrl}/business-lines`)

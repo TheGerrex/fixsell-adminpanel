@@ -10,7 +10,6 @@ import { ToastService } from './../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { ConsumiblesService } from '../../services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
@@ -20,6 +19,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { DialogComponent } from 'src/app/shared/components/dialogs/dialog/dialog.component';
 @Component({
   selector: 'app-consumibles-create',
   templateUrl: './consumibles-create.component.html',

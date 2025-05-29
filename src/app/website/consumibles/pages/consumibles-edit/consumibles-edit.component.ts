@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { ConsumiblesService } from '../../services/consumibles.service';
 import { Consumible } from 'src/app/website/interfaces/consumibles.interface';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
@@ -22,6 +21,7 @@ import { Observable, map, startWith, switchMap } from 'rxjs';
 import { Printer } from 'src/app/website/interfaces/printer.interface';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { DialogComponent } from 'src/app/shared/components/dialogs/dialog/dialog.component';
 
 @Component({
   selector: 'app-consumibles-edit',

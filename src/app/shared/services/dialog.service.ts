@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../components/dialog/dialog.component';
+import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DialogService {
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   openConfirmDialog(message: string, buttonText: string, panelClass: string) {
-    return this.dialog.open(DialogComponent, {
+    return this.dialog.open(ConfirmDialogComponent, {
       panelClass: panelClass, // Add panelClass here
       data: {
         title: 'Confirm',
@@ -22,7 +22,7 @@ export class DialogService {
   }
 
   openErrorDialog(message: string, buttonText: string, panelClass: string) {
-    return this.dialog.open(DialogComponent, {
+    return this.dialog.open(ConfirmDialogComponent, {
       panelClass: panelClass, // Add panelClass here
       data: {
         title: 'Error',

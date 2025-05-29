@@ -12,6 +12,7 @@ import { ClientCollectionZoneCRUDComponent } from './components/client-collectio
 import { SalesModule } from '../sales.module';
 import { AddClientCategoryDialogComponent } from './components/dialogs/add-client-category-dialog/add-client-category-dialog.component';
 import { EditClientCategoryDialogComponent } from './components/dialogs/edit-client-category-dialog/edit-client-category-dialog.component';
+import { ClientConfigTableComponent } from './components/client-config-table/client-config-table.component';
 @NgModule({
   declarations: [
     LayoutPageComponent,
@@ -23,6 +24,7 @@ import { EditClientCategoryDialogComponent } from './components/dialogs/edit-cli
     ClientCollectionZoneCRUDComponent,
     AddClientCategoryDialogComponent,
     EditClientCategoryDialogComponent,
+    ClientConfigTableComponent
   ],
   imports: [
     CommonModule,

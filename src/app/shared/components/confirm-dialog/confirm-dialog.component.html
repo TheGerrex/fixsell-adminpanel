@@ -1,12 +1,23 @@
 <div class="dialog">
-    <div class="title-container">
-        <h5 class="title">{{data.title}}</h5>
-    </div>
-    <div class="content">
-        <p>{{ data.message }}</p>
-    </div>
-    <div class="button-actions">
-        <button class="button button-outline-secondary button-full" (click)="onCancel()"><span class="button-label">{{data.buttonText.cancel}}</span></button>
-        <button class="button button-danger button-raised button-full" (click)="onConfirm()"><mat-icon>delete</mat-icon> <span class="button-label">{{data.buttonText.ok}}</span> </button>
-    </div>
+  <div class="title-container">
+    <h5 class="title">{{ data.title }}</h5>
+  </div>
+  <div class="content">
+    <p>{{ data.message }}</p>
+  </div>
+  <div class="button-actions">
+    <button
+      class="button button-outline-secondary button-full"
+      (click)="onCancel()"
+    >
+      <span class="button-label">{{ data.buttonText.cancel }}</span>
+    </button>
+    <button
+      class="button button-danger button-raised button-full"
+      (click)="onConfirm()"
+    >
+      <mat-icon>{{ data.buttonIcon ? data.buttonIcon.ok : 'delete' }}</mat-icon>
+      <span class="button-label">{{ data.buttonText.ok }}</span>
+    </button>
+  </div>
 </div>

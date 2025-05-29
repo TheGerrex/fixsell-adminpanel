@@ -9,7 +9,7 @@
   <img *ngIf="imageUrl" [src]="imageUrl" alt="Image preview" />
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [color]="data.buttonColor" (click)="dialogRef.close(true)">
+  <button class="button button-primary" (click)="dialogRef.close(true)">
     {{ data.buttonText }}
   </button>
 </mat-dialog-actions>

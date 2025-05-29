@@ -160,6 +160,8 @@ export interface SuspensionConfig {
 export interface BaseClassification {
   id: string;
   name: string;
+  description?: string;
+  notes?: string;
   isActive: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;

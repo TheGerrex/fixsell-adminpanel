@@ -6,7 +6,6 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastComponent } from './components/toast/toast.component';
-import { DialogComponent } from './components/dialog/dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
@@ -38,12 +37,13 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { NotificationsListComponent } from './components/notifications-list/notifications-list.component';
 import { NotificationToastComponent } from './components/notifications-toast/notifications-toast.component';
+import { SimpleInputDialogComponent } from './components/dialogs/simple-input-dialog/simple-input-dialog.component';
+import { DialogComponent } from './components/dialogs/dialog/dialog.component';
 @NgModule({
   declarations: [
     SidenavComponent,
     BreadcrumbComponent,
     ToastComponent,
-    DialogComponent,
     FileUploadComponent,
     ConfirmDialogComponent,
     PdfUploadComponent,
@@ -70,6 +70,8 @@ import { NotificationToastComponent } from './components/notifications-toast/not
     DataTableComponent,
     NotificationsListComponent,
     NotificationToastComponent,
+    SimpleInputDialogComponent,
+    DialogComponent,
   ],
   imports: [
     CommonModule,
@@ -108,6 +110,9 @@ import { NotificationToastComponent } from './components/notifications-toast/not
     DataTableComponent,
     NotificationsListComponent,
     NotificationToastComponent,
+    SafeHtmlPipe,
+    SimpleInputDialogComponent,
+    DialogComponent,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

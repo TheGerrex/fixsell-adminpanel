@@ -731,7 +731,11 @@ export class ClientsService {
       );
   }
 
-  // Branch Offices
+
+
+  // ======== CLIENT BRANCH OFFICES METHODS ========
+
+  // Branch Offices - Find All
   getBranchOffices(): Observable<BranchOffice[]> {
     return this.http
       .get<BranchOffice[]>(`${environment.baseUrl}/branch-offices`)
@@ -741,5 +745,43 @@ export class ClientsService {
       );
   }
 
+  // Branch Offices - Find One
+  getBranchOffice(id: string): Observable<BranchOffice> {
+    return this.http
+      .get<BranchOffice>(`${environment.baseUrl}/branch-offices/${id}`)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Branch Offices - Create
+  createBranchOffice(data: Partial<BranchOffice>): Observable<BranchOffice> {
+    return this.http
+      .post<BranchOffice>(`${environment.baseUrl}/branch-offices`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Branch Offices - Update
+  updateBranchOffice(id: string, data: Partial<BranchOffice>): Observable<BranchOffice> {
+    return this.http
+      .patch<BranchOffice>(`${environment.baseUrl}/branch-offices/${id}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Branch Offices - Delete
+  deleteBranchOffice(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.baseUrl}/branch-offices/${id}`)
+      .pipe(
+        catchError((error) => this.handleError(error)),
+      );
+  }
 
 }

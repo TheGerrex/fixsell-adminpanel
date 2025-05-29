@@ -1,1 +1,15 @@
-<p>client-branch-office-crud works!</p>
+<sales-client-config-table
+  [title]="'Sucursales'"
+  [data]="branchOfficeData"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoading"
+  [addButtonText]="'Crear Sucursal'"
+  [addButtonPermission]="'canCreateBranchOffice'"
+  [viewActionPermission]="'canViewBranchOffice'"
+  [editActionPermission]="'canUpdateBranchOffice'"
+  [deleteActionPermission]="'canDeleteBranchOffice'"
+  (editClick)="editBranchOffice($event)"
+  (deleteClick)="openConfirmDialog($event)"
+  (addClick)="addBranchOffice()"
+></sales-client-config-table>

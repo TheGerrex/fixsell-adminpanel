@@ -1,0 +1,46 @@
+<div class="dialog">
+  <div class="title-container">
+    <h4 class="title">{{ data.title }}</h4>
+  </div>
+  <div class="content">
+    <form [formGroup]="form">
+      <ng-container *ngFor="let field of fields">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>{{ field.label }}</mat-label>
+          <input
+            matInput
+            [type]="field.type || 'text'"
+            [placeholder]="field.placeholder"
+            [formControlName]="field.name"
+          />
+          <mat-error
+            *ngIf="
+              form.get(field.name)?.invalid && form.get(field.name)?.touched
+            "
+          >
+            {{ field.errorText || 'Este campo es requerido' }}
+          </mat-error>
+        </mat-form-field>
+        <mat-checkbox
+          *ngIf="field.type === 'checkbox'"
+          [formControlName]="field.name"
+        >
+          {{ field.label }}
+        </mat-checkbox>
+      </ng-container>
+    </form>
+  </div>
+  <div class="button-actions">
+    <button class="button button-outline-secondary w-100" (click)="onNoClick()">
+      <span class="button-label">Cancelar</span>
+    </button>
+    <button
+      class="button button-primary button-icon-text button-raised w-100"
+      [disabled]="form.invalid"
+      (click)="onSubmit()"
+    >
+      <mat-icon *ngIf="data.icon">{{ data.icon }}</mat-icon>
+      <span class="button-label">{{ data.actionLabel || 'Crear' }}</span>
+    </button>
+  </div>
+</div>

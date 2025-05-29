@@ -105,6 +105,10 @@ export class ClientCategoryCRUDComponent {
         title: 'Desactivar categoria de cliente',
         message: `¿Seguro que quieres deshabilitar la categoria ${client_category.name}?`,
         buttonText: { cancel: 'Cancelar', ok: 'Desactivar' },
+        buttonIcon: {
+          cancel: 'check_circle',
+          ok: 'block',
+        }
       },
     });
 

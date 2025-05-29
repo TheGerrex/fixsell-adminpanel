@@ -54,7 +54,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="isActive">
-          <th mat-header-cell *matHeaderCellDef>Activo</th>
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
           <td mat-cell *matCellDef="let category" data-column="isActive">
             <mat-icon *ngIf="category.isActive" class="active-icon"
               >check_circle</mat-icon
@@ -87,7 +87,7 @@
               class="delete-icon"
               (click)="deleteClientCategory(category.id, category)"
             >
-              <mat-icon>delete</mat-icon>
+              <mat-icon>block</mat-icon>
             </button>
           </td>
         </ng-container>

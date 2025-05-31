@@ -11,7 +11,7 @@ export class ValidatorsService {
     '^(?:\\+\\d{1,3}\\s*)?(?=(?:\\D*\\d){10,13}\\D*$)[\\d\\s]+$';
   public floatNumberPattern: string = '^[0-9]*.?[0-9]+$';
 
-  constructor() {}
+  constructor() { }
 
   public isValidField(form: FormGroup, field: string): boolean | null {
     return form.controls[field].errors && form.controls[field].touched;
@@ -107,7 +107,19 @@ export class ValidatorsService {
         case 'email':
           return 'Este campo debe ser un email válido';
         case 'serverError':
-          return 'Error del servidor';
+          // Only show a message if it's a string or has a message property
+          if (typeof errors['serverError'] === 'string') {
+            return errors['serverError'];
+          }
+          if (
+            errors['serverError'] &&
+            typeof errors['serverError'] === 'object' &&
+            errors['serverError'].message
+          ) {
+            return errors['serverError'].message;
+          }
+          // If it's just true or any other value, don't show a message
+          break;
         case 'min':
           return `El precio tiene que ser minimo ${errors['min'].min}`;
         case 'phoneInvalid':

@@ -16,7 +16,7 @@ export class LoginPageComponent {
   private toastService = inject(ToastService);
   isLoading = false;
 
-  constructor(private validatorsService: ValidatorsService) {}
+  constructor(private validatorsService: ValidatorsService) { }
 
   public myForm: FormGroup = this.fb.group({
     email: [
@@ -51,9 +51,10 @@ export class LoginPageComponent {
         });
       },
       error: (message) => {
-        this.toastService.showError(message, 'error');
         this.isLoading = false;
-        this.myForm.controls['password'].setErrors({ serverError: true });
+        this.myForm.controls['password'].setErrors({ serverError: { message: message } });
+        this.myForm.controls['email'].setErrors({ serverError: true });
+
       },
     });
   }

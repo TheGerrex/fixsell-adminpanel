@@ -329,9 +329,11 @@ export class ClientConfigTableComponent implements OnInit, OnChanges {
   getFilterCount(): number {
     return this.getActiveFilters().length;
   }
+
   /**
    * Apply filter to the table
-   */applyFilter(eventOrValue: Event | string, columnName: string): void {
+   */
+  applyFilter(eventOrValue: Event | string, columnName: string): void {
     let value: string;
     if (typeof eventOrValue === 'string') {
       value = eventOrValue;

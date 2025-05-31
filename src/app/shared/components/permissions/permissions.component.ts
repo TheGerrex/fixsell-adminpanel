@@ -245,6 +245,66 @@ export class PermissionsComponent implements OnInit, OnChanges {
               },
             ],
           },
+
+        ],
+      },
+      {
+        name: 'Configuración de Clientes',
+        items: [
+          {
+            name: 'Clasificaciones de Cliente',
+            subitems: [
+              { key: 'canViewClientClassification', label: 'Ver Clasificación', checked: false },
+              { key: 'canCreateClientClassification', label: 'Crear Clasificación', checked: false },
+              { key: 'canUpdateClientClassification', label: 'Editar Clasificación', checked: false },
+              { key: 'canDeleteClientClassification', label: 'Eliminar Clasificación', checked: false },
+            ],
+          },
+          {
+            name: 'Categorías de Cliente',
+            subitems: [
+              { key: 'canViewClientCategory', label: 'Ver Categoría', checked: false },
+              { key: 'canCreateClientCategory', label: 'Crear Categoría', checked: false },
+              { key: 'canUpdateClientCategory', label: 'Editar Categoría', checked: false },
+              { key: 'canDeleteClientCategory', label: 'Eliminar Categoría', checked: false },
+            ],
+          },
+          {
+            name: 'Sucursales de Cliente',
+            subitems: [
+              { key: 'canViewClientBranchOffice', label: 'Ver Sucursal', checked: false },
+              { key: 'canCreateClientBranchOffice', label: 'Crear Sucursal', checked: false },
+              { key: 'canUpdateClientBranchOffice', label: 'Editar Sucursal', checked: false },
+              { key: 'canDeleteClientBranchOffice', label: 'Eliminar Sucursal', checked: false },
+            ],
+          },
+          {
+            name: 'Grupos Empresariales de Cliente',
+            subitems: [
+              { key: 'canViewClientBusinessGroup', label: 'Ver Grupo Empresarial', checked: false },
+              { key: 'canCreateClientBusinessGroup', label: 'Crear Grupo Empresarial', checked: false },
+              { key: 'canUpdateClientBusinessGroup', label: 'Editar Grupo Empresarial', checked: false },
+              { key: 'canDeleteClientBusinessGroup', label: 'Eliminar Grupo Empresarial', checked: false },
+            ],
+          },
+          {
+            name: 'Zonas de Cobranza de Cliente',
+            subitems: [
+              { key: 'canViewClientCollectionZone', label: 'Ver Zona de Cobranza', checked: false },
+              { key: 'canCreateClientCollectionZone', label: 'Crear Zona de Cobranza', checked: false },
+              { key: 'canUpdateClientCollectionZone', label: 'Editar Zona de Cobranza', checked: false },
+              { key: 'canDeleteClientCollectionZone', label: 'Eliminar Zona de Cobranza', checked: false },
+            ],
+          },
+          {
+            name: 'Líneas de Negocio de Cliente',
+            subitems: [
+              { key: 'canViewClientBusinessLine', label: 'Ver Línea de Negocio', checked: false },
+              { key: 'canCreateClientBusinessLine', label: 'Crear Línea de Negocio', checked: false },
+              { key: 'canUpdateClientBusinessLine', label: 'Editar Línea de Negocio', checked: false },
+              { key: 'canDeleteClientBusinessLine', label: 'Eliminar Línea de Negocio', checked: false },
+            ],
+          },
         ],
       },
       {

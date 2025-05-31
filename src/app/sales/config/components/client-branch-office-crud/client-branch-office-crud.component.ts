@@ -5,6 +5,8 @@ import { ClientsService } from 'src/app/sales/clients/services/clients.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { SimpleInputDialogComponent } from 'src/app/shared/components/dialogs/simple-input-dialog/simple-input-dialog.component';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'client-branch-office-crud',
@@ -16,12 +18,19 @@ export class ClientBranchOfficeCRUDComponent {
   isLoading = false;
   searchTerm = '';
 
+  // Permission flags
+  canCreateClientBranchOffice: boolean = true;
+  canReadClientBranchOffice: boolean = true;
+  canUpdateClientBranchOffice: boolean = true;
+  canDeleteClientBranchOffice: boolean = true;
+
   // Define columns for the data table
   displayedColumns: string[] = [
     'isActive',
     'name',
     'description',
     'notes',
+    'action',
   ];
 
   columns: TableColumn[] = [
@@ -32,10 +41,8 @@ export class ClientBranchOfficeCRUDComponent {
       sortable: true,
       formatter: (value: any, row: BranchOffice) => ({
         html: true,
-        content: `
-            <mat-icon class="${this.getStatusClass(row)}">
-            ${row.isActive ? 'check_circle' : 'cancel'}</mat-icon>
-        `,
+        content: `<div class="status-indicator"><span class="circle-icon ${row.isActive ? 'active-icon' : 'inactive-icon'}"></span>
+                  <span class="${row.isActive ? 'active-text' : 'inactive-text'}">${row.isActive ? 'Activo' : 'Inactivo'}</span></div>`,
       }),
       rawValue: (row: BranchOffice) => (row.isActive ? 'Activo' : 'Inactivo'), // Raw value for filtering
       showFilter: true,
@@ -111,7 +118,7 @@ export class ClientBranchOfficeCRUDComponent {
         cancel: 'Cancelar',
       },
       buttonIcon: {
-        ok: 'cancel',
+        ok: 'block',
       },
     };
 
@@ -124,19 +131,79 @@ export class ClientBranchOfficeCRUDComponent {
     });
   }
 
+  /**
+   * Opens the add branch office dialog.
+   */
+  openAddBranchOfficeDialog() {
+    const branchOfficeDialogFields = [
+      { name: 'name', label: 'Nombre', placeholder: 'Ej: Sucursal Centro', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
+      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
+    ];
+    if (!this.canCreateClientBranchOffice) {
+      // Optional: Show a message or handle unauthorized access
+      return;
+    }
+    this.dialog.open(SimpleInputDialogComponent, {
+      data: {
+        title: 'Agregar Sucursal',
+        actionLabel: 'Guardar',
+        icon: 'add',
+        fields: branchOfficeDialogFields,
+        initialValues: {}
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.submitCreateBranchOffice(result);
+      }
+    });
+  }
+
+  openEditBranchOfficeDialog(branchOffice: BranchOffice) {
+    const branchOfficeDialogFields = [
+      { name: 'name', label: 'Nombre', placeholder: 'Ej: Sucursal Centro', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
+      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
+      { name: 'isActive', label: 'Activo', type: 'checkbox', validators: [] }
+    ];
+
+    if (!this.canUpdateClientBranchOffice) {
+      // Optional: Show a message or handle unauthorized access
+      return;
+    }
+
+    this.dialog.open(SimpleInputDialogComponent, {
+      data: {
+        title: 'Editar Sucursal',
+        actionLabel: 'Guardar',
+        icon: 'edit',
+        fields: branchOfficeDialogFields,
+        initialValues: branchOffice
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.submitEditBranchOffice(branchOffice.id, result);
+      }
+    });
+  }
+
   deleteBranchOffice(branch: BranchOffice): void {
+    if (!this.canDeleteClientBranchOffice) {
+      // Optional: Show a message or handle unauthorized access
+      return;
+    }
     if (branch.id) {
       this.clientsService.deleteBranchOffice(branch.id).subscribe(
         () => {
           this.branchOfficeData = this.branchOfficeData.filter((b) => b.id !== branch.id);
           this.toastService.showSuccess(
-            'Sucursal eliminada con éxito',
+            'Sucursal desactivada con éxito',
             'Aceptar',
           );
         },
         (error) => {
           this.toastService.showError(
-            error.error?.message || 'Error al eliminar sucursal',
+            error.error?.message || 'Error al desactivar sucursal',
             'Cerrar',
           );
         },
@@ -144,17 +211,40 @@ export class ClientBranchOfficeCRUDComponent {
     }
   }
 
-  editBranchOffice(branch: BranchOffice): void {
-    // Implement the logic to edit the branch office
-    // This could involve navigating to an edit form or opening a dialog
-    console.log('Edit branch office:', branch);
+  submitCreateBranchOffice(data: BranchOffice) {
+    this.isLoading = true;
+    this.clientsService.createBranchOffice(data).subscribe({
+      next: (createdBranch) => {
+        this.toastService.showSuccess('Sucursal creada con éxito', 'Aceptar');
+        this.loadData();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastService.showError(
+          error.error?.message || 'Error al crear sucursal',
+          'Cerrar'
+        );
+        this.isLoading = false;
+      }
+    });
   }
 
-  addBranchOffice(): void {
-    // Implement the logic to add a new branch office
-    // This could involve navigating to a create form or opening a dialog
-    console.log('Add new branch office');
-
+  submitEditBranchOffice(id: string, data: BranchOffice) {
+    this.isLoading = true;
+    this.clientsService.updateBranchOffice(id, data).subscribe({
+      next: (updatedBranch) => {
+        this.toastService.showSuccess('Sucursal actualizada con éxito', 'Aceptar');
+        this.loadData();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastService.showError(
+          error.error?.message || 'Error al actualizar sucursal',
+          'Cerrar'
+        );
+        this.isLoading = false;
+      }
+    });
   }
 
 

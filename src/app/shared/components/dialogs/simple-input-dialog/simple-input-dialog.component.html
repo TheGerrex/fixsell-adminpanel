@@ -3,30 +3,62 @@
     <h4 class="title">{{ data.title }}</h4>
   </div>
   <div class="content">
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="form-container">
       <ng-container *ngFor="let field of fields">
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>{{ field.label }}</mat-label>
-          <input
-            matInput
-            [type]="field.type || 'text'"
-            [placeholder]="field.placeholder"
-            [formControlName]="field.name"
-          />
-          <mat-error
-            *ngIf="
-              form.get(field.name)?.invalid && form.get(field.name)?.touched
-            "
+        <ng-container [ngSwitch]="field.type">
+          <mat-form-field
+            *ngSwitchCase="'textarea'"
+            appearance="outline"
+            style="width: 100%"
           >
-            {{ field.errorText || 'Este campo es requerido' }}
-          </mat-error>
-        </mat-form-field>
-        <mat-checkbox
-          *ngIf="field.type === 'checkbox'"
-          [formControlName]="field.name"
-        >
-          {{ field.label }}
-        </mat-checkbox>
+            <mat-label>{{ field.label }}</mat-label>
+            <textarea
+              matInput
+              [placeholder]="field.placeholder"
+              [formControlName]="field.name"
+              [attr.maxLength]="field.maxLength || null"
+              rows="3"
+            ></textarea>
+            <mat-hint align="end" *ngIf="field.maxLength">
+              {{ form.get(field.name)?.value?.length || 0 }}/{{
+                field.maxLength
+              }}
+            </mat-hint>
+            <mat-error
+              *ngIf="
+                form.get(field.name)?.invalid && form.get(field.name)?.touched
+              "
+            >
+              {{ field.errorText || 'Este campo es requerido' }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            *ngSwitchDefault
+            appearance="outline"
+            style="width: 100%"
+          >
+            <mat-label>{{ field.label }}</mat-label>
+            <input
+              matInput
+              [type]="field.type || 'text'"
+              [placeholder]="field.placeholder"
+              [formControlName]="field.name"
+            />
+            <mat-error
+              *ngIf="
+                form.get(field.name)?.invalid && form.get(field.name)?.touched
+              "
+            >
+              {{ field.errorText || 'Este campo es requerido' }}
+            </mat-error>
+          </mat-form-field>
+          <mat-checkbox
+            *ngSwitchCase="'checkbox'"
+            [formControlName]="field.name"
+          >
+            {{ field.label }}
+          </mat-checkbox>
+        </ng-container>
       </ng-container>
     </form>
   </div>

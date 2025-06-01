@@ -10,8 +10,6 @@ import { ClientBusinessLineCRUDComponent } from './components/client-business-li
 import { ClientCategoryCRUDComponent } from './components/client-category-crud/client-category-crud.component';
 import { ClientCollectionZoneCRUDComponent } from './components/client-collection-zone-crud/client-collection-zone-crud.component';
 import { SalesModule } from '../sales.module';
-import { AddClientCategoryDialogComponent } from './components/dialogs/add-client-category-dialog/add-client-category-dialog.component';
-import { EditClientCategoryDialogComponent } from './components/dialogs/edit-client-category-dialog/edit-client-category-dialog.component';
 import { ClientConfigTableComponent } from './components/client-config-table/client-config-table.component';
 @NgModule({
   declarations: [
@@ -22,8 +20,6 @@ import { ClientConfigTableComponent } from './components/client-config-table/cli
     ClientBusinessLineCRUDComponent,
     ClientCategoryCRUDComponent,
     ClientCollectionZoneCRUDComponent,
-    AddClientCategoryDialogComponent,
-    EditClientCategoryDialogComponent,
     ClientConfigTableComponent
   ],
   imports: [

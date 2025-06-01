@@ -1,121 +1,15 @@
-<div class="table-header">
-  <div class="table-header-container">
-    <div class="table-header-wrapper">
-      <div class="table-header-title">
-        <h4 class="table-title">Categoria</h4>
-      </div>
-      <div class="table-actions">
-        <mat-form-field appearance="outline">
-          <mat-icon matPrefix *ngIf="!searchTerm">search</mat-icon>
-          <input
-            matInput
-            type="text"
-            placeholder="Buscar Categorias"
-            [(ngModel)]="searchTerm"
-            (input)="applyFilter($event)"
-        /></mat-form-field>
-        <button
-          ButtonResize
-          class="button button-primary button-raised button-icon-text"
-          (click)="addClientCategory()"
-        >
-          <mat-icon>add</mat-icon
-          ><span class="button-label">Crear Categoria</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="responsive-table">
-  <div class="table-container">
-    <div class="table-wrapper">
-      <table
-        mat-table
-        matSort
-        [dataSource]="dataSource"
-        class="data-table dense-theme"
-      >
-        <!-- Fila de encabezado -->
-        <tr
-          mat-header-row
-          *matHeaderRowDef="clientCategoriesDisplayedColumns; sticky: true"
-        ></tr>
-
-        <!-- Data Rows -->
-        <tr
-          mat-row
-          *matRowDef="let row; columns: clientCategoriesDisplayedColumns"
-          class="table-row"
-        ></tr>
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let category" data-column="name">
-            {{ category.name }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="isActive">
-          <th mat-header-cell *matHeaderCellDef>Estado</th>
-          <td mat-cell *matCellDef="let category" data-column="isActive">
-            <mat-icon *ngIf="category.isActive" class="active-icon"
-              >check_circle</mat-icon
-            >
-            <mat-icon *ngIf="!category.isActive" class="inactive-icon"
-              >cancel</mat-icon
-            >
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef class="actions-header-cell">
-            Acciones
-          </th>
-          <td
-            mat-cell
-            *matCellDef="let category"
-            data-column="actions"
-            class="actions-cell"
-          >
-            <button
-              mat-icon-button
-              class="edit-icon"
-              (click)="editClientCategory(category.id, category)"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="delete-icon"
-              (click)="deleteClientCategory(category.id, category)"
-            >
-              <mat-icon>block</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-      </table>
-    </div>
-
-    <!-- No items message and create button -->
-    <ng-container *ngIf="dataSource.data.length === 0">
-      <div class="no-items-container">
-        <div class="no-items-wrapper">
-          <mat-icon class="no-items-icon">warning</mat-icon>
-          <p class="message-text">No se encontraron registros en esta tabla.</p>
-          <button
-            class="button button-primary button-raised button-icon-text"
-            (click)="addClientCategory()"
-          >
-            <mat-icon>add</mat-icon>
-            <span class="button-label">Crear Categoria</span>
-          </button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-  <!-- Pagination -->
-  <mat-paginator
-    [pageSizeOptions]="[10, 25, 50, 100]"
-    [pageSize]="10"
-    showFirstLastButtons
-    class="table-paginator"
-  ></mat-paginator>
-</div>
+<sales-client-config-table
+  [title]="'Categorias'"
+  [data]="clientCategoryData"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoading"
+  [addButtonText]="'Crear Categoria'"
+  [addButtonPermission]="'canCreateClientCategory'"
+  [viewActionPermission]="'canViewClientCategory'"
+  [editActionPermission]="'canUpdateClientCategory'"
+  [deleteActionPermission]="'canDeleteClientCategory'"
+  (editClick)="openEditCategoryDialog($event)"
+  (deleteClick)="openDeleteClientCategoryDialog($event)"
+  (addClick)="openCreateClientCategoryDialog()"
+></sales-client-config-table>

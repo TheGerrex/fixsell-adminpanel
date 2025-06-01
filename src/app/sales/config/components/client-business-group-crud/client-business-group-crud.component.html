@@ -1,1 +1,15 @@
-<p>client-business-group-crud works!</p>
+<sales-client-config-table
+  [title]="'Grupos de Trabajo'"
+  [data]="clientBusinessGroupData"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoading"
+  [addButtonText]="'Crear Grupo'"
+  [addButtonPermission]="'canCreateClientBusinessGroup'"
+  [viewActionPermission]="'canViewClientBusinessGroup'"
+  [editActionPermission]="'canUpdateClientBusinessGroup'"
+  [deleteActionPermission]="'canDeleteClientBusinessGroup'"
+  (editClick)="openEditClientBusinessGroupDialog($event)"
+  (deleteClick)="openDeleteClientBusinessGroupDialog($event)"
+  (addClick)="openCreateClientBusinessGroupDialog()"
+></sales-client-config-table>

@@ -643,7 +643,9 @@ export class ClientsService {
       );
   }
 
-  // Business Groups
+  // ======== BUSINESS GROUPS CRUD METHODS ========
+
+  // Get all business groups
   getBusinessGroups(): Observable<BusinessGroup[]> {
     return this.http
       .get<BusinessGroup[]>(`${environment.baseUrl}/business-groups`)
@@ -653,7 +655,49 @@ export class ClientsService {
       );
   }
 
-  // Collection Zones
+  // Get a single business group by ID
+  getBusinessGroup(id: string): Observable<BusinessGroup> {
+    return this.http
+      .get<BusinessGroup>(`${environment.baseUrl}/business-groups/${id}`)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Create a new business group
+  createBusinessGroup(data: Partial<BusinessGroup>): Observable<BusinessGroup> {
+    return this.http
+      .post<BusinessGroup>(`${environment.baseUrl}/business-groups`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Update an existing business group
+  updateBusinessGroup(id: string, data: Partial<BusinessGroup>): Observable<BusinessGroup> {
+    return this.http
+      .patch<BusinessGroup>(`${environment.baseUrl}/business-groups/${id}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Delete a business group
+  deleteBusinessGroup(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.baseUrl}/business-groups/${id}`)
+      .pipe(
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+
+  // ======== COLLECTION ZONES METHODS ========
+
+  // Get all collection zones
   getCollectionZones(): Observable<CollectionZone[]> {
     return this.http
       .get<CollectionZone[]>(`${environment.baseUrl}/collection-zones`)
@@ -663,8 +707,46 @@ export class ClientsService {
       );
   }
 
-  // ======== CLIENT CATEGORIES METHODS ========
+  // Get a single collection zone by ID
+  getCollectionZone(id: string): Observable<CollectionZone> {
+    return this.http
+      .get<CollectionZone>(`${environment.baseUrl}/collection-zones/${id}`)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
 
+  // Create a new collection zone
+  createCollectionZone(data: Partial<CollectionZone>): Observable<CollectionZone> {
+    return this.http
+      .post<CollectionZone>(`${environment.baseUrl}/collection-zones`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Update an existing collection zone
+  updateCollectionZone(id: string, data: Partial<CollectionZone>): Observable<CollectionZone> {
+    return this.http
+      .patch<CollectionZone>(`${environment.baseUrl}/collection-zones/${id}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Delete a collection zone
+  deleteCollectionZone(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.baseUrl}/collection-zones/${id}`)
+      .pipe(
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // ======== CLIENT CATEGORIES METHODS ========
 
   // Client Categories - Find All
   getAllClientCategories(): Observable<ClientCategory[]> {
@@ -722,11 +804,52 @@ export class ClientsService {
   }
 
   // ======== CLIENT BUSINESS LINES METHODS ========
+
+  // Get all business lines
   getBusinessLines(): Observable<BusinessLine[]> {
     return this.http
       .get<BusinessLine[]>(`${environment.baseUrl}/business-lines`)
       .pipe(
         map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Get a single business line by ID
+  getBusinessLine(id: string): Observable<BusinessLine> {
+    return this.http
+      .get<BusinessLine>(`${environment.baseUrl}/business-lines/${id}`)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Create a new business line
+  createBusinessLine(data: Partial<BusinessLine>): Observable<BusinessLine> {
+    return this.http
+      .post<BusinessLine>(`${environment.baseUrl}/business-lines`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Update an existing business line
+  updateBusinessLine(id: string, data: Partial<BusinessLine>): Observable<BusinessLine> {
+    return this.http
+      .patch<BusinessLine>(`${environment.baseUrl}/business-lines/${id}`, data)
+      .pipe(
+        map((response) => response),
+        catchError((error) => this.handleError(error)),
+      );
+  }
+
+  // Delete a business line
+  deleteBusinessLine(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.baseUrl}/business-lines/${id}`)
+      .pipe(
         catchError((error) => this.handleError(error)),
       );
   }

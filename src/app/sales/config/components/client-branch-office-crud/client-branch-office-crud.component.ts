@@ -7,6 +7,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SimpleInputDialogComponent } from 'src/app/shared/components/dialogs/simple-input-dialog/simple-input-dialog.component';
 import { Validators } from '@angular/forms';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'client-branch-office-crud',
@@ -76,11 +77,30 @@ export class ClientBranchOfficeCRUDComponent {
   constructor(
     private clientsService: ClientsService,
     private toastService: ToastService,
+    private authService: AuthService,
     private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.loadData();
+  }
+
+  initializePermissions(): void {
+    this.canUpdateClientBranchOffice = this.authService.hasPermission('canUpdateBranchOffice');
+    this.canDeleteClientBranchOffice = this.authService.hasPermission('canDeleteBranchOffice');
+    this.canCreateClientBranchOffice = this.authService.hasPermission('canCreateBranchOffice');
+
+    // Conditionally add 'action' column based on permissions
+    if (this.canUpdateClientBranchOffice || this.canDeleteClientBranchOffice) {
+      if (!this.displayedColumns.includes('action')) {
+        this.displayedColumns.push('action');
+      }
+    } else {
+      // Remove 'action' column if no permissions
+      this.displayedColumns = this.displayedColumns.filter(
+        (col) => col !== 'action',
+      );
+    }
   }
 
   loadData(): void {
@@ -112,7 +132,7 @@ export class ClientBranchOfficeCRUDComponent {
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       title: '¿Estás seguro de desactivar esta sucursal?',
-      message: 'La sucursal será desactivada permanentemente.',
+      message: 'La sucursal será desactivada temporalmente. No podrás asignarla a nuevos clientes hasta que la actives de nuevo.',
       buttonText: {
         ok: 'Desactivar',
         cancel: 'Cancelar',
@@ -137,7 +157,7 @@ export class ClientBranchOfficeCRUDComponent {
   openAddBranchOfficeDialog() {
     const branchOfficeDialogFields = [
       { name: 'name', label: 'Nombre', placeholder: 'Ej: Sucursal Centro', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
-      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'description', label: 'Descripción', placeholder: '(Opcional)', type: 'textarea', validators: [] },
       { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
     ];
     if (!this.canCreateClientBranchOffice) {
@@ -195,11 +215,11 @@ export class ClientBranchOfficeCRUDComponent {
     if (branch.id) {
       this.clientsService.deleteBranchOffice(branch.id).subscribe(
         () => {
-          this.branchOfficeData = this.branchOfficeData.filter((b) => b.id !== branch.id);
           this.toastService.showSuccess(
             'Sucursal desactivada con éxito',
             'Aceptar',
           );
+          this.loadData(); // Recarga los datos después de eliminar
         },
         (error) => {
           this.toastService.showError(

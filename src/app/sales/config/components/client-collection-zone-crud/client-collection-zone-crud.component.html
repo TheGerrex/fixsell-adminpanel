@@ -1,1 +1,15 @@
-<p>client-collection-zone-crud works!</p>
+<sales-client-config-table
+  [title]="'Zonas de cobranza'"
+  [data]="clientCollectionZoneData"
+  [columns]="columns"
+  [displayedColumns]="displayedColumns"
+  [isLoading]="isLoading"
+  [addButtonText]="'Crear Zona'"
+  [addButtonPermission]="'canCreateClientCollectionZone'"
+  [viewActionPermission]="'canViewClientCollectionZone'"
+  [editActionPermission]="'canUpdateClientCollectionZone'"
+  [deleteActionPermission]="'canDeleteClientCollectionZone'"
+  (editClick)="openEditClientCollectionZoneDialog($event)"
+  (deleteClick)="openDeleteClientCollectionZoneDialog($event)"
+  (addClick)="openCreateClientCollectionZoneDialog()"
+></sales-client-config-table>

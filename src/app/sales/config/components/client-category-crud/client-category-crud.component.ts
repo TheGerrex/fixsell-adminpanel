@@ -1,15 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { ClientCategory } from 'src/app/sales/clients/interfaces/client.interface';
-import { ClientsService } from 'src/app/sales/clients/services/clients.service';
-import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { EditClientCategoryDialogComponent } from '../dialogs/edit-client-category-dialog/edit-client-category-dialog.component';
-import { AddClientCategoryDialogComponent } from '../dialogs/add-client-category-dialog/add-client-category-dialog.component';
+import { TableColumn } from '../client-config-table/client-config-table.component';
+import { ClientsService } from 'src/app/sales/clients/services/clients.service';
+import { ClientCategory } from 'src/app/sales/clients/interfaces/client.interface';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { SimpleInputDialogComponent } from 'src/app/shared/components/dialogs/simple-input-dialog/simple-input-dialog.component';
 
 @Component({
   selector: 'client-category-crud',
@@ -17,145 +15,258 @@ import { AddClientCategoryDialogComponent } from '../dialogs/add-client-category
   styleUrl: './client-category-crud.component.scss'
 })
 export class ClientCategoryCRUDComponent {
-  clientCategoriesDisplayedColumns: string[] = ['isActive', 'name', 'action'];
-  dataSource = new MatTableDataSource<ClientCategory>();
-  searchTerm = '';
-  isLoadingData = false;
+  isLoading = false;
   clientCategoryData: ClientCategory[] = [];
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  searchTerm = '';
 
   // Permission flags
-  canEditClientCategoy: boolean = true;
-  canDeleteClientCategoy: boolean = true;
-  canAddClientCategoy: boolean = true;
+  canCreateClientCategory: boolean = true;
+  canReadClientCategory: boolean = true;
+  canUpdateClientCategory: boolean = true;
+  canDeleteClientCategory: boolean = true;
+
+
+  displayedColumns: string[] = [
+    'isActive',
+    'name',
+    'description',
+    'notes',
+    'action',
+  ];
+
+  columns: TableColumn[] = [
+    {
+      name: 'isActive',
+      label: 'Estado',
+      type: 'select',
+      sortable: true,
+      formatter: (value: any, row: ClientCategory) => ({
+        html: true,
+        content: `<div class="status-indicator"><span class="circle-icon ${row.isActive ? 'active-icon' : 'inactive-icon'}"></span>
+                  <span class="${row.isActive ? 'active-text' : 'inactive-text'}">${row.isActive ? 'Activo' : 'Inactivo'}</span></div>`,
+      }),
+      rawValue: (row: ClientCategory) => (row.isActive ? 'Activo' : 'Inactivo'), // Raw value for filtering
+      showFilter: true,
+    },
+    {
+      name: 'name',
+      label: 'Nombre',
+      type: 'input',
+      sortable: true,
+      rawValue: (row: ClientCategory) => row.name, // Use raw business name for filtering
+      showFilter: true,
+    },
+    {
+      name: 'description',
+      label: 'Descripción',
+      type: 'input',
+      sortable: false,
+      rawValue: (row: ClientCategory) => row.description, // Raw value for filtering
+      showFilter: false,
+    },
+    {
+      name: 'notes',
+      label: 'Notas',
+      type: 'input',
+      sortable: false,
+      rawValue: (row: ClientCategory) => row.notes, // Raw value for filtering
+      showFilter: false,
+    },
+  ];
 
   constructor(
     private authService: AuthService,
-    private clientService: ClientsService,
-    private dialog: MatDialog,
+    private clientsService: ClientsService,
     private toastService: ToastService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
     this.initializePermissions();
-    this.getClientCategories();
+    this.loadData();
   }
 
   /**
    * Initializes brand-related permissions by checking with AuthService.
    */
   initializePermissions(): void {
-    this.canEditClientCategoy = this.authService.hasPermission('canUpdateBrand');
-    this.canDeleteClientCategoy = this.authService.hasPermission('canDeleteBrand');
-    this.canAddClientCategoy = this.authService.hasPermission('canCreateBrand');
+    this.canUpdateClientCategory = this.authService.hasPermission('canUpdateCategory');
+    this.canDeleteClientCategory = this.authService.hasPermission('canDeleteCategory');
+    this.canCreateClientCategory = this.authService.hasPermission('canCreateCategory');
 
     // Conditionally add 'action' column based on permissions
-    if (this.canEditClientCategoy || this.canDeleteClientCategoy) {
-      if (!this.clientCategoriesDisplayedColumns.includes('action')) {
-        this.clientCategoriesDisplayedColumns.push('action');
+    if (this.canUpdateClientCategory || this.canDeleteClientCategory) {
+      if (!this.displayedColumns.includes('action')) {
+        this.displayedColumns.push('action');
       }
     } else {
       // Remove 'action' column if no permissions
-      this.clientCategoriesDisplayedColumns = this.clientCategoriesDisplayedColumns.filter(
+      this.displayedColumns = this.displayedColumns.filter(
         (col) => col !== 'action',
       );
     }
   }
 
-  /**
-   * Fetches all brands data from the server.
-   */
-  getClientCategories() {
-    this.isLoadingData = true;
-    this.clientService.getAllClientCategories().subscribe(
-      (clientCategories: ClientCategory[]) => {
-        this.clientCategoryData = clientCategories;
-        this.dataSource = new MatTableDataSource(clientCategories);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.isLoadingData = false;
+  loadData(): void {
+    this.isLoading = true;
+    this.clientsService.getAllClientCategories().subscribe(
+      (categories) => {
+        this.clientCategoryData = categories;
+        this.isLoading = false;
       },
-      (error: any) => {
-        console.error('Error:', error);
-        this.isLoadingData = false;
+      (error) => {
+        this.isLoading = false;
+        this.toastService.showError(
+          'Error al cargar las categorías',
+          'error-snackbar',
+        );
       },
     );
   }
 
-  /**
-   * Applies filter to the data table based on user input.
-   * @param event The input event containing the filter value.
-   */
-  applyFilter(event: Event) {
-    const searchTerm = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = searchTerm.trim().toLowerCase();
+  getStatusClass(row: ClientCategory): string {
+    return row.isActive ? 'active-icon' : 'inactive-icon';
   }
 
-  /**
-   * Opens a confirmation dialog before deleting a brand.
-   * @param id The ID of the brand to delete.
-   * @param brand The brand object to delete.
-   */
-  deleteClientCategory(id: string, client_category: ClientCategory) {
-    // Open confirm-dialog
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Desactivar categoria de cliente',
-        message: `¿Seguro que quieres deshabilitar la categoria ${client_category.name}?`,
-        buttonText: { cancel: 'Cancelar', ok: 'Desactivar' },
-        buttonIcon: {
-          cancel: 'check_circle',
-          ok: 'block',
-        }
-      },
-    });
+  openDeleteClientCategoryDialog(category: ClientCategory): void {
+    const dialogConfig = new MatDialogConfig();
 
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.clientService.deleteClientCategory(id).subscribe(() => {
-          this.getClientCategories();
-        });
-        this.toastService.showSuccess(
-          'Categoria desactivada con éxito',
-          'Cerrar',
-        );
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: '¿Estás seguro de desactivar esta categoría?',
+      message: 'La categoría será desactivada temporalmente. No podrás asignarla a nuevos clientes hasta que la actives de nuevo.',
+      buttonText: {
+        ok: 'Desactivar',
+        cancel: 'Cancelar',
+      },
+      buttonIcon: {
+        ok: 'block',
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.deleteClientCategory(category);
       }
     });
   }
 
   /**
-   * Opens the edit brand dialog.
-   * @param id The ID of the brand to edit.
-   * @param brand The brand object to edit.
+   * Opens the add branch office dialog.
    */
-  editClientCategory(id: string, client_category: ClientCategory) {
-    if (!this.canEditClientCategoy) {
+  openCreateClientCategoryDialog() {
+    const categoryDialogFields = [
+      { name: 'name', label: 'Nombre', placeholder: 'Ej: Corporativo, No Fiscal, Pyme, etc.', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
+      { name: 'description', label: 'Descripción', placeholder: '(Opcional)', type: 'textarea', validators: [] },
+      { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
+    ];
+    if (!this.canCreateClientCategory) {
       // Optional: Show a message or handle unauthorized access
       return;
     }
-    const dialogRef = this.dialog.open(EditClientCategoryDialogComponent, {
-      data: { id: id, categoryName: client_category.name, isActive: client_category.isActive },
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.getClientCategories();
+    this.dialog.open(SimpleInputDialogComponent, {
+      data: {
+        title: 'Agregar Categoría',
+        actionLabel: 'Guardar',
+        icon: 'add',
+        fields: categoryDialogFields,
+        initialValues: {}
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.submitCreateClientCategory(result);
+      }
     });
   }
 
-  /**
-   * Opens the add brand dialog.
-   */
-  addClientCategory() {
-    if (!this.canAddClientCategoy) {
+  openEditCategoryDialog(category: ClientCategory) {
+    const categoryDialogFields = [
+      { name: 'name', label: 'Nombre', placeholder: 'Ej: Sucursal Centro', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
+      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
+      { name: 'isActive', label: 'Activo', type: 'checkbox', validators: [] }
+    ];
+
+    if (!this.canUpdateClientCategory) {
       // Optional: Show a message or handle unauthorized access
       return;
     }
-    const dialogRef = this.dialog.open(AddClientCategoryDialogComponent);
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.getClientCategories();
+    this.dialog.open(SimpleInputDialogComponent, {
+      data: {
+        title: 'Editar Categoría',
+        actionLabel: 'Guardar',
+        icon: 'edit',
+        fields: categoryDialogFields,
+        initialValues: category
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.submitEditClientCategory(category.id, result);
+      }
+    });
+  }
+
+  deleteClientCategory(category: ClientCategory): void {
+    if (!this.canDeleteClientCategory) {
+      // Optional: Show a message or handle unauthorized access
+      return;
+    }
+    if (category.id) {
+      this.clientsService.deleteClientCategory(category.id).subscribe(
+        () => {
+          this.toastService.showSuccess(
+            'Categoría desactivada con éxito',
+            'Aceptar',
+          );
+          this.loadData(); // Recarga los datos después de eliminar
+        },
+        (error) => {
+          this.toastService.showError(
+            error.error?.message || 'Error al desactivar categoría',
+            'Cerrar',
+          );
+        },
+      );
+    }
+  }
+
+  submitCreateClientCategory(data: ClientCategory) {
+    this.isLoading = true;
+    this.clientsService.createClientCategory(data).subscribe({
+      next: (createdCategory) => {
+        this.toastService.showSuccess('Categoría creada con éxito', 'Aceptar');
+        this.loadData();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastService.showError(
+          error.error?.message || 'Error al crear categoría',
+          'Cerrar'
+        );
+        this.isLoading = false;
+      }
+    });
+  }
+
+  submitEditClientCategory(id: string, data: ClientCategory) {
+    this.isLoading = true;
+    this.clientsService.updateClientCategory(id, data).subscribe({
+      next: (updatedCategory) => {
+        this.toastService.showSuccess('Categoría actualizada con éxito', 'Aceptar');
+        this.loadData();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastService.showError(
+          error.error?.message || 'Error al actualizar categoría',
+          'Cerrar'
+        );
+        this.isLoading = false;
+      }
     });
   }
 }

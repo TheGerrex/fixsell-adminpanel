@@ -21,7 +21,6 @@ import {
   PaymentComplementInfo,
 } from '../interfaces/client.interface';
 import { User } from 'src/app/auth/interfaces';
-import { NewClientCategory } from '../../config/components/client-category-crud/client-category.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -769,9 +768,9 @@ export class ClientsService {
   }
 
   // Client Categories - Create
-  createClientCategory(category: NewClientCategory): Observable<ClientCategory> {
+  createClientCategory(data: Partial<ClientCategory>): Observable<ClientCategory> {
     return this.http
-      .post<ClientCategory>(`${environment.baseUrl}/client-categories`, category)
+      .post<ClientCategory>(`${environment.baseUrl}/client-categories`, data)
       .pipe(
         map((response) => response),
         catchError((error) => this.handleError(error)),

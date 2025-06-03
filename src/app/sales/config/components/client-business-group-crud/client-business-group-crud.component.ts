@@ -184,8 +184,8 @@ export class ClientBusinessGroupCRUDComponent {
 
   openEditClientBusinessGroupDialog(group: BusinessGroup) {
     const groupDialogFields = [
-      { name: 'name', label: 'Nombre', placeholder: 'Ej: Sucursal Centro', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
-      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'name', label: 'Nombre', placeholder: 'Ej: Sector Público, Sector Privado, ONG', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
+      { name: 'description', label: 'Descripción', placeholder: '(Opcional)', type: 'textarea', validators: [] },
       { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
       { name: 'isActive', label: 'Activo', type: 'checkbox', validators: [] }
     ];

@@ -184,8 +184,8 @@ export class ClientCategoryCRUDComponent {
 
   openEditCategoryDialog(category: ClientCategory) {
     const categoryDialogFields = [
-      { name: 'name', label: 'Nombre', placeholder: 'Ej: Sucursal Centro', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
-      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'name', label: 'Nombre', placeholder: 'Ej: Corporativo, No Fiscal, Pyme, etc.', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
+      { name: 'description', label: 'Descripción', placeholder: '(Opcional)', type: 'textarea', validators: [] },
       { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
       { name: 'isActive', label: 'Activo', type: 'checkbox', validators: [] }
     ];

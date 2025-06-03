@@ -185,7 +185,7 @@ export class ClientCollectionZoneCRUDComponent {
   openEditClientCollectionZoneDialog(zone: CollectionZone) {
     const zoneDialogFields = [
       { name: 'name', label: 'Nombre', placeholder: 'Ej: Zona Norte, Zona Centro, Zona Metropolitana, Clientes Gobierno', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
-      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'description', label: 'Descripción', placeholder: '(Opcional)', type: 'textarea', validators: [] },
       { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
       { name: 'isActive', label: 'Activo', type: 'checkbox', validators: [] }
     ];

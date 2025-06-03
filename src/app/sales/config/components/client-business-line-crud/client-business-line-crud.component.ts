@@ -185,7 +185,7 @@ export class ClientBusinessLineCRUDComponent {
   openEditClientBusinessLineDialog(line: BusinessLine) {
     const lineDialogFields = [
       { name: 'name', label: 'Nombre', placeholder: 'Ej: Servicios de Mantenimiento, Soluciones Documentales, Venta Directa, Contratos de Renta', type: 'text', validators: [Validators.required], errorText: 'El nombre es requerido' },
-      { name: 'description', label: 'Descripción', placeholder: 'Opcional', type: 'textarea', validators: [] },
+      { name: 'description', label: 'Descripción', placeholder: '(Opcional)', type: 'textarea', validators: [] },
       { name: 'notes', label: 'Notas', placeholder: 'Notas adicionales', type: 'textarea', validators: [] },
       { name: 'isActive', label: 'Activo', type: 'checkbox', validators: [] }
     ];

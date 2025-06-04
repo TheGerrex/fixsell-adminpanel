@@ -109,7 +109,7 @@ export class ClientCategoryCRUDComponent {
 
   loadData(): void {
     this.isLoading = true;
-    this.clientsService.getAllClientCategories().subscribe(
+    this.clientsService.getClientCategories().subscribe(
       (categories) => {
         this.clientCategoryData = categories;
         this.isLoading = false;

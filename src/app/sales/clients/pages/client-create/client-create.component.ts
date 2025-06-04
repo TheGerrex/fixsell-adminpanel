@@ -30,6 +30,15 @@ export class ClientCreateComponent implements OnInit {
   public createContactsClientForm!: FormGroup;
   public createPrintersClientForm!: FormGroup;
   public createAccountsClientForm!: FormGroup;
+  // Dropdown data variables
+  public clients: any[] = [];
+  public businessGroups: any[] = [];
+  public collectionZones: any[] = [];
+  public clientCategories: any[] = [];
+  public businessLines: any[] = [];
+  public branchOffices: any[] = [];
+
+
   public cfdiValues: Cfdi[] = [];
   public taxRegimeValues: TaxRegime[] = [];
   public states: { code: string; name: string }[] = [];
@@ -40,6 +49,7 @@ export class ClientCreateComponent implements OnInit {
   isLoading = false;
   isSubmittingForm = false;
   clientId = '';
+
   constructor(
     private fb: FormBuilder,
     private toastService: ToastService,
@@ -53,8 +63,8 @@ export class ClientCreateComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.loadExecutives();
-    this.initializeTaxDataForm();
-    this.initializeComercialConditionsForm();
+    this.loadClientClassificationData();
+    this.initializeAllForms();
     this.cfdiValues = this.cfdiService.getCfdiValues();
     this.taxRegimeValues = this.taxRegimeService.getTaxRegimes();
     this.updateStates();
@@ -62,6 +72,13 @@ export class ClientCreateComponent implements OnInit {
       this.updateStates(country);
     });
     this.isLoading = false;
+  }
+
+  initializeAllForms() {
+    this.initializeTaxDataForm();
+    this.initializeComercialConditionsForm();
+    this.initializeClassificationClientForm(this.clientId);
+    // Initialize other forms as needed
   }
 
   initializeTaxDataForm() {
@@ -105,6 +122,17 @@ export class ClientCreateComponent implements OnInit {
     });
   }
 
+  initializeClassificationClientForm(clientId: string): void {
+    this.createClassificationClientForm = this.fb.group({
+      clientId: [clientId, Validators.required], // Dropdown or input for client ID
+      businessGroupId: [null], // Dropdown for business group (optional)
+      collectionZoneId: [null], // Dropdown for collection zone (optional)
+      clientCategoryId: [null], // Dropdown for client category (optional)
+      businessLineId: [null], // Dropdown for business line (optional)
+      branchOfficeId: [null], // Dropdown for branch office (optional)
+    });
+  }
+
   getClientData(clientId: string) {
     this.clientService.getClient(clientId).subscribe({
       next: (client) => {
@@ -140,6 +168,28 @@ export class ClientCreateComponent implements OnInit {
     this.clientService.fetchExecutives().subscribe((executives) => {
       this.executives = executives;
       this.collectionExecutives = executives;
+    });
+  }
+
+  loadClientClassificationData(): void {
+    this.clientService.getBusinessGroups().subscribe((groups) => {
+      this.businessGroups = groups;
+    });
+
+    this.clientService.getCollectionZones().subscribe((zones) => {
+      this.collectionZones = zones;
+    });
+
+    this.clientService.getClientCategories().subscribe((categories) => {
+      this.clientCategories = categories;
+    });
+
+    this.clientService.getBusinessLines().subscribe((lines) => {
+      this.businessLines = lines;
+    });
+
+    this.clientService.getBranchOffices().subscribe((branches) => {
+      this.branchOffices = branches;
     });
   }
 

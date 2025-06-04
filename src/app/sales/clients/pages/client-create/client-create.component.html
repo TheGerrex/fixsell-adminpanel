@@ -23,7 +23,7 @@
     <app-loading-spinner *ngIf="isSubmittingForm"></app-loading-spinner>
 
     <div class="section-card-body">
-      <mat-stepper linear #stepper style="width: 100%">
+      <mat-stepper #stepper style="width: 100%">
         <mat-step [stepControl]="createClientTaxForm" [editable]="true">
           <form [formGroup]="createClientTaxForm" class="form">
             <ng-template matStepLabel>Datos Fiscales</ng-template>
@@ -496,156 +496,81 @@
           [stepControl]="createComercialConditionsClientForm"
           [editable]="true"
         >
-          <form [formGroup]="createComercialConditionsClientForm" class="form">
-            <ng-template matStepLabel>Clasificación</ng-template>
+          <form [formGroup]="createClassificationClientForm" class="form">
+            <ng-template matStepLabel>Clasificación Cliente</ng-template>
             <div class="form-container">
               <div class="form-section">
-                <h5 class="form-section-subheader">Condiciones Comerciales</h5>
+                <h5 class="form-section-subheader">Clasificación Cliente</h5>
                 <div class="form-grid">
-                  <!-- assignedExecutiveId -->
+                  <!-- businessGroupId -->
                   <div class="form-item half-row">
                     <mat-form-field appearance="outline">
-                      <mat-label>Ejecutivo asignado</mat-label>
-                      <mat-select formControlName="assignedExecutiveId">
+                      <mat-label>Grupo Empresarial</mat-label>
+                      <mat-select formControlName="businessGroupId">
                         <mat-option
-                          *ngFor="let executive of executives"
-                          [value]="executive.id"
+                          *ngFor="let group of businessGroups"
+                          [value]="group.id"
                         >
-                          {{ executive.name }}
+                          {{ group.name }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
 
-                  <!-- collectionExecutiveId -->
+                  <!-- collectionZoneId -->
                   <div class="form-item half-row">
                     <mat-form-field appearance="outline">
-                      <mat-label>Ejecutivo de cobranza</mat-label>
-                      <mat-select formControlName="collectionExecutiveId">
+                      <mat-label>Zona de Cobranza</mat-label>
+                      <mat-select formControlName="collectionZoneId">
                         <mat-option
-                          *ngFor="let executive of collectionExecutives"
-                          [value]="executive.id"
+                          *ngFor="let zone of collectionZones"
+                          [value]="zone.id"
                         >
-                          {{ executive.name }}
+                          {{ zone.name }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
 
-                  <!-- creditDays -->
+                  <!-- clientCategoryId -->
                   <div class="form-item half-row">
                     <mat-form-field appearance="outline">
-                      <mat-label>Días de crédito</mat-label>
-                      <input
-                        matInput
-                        type="number"
-                        placeholder="Días de crédito"
-                        formControlName="creditDays"
-                      />
-                    </mat-form-field>
-                  </div>
-
-                  <!-- creditLimit -->
-                  <div class="form-item half-row">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Monto límite de crédito</mat-label>
-                      <span matPrefix style="margin-left: 0.5rem">$&nbsp;</span>
-                      <input
-                        matInput
-                        type="number"
-                        placeholder="Límite de crédito"
-                        formControlName="creditLimit"
-                      />
-                    </mat-form-field>
-                  </div>
-
-                  <!-- isActiveClient -->
-                  <div class="form-item half-row">
-                    <div class="form-item-toggle">
-                      <p class="item-toggle-label">Cliente Activo</p>
-                      <mat-slide-toggle formControlName="isActive">
-                      </mat-slide-toggle>
-                    </div>
-                  </div>
-
-                  <!-- applyVatWithholding -->
-                  <div class="form-item half-row">
-                    <div class="form-item-toggle">
-                      <p class="item-toggle-label">Aplicar retención I.V.A</p>
-                      <mat-slide-toggle
-                        formControlName="applyVatWithholding"
-                      ></mat-slide-toggle>
-                    </div>
-                  </div>
-
-                  <!-- isrRetention -->
-                  <div class="form-item half-row">
-                    <div class="form-item-toggle">
-                      <p class="item-toggle-label">¿Aplica Retención de ISR?</p>
-                      <mat-slide-toggle formControlName="isrRetention">
-                      </mat-slide-toggle>
-                    </div>
-                  </div>
-                  <!-- validateCreditLimitInSales -->
-                  <div class="form-item half-row">
-                    <div class="form-item-toggle">
-                      <p class="item-toggle-label">
-                        Validar límite de crédito en documentos de venta?
-                      </p>
-                      <mat-slide-toggle
-                        formControlName="validateCreditLimitInSales"
-                      ></mat-slide-toggle>
-                    </div>
-                  </div>
-                  <!-- collectionObservations -->
-                  <div class="form-item full-row">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Observaciones para cobranza</mat-label>
-                      <textarea
-                        matInput
-                        placeholder="Escribe observaciones para cobranza"
-                        formControlName="collectionObservations"
-                        rows="3"
-                      ></textarea>
-                    </mat-form-field>
-                  </div>
-
-                  <!-- currency -->
-                  <div class="form-item half-row">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Moneda</mat-label>
-                      <mat-select formControlName="currency">
-                        <mat-option value="MXN"> MXN </mat-option>
-                        <mat-option value="USD"> USD </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-
-                  <!-- reviewDays -->
-                  <div class="form-item half-row">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Días de revisión</mat-label>
-                      <mat-select formControlName="reviewDays" multiple>
+                      <mat-label>Categoría del Cliente</mat-label>
+                      <mat-select formControlName="clientCategoryId">
                         <mat-option
-                          *ngFor="let day of daysOfWeek"
-                          [value]="day"
+                          *ngFor="let category of clientCategories"
+                          [value]="category.id"
                         >
-                          {{ day }}
+                          {{ category.name }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
 
-                  <!-- paymentDays -->
+                  <!-- businessLineId -->
                   <div class="form-item half-row">
                     <mat-form-field appearance="outline">
-                      <mat-label>Días de pago</mat-label>
-                      <mat-select formControlName="paymentDays" multiple>
+                      <mat-label>Giro de Negocio</mat-label>
+                      <mat-select formControlName="businessLineId">
                         <mat-option
-                          *ngFor="let day of daysOfWeek"
-                          [value]="day"
+                          *ngFor="let line of businessLines"
+                          [value]="line.id"
                         >
-                          {{ day }}
+                          {{ line.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <!-- branchOfficeId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Sucursal</mat-label>
+                      <mat-select formControlName="branchOfficeId">
+                        <mat-option
+                          *ngFor="let branch of branchOffices"
+                          [value]="branch.id"
+                        >
+                          {{ branch.name }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -653,29 +578,93 @@
                 </div>
               </div>
             </div>
-            <div class="form-actions">
-              <button
-                matStepperPrevious
-                type="button"
-                class="button button-outline-secondary"
-              >
-                <mat-icon>arrow_back</mat-icon>
-                <span class="button-label">Atras</span>
-              </button>
-              <button
-                class="button button-outline-secondary"
-                (click)="skipStep(stepper)"
-              >
-                Omitir
-              </button>
-              <button
-                matStepperNext
-                type="button"
-                class="button button-outline-primary"
-              >
-                <span class="button-label">Siguiente</span>
-                <mat-icon>arrow_forward</mat-icon>
-              </button>
+          </form>
+        </mat-step>
+        <mat-step
+          [stepControl]="createComercialConditionsClientForm"
+          [editable]="true"
+        >
+          <form [formGroup]="createClassificationClientForm" class="form">
+            <ng-template matStepLabel>Cuentas</ng-template>
+            <div class="form-container">
+              <div class="form-section">
+                <h5 class="form-section-subheader">Clasificación Cliente</h5>
+                <div class="form-grid">
+                  <!-- businessGroupId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Grupo Empresarial</mat-label>
+                      <mat-select formControlName="businessGroupId">
+                        <mat-option
+                          *ngFor="let group of businessGroups"
+                          [value]="group.id"
+                        >
+                          {{ group.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- collectionZoneId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Zona de Cobranza</mat-label>
+                      <mat-select formControlName="collectionZoneId">
+                        <mat-option
+                          *ngFor="let zone of collectionZones"
+                          [value]="zone.id"
+                        >
+                          {{ zone.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- clientCategoryId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Categoría del Cliente</mat-label>
+                      <mat-select formControlName="clientCategoryId">
+                        <mat-option
+                          *ngFor="let category of clientCategories"
+                          [value]="category.id"
+                        >
+                          {{ category.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- businessLineId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Giro de Negocio</mat-label>
+                      <mat-select formControlName="businessLineId">
+                        <mat-option
+                          *ngFor="let line of businessLines"
+                          [value]="line.id"
+                        >
+                          {{ line.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <!-- branchOfficeId -->
+                  <div class="form-item half-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Sucursal</mat-label>
+                      <mat-select formControlName="branchOfficeId">
+                        <mat-option
+                          *ngFor="let branch of branchOffices"
+                          [value]="branch.id"
+                        >
+                          {{ branch.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
         </mat-step>

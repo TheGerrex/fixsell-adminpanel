@@ -748,7 +748,7 @@ export class ClientsService {
   // ======== CLIENT CATEGORIES METHODS ========
 
   // Client Categories - Find All
-  getAllClientCategories(): Observable<ClientCategory[]> {
+  getClientCategories(): Observable<ClientCategory[]> {
     return this.http
       .get<ClientCategory[]>(`${environment.baseUrl}/client-categories`)
       .pipe(
